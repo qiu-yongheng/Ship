@@ -1,0 +1,9 @@
+<litepal>
+    <dbname value="ship_db" />
+    <version value="1"/>
+    <list>
+        <mapping class="com.kc.shiptransport.db.Ship"/>
+        <mapping class="com.kc.shiptransport.db.Subcontractor"/>
+        <mapping class="com.kc.shiptransport.db.WeekTask"/>
+    </list>
+</litepal>
