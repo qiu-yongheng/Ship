@@ -17,10 +17,18 @@ public interface ShipSelectContract {
         void showShip(List<Ship> value);
         void cancle();
         void commit();
+        void showLoading(boolean active);
+        void showError();
+        void showSuccess();
+        void changeDailogInfo();
+        void navigateToPlanSet();
+        void showCommitSuccess();
     }
     interface Presenter extends BasePresenter {
-        void getShip(String itemID);
-        void doCancle(String itemID);
-        void doCommit();
+        void getShip(String type);
+        void doCancle(String currentSelectShipType, String date);
+        void doCommit(String currentSelectShipType, String currentSelectDate);
+        // 刷新数据
+        void doRefresh(String SubcontractorAccount, String StartDay, String EndDay);
     }
 }

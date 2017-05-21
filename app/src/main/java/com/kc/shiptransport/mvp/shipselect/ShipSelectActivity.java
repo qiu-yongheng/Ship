@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 public class ShipSelectActivity extends BaseActivity {
     public String currentSelectShipType;
     private ShipSelectFragment shipSelectFragment;
+    public String mCurrentSelectDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,8 @@ public class ShipSelectActivity extends BaseActivity {
 
         // 获取传过来的数据
         Bundle bundle = getIntent().getExtras();
-        currentSelectShipType = bundle.getString("ShipSelectActivity");
+        currentSelectShipType = bundle.getString("ShipSelectActivity_type");
+        mCurrentSelectDate = bundle.getString("ShipSelectActivity_date");
 
         if (savedInstanceState != null) {
             shipSelectFragment = (ShipSelectFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ShipSelectFragment");

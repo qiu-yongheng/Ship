@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.shipselect;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,10 +13,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.util.CalendarUtil;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -51,22 +58,25 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
+        // 获取船舶类型对应的数据
         presenter.getShip(activity.currentSelectShipType);
         return view;
     }
 
     private void initListener() {
+        // 取消选择,
         btnShipCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.doCancle(activity.currentSelectShipType);
+                presenter.doCancle(activity.currentSelectShipType, activity.mCurrentSelectDate);
             }
         });
 
+        // 发送提交的网络请求, 刷新任务计划列表 (两个网络请求)
         btnShipCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.doCommit();
+                presenter.doCommit(activity.currentSelectShipType, activity.mCurrentSelectDate);
             }
         });
     }
@@ -106,7 +116,7 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
     @Override
     public void showShip(List<Ship> value) {
         if (adapter == null) {
-            adapter = new ShipSelectAdapter(getActivity(), value);
+            adapter = new ShipSelectAdapter(getActivity(), value, activity.mCurrentSelectDate);
             recyclerviewShipSelect.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
@@ -116,10 +126,50 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
     @Override
     public void cancle() {
         adapter.notifyDataSetChanged();
+        Toast.makeText(activity, "取消成功", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void commit() {
         activity.onBackPressed();
+    }
+
+    @Override
+    public void showLoading(boolean active) {
+        if (active) {
+            activity.showProgressDailog("提交中", "提交中...");
+        } else {
+            activity.hideProgressDailog();
+        }
+    }
+
+    @Override
+    public void showError() {
+        activity.showDailog("提交失败", "提交失败, 是否重试?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                presenter.doCommit(activity.currentSelectShipType, activity.mCurrentSelectDate);
+            }
+        });
+    }
+
+    @Override
+    public void showSuccess() {
+        Toast.makeText(activity, "提交成功", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void changeDailogInfo() {
+        activity.changeProgressDailogInfo("同步数据", "正在同步数据");
+    }
+
+    @Override
+    public void navigateToPlanSet() {
+        activity.onBackPressed();
+    }
+
+    @Override
+    public void showCommitSuccess() {
+        presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY));
     }
 }

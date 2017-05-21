@@ -67,6 +67,7 @@
         android:orientation="horizontal">
 
         <android.support.v7.widget.AppCompatButton
+            android:visibility="gone"
             android:id="@+id/btn_set_cancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -81,7 +82,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?colorPrimary"
-            android:text="提交"
+            android:text="确定"
             android:textColor="#fff"/>
     </LinearLayout>
 

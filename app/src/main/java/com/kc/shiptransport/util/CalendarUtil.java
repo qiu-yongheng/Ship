@@ -32,18 +32,32 @@ public class CalendarUtil {
     }
 
     /**
-     * 获取当前日期
-     * @param format
+     * 获取当天日期
+     * @param format 自定义格式化格式
      * @return
      */
     public static String getCurrentDate(String format) {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat(format);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         return df.format(cal.getTime());
     }
 
     /**
+     * 获取指定星期的日期
+     * @param format
+     * @param value
+     * @return
+     */
+    public static String getSelectDate(String format, int value) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        cal.set(Calendar.DAY_OF_WEEK, value);
+        return df.format(cal.getTime());
+    }
+
+    /**
+     * 获取一周的日期 (集合)
+     * @param format
      * @return
      */
     public static List<String> getdateOfWeek(String format) {
@@ -57,19 +71,15 @@ public class CalendarUtil {
         for (int i = 0; i < 7; i++) {
             list.add(i, String.valueOf(sunday++));
         }
-
         return list;
-
-        //        System.out.println(df.format(cal.getTime()));
-        //        //这种输出的是上个星期周日的日期，因为老外那边把周日当成第一天
-        //        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        //        System.out.println(df.format(cal.getTime()));
-        //        //增加一个星期，才是我们中国人理解的本周日的日期
-        //        cal.add(Calendar.WEEK_OF_YEAR, 1);
-        //        System.out.println(df.format(cal.getTime()));
     }
 
-    public static String[] getdate(String format) {
+    /**
+     * 获取一周的日期 (数组)
+     * @param format
+     * @return
+     */
+    public static String[] getdateToWeek(String format) {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat(format);
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); //获取本周一的日期
@@ -84,47 +94,8 @@ public class CalendarUtil {
     }
 
     /**
-     * 转换字符串格式
-     * @param format
-     * @param date
-     * @return
+     * 获取当前时间(精确到天)且判断季节
      */
-    public static String dateFormat(String format, String date) {
-        SimpleDateFormat sdf=new SimpleDateFormat(format);
-        try {
-            Date parse = sdf.parse(date);
-            return sdf.format(parse);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    /**
-     * 把日期, itemID转换成list position
-     * @param format
-     * @param d
-     * @return
-     */
-    public static int dateToPosition(String format, String d) {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat(format);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        String date = df.format(cal.getTime());
-        Integer sunday = Integer.valueOf(date);
-        Integer selectDay = Integer.valueOf(dateFormat(format, d));
-        return selectDay - sunday;
-    }
-
-    public static String getDate(String format, int value) {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat(format);
-        cal.set(Calendar.DAY_OF_WEEK, value);
-        return df.format(cal.getTime());
-    }
-
-
-    //获取当前时间(精确到天)且判断季节
     private void getCurrentTime() {
         SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = sDateFormat.format(new java.util.Date());
@@ -155,26 +126,13 @@ public class CalendarUtil {
         System.out.println("季节:" + season);
     }
 
-
-    public static void main(String[] args) throws ParseException {
-
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date date1 = sdf.parse("2011-12-26");
-        Date date2 = sdf.parse("2011-06-08");
-
-        GregorianCalendar cal1 = new GregorianCalendar();
-        GregorianCalendar cal2 = new GregorianCalendar();
-
-        cal1.setTime(date1);
-        cal2.setTime(date2);
-
-        long gap = (cal2.getTimeInMillis()-cal1.getTimeInMillis())/(1000*3600*24);//从间隔毫秒变成间隔天数</strong>
-
-        System.out.println("相差"+gap+"天");
-    }
-
+    /**
+     * 计算日期之间的时间差
+     * @param sunday
+     * @param currentday
+     * @return
+     * @throws ParseException
+     */
     public static long getDataBetween(String sunday, String currentday) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 

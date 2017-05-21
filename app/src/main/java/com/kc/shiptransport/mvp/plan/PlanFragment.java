@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -99,7 +100,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         // TODO 获取数据 网络请求
         presenter.subscribe();
         // 网络请求
-        presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getDate("yyyy-MM-dd", Calendar.SUNDAY), CalendarUtil.getDate("yyyy-MM-dd", Calendar.SATURDAY));
+        presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY));
         return view;
     }
 
@@ -114,7 +115,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getDate("yyyy-MM-dd", Calendar.SUNDAY), CalendarUtil.getDate("yyyy-MM-dd", Calendar.SATURDAY));
+                presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY));
             }
         });
     }
@@ -153,6 +154,8 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        presenter.getWeekTask();
+        Log.d("==", "PlanFragment");
     }
 
     /**
@@ -208,7 +211,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
                 @Override
                 public void onItemClick(View view, int position) {
                     if (position < 7) {
-                        Toast.makeText(getActivity(), dates.get(position) + "", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), dates.get(position) + "", Toast.LENGTH_SHORT).show();
                         navigationToPlanSetActivity(position);
                     } else {
                         WeekTask task = DataSupport.where("position = ?", String.valueOf(position)).findFirst(WeekTask.class);
@@ -222,7 +225,6 @@ public class PlanFragment extends Fragment implements PlanContract.View {
                             });
                         }
                     }
-
                 }
 
                 @Override
@@ -254,6 +256,11 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         } else {
             activity.hideProgressDailog();
         }
+    }
+
+    @Override
+    public void showSuccess() {
+        Toast.makeText(activity, "刷新成功", Toast.LENGTH_SHORT).show();
     }
 
     /**

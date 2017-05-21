@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +23,6 @@ import android.widget.LinearLayout;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Ship;
-import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.shipselect.ShipSelectActivity;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -65,6 +65,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     private PlanSetContract.Presenter presenter;
     private PlanSetActivity activity;
     private PlanSetAdapter adapter;
+    private String selectData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,8 +79,6 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
-        // TODO 获取数据
-        //presenter.getShipCategory(CalendarUtil.getdate("yyyy-MM-dd")[activity.currentSelectItem]);
         return view;
     }
 
@@ -87,12 +86,15 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
         spinnerSelectDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("==", "PlanSetFragment");
                 // 设置title时间
-                tvPlanSetDate.setText(CalendarUtil.getdate("yyyy年MM月dd日")[spinnerSelectDate.getSelectedItemPosition()]);
+                tvPlanSetDate.setText(CalendarUtil.getdateToWeek("yyyy年MM月dd日")[spinnerSelectDate.getSelectedItemPosition()]);
 
                 // TODO 根据选择时间, 重新从数据库获取weektask数据
-                //presenter.getWeekTaskData(CalendarUtil.getdate("yyyy-MM-dd")[spinnerSelectDate.getSelectedItemPosition()]);
-                presenter.getShipCategory(CalendarUtil.getdate("yyyy-MM-dd")[spinnerSelectDate.getSelectedItemPosition()]);
+                presenter.getShipCategory(CalendarUtil.getdateToWeek("yyyy-MM-dd")[spinnerSelectDate.getSelectedItemPosition()]);
+
+                // 保存当前选中的日期
+                selectData = CalendarUtil.getdateToWeek("yyyy-MM-dd")[spinnerSelectDate.getSelectedItemPosition()];
             }
 
             @Override
@@ -127,7 +129,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //适配器
-        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, CalendarUtil.getdate("yyyy-MM-dd"));
+        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, CalendarUtil.getdateToWeek("yyyy-MM-dd"));
         //设置样式
         arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //加载适配器
@@ -158,6 +160,12 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        presenter.getShipCategory(CalendarUtil.getdateToWeek("yyyy-MM-dd")[spinnerSelectDate.getSelectedItemPosition()]);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -167,12 +175,14 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
      * 获取数据, 显示船舶分类
      * 从数据库获取所有数据
      * @param value
-     * @param list
+     * @param date
      */
     @Override
-    public void showShipCategory(final List<List<Ship>> value, List<WeekTask> list) {
+    public void showShipCategory(final List<List<Ship>> value, String date) {
+        Log.d("gaga", Thread.currentThread().getName());
+
         if (adapter == null) {
-            adapter = new PlanSetAdapter(activity, value, list);
+            adapter = new PlanSetAdapter(activity, value, date);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
@@ -187,18 +197,9 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
             });
             recyclerviewAdd.setAdapter(adapter);
         } else {
+            adapter.setDates(value, date);
             adapter.notifyDataSetChanged();
         }
-    }
-
-    /**
-     * 更新内部recyclerview数据
-     * @param value
-     */
-    @Override
-    public void showSelectShip(List<WeekTask> value) {
-        adapter.setRecyclerViewData(value);
-        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -210,7 +211,10 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     public void navigationToShipSelectActivity(String type) {
         Intent intent = new Intent(activity, ShipSelectActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("ShipSelectActivity", type);
+        // 传递船舶类型
+        bundle.putString("ShipSelectActivity_type", type);
+        // 传递当前日期
+        bundle.putString("ShipSelectActivity_date", selectData);
         intent.putExtras(bundle);
         activity.startActivity(intent, bundle);
     }

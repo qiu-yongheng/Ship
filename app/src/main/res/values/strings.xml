@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">ShipTransport</string>
-    <string name="title_login">登录</string>
+    <string name="app_name">综合生产调度系统</string>
+    <string name="title_login">综合生产调度系统</string>
     <string name="hint_username">请输入用户名:</string>
     <string name="hint_password">请输入密码:</string>
     <string name="setting_remenber_password">记住密码</string>

@@ -3,7 +3,6 @@ package com.kc.shiptransport.mvp.plansetting;
 import android.content.Context;
 
 import com.kc.shiptransport.db.Ship;
-import com.kc.shiptransport.db.WeekTask;
 
 import org.litepal.crud.DataSupport;
 
@@ -47,6 +46,8 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
 
     /**
      * 获取船的数据, 进行分类
+     * 获取当前选中日期的计划任务
+     * @param date
      */
     @Override
     public void getShipCategory(final String date) {
@@ -56,7 +57,7 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
                 List<List<Ship>> lists = new ArrayList<>();
                 List<Ship> all = DataSupport.findAll(Ship.class);
 
-                // TODO
+                // 根据type进行分类
                 Set set = new HashSet();
                 for (Ship ship : all) {
                     String type = ship.getShipType();
@@ -80,45 +81,8 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
 
                     @Override
                     public void onNext(List<List<Ship>> value) {
-                        List<WeekTask> list = DataSupport.where("PlanDay = ?", date).find(WeekTask.class);
-                        view.showShipCategory(value, list);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    /**
-     * 根据日期获取任务数据
-     * @param date
-     */
-    @Override
-    public void getWeekTaskData(final String date) {
-        Observable.create(new ObservableOnSubscribe<List<WeekTask>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<WeekTask>> e) throws Exception {
-                List<WeekTask> list = DataSupport.where("PlanDay = ?", date).find(WeekTask.class);
-                e.onNext(list);
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<WeekTask>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<WeekTask> value) {
-                        view.showSelectShip(value);
+                        // 传递当前选中日期
+                        view.showShipCategory(value, date);
                     }
 
                     @Override

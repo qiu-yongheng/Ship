@@ -12,26 +12,20 @@ public class Ship extends DataSupport{
 
     /**
      * ItemID : 1
-     * ShipID : Num1
-     * ShipName : 誉丰联发
-     * ShipType : 抛沙
+     * ShipID : zd881
+     * ShipAccount : shipd
+     * ShipName : 船舶D
+     * ShipType : B类
      * MaxSandSupplyCount : 2000
      */
     private int id;
     private String ItemID;
     private String ShipID;
+    private String ShipAccount;
     private String ShipName;
     private String ShipType;
     private String MaxSandSupplyCount;
-    private String selected;
-
-    public String getSelected() {
-        return selected;
-    }
-
-    public void setSelected(String selected) {
-        this.selected = selected;
-    }
+    private String Selected;
 
     public int getId() {
         return id;
@@ -39,6 +33,14 @@ public class Ship extends DataSupport{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getSelected() {
+        return Selected;
+    }
+
+    public void setSelected(String selected) {
+        Selected = selected;
     }
 
     public String getItemID() {
@@ -55,6 +57,14 @@ public class Ship extends DataSupport{
 
     public void setShipID(String ShipID) {
         this.ShipID = ShipID;
+    }
+
+    public String getShipAccount() {
+        return ShipAccount;
+    }
+
+    public void setShipAccount(String ShipAccount) {
+        this.ShipAccount = ShipAccount;
     }
 
     public String getShipName() {

@@ -1,7 +1,6 @@
 package com.kc.shiptransport.mvp.plansetting;
 
 import com.kc.shiptransport.db.Ship;
-import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -15,11 +14,9 @@ import java.util.List;
 
 public interface PlanSetContract {
     interface View extends BaseView<Presenter> {
-        void showShipCategory(List<List<Ship>> value, List<WeekTask> list);
-        void showSelectShip(List<WeekTask> value);
+        void showShipCategory(List<List<Ship>> value, String list);
     }
     interface Presenter extends BasePresenter {
         void getShipCategory(String s);
-        void getWeekTaskData(String yyyy年MM月dd日);
     }
 }

@@ -49,17 +49,20 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((NormalHolder) holder).mTvDate.setText(dates.get(position));
         } else {
             ((NormalHolder) holder).mLlDate.setVisibility(View.INVISIBLE);
-            ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
+
 
             List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
             if (weekTasks != null && !weekTasks.isEmpty()) {
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                 ((NormalHolder) holder).mTvQuantum.setText(weekTask.getSandSupplyCount());
+                ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
+            } else {
+                ((NormalHolder) holder).mLlTask.setVisibility(View.INVISIBLE);
             }
         }
 
-        // 根据不同的position设置点击时间
+        // 根据不同的position设置点击事件
         if (listener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -91,7 +94,7 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 42;
+        return 77;
     }
 
     public void setOnItemClickListener(OnRecyclerviewItemClickListener listener) {

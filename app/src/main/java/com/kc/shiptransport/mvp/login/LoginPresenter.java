@@ -80,6 +80,14 @@ public class LoginPresenter implements LoginContract.Presenter {
                     }
                 }
 
+                /**
+                 * ItemID : 1
+                 * ShipID : zd881
+                 * ShipAccount : shipd
+                 * ShipName : 船舶D
+                 * ShipType : B类
+                 * MaxSandSupplyCount : 2000
+                 */
                 // 2. 获取数据, 缓存到数据库
                 String shipInfo = remoteDataSource.getShipInfo(username);
                 List<ShipBean> list = gson.fromJson(shipInfo, new TypeToken<List<ShipBean>>() {
@@ -88,11 +96,13 @@ public class LoginPresenter implements LoginContract.Presenter {
                     DataSupport.deleteAll(Ship.class);
                     for (ShipBean listBean : list) {
                         Ship ship = new Ship();
-                        ship.setShipID(listBean.getShipID());
                         ship.setItemID(listBean.getItemID());
+                        ship.setShipID(listBean.getShipID());
+                        ship.setShipAccount(listBean.getShipAccount());
                         ship.setShipName(listBean.getShipName());
                         ship.setShipType(listBean.getShipType());
                         ship.setMaxSandSupplyCount(listBean.getMaxSandSupplyCount());
+                        ship.setSelected("0");
                         ship.save();
                     }
                 }
