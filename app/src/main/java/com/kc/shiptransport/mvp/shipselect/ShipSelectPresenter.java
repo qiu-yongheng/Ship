@@ -10,6 +10,7 @@ import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
 import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
+import com.kc.shiptransport.db.CommitShip;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
@@ -170,11 +171,14 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
 
                 List<Integer> removeItemIDS = new ArrayList<>();
 
-                // 先查询weektask
+                /**
+                 * 先查询weektask, 如果没有计划, 保存""
+                 */
                 List<WeekTask> weekTasks = DataSupport.where("PlanDay = ? and ShipType = ?", date, type).find(WeekTask.class);
                 if (!weekTasks.isEmpty()) {
                     // 判断该任务对应的ship是否选中
                     for (WeekTask weekTask : weekTasks) {
+
                         if (!DataSupport.where("Selected = ? and ShipAccount = ?", "0", weekTask.getShipAccount()).find(Ship.class).isEmpty()) {
                             // 被取消的任务
                             removeItemIDS.add(weekTask.getItemID());
@@ -201,53 +205,77 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
                 }
 
 
-
-
-
-
-
                 List<SubmitBean.ListBean> list = new ArrayList<>(); // 新增计划列表
-
-                List<Ship> ships = DataSupport.where("Selected = ? and ShipType = ?", "1", type).find(Ship.class); // TODO 查询所有选中的船(类型筛选)
-                List<Ship> removeShips = new ArrayList<Ship>();
-                /* 判断当前是否有计划 */
-                if (!weekTasks.isEmpty()) {
-                    /* 有计划,  */
-                    for (WeekTask weekTask : weekTasks) {
-                        for (Ship ship : ships) {
-                            if (ship.getShipAccount().equals(weekTask.getShipAccount())) {
-                                // 从集合中删除
-                                removeShips.add(ship);
-                            }
-                        }
-                    }
-                    ships.removeAll(removeShips); // TODO 删除已经计划的船
-                }
-
-                 /* 判断是否有船舶选中 */
-                if (!ships.isEmpty()) {
-                    for (Ship ship : ships) {
-                            /* 有船舶选中, 创建对象, 添加到集合 */
+                List<CommitShip> commitShips = DataSupport.where("PlanDay = ? and ShipType = ?", date, type).find(CommitShip.class);
+                if (!commitShips.isEmpty()) {
+                    for (CommitShip commitShip : commitShips) {
+                             /* 有船舶选中, 创建对象, 添加到集合 */
                         SubmitBean.ListBean listBean = new SubmitBean.ListBean();
 
                         listBean.setItemID("");
                         listBean.setPlanDay(date);
-                        listBean.setShipAccount(ship.getShipAccount());
-                        listBean.setSandSupplyCount(ship.getMaxSandSupplyCount());
+                        listBean.setShipAccount(commitShip.getShipAccount());
+                        listBean.setSandSupplyCount(commitShip.getMaxSandSupplyCount());
 
                         list.add(listBean);
                     }
                     bean.setList(list); // 计划列表
                 } else {
-                        /* 没有船舶选中, 上传空集合 */
+                         /* 没有船舶选中, 上传空集合 */
                     bean.setList(list); // 计划列表
                 }
+
+
+                //                List<Ship> ships = DataSupport.where("Selected = ? and ShipType = ?", "1", type).find(Ship.class); // TODO 查询所有选中的船(类型筛选)
+                //                List<Ship> removeShips = new ArrayList<Ship>();
+                //                /* 判断当前是否有计划 */
+                //                if (!weekTasks.isEmpty()) {
+                //                    /* 有计划,  */
+                //                    for (WeekTask weekTask : weekTasks) {
+                //                        for (Ship ship : ships) {
+                //                            if (ship.getShipAccount().equals(weekTask.getShipAccount())) {
+                //                                // 从集合中删除
+                //                                removeShips.add(ship);
+                //                            }
+                //                        }
+                //                    }
+                //                    ships.removeAll(removeShips); // TODO 删除已经计划的船
+                //                }
+                //
+                //                 /* 判断是否有船舶选中 */
+                //                if (!ships.isEmpty()) {
+                //                    for (Ship ship : ships) {
+                //                            /* 有船舶选中, 创建对象, 添加到集合 */
+                //                        SubmitBean.ListBean listBean = new SubmitBean.ListBean();
+                //
+                //                        listBean.setItemID("");
+                //                        listBean.setPlanDay(date);
+                //                        listBean.setShipAccount(ship.getShipAccount());
+                //                        listBean.setSandSupplyCount(ship.getMaxSandSupplyCount());
+                //
+                //                        list.add(listBean);
+                //                    }
+                //                    bean.setList(list); // 计划列表
+                //                } else {
+                //                        /* 没有船舶选中, 上传空集合 */
+                //                    bean.setList(list); // 计划列表
+                //                }
 
                 /* 2. 把对象转换成json字符串 */
                 String json = gson.toJson(bean);
                 Log.d("==", json);
+
+
+                /* 4. 提交数据后, 删除缓存 */
+                int i = DataSupport.deleteAll(CommitShip.class, "PlanDay = ? and ShipType = ?", date, type);
+                Log.d("==", "删除缓存: " + i);
+
+
+
+
                 /* 3. 上传数据 */
                 String result = remoteDataSource.commitWeekTask(json);
+
 
                 e.onNext(result);
             }

@@ -100,6 +100,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         // TODO 获取数据 网络请求
         presenter.subscribe();
         // 网络请求
+        List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
         presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY));
         return view;
     }

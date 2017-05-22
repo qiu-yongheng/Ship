@@ -5,5 +5,6 @@
         <mapping class="com.kc.shiptransport.db.Ship"/>
         <mapping class="com.kc.shiptransport.db.Subcontractor"/>
         <mapping class="com.kc.shiptransport.db.WeekTask"/>
+        <mapping class="com.kc.shiptransport.db.CommitShip"/>
     </list>
 </litepal>

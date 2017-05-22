@@ -116,6 +116,7 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
     @Override
     public void showShip(List<Ship> value) {
         if (adapter == null) {
+            // 传递船分类数据, 当前选择日期
             adapter = new ShipSelectAdapter(getActivity(), value, activity.mCurrentSelectDate);
             recyclerviewShipSelect.setAdapter(adapter);
         } else {

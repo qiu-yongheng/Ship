@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.plansetting;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.kc.shiptransport.db.Ship;
 
@@ -51,12 +52,12 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
      */
     @Override
     public void getShipCategory(final String date) {
+        Log.d("==", "----PlanSetPresenter: 获取所有ship, 分类, 传递当前时间----");
         Observable.create(new ObservableOnSubscribe<List<List<Ship>>>() {
             @Override
             public void subscribe(ObservableEmitter<List<List<Ship>>> e) throws Exception {
                 List<List<Ship>> lists = new ArrayList<>();
                 List<Ship> all = DataSupport.findAll(Ship.class);
-
                 // 根据type进行分类
                 Set set = new HashSet();
                 for (Ship ship : all) {

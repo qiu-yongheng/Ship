@@ -179,8 +179,6 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
      */
     @Override
     public void showShipCategory(final List<List<Ship>> value, String date) {
-        Log.d("gaga", Thread.currentThread().getName());
-
         if (adapter == null) {
             adapter = new PlanSetAdapter(activity, value, date);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {

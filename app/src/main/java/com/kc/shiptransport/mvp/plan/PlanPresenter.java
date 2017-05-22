@@ -181,20 +181,32 @@ public class PlanPresenter implements PlanContract.Presenter {
      */
     @Override
     public void getWeekTask() {
+//        Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
         Observable.create(new ObservableOnSubscribe<List<WeekTask>>() {
             @Override
             public void subscribe(ObservableEmitter<List<WeekTask>> e) throws Exception {
                 // 从数据库获取一周任务分配数据
                 List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
+                Log.d("==", "计划数量: " + weekLists.size());
                 e.onNext(weekLists);
-
-                // 根据计划, 设置ship select = 1
-                ContentValues values = new ContentValues();
-                values.put("Selected", "1");
-                for (WeekTask weekTask : weekLists) {
-                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
-                }
-
+//
+//                // 重置ship的选择状态
+//                ContentValues v = new ContentValues();
+//                v.put("Selected", "0");
+//                DataSupport.updateAll(Ship.class, v);
+//
+//                Log.d("==", "重置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+//
+//
+//                // 根据计划, 设置ship select = 1
+//                ContentValues values = new ContentValues();
+//                values.put("Selected", "1");
+//                for (WeekTask weekTask : weekLists) {
+//                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
+//                }
+//
+//                Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+//                Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
                 // 完成
                 e.onComplete();
             }
@@ -360,6 +372,33 @@ public class PlanPresenter implements PlanContract.Presenter {
                         weekTask.save();
                     }
                 }
+
+
+
+
+
+
+                // 从数据库获取一周任务分配数据
+                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
+                Log.d("==", "计划数量: " + weekLists.size());
+
+                // 重置ship的选择状态
+                ContentValues v = new ContentValues();
+                v.put("Selected", "0");
+                DataSupport.updateAll(Ship.class, v);
+
+                Log.d("==", "重置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+
+
+                // 根据计划, 设置ship select = 1
+                ContentValues values = new ContentValues();
+                values.put("Selected", "1");
+                for (WeekTask weekTask : weekLists) {
+                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
+                }
+
+                Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+                Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
 
                 // 通知presenter从DB获取数据
                 e.onComplete();
