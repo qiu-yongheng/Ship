@@ -19,6 +19,8 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -171,6 +173,7 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
 
     @Override
     public void showCommitSuccess() {
-        presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY));
+        int jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP);
+        presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek), jumpWeek);
     }
 }

@@ -317,7 +317,7 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
     }
 
     @Override
-    public void doRefresh(final String SubcontractorAccount, final String StartDay, final String EndDay) {
+    public void doRefresh(final String SubcontractorAccount, final String StartDay, final String EndDay, final int jumpWeek) {
         Observable.create(new ObservableOnSubscribe<List<WeekTaskBean>>() {
             @Override
             public void subscribe(ObservableEmitter<List<WeekTaskBean>> e) throws Exception {
@@ -362,7 +362,7 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
                     for (int i = 1; i <= list.size(); i++) {
                         // 更新数据
                         WeekTask weekTask = list.get(i - 1);
-                        weekTask.setPosition(String.valueOf(dateToPosition(weekTask.getPlanDay(), i)));
+                        weekTask.setPosition(String.valueOf(dateToPosition(weekTask.getPlanDay(), i, jumpWeek)));
                         //                        weekTask.updateAll("ItemID = ?", String.valueOf(weekTask.getItemID()));
                         weekTask.save();
                     }
@@ -406,11 +406,11 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
      * @param date
      * @param itemID
      */
-    private int dateToPosition(String date, int itemID) {
+    private int dateToPosition(String date, int itemID, int jumpWeek) {
         long dataBetween = 0;
         try {
             // 获取时间差
-            dataBetween = CalendarUtil.getDataBetween(CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY), date);
+            dataBetween = CalendarUtil.getDataBetween(CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), date);
             Log.d("==", "" + dataBetween);
         } catch (ParseException e) {
             e.printStackTrace();

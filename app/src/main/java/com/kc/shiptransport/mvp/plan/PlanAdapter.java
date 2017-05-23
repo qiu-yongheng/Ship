@@ -25,7 +25,7 @@ import java.util.List;
 public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context context;
-    private final List<String> dates;
+    private List<String> dates;
     private final List<WeekTask> weekLists;
     private OnRecyclerviewItemClickListener listener;
 
@@ -99,6 +99,10 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setOnItemClickListener(OnRecyclerviewItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setDates (List<String> dates) {
+        this.dates = dates;
     }
 
 }

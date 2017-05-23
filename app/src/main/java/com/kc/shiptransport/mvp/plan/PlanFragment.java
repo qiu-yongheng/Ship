@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,6 +28,8 @@ import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.plansetting.PlanSetActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -81,6 +84,9 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     private PlanContract.Presenter presenter;
     private PlanAdapter adapter;
     private PlanActivity activity;
+    private float dowmX;
+    private float upX;
+    private int jumpWeek = 0; // 要显示的week, 默认当周
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,10 +104,10 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         initListener();
 
         // TODO 获取数据 网络请求
-        presenter.subscribe();
+        presenter.start(jumpWeek);
         // 网络请求
         List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-        presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY));
+        presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek), jumpWeek);
         return view;
     }
 
@@ -116,13 +122,54 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY));
+                presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek), jumpWeek);
+            }
+        });
+
+        recyclerviewPlan.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Log.d("==", "DOWM X = " + motionEvent.getX());
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (dowmX == 0) {
+                            dowmX = motionEvent.getX();
+                        Log.d("==", "MOVE X = " + motionEvent.getX());
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        upX = motionEvent.getX();
+                        Log.d("==", "UP X = " + motionEvent.getX());
+
+                        if (upX - dowmX > 100) {
+                            Toast.makeText(activity, "上一周", Toast.LENGTH_SHORT).show();
+                            // TODO 请求上一周数据
+                            jumpWeek--;
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP, jumpWeek);
+                            presenter.start(jumpWeek);
+                            presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek), jumpWeek);
+                        } else if(upX - dowmX < -100) {
+                            Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
+                            // TODO 请求下一周数据
+                            jumpWeek++;
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP, jumpWeek);
+                            presenter.start(jumpWeek);
+                            presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek), jumpWeek);
+                        }
+                        dowmX = 0;
+                        break;
+                }
+                return false;
             }
         });
     }
 
     @Override
     public void initViews(View view) {
+        SharePreferenceUtil.saveInt(getContext(), SettingUtil.WEEK_JUMP, 0);
         // 允许使用menu
         setHasOptionsMenu(true);
         activity = (PlanActivity) getActivity();
@@ -155,7 +202,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        presenter.getWeekTask();
+        presenter.getWeekTask(jumpWeek);
         Log.d("==", "PlanFragment");
     }
 
@@ -235,6 +282,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
             });
             recyclerviewPlan.setAdapter(adapter);
         } else {
+            adapter.setDates(dates);
             adapter.notifyDataSetChanged();
         }
     }

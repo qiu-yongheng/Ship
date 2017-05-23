@@ -12,7 +12,6 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_plan"
             android:layout_width="match_parent"

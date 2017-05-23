@@ -26,6 +26,8 @@ import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.shipselect.ShipSelectActivity;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import java.util.List;
 
@@ -66,6 +68,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     private PlanSetActivity activity;
     private PlanSetAdapter adapter;
     private String selectData;
+    private int jumpWeek;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plan_set, container, false);
         unbinder = ButterKnife.bind(this, view);
+        jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP);
         initViews(view);
         initListener();
         return view;
@@ -88,13 +92,13 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("==", "PlanSetFragment");
                 // 设置title时间
-                tvPlanSetDate.setText(CalendarUtil.getdateToWeek("yyyy年MM月dd日")[spinnerSelectDate.getSelectedItemPosition()]);
+                tvPlanSetDate.setText(CalendarUtil.getdateOfWeek("yyyy年MM月dd日", jumpWeek).get(spinnerSelectDate.getSelectedItemPosition()));
 
                 // TODO 根据选择时间, 重新从数据库获取weektask数据
-                presenter.getShipCategory(CalendarUtil.getdateToWeek("yyyy-MM-dd")[spinnerSelectDate.getSelectedItemPosition()]);
+                presenter.getShipCategory(CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek).get(spinnerSelectDate.getSelectedItemPosition()));
 
                 // 保存当前选中的日期
-                selectData = CalendarUtil.getdateToWeek("yyyy-MM-dd")[spinnerSelectDate.getSelectedItemPosition()];
+                selectData = CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek).get(spinnerSelectDate.getSelectedItemPosition());
             }
 
             @Override
@@ -129,7 +133,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //适配器
-        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, CalendarUtil.getdateToWeek("yyyy-MM-dd"));
+        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek));
         //设置样式
         arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //加载适配器
@@ -162,6 +166,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("==", "PlanSetFragment Resume");
         presenter.getShipCategory(CalendarUtil.getdateToWeek("yyyy-MM-dd")[spinnerSelectDate.getSelectedItemPosition()]);
     }
 

@@ -16,7 +16,6 @@ import com.kc.shiptransport.util.CalendarUtil;
 import org.litepal.crud.DataSupport;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -59,12 +58,21 @@ public class PlanPresenter implements PlanContract.Presenter {
     }
 
     @Override
-    public void subscribe() {
+    public void start(int jumpWeek) {
         // 1. 获取分包商, 周
-        getTitle();
+        getTitle(jumpWeek);
 
         // 2. 获取当前月
-        getCurrentDate();
+        getCurrentDate(jumpWeek);
+    }
+
+    @Override
+    public void subscribe() {
+        // 1. 获取分包商, 周
+        //getTitle();
+
+        // 2. 获取当前月
+        //getCurrentDate();
 
         // TODO 3. 任务量
         getTaskVolume();
@@ -85,15 +93,14 @@ public class PlanPresenter implements PlanContract.Presenter {
      * 获取标题数据
      */
     @Override
-    public void getTitle() {
+    public void getTitle(final int jumpWeek) {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
                 // 从数据库获取分包商
                 List<Subcontractor> subcontractorList = DataSupport.findAll(Subcontractor.class);
-                Calendar calendar = Calendar.getInstance();
-                int week_of_year = calendar.get(Calendar.WEEK_OF_YEAR);
-                e.onNext(subcontractorList.get(0).getSubcontractorName() + "-" + week_of_year + "周进场计划");
+                int weekOfYearNum = CalendarUtil.getWeekOfYearNum(jumpWeek);
+                e.onNext(subcontractorList.get(0).getSubcontractorName() + "-" + weekOfYearNum + "周进场计划");
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -124,12 +131,11 @@ public class PlanPresenter implements PlanContract.Presenter {
      * 获取当前月数据
      */
     @Override
-    public void getCurrentDate() {
+    public void getCurrentDate(final int jumpWeek) {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
-                SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月");
-                String date = sDateFormat.format(new java.util.Date());
+                String date = CalendarUtil.getMonthOfYear(jumpWeek);
                 e.onNext(date);
             }
         }).subscribeOn(Schedulers.io())
@@ -180,7 +186,7 @@ public class PlanPresenter implements PlanContract.Presenter {
      * 从本地获取计划表
      */
     @Override
-    public void getWeekTask() {
+    public void getWeekTask(final int jumpWeek) {
 //        Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
         Observable.create(new ObservableOnSubscribe<List<WeekTask>>() {
             @Override
@@ -221,7 +227,8 @@ public class PlanPresenter implements PlanContract.Presenter {
                     @Override
                     public void onNext(List<WeekTask> value) {
                         // 获取一周日期数据
-                        List<String> dates = CalendarUtil.getdateOfWeek("dd");
+                        List<String> dates = CalendarUtil.getdateOfWeek("dd", jumpWeek);
+                        Log.d("==", dates.toString());
                         view.showWeekTask(dates, value);
                         view.showLoading(false);
                     }
@@ -321,11 +328,12 @@ public class PlanPresenter implements PlanContract.Presenter {
      * @param EndDay
      */
     @Override
-    public void doRefresh(final String SubcontractorAccount, final String StartDay, final String EndDay) {
+    public void doRefresh(final String SubcontractorAccount, final String StartDay, final String EndDay, final int jumpWeek) {
         view.showLoading(true);
         Observable.create(new ObservableOnSubscribe<List<WeekTaskBean>>() {
             @Override
             public void subscribe(ObservableEmitter<List<WeekTaskBean>> e) throws Exception {
+                Log.d("==", "请求日期: " + StartDay + "-" + EndDay);
                 /* 1. 获取请求数据 */
                 String weekTaskInfo = remoteDataSource.getWeekTaskInfo(SubcontractorAccount, StartDay, EndDay);
 
@@ -367,7 +375,7 @@ public class PlanPresenter implements PlanContract.Presenter {
                     for (int i = 1; i <= list.size(); i++) {
                         // 更新数据
                         WeekTask weekTask = list.get(i - 1);
-                        weekTask.setPosition(String.valueOf(dateToPosition(weekTask.getPlanDay(), i)));
+                        weekTask.setPosition(String.valueOf(dateToPosition(weekTask.getPlanDay(), i, jumpWeek)));
                         //                        weekTask.updateAll("ItemID = ?", String.valueOf(weekTask.getItemID()));
                         weekTask.save();
                     }
@@ -424,10 +432,12 @@ public class PlanPresenter implements PlanContract.Presenter {
 
                     @Override
                     public void onComplete() {
-                        getWeekTask();
+                        getWeekTask(jumpWeek);
                     }
                 });
     }
+
+
 
 
     private void reset() {
@@ -446,11 +456,11 @@ public class PlanPresenter implements PlanContract.Presenter {
      * @param date
      * @param itemID
      */
-    private int dateToPosition(String date, int itemID) {
+    private int dateToPosition(String date, int itemID, int jumpWeek) {
         long dataBetween = 0;
         try {
             // 获取时间差
-            dataBetween = CalendarUtil.getDataBetween(CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY), date);
+            dataBetween = CalendarUtil.getDataBetween(CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), date);
             Log.d("==", "" + dataBetween);
         } catch (ParseException e) {
             e.printStackTrace();

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -134,5 +135,7 @@ public class BaseActivity extends AppCompatActivity {
         //单例模式不能关闭, 数据库会打不开
         //        mDao.close();
         //        mDao = null;
+
+        Log.d("==", "销毁");
     }
 }

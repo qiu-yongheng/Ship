@@ -32,9 +32,9 @@ public interface PlanContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getTitle();
+        void getTitle(int jumpWeek);
         // 当前日期
-        void getCurrentDate();
+        void getCurrentDate(int jumpWeek);
         // 任务量
         void getTaskVolume();
         // 任务要求
@@ -42,12 +42,14 @@ public interface PlanContract {
         // 当前任务总量
         void getTotalTaskVolume(Integer[] integers);
         // 本周任务分配
-        void getWeekTask();
+        void getWeekTask(int jumpWeek);
         // 每天任务量统计
         void getDayCount();
         // 提交数据
         void doCommit();
         // 刷新数据
-        void doRefresh(String SubcontractorAccount, String StartDay, String EndDay);
+        void doRefresh(String SubcontractorAccount, String StartDay, String EndDay, int jumpWeek);
+        //
+        void start(int jumpWeek);
     }
 }

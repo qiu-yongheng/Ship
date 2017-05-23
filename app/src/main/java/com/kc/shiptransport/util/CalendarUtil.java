@@ -48,30 +48,73 @@ public class CalendarUtil {
      * @param value
      * @return
      */
-    public static String getSelectDate(String format, int value) {
+    public static String getSelectDate(String format, int value, int jumpWeek) {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat(format);
         cal.set(Calendar.DAY_OF_WEEK, value);
+
+        cal.add(Calendar.WEEK_OF_YEAR, jumpWeek);
         return df.format(cal.getTime());
     }
 
     /**
      * 获取一周的日期 (集合)
+     * ++: 获取下个星期的日期
+     * --: 获取上个星期的日期
      * @param format
      * @return
      */
-    public static List<String> getdateOfWeek(String format) {
+    public static List<String> getdateOfWeek(String format, int jumpWeek) {
+        List<String> list = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat(format);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); //获取本周一的日期
+        cal.add(Calendar.WEEK_OF_YEAR, jumpWeek);
 
-        List<String> list = new ArrayList<>();
-        String date = df.format(cal.getTime());
-        Integer sunday = Integer.valueOf(date);
-        for (int i = 0; i < 7; i++) {
-            list.add(i, String.valueOf(sunday++));
-        }
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); //获取本周一的日期
+        list.add(df.format(cal.getTime()));
+
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        list.add(df.format(cal.getTime()));
+
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+        list.add(df.format(cal.getTime()));
+
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+        list.add(df.format(cal.getTime()));
+
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+        list.add(df.format(cal.getTime()));
+
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+        list.add(df.format(cal.getTime()));
+
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        list.add(df.format(cal.getTime()));
+
         return list;
+    }
+
+    /**
+     * 获取当前是一年中的第几周
+     * @param jumpWeek
+     * @return
+     */
+    public static int getWeekOfYearNum (int jumpWeek) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.WEEK_OF_YEAR, jumpWeek);
+        return calendar.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    /**
+     * 获取当前月份
+     * @param jumpWeek
+     * @return
+     */
+    public static String getMonthOfYear (int jumpWeek) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月");
+        cal.add(Calendar.WEEK_OF_YEAR, jumpWeek);
+        return sDateFormat.format(cal.getTime());
     }
 
     /**
