@@ -234,4 +234,10 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         startActivity(i);
         finish();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        presenter.unsubscribe();
+    }
 }

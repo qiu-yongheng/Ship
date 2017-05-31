@@ -1,30 +1,19 @@
 package com.kc.shiptransport.mvp.plan;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.data.bean.WeekTaskBean;
+import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
-import com.kc.shiptransport.db.Ship;
-import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
 
-import org.litepal.crud.DataSupport;
-
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -35,7 +24,6 @@ import io.reactivex.schedulers.Schedulers;
  * @time 2017/5/17  10:53
  * @desc ${TODD}
  */
-
 public class PlanPresenter implements PlanContract.Presenter {
     private final Context context;
     private final PlanContract.View view;
@@ -48,12 +36,14 @@ public class PlanPresenter implements PlanContract.Presenter {
     private int day_4 = 0;
     private int day_5 = 0;
     private int day_6 = 0;
+    private final DataRepository mDataRepository;
 
     public PlanPresenter(Context context, PlanContract.View view) {
         this.context = context;
         this.view = view;
         view.setPresenter(this);
         remoteDataSource = new RemoteDataSource();
+        mDataRepository = new DataRepository();
         gson = new Gson();
     }
 
@@ -94,15 +84,18 @@ public class PlanPresenter implements PlanContract.Presenter {
      */
     @Override
     public void getTitle(final int jumpWeek) {
-        Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(ObservableEmitter<String> e) throws Exception {
-                // 从数据库获取分包商
-                List<Subcontractor> subcontractorList = DataSupport.findAll(Subcontractor.class);
-                int weekOfYearNum = CalendarUtil.getWeekOfYearNum(jumpWeek);
-                e.onNext(subcontractorList.get(0).getSubcontractorName() + "-" + weekOfYearNum + "周进场计划");
-            }
-        }).subscribeOn(Schedulers.io())
+        //        Observable.create(new ObservableOnSubscribe<String>() {
+        //            @Override
+        //            public void subscribe(ObservableEmitter<String> e) throws Exception {
+        //                // 从数据库获取分包商
+        //                List<Subcontractor> subcontractorList = DataSupport.findAll(Subcontractor.class);
+        //                int weekOfYearNum = CalendarUtil.getWeekOfYearNum(jumpWeek);
+        //                e.onNext(subcontractorList.get(0).getSubcontractorName() + "-" + weekOfYearNum + "周进场计划");
+        //            }
+        //        })
+        mDataRepository
+                .getTitle(jumpWeek)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<String>() {
                     @Override
@@ -132,13 +125,16 @@ public class PlanPresenter implements PlanContract.Presenter {
      */
     @Override
     public void getCurrentDate(final int jumpWeek) {
-        Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(ObservableEmitter<String> e) throws Exception {
-                String date = CalendarUtil.getMonthOfYear(jumpWeek);
-                e.onNext(date);
-            }
-        }).subscribeOn(Schedulers.io())
+//        Observable.create(new ObservableOnSubscribe<String>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<String> e) throws Exception {
+//                String date = CalendarUtil.getMonthOfYear(jumpWeek);
+//                e.onNext(date);
+//            }
+//        })
+        mDataRepository
+                .getCurrentMouthDate(jumpWeek)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<String>() {
                     @Override
@@ -163,16 +159,27 @@ public class PlanPresenter implements PlanContract.Presenter {
                 });
     }
 
+    /**
+     * 获取任务量
+     */
     @Override
     public void getTaskVolume() {
 
     }
 
+    /**
+     * 获取任务要求
+     */
     @Override
     public void getTaskRequire() {
 
     }
 
+    /**
+     * 计算总任务量
+     *
+     * @param integers
+     */
     @Override
     public void getTotalTaskVolume(Integer[] integers) {
         int total = 0;
@@ -183,40 +190,43 @@ public class PlanPresenter implements PlanContract.Presenter {
     }
 
     /**
-     * 从本地获取计划表
+     * 从本地数据库获取计划表
      */
     @Override
     public void getWeekTask(final int jumpWeek) {
-//        Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
-        Observable.create(new ObservableOnSubscribe<List<WeekTask>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<WeekTask>> e) throws Exception {
-                // 从数据库获取一周任务分配数据
-                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
-                Log.d("==", "计划数量: " + weekLists.size());
-                e.onNext(weekLists);
-//
-//                // 重置ship的选择状态
-//                ContentValues v = new ContentValues();
-//                v.put("Selected", "0");
-//                DataSupport.updateAll(Ship.class, v);
-//
-//                Log.d("==", "重置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
-//
-//
-//                // 根据计划, 设置ship select = 1
-//                ContentValues values = new ContentValues();
-//                values.put("Selected", "1");
-//                for (WeekTask weekTask : weekLists) {
-//                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
-//                }
-//
-//                Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
-//                Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
-                // 完成
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io())
+        //        Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
+//        Observable.create(new ObservableOnSubscribe<List<WeekTask>>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<List<WeekTask>> e) throws Exception {
+//                // 从数据库获取一周任务分配数据 (每次请求, 初始化表, 所以只有一周的数据)
+//                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
+//                Log.d("==", "计划数量: " + weekLists.size());
+//                e.onNext(weekLists);
+//                //
+//                //                // 重置ship的选择状态
+//                //                ContentValues v = new ContentValues();
+//                //                v.put("Selected", "0");
+//                //                DataSupport.updateAll(Ship.class, v);
+//                //
+//                //                Log.d("==", "重置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+//                //
+//                //
+//                //                // 根据计划, 设置ship select = 1
+//                //                ContentValues values = new ContentValues();
+//                //                values.put("Selected", "1");
+//                //                for (WeekTask weekTask : weekLists) {
+//                //                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
+//                //                }
+//                //
+//                //                Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+//                //                Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
+//                // 完成
+//                e.onComplete();
+//            }
+//        })
+        mDataRepository
+                .getWeekTask()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<WeekTask>>() {
                     @Override
@@ -246,45 +256,51 @@ public class PlanPresenter implements PlanContract.Presenter {
                 });
     }
 
+    /**
+     * 计算每天任务总量
+     */
     @Override
     public void getDayCount() {
-        Observable.create(new ObservableOnSubscribe<Integer[]>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer[]> e) throws Exception {
-                reset();
-                // 从数据库获取一周任务分配数据
-                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
-                for (WeekTask weekTask : weekLists) {
-                    switch (Integer.valueOf(weekTask.getPosition()) % 7) {
-                        case 0:
-                            day_0 += Integer.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 1:
-                            day_1 += Integer.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 2:
-                            day_2 += Integer.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 3:
-                            day_3 += Integer.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 4:
-                            day_4 += Integer.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 5:
-                            day_5 += Integer.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 6:
-                            day_6 += Integer.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                    }
-                }
-                Integer[] integers = new Integer[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
-
-                e.onNext(integers);
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io())
+//        Observable.create(new ObservableOnSubscribe<Integer[]>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<Integer[]> e) throws Exception {
+//                reset();
+//                // 从数据库获取一周任务分配数据
+//                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
+//                for (WeekTask weekTask : weekLists) {
+//                    switch (Integer.valueOf(weekTask.getPosition()) % 7) {
+//                        case 0:
+//                            day_0 += Integer.valueOf(weekTask.getSandSupplyCount());
+//                            break;
+//                        case 1:
+//                            day_1 += Integer.valueOf(weekTask.getSandSupplyCount());
+//                            break;
+//                        case 2:
+//                            day_2 += Integer.valueOf(weekTask.getSandSupplyCount());
+//                            break;
+//                        case 3:
+//                            day_3 += Integer.valueOf(weekTask.getSandSupplyCount());
+//                            break;
+//                        case 4:
+//                            day_4 += Integer.valueOf(weekTask.getSandSupplyCount());
+//                            break;
+//                        case 5:
+//                            day_5 += Integer.valueOf(weekTask.getSandSupplyCount());
+//                            break;
+//                        case 6:
+//                            day_6 += Integer.valueOf(weekTask.getSandSupplyCount());
+//                            break;
+//                    }
+//                }
+//                Integer[] integers = new Integer[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
+//
+//                e.onNext(integers);
+//                e.onComplete();
+//            }
+//        })
+        mDataRepository
+                .getDayCount()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Integer[]>() {
                     @Override
@@ -330,89 +346,88 @@ public class PlanPresenter implements PlanContract.Presenter {
     @Override
     public void doRefresh(final String SubcontractorAccount, final String StartDay, final String EndDay, final int jumpWeek) {
         view.showLoading(true);
-        Observable.create(new ObservableOnSubscribe<List<WeekTaskBean>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<WeekTaskBean>> e) throws Exception {
-                Log.d("==", "请求日期: " + StartDay + "-" + EndDay);
-                /* 1. 获取请求数据 */
-                String weekTaskInfo = remoteDataSource.getWeekTaskInfo(SubcontractorAccount, StartDay, EndDay);
-
-                /* 2. 解析数据成对象 */
-                List<WeekTaskBean> lists = gson.fromJson(weekTaskInfo, new TypeToken<List<WeekTaskBean>>() {
-                }.getType());
-
-                /* 3. 初始化数据库 */
-                DataSupport.deleteAll(WeekTask.class);
-
-                /* 4. 保存数据到数据库 */
-                for (WeekTaskBean bean : lists) {
-                    WeekTask weekTask = new WeekTask();
-                    weekTask.setItemID(bean.getItemID()); // 保存itemID
-                    weekTask.setSubcontractorAccount(bean.getSubcontractorAccount()); // 保存账号名
-                    weekTask.setPlanDay(bean.getPlanDay()); // 保存计划时间
-                    weekTask.setShipAccount(bean.getShipAccount()); //船舶账号
-                    weekTask.setShipType(bean.getShipType()); // 船舶类型
-                    weekTask.setShipName(bean.getShipName()); // 船舶名字
-                    weekTask.setSandSupplyCount(bean.getSandSupplyCount()); // 船舶最大运沙量
-                    weekTask.save();
-                }
-
-                /* 5. 根据日期对数据进行分类 */
-                List<List<WeekTask>> totalLists = new ArrayList<>();
-                Set set = new HashSet();
-                for (WeekTaskBean bean : lists) {
-                    String planDay = bean.getPlanDay();
-                    if (set.contains(planDay)) {
-
-                    } else {
-                        set.add(planDay);
-                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(WeekTask.class));
-                    }
-                }
-
-                /* 6. 更新position */
-                for (List<WeekTask> list : totalLists) {
-                    for (int i = 1; i <= list.size(); i++) {
-                        // 更新数据
-                        WeekTask weekTask = list.get(i - 1);
-                        weekTask.setPosition(String.valueOf(dateToPosition(weekTask.getPlanDay(), i, jumpWeek)));
-                        //                        weekTask.updateAll("ItemID = ?", String.valueOf(weekTask.getItemID()));
-                        weekTask.save();
-                    }
-                }
-
-
-
-
-
-
-                // 从数据库获取一周任务分配数据
-                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
-                Log.d("==", "计划数量: " + weekLists.size());
-
-                // 重置ship的选择状态
-                ContentValues v = new ContentValues();
-                v.put("Selected", "0");
-                DataSupport.updateAll(Ship.class, v);
-
-                Log.d("==", "重置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
-
-
-                // 根据计划, 设置ship select = 1
-                ContentValues values = new ContentValues();
-                values.put("Selected", "1");
-                for (WeekTask weekTask : weekLists) {
-                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
-                }
-
-                Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
-                Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
-
-                // 通知presenter从DB获取数据
-                e.onComplete();
-
-            }
-        }).subscribeOn(Schedulers.io())
+//        Observable.create(new ObservableOnSubscribe<List<WeekTaskBean>>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<List<WeekTaskBean>> e) throws Exception {
+//                Log.d("==", "请求日期: " + StartDay + "-" + EndDay);
+//                /* 1. 获取请求数据 */
+//                String weekTaskInfo = remoteDataSource.getWeekTaskInfo(SubcontractorAccount, StartDay, EndDay);
+//
+//                /* 2. 解析数据成对象 */
+//                List<WeekTaskBean> lists = gson.fromJson(weekTaskInfo, new TypeToken<List<WeekTaskBean>>() {
+//                }.getType());
+//
+//                /* 3. 初始化数据库 */
+//                DataSupport.deleteAll(WeekTask.class);
+//
+//                /* 4. 保存数据到数据库 */
+//                for (WeekTaskBean bean : lists) {
+//                    WeekTask weekTask = new WeekTask();
+//                    weekTask.setItemID(bean.getItemID()); // 保存itemID
+//                    weekTask.setSubcontractorAccount(bean.getSubcontractorAccount()); // 保存账号名
+//                    weekTask.setPlanDay(bean.getPlanDay()); // 保存计划时间
+//                    weekTask.setShipAccount(bean.getShipAccount()); //船舶账号
+//                    weekTask.setShipType(bean.getShipType()); // 船舶类型
+//                    weekTask.setShipName(bean.getShipName()); // 船舶名字
+//                    weekTask.setSandSupplyCount(bean.getSandSupplyCount()); // 船舶最大运沙量
+//                    weekTask.save();
+//                }
+//
+//                /* 5. 根据日期对数据进行分类 */
+//                List<List<WeekTask>> totalLists = new ArrayList<>();
+//                Set set = new HashSet();
+//                for (WeekTaskBean bean : lists) {
+//                    String planDay = bean.getPlanDay();
+//                    if (set.contains(planDay)) {
+//
+//                    } else {
+//                        set.add(planDay);
+//                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(WeekTask.class));
+//                    }
+//                }
+//
+//                /* 6. 更新position */
+//                for (List<WeekTask> list : totalLists) {
+//                    for (int i = 1; i <= list.size(); i++) {
+//                        // 更新数据
+//                        WeekTask weekTask = list.get(i - 1);
+//                        weekTask.setPosition(String.valueOf(dateToPosition(weekTask.getPlanDay(), i, jumpWeek)));
+//                        //                        weekTask.updateAll("ItemID = ?", String.valueOf(weekTask.getItemID()));
+//                        weekTask.save();
+//                    }
+//                }
+//
+//
+//                // 从数据库获取一周任务分配数据
+//                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
+//                Log.d("==", "计划数量: " + weekLists.size());
+//
+//                // 重置ship的选择状态
+//                ContentValues v = new ContentValues();
+//                v.put("Selected", "0");
+//                DataSupport.updateAll(Ship.class, v);
+//
+//                Log.d("==", "重置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+//
+//
+//                // 根据计划, 设置ship select = 1
+//                ContentValues values = new ContentValues();
+//                values.put("Selected", "1");
+//                for (WeekTask weekTask : weekLists) {
+//                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
+//                }
+//
+//                Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+//                Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
+//
+//                // 通知presenter从DB获取数据
+//                e.onComplete();
+//
+//            }
+//        })
+        mDataRepository
+                .doRefresh(SubcontractorAccount, StartDay, EndDay, jumpWeek)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<WeekTaskBean>>() {
                     @Override
@@ -436,8 +451,6 @@ public class PlanPresenter implements PlanContract.Presenter {
                     }
                 });
     }
-
-
 
 
     private void reset() {

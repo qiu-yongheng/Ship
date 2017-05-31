@@ -23,6 +23,8 @@
         <activity android:name=".mvp.plan.PlanActivity"/>
         <activity android:name=".mvp.plansetting.PlanSetActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.shipselect.ShipSelectActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.supply.SupplyActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.acceptance.AcceptanceActivity" android:launchMode="singleTask"/>
     </application>
 
 </manifest>

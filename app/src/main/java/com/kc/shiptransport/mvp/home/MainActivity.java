@@ -10,8 +10,10 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.mvp.BaseActivity;
+import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.login.LoginActivity;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
+import com.kc.shiptransport.mvp.supply.SupplyActivity;
 import com.kc.shiptransport.util.SettingUtil;
 
 import butterknife.BindView;
@@ -115,14 +117,20 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 跳转到供沙界面
+     */
     private void navigateToSupplyActivity() {
-        Intent i = new Intent(this, PlanActivity.class);
+        Intent i = new Intent(this, SupplyActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
 
+    /**
+     * 跳转到审核界面
+     */
     private void navigateToAcceptanceActivity() {
-        Intent i = new Intent(this, PlanActivity.class);
+        Intent i = new Intent(this, AcceptanceActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }

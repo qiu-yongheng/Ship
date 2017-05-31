@@ -2,15 +2,18 @@ package com.kc.shiptransport.mvp.login;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
+import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.exception.ErrorLoginException;
 import com.kc.shiptransport.util.NetworkUtil;
 
 import org.litepal.crud.DataSupport;
@@ -22,7 +25,10 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -36,12 +42,16 @@ public class LoginPresenter implements LoginContract.Presenter {
     private final LoginContract.View view;
     private final RemoteDataSource remoteDataSource;
     private final Gson gson;
+    private final CompositeDisposable mCompositeDisposable;
+    private final DataRepository mDataRepository;
 
     public LoginPresenter(Context context, LoginContract.View view) {
         this.context = context;
         this.view = view;
         view.setPresenter(this);
         remoteDataSource = new RemoteDataSource();
+        mCompositeDisposable = new CompositeDisposable();
+        mDataRepository = new DataRepository();
         gson = new Gson();
     }
 
@@ -52,7 +62,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void unsubscribe() {
-
+        /* 切断水管 */
+        mCompositeDisposable.clear();
     }
 
     /**
@@ -114,7 +125,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        mCompositeDisposable.add(d);
                     }
 
                     @Override
@@ -150,29 +161,53 @@ public class LoginPresenter implements LoginContract.Presenter {
                     e.onNext(loginInfo);
                     e.onComplete();
                 }
-            }).subscribeOn(Schedulers.io())
+            })
+                    .filter(new Predicate<String>() {
+                        @Override
+                        public boolean test(String s) throws Exception {
+                            LoginResult loginResult = gson.fromJson(s, LoginResult.class);
+                            if (loginResult.getMessage() == 0) {
+                                throw new ErrorLoginException("账号或密码错误");
+                            }
+                            return loginResult.getMessage() == 1;
+                        }
+                    })
+                    .map(new Function<String, Boolean>() { // 获取分包商, 船舶信息
+                        @Override
+                        public Boolean apply(String s) throws Exception {
+                            mDataRepository.getSubcontractorInfo(username);
+                            mDataRepository.getShipInfo(username);
+                            return true;
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<String>() {
+                    .subscribe(new Observer<Boolean>() {
                         @Override
                         public void onSubscribe(Disposable d) {
-
+                            mCompositeDisposable.add(d);
                         }
 
                         @Override
-                        public void onNext(String value) {
-                            LoginResult loginResult = gson.fromJson(value, LoginResult.class);
-                            view.showResult(loginResult);
+                        public void onNext(Boolean value) {
+//                            LoginResult loginResult = gson.fromJson(value, LoginResult.class);
+//                            view.showResult(loginResult);
                         }
 
                         @Override
                         public void onError(Throwable e) {
+                            if (e instanceof ErrorLoginException) {
+                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                             view.showloading(false);
                             view.showNetworkError();
                         }
 
                         @Override
                         public void onComplete() {
-
+                            Log.d("==", "login onComplete");
+                            view.showloading(false);
+                            view.navigateToMain();
                         }
                     });
         } else {

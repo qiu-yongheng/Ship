@@ -103,15 +103,17 @@ public class PlanFragment extends Fragment implements PlanContract.View {
 
         initListener();
 
-        // TODO 获取数据 网络请求
+        // 根据当前周获取时间
         presenter.start(jumpWeek);
+
         // 网络请求
-        List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+        //List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
         presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek), jumpWeek);
         return view;
     }
 
     private void initListener() {
+        /* 提交 */
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,6 +121,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
             }
         });
 
+        /* 刷新数据 */
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,6 +129,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
             }
         });
 
+        /* 滑动监听 */
         recyclerviewPlan.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

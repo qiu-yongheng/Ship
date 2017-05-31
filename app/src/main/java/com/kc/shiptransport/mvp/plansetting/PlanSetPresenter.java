@@ -3,18 +3,11 @@ package com.kc.shiptransport.mvp.plansetting;
 import android.content.Context;
 import android.util.Log;
 
+import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Ship;
 
-import org.litepal.crud.DataSupport;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -29,10 +22,12 @@ import io.reactivex.schedulers.Schedulers;
 public class PlanSetPresenter implements PlanSetContract.Presenter{
     private final Context context;
     private final PlanSetContract.View view;
+    private final DataRepository mDataRepository;
 
     public PlanSetPresenter(Context context, PlanSetContract.View view) {
         this.context = context;
         this.view = view;
+        mDataRepository = new DataRepository();
         view.setPresenter(this);
     }
 
@@ -53,26 +48,29 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
     @Override
     public void getShipCategory(final String date) {
         Log.d("==", "----PlanSetPresenter: 获取所有ship, 分类, 传递当前时间----");
-        Observable.create(new ObservableOnSubscribe<List<List<Ship>>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<List<Ship>>> e) throws Exception {
-                List<List<Ship>> lists = new ArrayList<>();
-                List<Ship> all = DataSupport.findAll(Ship.class);
-                // 根据type进行分类
-                Set set = new HashSet();
-                for (Ship ship : all) {
-                    String type = ship.getShipType();
-                    if (set.contains(type)) {
-
-                    } else {
-                        set.add(type);
-                        lists.add(DataSupport.where("ShipType = ?", type).find(Ship.class));
-                    }
-                }
-
-                e.onNext(lists);
-            }
-        }).subscribeOn(Schedulers.io())
+//        Observable.create(new ObservableOnSubscribe<List<List<Ship>>>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<List<List<Ship>>> e) throws Exception {
+//                List<List<Ship>> lists = new ArrayList<>();
+//                List<Ship> all = DataSupport.findAll(Ship.class);
+//                // 根据type进行分类
+//                Set set = new HashSet();
+//                for (Ship ship : all) {
+//                    String type = ship.getShipType();
+//                    if (set.contains(type)) {
+//
+//                    } else {
+//                        set.add(type);
+//                        lists.add(DataSupport.where("ShipType = ?", type).find(Ship.class));
+//                    }
+//                }
+//
+//                e.onNext(lists);
+//            }
+//        })
+        mDataRepository
+                .getShipCategory()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<List<Ship>>>() {
                     @Override
