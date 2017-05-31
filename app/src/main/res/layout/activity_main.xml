@@ -19,25 +19,69 @@
     </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
+        android:id="@+id/rl_plan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerVertical="true">
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_plan"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="@mipmap/plan"/>
-
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="100dp"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btn_plan"
-            android:text="分包商进场计划"
-            android:textColor="#000"
-            android:textSize="20sp"/>
     </RelativeLayout>
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="100dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_plan"
+        android:text="分包商进场计划"
+        android:textColor="#000"
+        android:textSize="20sp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_supply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_supply_sand"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@mipmap/supply_sand"/>
+    </RelativeLayout>
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_centerHorizontal="true"
+        android:layout_width="100dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_supply"
+        android:text="待验沙"
+        android:textColor="#000"
+        android:textSize="20sp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_acceptance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_acceptance"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@mipmap/acceptance"/>
+    </RelativeLayout>
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_centerHorizontal="true"
+        android:layout_width="100dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_acceptance"
+        android:layout_alignParentRight="true"
+        android:text="待验收"
+        android:textColor="#000"
+        android:textSize="20sp"/>
 
 
     <android.support.v7.widget.AppCompatButton

@@ -23,6 +23,10 @@ public class MainActivity extends BaseActivity {
     AppCompatButton btnPlan;
     @BindView(R.id.btn_exit)
     AppCompatButton btnExit;
+    @BindView(R.id.btn_supply_sand)
+    AppCompatButton btnSupplySand;
+    @BindView(R.id.btn_acceptance)
+    AppCompatButton btnAcceptance;
     private SharedPreferences sp;
     private long exitTime;
 
@@ -41,6 +45,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initListener() {
+        /* 添加计划 */
         btnPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,6 +53,23 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        /* 验沙 */
+        btnSupplySand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        /* 验收 */
+        btnAcceptance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        /* 离开 */
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,5 +113,17 @@ public class MainActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void navigateToSupplyActivity() {
+        Intent i = new Intent(this, PlanActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+    }
+
+    private void navigateToAcceptanceActivity() {
+        Intent i = new Intent(this, PlanActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
     }
 }
