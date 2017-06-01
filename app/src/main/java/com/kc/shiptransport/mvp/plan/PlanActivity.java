@@ -28,7 +28,7 @@ public class PlanActivity extends BaseActivity {
 
         if (!planFragment.isAdded()) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_plan, planFragment)
+                    .replace(R.id.fragment_repository, planFragment)
                     .commit();
         }
 

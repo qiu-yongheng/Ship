@@ -80,7 +80,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plan_set, container, false);
         unbinder = ButterKnife.bind(this, view);
-        jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP);
+        jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN);
         initViews(view);
         initListener();
         return view;

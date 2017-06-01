@@ -1,5 +1,8 @@
 package com.kc.shiptransport.mvp.acceptance;
 
+import android.os.Bundle;
+
+import com.kc.shiptransport.R;
 import com.kc.shiptransport.mvp.BaseActivity;
 
 /**
@@ -9,4 +12,34 @@ import com.kc.shiptransport.mvp.BaseActivity;
  */
 
 public class AcceptanceActivity extends BaseActivity{
+
+    private AcceptanceFragment acceptanceFragment;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_plan);
+        if (savedInstanceState != null) {
+            acceptanceFragment = (AcceptanceFragment) getSupportFragmentManager().getFragment(savedInstanceState, "AcceptanceFragment");
+        } else {
+            acceptanceFragment = new AcceptanceFragment();
+        }
+
+        if (!acceptanceFragment.isAdded()) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_repository, acceptanceFragment)
+                    .commit();
+        }
+
+        new AcceptancePresenter(this, acceptanceFragment);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (acceptanceFragment.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, "AcceptanceFragment", acceptanceFragment);
+        }
+    }
 }

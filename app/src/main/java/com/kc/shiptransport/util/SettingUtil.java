@@ -17,7 +17,12 @@ public class SettingUtil {
     /* 用户名 */
     public static final String DATA_USERNAME = "username";
 
-    /* jumpWeek */
-    public static final String WEEK_JUMP = "jump_week";
+    /* plan jumpWeek */
+    public static final String WEEK_JUMP_PLAN = "jump_week_plan";
 
+    /* supply jumpWeek */
+    public static final String WEEK_JUMP_SUPPLY = "jump_week_supply";
+
+    /* supply jumpWeek */
+    public static final String WEEK_JUMP_ACCEPTANCE = "jump_week_acceptance";
 }

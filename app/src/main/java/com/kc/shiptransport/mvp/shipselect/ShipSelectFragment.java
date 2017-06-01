@@ -173,7 +173,7 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
 
     @Override
     public void showCommitSuccess() {
-        int jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP);
+        int jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN);
         presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek), jumpWeek);
     }
 }

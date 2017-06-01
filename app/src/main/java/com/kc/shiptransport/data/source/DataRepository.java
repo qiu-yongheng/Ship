@@ -168,13 +168,18 @@ public class DataRepository implements DataSouceImpl{
     }
 
     @Override
-    public Observable<List<WeekTaskBean>> doRefresh(final String SubcontractorAccount, final String StartDay, final String EndDay, final int jumpWeek) {
+    public Observable<List<WeekTaskBean>> doRefresh(final int jumpWeek) {
         return Observable.create(new ObservableOnSubscribe<List<WeekTaskBean>>() {
             @Override
             public void subscribe(ObservableEmitter<List<WeekTaskBean>> e) throws Exception {
-                Log.d("==", "请求日期: " + StartDay + "-" + EndDay);
+                String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
+                String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
+                String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
+
+                Log.d("==", "请求日期: " + startDay + "-" + endDay);
+
                 /* 1. 获取请求数据 */
-                String weekTaskInfo = mRemoteDataSource.getWeekTaskInfo(SubcontractorAccount, StartDay, EndDay);
+                String weekTaskInfo = mRemoteDataSource.getWeekTaskInfo(subcontractorAccount, startDay, endDay);
 
                 /* 2. 解析数据成对象 */
                 List<WeekTaskBean> lists = gson.fromJson(weekTaskInfo, new TypeToken<List<WeekTaskBean>>() {

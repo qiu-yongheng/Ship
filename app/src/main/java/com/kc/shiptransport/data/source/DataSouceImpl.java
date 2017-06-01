@@ -58,13 +58,10 @@ public interface DataSouceImpl {
     /**
      * 网络请求
      * 请求选中周的任务计划
-     * @param SubcontractorAccount
-     * @param StartDay
-     * @param EndDay
      * @param jumpWeek
      * @return
      */
-    Observable<List<WeekTaskBean>> doRefresh(String SubcontractorAccount, String StartDay, String EndDay, int jumpWeek);
+    Observable<List<WeekTaskBean>> doRefresh(int jumpWeek);
 
     /**
      * 根据船的类型对数据进行分类

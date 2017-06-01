@@ -54,6 +54,9 @@ public class PlanPresenter implements PlanContract.Presenter {
 
         // 2. 获取当前月
         getCurrentDate(jumpWeek);
+
+        // 3. 刷新
+        doRefresh(jumpWeek);
     }
 
     @Override
@@ -339,12 +342,9 @@ public class PlanPresenter implements PlanContract.Presenter {
      * 网络请求
      * 保存数据到数据库
      *
-     * @param SubcontractorAccount
-     * @param StartDay
-     * @param EndDay
      */
     @Override
-    public void doRefresh(final String SubcontractorAccount, final String StartDay, final String EndDay, final int jumpWeek) {
+    public void doRefresh(final int jumpWeek) {
         view.showLoading(true);
 //        Observable.create(new ObservableOnSubscribe<List<WeekTaskBean>>() {
 //            @Override
@@ -426,7 +426,7 @@ public class PlanPresenter implements PlanContract.Presenter {
 //            }
 //        })
         mDataRepository
-                .doRefresh(SubcontractorAccount, StartDay, EndDay, jumpWeek)
+                .doRefresh(jumpWeek)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<WeekTaskBean>>() {

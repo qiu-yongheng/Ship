@@ -1,4 +1,4 @@
-package com.kc.shiptransport.mvp.plan;
+package com.kc.shiptransport.mvp.acceptance;
 
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.mvp.BasePresenter;
@@ -8,48 +8,42 @@ import java.util.List;
 
 /**
  * @author qiuyongheng
- * @time 2017/5/16  19:49
+ * @time 2017/6/1  15:10
  * @desc ${TODD}
  */
 
-public interface PlanContract {
+public interface AcceptanceContract {
     interface View extends BaseView<Presenter> {
-        void showTitle(String title);
+        // 显示验收人
+        void showAcceptanceMan(String acceptanceMan);
         // 当前日期
         void showCurrentDate(String date);
-        // 任务量
-        void showTaskVolume();
-        // 任务要求
-        void showTaskRequire();
-        // 当前任务总量
-        void showTotalTaskVolume(int total);
-        // 本周任务分配
+        // 待验收船数
+        void showStayAcceptanceShip(String num);
+        // 显示选中周的任务计划
         void showWeekTask(List<String> dates, List<WeekTask> weekLists);
         // 每天任务量统计
         void showDayCount(Integer[] integers);
+        // 是否显示加载
         void showLoading(boolean active);
-        void showSuccess();
+        // 显示失败
+        void showError();
     }
 
     interface Presenter extends BasePresenter {
-        void getTitle(int jumpWeek);
+        // 验收人名字
+        void getAcceptanceManName();
         // 当前日期
         void getCurrentDate(int jumpWeek);
-        // 任务量
-        void getTaskVolume();
-        // 任务要求
-        void getTaskRequire();
-        // 当前任务总量
-        void getTotalTaskVolume(Integer[] integers);
+        // 待验收船数
+        void getStayAcceptanceShip();
         // 本周任务分配
         void getWeekTask(int jumpWeek);
         // 每天任务量统计
         void getDayCount();
-        // 提交数据
-        void doCommit();
         // 刷新数据
         void doRefresh(int jumpWeek);
-        //
+        // 加载数据
         void start(int jumpWeek);
     }
 }

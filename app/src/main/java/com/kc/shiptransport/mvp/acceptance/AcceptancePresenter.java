@@ -1,4 +1,4 @@
-package com.kc.shiptransport.mvp.supply;
+package com.kc.shiptransport.mvp.acceptance;
 
 import android.content.Context;
 import android.util.Log;
@@ -18,17 +18,17 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author qiuyongheng
- * @time 2017/5/31  17:03
+ * @time 2017/6/1  15:12
  * @desc ${TODD}
  */
 
-public class SupplyPresenter implements SupplyContract.Presenter{
+public class AcceptancePresenter implements AcceptanceContract.Presenter{
     private final Context context;
-    private final SupplyContract.View view;
+    private final AcceptanceContract.View view;
     private final DataRepository dataRepository;
     private final CompositeDisposable compositeDisposable;
 
-    public SupplyPresenter(Context context, SupplyContract.View view) {
+    public AcceptancePresenter(Context context, AcceptanceContract.View view) {
         this.context = context;
         this.view = view;
         view.setPresenter(this);
@@ -46,18 +46,11 @@ public class SupplyPresenter implements SupplyContract.Presenter{
         compositeDisposable.clear();
     }
 
-    /**
-     * 获取验沙人名
-     */
     @Override
-    public void getSupplyManName() {
+    public void getAcceptanceManName() {
         // TODO
     }
 
-    /**
-     * 获取当前时间
-     * @param jumpWeek
-     */
     @Override
     public void getCurrentDate(int jumpWeek) {
         dataRepository
@@ -87,18 +80,11 @@ public class SupplyPresenter implements SupplyContract.Presenter{
                 });
     }
 
-    /**
-     * 待验沙船数
-     */
     @Override
-    public void getStaySupplyShip() {
+    public void getStayAcceptanceShip() {
         // TODO 根据数据库weekTask获取所有的计划, 统计待验沙船数
     }
 
-    /**
-     * 获取供沙计划
-     * @param jumpWeek
-     */
     @Override
     public void getWeekTask(final int jumpWeek) {
         dataRepository
@@ -134,9 +120,6 @@ public class SupplyPresenter implements SupplyContract.Presenter{
                 });
     }
 
-    /**
-     * 统计每日计划量
-     */
     @Override
     public void getDayCount() {
         dataRepository
