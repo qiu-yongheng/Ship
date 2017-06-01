@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.supplydetail;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,9 +16,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,8 +57,8 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     EditText etDeckVolume;
     @BindView(R.id.tv_total_volume)
     TextView tvTotalVolume;
-    @BindView(R.id.et_supply_time)
-    EditText etSupplyTime;
+    @BindView(R.id.tv_supply_time)
+    EditText tvSupplyTime;
     @BindView(R.id.btn_supply_detail_commit)
     AppCompatButton btnSupplyDetailCommit;
     Unbinder unbinder;
@@ -129,6 +135,27 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                 presenter.getTotalVolume(ship, deck);
             }
         });
+
+        /* 点击弹出时间选择器 */
+        tvSupplyTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar now = Calendar.getInstance();
+                TimePickerDialog timePickerDialog = new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        Calendar instance = Calendar.getInstance();
+                        instance.set(Calendar.HOUR_OF_DAY, hour);
+                        instance.set(Calendar.MINUTE, minute);
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        String format = df.format(instance.getTime());
+                        tvSupplyTime.setText(format);
+                    }
+                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
+
+                timePickerDialog.show();
+            }
+        });
     }
 
     @Override
@@ -162,7 +189,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
 
     @Override
     public void showSupplyTime(String currentDate) {
-        etSupplyTime.setText(currentDate);
+        tvSupplyTime.setText(currentDate);
     }
 
     @Override

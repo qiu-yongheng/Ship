@@ -1,19 +1,25 @@
 package com.kc.shiptransport.mvp.acceptancedetail;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,6 +98,27 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
             @Override
             public void onClick(View view) {
                 presenter.commit();
+            }
+        });
+
+        /* 点击弹出时间选择器 */
+        tvAcceptanceTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar now = Calendar.getInstance();
+                TimePickerDialog timePickerDialog = new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        Calendar instance = Calendar.getInstance();
+                        instance.set(Calendar.HOUR_OF_DAY, hour);
+                        instance.set(Calendar.MINUTE, minute);
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        String format = df.format(instance.getTime());
+                        tvAcceptanceTime.setText(format);
+                    }
+                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
+
+                timePickerDialog.show();
             }
         });
     }
