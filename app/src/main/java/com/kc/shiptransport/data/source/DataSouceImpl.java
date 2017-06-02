@@ -1,6 +1,7 @@
 package com.kc.shiptransport.data.source;
 
 import com.kc.shiptransport.data.bean.WeekTaskBean;
+import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.WeekTask;
 
@@ -68,4 +69,29 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<List<Ship>>> getShipCategory();
+
+    /**
+     * 根据itemID获取验收明细
+     * @param itemID
+     * @return
+     */
+    Observable<Acceptance> getAcceptanceByItemID(int itemID);
+
+    /**
+     * 提交验沙审核结果
+     * @param itemID
+     * @param ReceptionSandTime
+     * @param Capacity
+     * @param DeckGauge
+     * @return
+     */
+    Observable<Integer> updateForReceptionSandTime(int itemID, String ReceptionSandTime, String Capacity, String DeckGauge);
+
+    /**
+     * 提交验收审核结果
+     * @param itemID
+     * @param PassReceptionSandTime
+     * @return
+     */
+    Observable<Integer> UpdateForPassReceptionSandTime(int itemID, String PassReceptionSandTime);
 }

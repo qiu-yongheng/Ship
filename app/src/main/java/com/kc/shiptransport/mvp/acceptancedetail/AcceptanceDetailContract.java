@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.acceptancedetail;
 
+import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -12,19 +13,23 @@ import com.kc.shiptransport.mvp.BaseView;
 public interface AcceptanceDetailContract {
     interface View extends BaseView<Presenter> {
         /* 显示供沙船的详细信息 */
-        void showShipDetail();
+        void showShipDetail(Acceptance value);
         /* 显示验收时间 */
         void showAcceptanceTime(String currentDate);
         /* 是否显示加载框 */
         void showLoading(boolean active);
         /* 显示错误 */
         void showError();
+        void showCommitError();
+        void showCommitResult(boolean active);
+        void showCancle();
     }
 
     interface Presenter extends BasePresenter {
-        void getShipDetail();
+        void getShipDetail(int itemID);
         void getAcceptanceTime();
-        void commit();
+        void commit(int itemID, String PassReceptionSandTime);
         void cancle();
+        void start(int itemID);
     }
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.Acceptance;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,11 +59,11 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     EditText etDeckVolume;
     @BindView(R.id.tv_total_volume)
     TextView tvTotalVolume;
-    @BindView(R.id.tv_supply_time)
-    EditText tvSupplyTime;
     @BindView(R.id.btn_supply_detail_commit)
     AppCompatButton btnSupplyDetailCommit;
     Unbinder unbinder;
+    @BindView(R.id.tv_supply_time)
+    TextView tvSupplyTime;
     private SupplyDetailContract.Presenter presenter;
     private SupplyDetailActivity activity;
 
@@ -69,10 +71,13 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_supply_detail, container, false);
+
+
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
         // TODO
+        presenter.start(activity.itemID);
         return view;
     }
 
@@ -85,6 +90,19 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         activity.setSupportActionBar(toolbarSupplyDetail);
         activity.getSupportActionBar().setTitle("验方管理(进场)");
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (activity.isSupply) {
+            // 禁止软键盘
+            etShipVolume.setInputType(InputType.TYPE_NULL);
+            etDeckVolume.setInputType(InputType.TYPE_NULL);
+            btnSupplyDetailCommit.setVisibility(View.GONE);
+
+        } else {
+            // 开启软键盘
+            etShipVolume.setInputType(InputType.TYPE_CLASS_TEXT);
+            etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
+            btnSupplyDetailCommit.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initListener() {
@@ -92,7 +110,13 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         btnSupplyDetailCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.commit();
+                String ship = etShipVolume.getText().toString().trim();
+                String deck = etDeckVolume.getText().toString().trim();
+                if (ship.equals("") && deck.equals("")) {
+                    Toast.makeText(activity, "舱容或甲板方不能为空", Toast.LENGTH_SHORT).show();
+                } else {
+                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), ship, deck);
+                }
             }
         });
 
@@ -181,10 +205,19 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
 
     /**
      * 显示选中任务的详细信息
+     *
+     * @param value
      */
     @Override
-    public void showShipDetail() {
+    public void showShipDetail(Acceptance value) {
+        tvShipName.setText(value.getShipName());
+        tvShipId.setText("船次: " + value.getPlanDay());
+        tvSubontractor.setText("供应商: " + value.getSubcontractorName());
+        tvTotalVoyage.setText("累计完成航次" + value.getTotalCompleteRide() + "次");
+        tvTotalValue.setText("累计完成方量" + value.getTotalCompleteSquare() + "㎡");
+        tvAvgValue.setText("平均航次方量" + value.getAvgSquare() + "㎡");
 
+        etShipVolume.setText(value.getCapacity());
     }
 
     @Override
@@ -208,6 +241,22 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
 
     @Override
     public void showError() {
+        Toast.makeText(activity, "数据获取失败", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCommitError() {
         Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void showCommitResult(boolean active) {
+        if (active) {
+            Toast.makeText(activity, "提交成功!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

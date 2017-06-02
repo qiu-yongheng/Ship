@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.acceptancedetail.AcceptanceDetailActivity;
@@ -24,6 +25,8 @@ import com.kc.shiptransport.util.DividerGridItemDecoration;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.kc.shiptransport.view.BetterRecyclerView;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -124,7 +127,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
                             SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
                             presenter.start(jumpWeek);
                             presenter.doRefresh(jumpWeek);
-                        } else if(upX - dowmX < -100) {
+                        } else if (upX - dowmX < -100) {
                             Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求下一周数据
                             jumpWeek++;
@@ -169,7 +172,6 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     }
 
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -184,6 +186,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
 
     /**
      * 验收人
+     *
      * @param acceptanceMan
      */
     @Override
@@ -193,6 +196,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
 
     /**
      * 当前时间
+     *
      * @param date
      */
     @Override
@@ -202,6 +206,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
 
     /**
      * 未验收数量
+     *
      * @param num
      */
     @Override
@@ -213,17 +218,30 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
      * 创建adapter
      * 加载recyclerview
      * 添加item的点击事件
+     *
      * @param dates
      * @param weekLists
      */
     @Override
-    public void showWeekTask(List<String> dates, List<WeekTask> weekLists) {
+    public void showWeekTask(List<String> dates, final List<WeekTask> weekLists) {
         if (adapter == null) {
             adapter = new AcceptanceAdapter(getContext(), dates, weekLists);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    AcceptanceDetailActivity.startActivity(activity);
+                    List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
+                    if (weekTasks != null && !weekTasks.isEmpty()) {
+                        // 判断是否验收
+                        List<Acceptance> acceptances = DataSupport.where("ItemID = ? and isAcceptance = ?", String.valueOf(weekTasks.get(0).getItemID()), "1").find(Acceptance.class);
+
+                        if (acceptances != null && !acceptances.isEmpty()) {
+                            // 已验收
+                            AcceptanceDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), true);
+                        } else {
+                            // 未验收
+                            AcceptanceDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), false);
+                        }
+                    }
                 }
 
                 @Override
@@ -239,6 +257,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
 
     /**
      * 每日计划量统计
+     *
      * @param integers
      */
     @Override
@@ -264,5 +283,13 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     @Override
     public void showError() {
         Toast.makeText(activity, "加载失败", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 }

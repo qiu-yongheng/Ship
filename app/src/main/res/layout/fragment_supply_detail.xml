@@ -112,6 +112,7 @@
 
             <EditText
                 android:id="@+id/et_ship_volume"
+                android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -139,6 +140,7 @@
 
             <EditText
                 android:id="@+id/et_deck_volume"
+                android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -167,6 +169,8 @@
             <TextView
                 android:id="@+id/tv_total_volume"
                 android:layout_width="0dp"
+                android:textColor="#000"
+                android:textSize="22sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"/>

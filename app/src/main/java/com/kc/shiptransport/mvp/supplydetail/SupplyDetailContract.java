@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.supplydetail;
 
+import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -12,7 +13,7 @@ import com.kc.shiptransport.mvp.BaseView;
 public interface SupplyDetailContract {
     interface View extends BaseView<Presenter> {
         /* 显示供沙船的详细信息 */
-        void showShipDetail();
+        void showShipDetail(Acceptance value);
         /* 显示验沙时间 */
         void showSupplyTime(String currentDate);
         /* 计算 */
@@ -21,12 +22,15 @@ public interface SupplyDetailContract {
         void showLoading(boolean active);
         /* 显示错误 */
         void showError();
+        void showCommitError();
+        void showCommitResult(boolean active);
     }
 
     interface Presenter extends BasePresenter {
-        void getShipDetail();
+        void getShipDetail(int itemID);
         void getSupplyTime();
         void getTotalVolume(String ship, String deck);
-        void commit();
+        void commit(int itemID, String ReceptionSandTime, String Capacity, String DeckGauge);
+        void start(int itemID);
     }
 }

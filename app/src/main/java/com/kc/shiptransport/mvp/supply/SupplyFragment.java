@@ -18,12 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.supplydetail.SupplyDetailActivity;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -213,14 +216,24 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
      * @param weekLists
      */
     @Override
-    public void showWeekTask(List<String> dates, List<WeekTask> weekLists) {
+    public void showWeekTask(List<String> dates, final List<WeekTask> weekLists) {
         if (adapter == null) {
             adapter = new SupplyAdapter(getContext(), dates, weekLists);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    // TODO 跳转
-                    SupplyDetailActivity.startActivity(activity);
+                    List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
+                    if (weekTasks != null && !weekTasks.isEmpty()) {
+                        List<Acceptance> acceptances = DataSupport.where("ItemID = ? and isSupply = ?", String.valueOf(weekTasks.get(0).getItemID()), "1").find(Acceptance.class);
+
+                        if (acceptances != null && !acceptances.isEmpty()) {
+                            // 已验收
+                            SupplyDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), true);
+                        } else {
+                            // 未验收
+                            SupplyDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), false);
+                        }
+                    }
                 }
 
                 @Override
@@ -279,5 +292,13 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
     public void onPause() {
         super.onPause();
         presenter.unsubscribe();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 }

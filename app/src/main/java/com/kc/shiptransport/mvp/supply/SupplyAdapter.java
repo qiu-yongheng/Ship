@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.supply;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
@@ -57,6 +59,17 @@ public class SupplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                 ((NormalHolder) holder).mTvQuantum.setText(weekTask.getSandSupplyCount());
                 ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
+
+                // 判断是否已审核
+                List<Acceptance> acceptances = DataSupport.where("ItemID = ? and isSupply = ?", String.valueOf(weekTask.getItemID()), "1").find(Acceptance.class);
+                if (acceptances != null && !acceptances.isEmpty()) {
+                    ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
+                    ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
+                } else {
+                    ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
+                    ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
+                }
+
             } else {
                 ((NormalHolder) holder).mLlTask.setVisibility(View.INVISIBLE);
             }
@@ -101,7 +114,7 @@ public class SupplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.listener = listener;
     }
 
-    public void setDates (List<String> dates) {
+    public void setDates(List<String> dates) {
         this.dates = dates;
     }
 

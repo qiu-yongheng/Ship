@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity {
         btnSupplySand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                navigateToSupplyActivity();
             }
         });
 
@@ -67,7 +67,7 @@ public class MainActivity extends BaseActivity {
         btnAcceptance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                navigateToAcceptanceActivity();
             }
         });
 

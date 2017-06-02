@@ -1,10 +1,11 @@
 <litepal>
     <dbname value="ship_db" />
-    <version value="1"/>
+    <version value="2"/>
     <list>
         <mapping class="com.kc.shiptransport.db.Ship"/>
         <mapping class="com.kc.shiptransport.db.Subcontractor"/>
         <mapping class="com.kc.shiptransport.db.WeekTask"/>
         <mapping class="com.kc.shiptransport.db.CommitShip"/>
+        <mapping class="com.kc.shiptransport.db.Acceptance"/>
     </list>
 </litepal>

@@ -18,7 +18,7 @@ public class AcceptanceActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_plan);
+        setContentView(R.layout.activity_plan);
         if (savedInstanceState != null) {
             acceptanceFragment = (AcceptanceFragment) getSupportFragmentManager().getFragment(savedInstanceState, "AcceptanceFragment");
         } else {

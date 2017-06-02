@@ -17,6 +17,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.Acceptance;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,7 +31,6 @@ import butterknife.Unbinder;
  * @time 2017/6/1  16:09
  * @desc ${TODD}
  */
-
 public class AcceptanceDetailFragment extends Fragment implements AcceptanceDetailContract.View {
 
     Unbinder unbinder;
@@ -72,7 +72,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
-        // TODO
+        // TODO 请求数据
+        presenter.start(activity.itemID);
         return view;
     }
 
@@ -97,7 +98,12 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.commit();
+                String trim = tvAcceptanceTime.getText().toString().trim();
+                if (trim.equals("")) {
+                    Toast.makeText(activity, "验收时间不能为空", Toast.LENGTH_SHORT).show();
+                } else {
+                    presenter.commit(activity.itemID, trim);
+                }
             }
         });
 
@@ -132,6 +138,14 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         activity.setSupportActionBar(toolbarSupplyDetail);
         activity.getSupportActionBar().setTitle("预验收管理");
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (activity.isAcceptance) {
+            // 已验收
+            btnAcceptanceCommit.setVisibility(View.GONE);
+        } else {
+            // 未验收
+            btnAcceptanceCommit.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -151,10 +165,18 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
 
     /**
      * 显示选中任务的详细信息
+     *
+     * @param value
      */
     @Override
-    public void showShipDetail() {
-
+    public void showShipDetail(Acceptance value) {
+        tvShipName.setText(value.getShipName());
+        tvShipId.setText("船次: " + value.getPlanDay());
+        tvSubontractor.setText("供应商: " + value.getSubcontractorName());
+        tvTotalVoyage.setText("累计完成航次" + value.getTotalCompleteRide() + "次");
+        tvTotalValue.setText("累计完成方量" + value.getTotalCompleteSquare() + "㎡");
+        tvAvgValue.setText("平均航次方量" + value.getAvgSquare() + "㎡");
+        tvShipCurrentTide.setText("当前潮水" + value.getCurrentTide());
     }
 
     @Override
@@ -173,7 +195,26 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
 
     @Override
     public void showError() {
+        Toast.makeText(activity, "数据获取失败", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCommitError() {
         Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCommitResult(boolean active) {
+        if (active) {
+            Toast.makeText(activity, "提交成功!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showCancle() {
+        getActivity().onBackPressed();
     }
 
     @Override

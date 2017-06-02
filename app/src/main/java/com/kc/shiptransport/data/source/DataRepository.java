@@ -5,10 +5,13 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kc.shiptransport.data.bean.AcceptanceBean;
+import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
+import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
@@ -277,6 +280,119 @@ public class DataRepository implements DataSouceImpl{
             }
         });
     }
+
+    @Override
+    public Observable<Acceptance> getAcceptanceByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<Acceptance>() {
+            @Override
+            public void subscribe(ObservableEmitter<Acceptance> e) throws Exception {
+                // 1. 发送网络请求
+                String data = mRemoteDataSource.getAcceptanceByItemID(itemID);
+                Log.d("==", data);
+
+                // 2. 解析成对象
+                List<AcceptanceBean> lists = gson.fromJson(data, new TypeToken<List<AcceptanceBean>>() {
+                }.getType());
+                AcceptanceBean accepBean = lists.get(0);
+
+                // 3. 保存到数据库
+                Acceptance accep = new Acceptance();
+                /**
+                 * ItemID : 396
+                 * SubmitDate : 2017-05-24
+                 * SubcontractorAccount : slgj
+                 * SubcontractorName : 森菱国际
+                 * PlanDay : 2017-05-25
+                 * ShipAccount : ygzh0708
+                 * ShipName : 粤广州货0708
+                 * ShipType : B类
+                 * DeadweightTon : 2962
+                 * MaxTakeInWater : 0
+                 * SandSupplyCount : 3000
+                 * SystemDate : 2017-05-26
+                 * Capacity : null
+                 * DeckGauge : null
+                 * ReceptionSandTime : null
+                 * PassReceptionSandTime : null
+                 * TotalCompleteRide : 0
+                 * TotalCompleteSquare : 0
+                 * AvgSquare : 0
+                 * CurrentTide : 0
+                 */
+                accep.setItemID(accepBean.getItemID());
+                accep.setSubmitDate(accepBean.getSubmitDate());
+                accep.setSubcontractorAccount(accepBean.getSubcontractorAccount());
+                accep.setSubcontractorName(accepBean.getSubcontractorName());
+                accep.setPlanDay(accepBean.getPlanDay());
+                accep.setShipAccount(accepBean.getShipAccount());
+                accep.setShipName(accepBean.getShipName());
+                accep.setShipType(accepBean.getShipType());
+                accep.setDeadweightTon(accepBean.getDeadweightTon());
+                accep.setMaxTakeInWater(accepBean.getMaxTakeInWater());
+                accep.setSandSupplyCount(accepBean.getSandSupplyCount());
+                accep.setSystemDate(accepBean.getSystemDate());
+                accep.setCapacity(accepBean.getCapacity());
+                accep.setDeckGauge(accepBean.getDeckGauge());
+                accep.setReceptionSandTime(accepBean.getReceptionSandTime());
+                accep.setPassReceptionSandTime(accepBean.getPassReceptionSandTime());
+                accep.setTotalCompleteRide(accepBean.getTotalCompleteRide());
+                accep.setTotalCompleteSquare(accepBean.getTotalCompleteSquare());
+                accep.setAvgSquare(accepBean.getAvgSquare());
+                accep.setCurrentTide(accepBean.getCurrentTide());
+                accep.save();
+                // 4. 返回存到数据库的数据
+                e.onNext(accep);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 提交验沙结果
+     * @param itemID
+     * @param ReceptionSandTime
+     * @param Capacity
+     * @param DeckGauge
+     * @return
+     */
+    @Override
+    public Observable<Integer> updateForReceptionSandTime(final int itemID, final String ReceptionSandTime, final String Capacity, final String DeckGauge) {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                String result = mRemoteDataSource.UpdateForReceptionSandTime(itemID, ReceptionSandTime, Capacity, DeckGauge);
+                Log.d("==", result);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(Integer.valueOf(bean.getMessage()));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 提交验收结果
+     * @param itemID
+     * @param PassReceptionSandTime
+     * @return
+     */
+    @Override
+    public Observable<Integer> UpdateForPassReceptionSandTime(final int itemID, final String PassReceptionSandTime) {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                String result = mRemoteDataSource.UpdateForPassReceptionSandTime(itemID, PassReceptionSandTime);
+                Log.d("==", result);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(Integer.valueOf(bean.getMessage()));
+                e.onComplete();
+            }
+        });
+    }
+
 
     private void reset() {
         day_0 = 0;
