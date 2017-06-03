@@ -28,7 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="预验收"
+                    android:text="待验收"
                     android:textColor="#fff"
                     android:textSize="22sp"/>
 
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="待验收船次: 1"
+                android:text="待验收航次: 1"
                 android:textColor="#fff"
                 android:textSize="18sp"/>
         </LinearLayout>
@@ -136,7 +136,7 @@
                 android:textColor="#fff"/>
         </LinearLayout>
 
-        <com.kc.shiptransport.view.BetterRecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_plan"
             android:layout_width="match_parent"
             android:layout_height="306dp"/>

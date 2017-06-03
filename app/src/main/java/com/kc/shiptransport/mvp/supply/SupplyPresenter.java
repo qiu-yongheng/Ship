@@ -5,8 +5,12 @@ import android.util.Log;
 
 import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.DataRepository;
+import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -51,7 +55,8 @@ public class SupplyPresenter implements SupplyContract.Presenter{
      */
     @Override
     public void getSupplyManName() {
-        // TODO
+        List<Subcontractor> subcontractorList = DataSupport.findAll(Subcontractor.class);
+        view.showSupplyMan(subcontractorList.get(0).getSubcontractorName());
     }
 
     /**
@@ -92,7 +97,22 @@ public class SupplyPresenter implements SupplyContract.Presenter{
      */
     @Override
     public void getStaySupplyShip() {
-        // TODO 根据数据库weekTask获取所有的计划, 统计待验沙船数
+        int num = 0;
+        // 1. 获取一周任务
+        List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
+
+        // 2. 获取一验收任务
+        if (weekTasks != null) {
+            for (WeekTask weektask : weekTasks) {
+                List<Acceptance> acceptances = DataSupport.where("isSupply = ? and ItemID = ?", "1", String.valueOf(weektask.getItemID())).find(Acceptance.class);
+                if (!acceptances.isEmpty()) {
+                    num++;
+                }
+            }
+
+
+            view.showStaySupplyShip(String.valueOf(weekTasks.size() - num));
+        }
     }
 
     /**
@@ -130,6 +150,9 @@ public class SupplyPresenter implements SupplyContract.Presenter{
                     public void onComplete() {
                         // 统计每日计划量
                         getDayCount();
+
+                        // 统计未验收量
+                        getStaySupplyShip();
                     }
                 });
     }
@@ -205,5 +228,8 @@ public class SupplyPresenter implements SupplyContract.Presenter{
 
         // 2. 刷新数据
         doRefresh(jumpWeek);
+
+        // 3. 验收人
+        getSupplyManName();
     }
 }

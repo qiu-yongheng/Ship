@@ -28,12 +28,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="验沙"
+                    android:text="验砂"
                     android:textColor="#fff"
                     android:textSize="22sp"/>
                 <TextView
                     android:id="@+id/toolbar_supply_man"
-                    android:text="验沙人: XXX"
+                    android:text="验砂人: XXX"
                     android:padding="5dp"
                     android:textSize="22sp"
                     android:textColor="#fff"
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="待验沙船次: 1"
+                android:text="待验砂船次: 1"
                 android:textColor="#fff"
                 android:textSize="18sp"/>
         </LinearLayout>
@@ -135,7 +135,7 @@
                 android:textColor="#fff"/>
         </LinearLayout>
 
-        <com.kc.shiptransport.view.BetterRecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_plan"
             android:layout_width="match_parent"
             android:layout_height="306dp"/>

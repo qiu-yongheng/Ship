@@ -151,14 +151,12 @@ public class PlanFragment extends Fragment implements PlanContract.View {
                             jumpWeek--;
                             SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
                             presenter.start(jumpWeek);
-                            presenter.doRefresh(jumpWeek);
                         } else if(upX - dowmX < -100) {
                             Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求下一周数据
                             jumpWeek++;
                             SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
                             presenter.start(jumpWeek);
-                            presenter.doRefresh(jumpWeek);
                         }
                         dowmX = 0;
                         break;

@@ -5,8 +5,12 @@ import android.util.Log;
 
 import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.DataRepository;
+import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -22,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public class AcceptancePresenter implements AcceptanceContract.Presenter{
+public class AcceptancePresenter implements AcceptanceContract.Presenter {
     private final Context context;
     private final AcceptanceContract.View view;
     private final DataRepository dataRepository;
@@ -46,9 +50,13 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter{
         compositeDisposable.clear();
     }
 
+    /**
+     * 验收人名字
+     */
     @Override
     public void getAcceptanceManName() {
-        // TODO
+        List<Subcontractor> subcontractorList = DataSupport.findAll(Subcontractor.class);
+        view.showAcceptanceMan(subcontractorList.get(0).getSubcontractorName());
     }
 
     @Override
@@ -80,9 +88,27 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter{
                 });
     }
 
+    /**
+     * 待验收航次
+     */
     @Override
     public void getStayAcceptanceShip() {
-        // TODO 根据数据库weekTask获取所有的计划, 统计待验沙船数
+        int num = 0;
+        // 1. 获取一周任务
+        List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
+
+        // 2. 获取一验收任务
+        if (weekTasks != null) {
+            for (WeekTask weektask : weekTasks) {
+                List<Acceptance> acceptances = DataSupport.where("isAcceptance = ? and ItemID = ?", "1", String.valueOf(weektask.getItemID())).find(Acceptance.class);
+                if (!acceptances.isEmpty()) {
+                    num++;
+                }
+            }
+
+
+            view.showStayAcceptanceShip(String.valueOf(weekTasks.size() - num));
+        }
     }
 
     @Override
@@ -116,6 +142,9 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter{
                     public void onComplete() {
                         // 统计每日计划量
                         getDayCount();
+
+                        // 统计未验收量
+                        getStayAcceptanceShip();
                     }
                 });
     }
@@ -188,5 +217,8 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter{
 
         // 2. 刷新数据
         doRefresh(jumpWeek);
+
+        // 3. 验收人
+        getAcceptanceManName();
     }
 }

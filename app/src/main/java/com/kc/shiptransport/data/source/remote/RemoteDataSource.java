@@ -15,10 +15,10 @@ import java.io.IOException;
  */
 public class RemoteDataSource {
     /** 正式服 */
-    private final String EndPoint = "http://cchk3.ccgdc.com/AppService/cchk3WebService.asmx";
+//    private final String EndPoint = "http://cchk3.ccgdc.com/AppService/cchk3WebService.asmx";
 
     /** 测试服 */
-//    private final String EndPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
+    private final String EndPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
     /**
      * 登录
      * @return

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +25,6 @@ import com.kc.shiptransport.mvp.acceptancedetail.AcceptanceDetailActivity;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
-import com.kc.shiptransport.view.BetterRecyclerView;
 
 import org.litepal.crud.DataSupport;
 
@@ -52,7 +52,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     @BindView(R.id.title_stay_acceptance)
     AppCompatTextView titleStayAcceptance;
     @BindView(R.id.recyclerview_plan)
-    BetterRecyclerView recyclerviewPlan;
+    RecyclerView recyclerviewPlan;
     @BindView(R.id.tv_total_0)
     AppCompatTextView tvTotal0;
     @BindView(R.id.tv_total_1)
@@ -122,18 +122,18 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
 
                         if (upX - dowmX > 100) {
                             Toast.makeText(activity, "上一周", Toast.LENGTH_SHORT).show();
+                            Log.d("==", "上一周");
                             // TODO 请求上一周数据
                             jumpWeek--;
                             SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
                             presenter.start(jumpWeek);
-                            presenter.doRefresh(jumpWeek);
                         } else if (upX - dowmX < -100) {
                             Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
+                            Log.d("==", "下一周");
                             // TODO 请求下一周数据
                             jumpWeek++;
                             SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
                             presenter.start(jumpWeek);
-                            presenter.doRefresh(jumpWeek);
                         }
                         dowmX = 0;
                         break;
@@ -191,7 +191,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
      */
     @Override
     public void showAcceptanceMan(String acceptanceMan) {
-        toolbarAcceptanceMan.setText(acceptanceMan);
+        toolbarAcceptanceMan.setText("工程人员: " + acceptanceMan);
     }
 
     /**
@@ -211,7 +211,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
      */
     @Override
     public void showStayAcceptanceShip(String num) {
-        titleStayAcceptance.setText("待验收船次: " + num);
+        titleStayAcceptance.setText("待验收航次: " + num);
     }
 
     /**
@@ -290,6 +290,10 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         super.onResume();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
+        }
+
+        if (presenter != null) {
+            presenter.getStayAcceptanceShip();
         }
     }
 }

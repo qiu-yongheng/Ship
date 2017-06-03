@@ -188,8 +188,12 @@ public class DataRepository implements DataSouceImpl{
                 List<WeekTaskBean> lists = gson.fromJson(weekTaskInfo, new TypeToken<List<WeekTaskBean>>() {
                 }.getType());
 
+                Log.d("==", "一周计划数量: " + lists.size());
+
                 /* 3. 初始化数据库 */
                 DataSupport.deleteAll(WeekTask.class);
+
+                Log.d("==", "初始化数据库后: " + DataSupport.findAll(WeekTask.class).size());
 
                 /* 4. 保存数据到数据库 */
                 for (WeekTaskBean bean : lists) {
@@ -203,6 +207,8 @@ public class DataRepository implements DataSouceImpl{
                     weekTask.setSandSupplyCount(bean.getSandSupplyCount()); // 船舶最大运沙量
                     weekTask.save();
                 }
+
+                Log.d("==", "保存数据到数据库后: " + DataSupport.findAll(WeekTask.class).size());
 
                 /* 5. 根据日期对数据进行分类 */
                 List<List<WeekTask>> totalLists = new ArrayList<>();
