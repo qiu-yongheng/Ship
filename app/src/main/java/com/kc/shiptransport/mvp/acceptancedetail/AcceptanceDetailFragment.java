@@ -173,10 +173,11 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         tvShipName.setText(value.getShipName());
         tvShipId.setText("船次: " + value.getPlanDay());
         tvSubontractor.setText("供应商: " + value.getSubcontractorName());
-        tvTotalVoyage.setText("累计完成航次" + value.getTotalCompleteRide() + "次");
-        tvTotalValue.setText("累计完成方量" + value.getTotalCompleteSquare() + "㎡");
-        tvAvgValue.setText("平均航次方量" + value.getAvgSquare() + "㎡");
-        tvShipCurrentTide.setText("当前潮水" + value.getCurrentTide());
+        tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
+        tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
+        tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
+        tvShipCurrentTide.setText("当前潮水: " + value.getCurrentTide());
+        tvShipMaxDraft.setText("最大吃水: " + value.getMaxTakeInWater());
     }
 
     @Override

@@ -213,9 +213,9 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         tvShipName.setText(value.getShipName());
         tvShipId.setText("船次: " + value.getPlanDay());
         tvSubontractor.setText("供应商: " + value.getSubcontractorName());
-        tvTotalVoyage.setText("累计完成航次" + value.getTotalCompleteRide() + "次");
-        tvTotalValue.setText("累计完成方量" + value.getTotalCompleteSquare() + "㎡");
-        tvAvgValue.setText("平均航次方量" + value.getAvgSquare() + "㎡");
+        tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
+        tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
+        tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
 
         etShipVolume.setText(value.getCapacity());
     }

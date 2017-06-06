@@ -1,11 +1,8 @@
-package com.kc.shiptransport.mvp.home;
+package com.kc.shiptransport.mvp.main;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v7.widget.AppCompatButton;
-import android.view.View;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
@@ -14,9 +11,7 @@ import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.login.LoginActivity;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
-import com.kc.shiptransport.util.SettingUtil;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
@@ -43,55 +38,52 @@ public class MainActivity extends BaseActivity {
                     .replace(R.id.fragment_repository, mainFragment)
                     .commit();
         }
-
-        initView();
-        initListener();
     }
 
-    private void initView() {
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-    }
-
-    private void initListener() {
-        /* 添加计划 */
-        btnPlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigateToPlanActivity();
-            }
-        });
-
-        /* 验沙 */
-        btnSupplySand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigateToSupplyActivity();
-            }
-        });
-
-        /* 验收 */
-        btnAcceptance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigateToAcceptanceActivity();
-            }
-        });
-
-        /* 离开 */
-        btnExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedPreferences.Editor edit = sp.edit();
-                edit.putString(SettingUtil.DATA_USERNAME, "");
-                edit.putString(SettingUtil.DATA_PASSWORD, "");
-                edit.putBoolean(SettingUtil.KEY_REMEMBER_PASSWORD, false);
-                edit.putBoolean(SettingUtil.KEY_AUTHOR_LOGIN, false);
-                edit.apply();
-
-                navigateToLoginActivity();
-            }
-        });
-    }
+//    private void initView() {
+//        sp = PreferenceManager.getDefaultSharedPreferences(this);
+//    }
+//
+//    private void initListener() {
+//        /* 添加计划 */
+//        btnPlan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                navigateToPlanActivity();
+//            }
+//        });
+//
+//        /* 验沙 */
+//        btnSupplySand.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                navigateToSupplyActivity();
+//            }
+//        });
+//
+//        /* 验收 */
+//        btnAcceptance.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                navigateToAcceptanceActivity();
+//            }
+//        });
+//
+//        /* 离开 */
+//        btnExit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                SharedPreferences.Editor edit = sp.edit();
+//                edit.putString(SettingUtil.DATA_USERNAME, "");
+//                edit.putString(SettingUtil.DATA_PASSWORD, "");
+//                edit.putBoolean(SettingUtil.KEY_REMEMBER_PASSWORD, false);
+//                edit.putBoolean(SettingUtil.KEY_AUTHOR_LOGIN, false);
+//                edit.apply();
+//
+//                navigateToLoginActivity();
+//            }
+//        });
+//    }
 
     /**
      * 跳转到loginActivity

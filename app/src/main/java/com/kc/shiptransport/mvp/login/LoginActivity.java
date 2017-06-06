@@ -16,7 +16,7 @@ import android.widget.CompoundButton;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.mvp.BaseActivity;
-import com.kc.shiptransport.mvp.home.MainActivity;
+import com.kc.shiptransport.mvp.main.MainActivity;
 import com.kc.shiptransport.util.SettingUtil;
 
 import butterknife.BindView;

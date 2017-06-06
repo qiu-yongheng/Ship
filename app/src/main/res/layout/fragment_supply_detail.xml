@@ -89,8 +89,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ll_supply_detail"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@+id/ll_supply_detail"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"

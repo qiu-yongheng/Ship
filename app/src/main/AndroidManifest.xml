@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".mvp.home.MainActivity"/>
+        <activity android:name=".mvp.main.MainActivity"/>
         <activity android:name=".mvp.plan.PlanActivity"/>
         <activity android:name=".mvp.plansetting.PlanSetActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.shipselect.ShipSelectActivity" android:launchMode="singleTask"/>

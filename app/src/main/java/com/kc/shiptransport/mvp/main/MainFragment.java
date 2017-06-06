@@ -1,4 +1,4 @@
-package com.kc.shiptransport.mvp.home;
+package com.kc.shiptransport.mvp.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.mvp.home.HomeFragment;
+import com.kc.shiptransport.mvp.mine.MineFragment;
+import com.kc.shiptransport.mvp.upcoming.UpcomingFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +47,10 @@ public class MainFragment extends Fragment {
     }
 
     private void initView(View view) {
-        viewpager.setAdapter(new TabAdapter(getActivity().getSupportFragmentManager()));
+        // 绑定view
+        viewpager.setAdapter(new TabAdapter(getActivity().getSupportFragmentManager(), new HomeFragment(), new UpcomingFragment(), new MineFragment()));
+        // 绑定viewpage
+        tabLayout.setupWithViewPager(viewpager);
     }
 
     @Override
