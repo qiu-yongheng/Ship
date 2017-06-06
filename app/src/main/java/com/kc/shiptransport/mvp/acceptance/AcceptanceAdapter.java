@@ -28,8 +28,10 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final Context context;
     private List<String> dates;
-    private final List<WeekTask> weekLists;
+    private List<WeekTask> weekLists;
     private OnRecyclerviewItemClickListener listener;
+    private String account;
+    private List<WeekTask> weekTasks;
 
     public AcceptanceAdapter(Context context, List<String> dates, List<WeekTask> weekLists) {
         this.context = context;
@@ -52,8 +54,12 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             ((NormalHolder) holder).mLlDate.setVisibility(View.INVISIBLE);
 
+            if (account == null || account.equals("")) {
+                weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
+            } else {
+                weekTasks = DataSupport.where("position = ? and SubcontractorAccount = ?", String.valueOf(position), account).find(WeekTask.class);
+            }
 
-            List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
             if (weekTasks != null && !weekTasks.isEmpty()) {
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
@@ -113,8 +119,12 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.listener = listener;
     }
 
-    public void setDates (List<String> dates) {
+    public void setDates(List<String> dates) {
         this.dates = dates;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 
 }

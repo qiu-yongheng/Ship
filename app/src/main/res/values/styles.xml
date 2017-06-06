@@ -14,7 +14,7 @@
 
     <style name="MyRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/ratingbar_drawable</item>
-        <item name="android:minHeight">40dp</item>
-        <item name="android:maxHeight">40dp</item>
+        <item name="android:minHeight">21dp</item>
+        <item name="android:maxHeight">21dp</item>
     </style>
 </resources>

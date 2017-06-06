@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.acceptance;
 
+import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -28,6 +29,8 @@ public interface AcceptanceContract {
         void showLoading(boolean active);
         // 显示失败
         void showError();
+        // 初始化spinner
+        void showSpinner(List<Subcontractor> value);
     }
 
     interface Presenter extends BasePresenter {
@@ -45,5 +48,7 @@ public interface AcceptanceContract {
         void doRefresh(int jumpWeek);
         // 加载数据
         void start(int jumpWeek);
+        // 获取所有分包商
+        void getSubcontractor();
     }
 }

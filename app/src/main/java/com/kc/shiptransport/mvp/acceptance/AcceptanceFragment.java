@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +15,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.acceptancedetail.AcceptanceDetailActivity;
@@ -28,6 +32,7 @@ import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -75,12 +80,15 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     AppCompatButton btnRefresh;
     @BindView(R.id.btn_commit)
     AppCompatButton btnCommit;
+    @BindView(R.id.spinner_select_subcontractor)
+    AppCompatSpinner spinnerSelectSubcontractor;
     private AcceptanceActivity activity;
     private AcceptanceContract.Presenter presenter;
     private int jumpWeek = 0; // 要显示的week, 默认当周
     private float dowmX;
     private float upX;
     private AcceptanceAdapter adapter;
+    private String subcontractorAccount;
 
     @Nullable
     @Override
@@ -89,6 +97,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
+        // 默认获取所有计划任务
         presenter.start(jumpWeek);
         return view;
     }
@@ -251,6 +260,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
             });
             recyclerviewPlan.setAdapter(adapter);
         } else {
+            adapter.setAccount(subcontractorAccount);
             adapter.notifyDataSetChanged();
         }
     }
@@ -283,6 +293,43 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     @Override
     public void showError() {
         Toast.makeText(activity, "加载失败", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSpinner(final List<Subcontractor> value) {
+        List<String> datas = new ArrayList<>();
+        datas.add("请选择分包商");
+        for (Subcontractor subcontractor : value) {
+            datas.add(subcontractor.getSubcontractorName());
+        }
+
+        // 适配器
+        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(activity, R.layout.spinner_hear, datas);
+        // 设置样式
+        arr_adapter.setDropDownViewResource(R.layout.spinner_item);
+        // 加载适配器
+        spinnerSelectSubcontractor.setAdapter(arr_adapter);
+        // 根据上一个界面传过来的position设置当前显示的item
+        spinnerSelectSubcontractor.setSelection(0);
+
+        // 点击后, 筛选分包商的数据
+        spinnerSelectSubcontractor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String s = (String) adapterView.getItemAtPosition(i);
+                Toast.makeText(activity, s, Toast.LENGTH_SHORT).show();
+                if (i != 0) {
+                    subcontractorAccount = value.get(i - 1).getSubcontractorAccount();
+                    presenter.doRefresh(jumpWeek);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
     }
 
     @Override

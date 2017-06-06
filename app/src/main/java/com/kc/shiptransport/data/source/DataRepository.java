@@ -36,7 +36,7 @@ import io.reactivex.ObservableOnSubscribe;
  * @desc ${TODO}
  */
 
-public class DataRepository implements DataSouceImpl{
+public class DataRepository implements DataSouceImpl {
     private Gson gson = new Gson();
     private RemoteDataSource mRemoteDataSource = new RemoteDataSource();
     private int day_0 = 0;
@@ -46,7 +46,6 @@ public class DataRepository implements DataSouceImpl{
     private int day_4 = 0;
     private int day_5 = 0;
     private int day_6 = 0;
-
 
 
     @Override
@@ -175,8 +174,11 @@ public class DataRepository implements DataSouceImpl{
         return Observable.create(new ObservableOnSubscribe<List<WeekTaskBean>>() {
             @Override
             public void subscribe(ObservableEmitter<List<WeekTaskBean>> e) throws Exception {
+                /* 获取分包商账号 */
                 String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
+                /* 开始时间 */
                 String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
+                /* 结束时间 */
                 String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
 
                 Log.d("==", "请求日期: " + startDay + "-" + endDay);
@@ -210,8 +212,14 @@ public class DataRepository implements DataSouceImpl{
 
                 Log.d("==", "保存数据到数据库后: " + DataSupport.findAll(WeekTask.class).size());
 
+
+
+
+
+
                 /* 5. 根据日期对数据进行分类 */
                 List<List<WeekTask>> totalLists = new ArrayList<>();
+
                 Set set = new HashSet();
                 for (WeekTaskBean bean : lists) {
                     String planDay = bean.getPlanDay();
@@ -229,7 +237,6 @@ public class DataRepository implements DataSouceImpl{
                         // 更新数据
                         WeekTask weekTask = list.get(i - 1);
                         weekTask.setPosition(String.valueOf(dateToPosition(weekTask.getPlanDay(), i, jumpWeek)));
-                        //                        weekTask.updateAll("ItemID = ?", String.valueOf(weekTask.getItemID()));
                         weekTask.save();
                     }
                 }
@@ -256,6 +263,7 @@ public class DataRepository implements DataSouceImpl{
 
                 Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
                 Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
+
 
                 // 通知presenter从DB获取数据
                 e.onComplete();
@@ -355,6 +363,7 @@ public class DataRepository implements DataSouceImpl{
 
     /**
      * 提交验沙结果
+     *
      * @param itemID
      * @param ReceptionSandTime
      * @param Capacity
@@ -379,6 +388,7 @@ public class DataRepository implements DataSouceImpl{
 
     /**
      * 提交验收结果
+     *
      * @param itemID
      * @param PassReceptionSandTime
      * @return

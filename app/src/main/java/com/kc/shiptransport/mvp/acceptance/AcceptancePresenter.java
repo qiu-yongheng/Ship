@@ -14,6 +14,9 @@ import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -220,5 +223,45 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
 
         // 3. 验收人
         getAcceptanceManName();
+
+        // 4. 获取所有分包商
+        getSubcontractor();
+    }
+
+    @Override
+    public void getSubcontractor() {
+        Observable.create(new ObservableOnSubscribe<List<Subcontractor>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Subcontractor>> e) throws Exception {
+                dataRepository.getSubcontractorInfo("");
+                // 从数据库获取分包商
+                List<Subcontractor> subcontractorList = DataSupport.findAll(Subcontractor.class);
+
+                e.onNext(subcontractorList);
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Subcontractor>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Subcontractor> value) {
+                        view.showSpinner(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

@@ -69,6 +69,16 @@
                 android:text="待验收航次: 1"
                 android:textColor="#fff"
                 android:textSize="18sp"/>
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spinner_select_subcontractor"
+                android:layout_width="0dp"
+
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_select"/>
+
         </LinearLayout>
 
         <LinearLayout

@@ -21,22 +21,28 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
 
-    @BindView(R.id.btn_plan)
-    AppCompatButton btnPlan;
-    @BindView(R.id.btn_exit)
-    AppCompatButton btnExit;
-    @BindView(R.id.btn_supply_sand)
-    AppCompatButton btnSupplySand;
-    @BindView(R.id.btn_acceptance)
-    AppCompatButton btnAcceptance;
     private SharedPreferences sp;
     private long exitTime;
+    private MainFragment mainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_plan);
         ButterKnife.bind(this);
+
+        if (savedInstanceState != null) {
+            getSupportFragmentManager().getFragment(savedInstanceState, "MainFragment");
+        } else {
+            mainFragment = new MainFragment();
+        }
+
+        if (!mainFragment.isAdded()) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_repository, mainFragment)
+                    .commit();
+        }
 
         initView();
         initListener();
@@ -133,5 +139,13 @@ public class MainActivity extends BaseActivity {
         Intent i = new Intent(this, AcceptanceActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mainFragment.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, "MainFragment", mainFragment);
+        }
     }
 }
