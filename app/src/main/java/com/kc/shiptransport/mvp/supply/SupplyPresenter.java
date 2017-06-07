@@ -5,10 +5,10 @@ import android.util.Log;
 
 import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.DataRepository;
-import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public class SupplyPresenter implements SupplyContract.Presenter{
+public class SupplyPresenter implements SupplyContract.Presenter {
     private final Context context;
     private final SupplyContract.View view;
     private final DataRepository dataRepository;
@@ -61,6 +61,7 @@ public class SupplyPresenter implements SupplyContract.Presenter{
 
     /**
      * 获取当前时间
+     *
      * @param jumpWeek
      */
     @Override
@@ -97,26 +98,36 @@ public class SupplyPresenter implements SupplyContract.Presenter{
      */
     @Override
     public void getStaySupplyShip() {
-        int num = 0;
-        // 1. 获取一周任务
-        List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
+        dataRepository
+                .getStayNum(SettingUtil.SUPPLY)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-        // 2. 获取一验收任务
-        if (weekTasks != null) {
-            for (WeekTask weektask : weekTasks) {
-                List<Acceptance> acceptances = DataSupport.where("isSupply = ? and ItemID = ?", "1", String.valueOf(weektask.getItemID())).find(Acceptance.class);
-                if (!acceptances.isEmpty()) {
-                    num++;
-                }
-            }
+                    }
 
+                    @Override
+                    public void onNext(Integer value) {
+                        view.showStaySupplyShip(String.valueOf(value));
+                    }
 
-            view.showStaySupplyShip(String.valueOf(weekTasks.size() - num));
-        }
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     /**
      * 获取供沙计划
+     *
      * @param jumpWeek
      */
     @Override
@@ -166,14 +177,14 @@ public class SupplyPresenter implements SupplyContract.Presenter{
                 .getDayCount()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer[]>() {
+                .subscribe(new Observer<Double[]>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(Integer[] value) {
+                    public void onNext(Double[] value) {
                         // 计算总计划量
                         view.showDayCount(value);
                     }

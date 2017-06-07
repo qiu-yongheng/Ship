@@ -26,7 +26,7 @@ public interface PlanContract {
         // 本周任务分配
         void showWeekTask(List<String> dates, List<WeekTask> weekLists);
         // 每天任务量统计
-        void showDayCount(Integer[] integers);
+        void showDayCount(Double[] integers);
         void showLoading(boolean active);
         void showSuccess();
     }
@@ -40,7 +40,7 @@ public interface PlanContract {
         // 任务要求
         void getTaskRequire();
         // 当前任务总量
-        void getTotalTaskVolume(Integer[] integers);
+        void getTotalTaskVolume(Double[] integers);
         // 本周任务分配
         void getWeekTask(int jumpWeek);
         // 每天任务量统计

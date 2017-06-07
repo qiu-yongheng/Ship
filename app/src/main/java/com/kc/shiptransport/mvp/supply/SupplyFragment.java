@@ -136,13 +136,13 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
                             Toast.makeText(activity, "上一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求上一周数据
                             jumpWeek--;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_SUPPLY, jumpWeek);
                             presenter.start(jumpWeek);
                         } else if (upX - dowmX < -100) {
                             Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求下一周数据
                             jumpWeek++;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_SUPPLY, jumpWeek);
                             presenter.start(jumpWeek);
                         }
                         dowmX = 0;
@@ -251,7 +251,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
      * @param integers
      */
     @Override
-    public void showDayCount(Integer[] integers) {
+    public void showDayCount(Double[] integers) {
         tvTotal0.setText(String.valueOf(integers[0]));
         tvTotal1.setText(String.valueOf(integers[1]));
         tvTotal2.setText(String.valueOf(integers[2]));

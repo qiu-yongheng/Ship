@@ -23,7 +23,7 @@ public interface SupplyContract {
         // 显示选中周的任务计划
         void showWeekTask(List<String> dates, List<WeekTask> weekLists);
         // 每天任务量统计
-        void showDayCount(Integer[] integers);
+        void showDayCount(Double[] integers);
         // 是否显示加载
         void showLoading(boolean active);
         // 显示失败

@@ -166,7 +166,7 @@
             <RatingBar
                 android:id="@+id/rb_complete"
                 android:numStars="5"
-                android:stepSize="0.5"
+                android:stepSize="1"
                 style="@style/MyRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -189,7 +189,7 @@
             <RatingBar
                 android:id="@+id/rb_timely"
                 android:numStars="5"
-                android:stepSize="0.5"
+                android:stepSize="1"
                 style="@style/MyRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

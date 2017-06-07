@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -247,5 +248,15 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     protected void onPause() {
         super.onPause();
         presenter.unsubscribe();
+    }
+
+    /**
+     * 跳转到loginActivity
+     */
+    public static void navigateToLoginActivity(Context context) {
+        Intent i = new Intent(context, LoginActivity.class);
+        // 在新的栈启动activity
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 }

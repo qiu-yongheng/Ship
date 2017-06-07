@@ -25,6 +25,10 @@ public class WeekTaskBean {
     private String ShipName;
     private String ShipType;
     private String SandSupplyCount;
+    // 预验收时间
+    private String ReceptionSandTime;
+    // 验砂时间
+    private String PassReceptionSandTime;
 
     public int getItemID() {
         return ItemID;
@@ -80,5 +84,21 @@ public class WeekTaskBean {
 
     public void setSandSupplyCount(String SandSupplyCount) {
         this.SandSupplyCount = SandSupplyCount;
+    }
+
+    public String getReceptionSandTime() {
+        return ReceptionSandTime;
+    }
+
+    public void setReceptionSandTime(String receptionSandTime) {
+        ReceptionSandTime = receptionSandTime;
+    }
+
+    public String getPassReceptionSandTime() {
+        return PassReceptionSandTime;
+    }
+
+    public void setPassReceptionSandTime(String passReceptionSandTime) {
+        PassReceptionSandTime = passReceptionSandTime;
     }
 }

@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
@@ -61,8 +60,9 @@ public class SupplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
 
                 // 判断是否已审核
-                List<Acceptance> acceptances = DataSupport.where("ItemID = ? and isSupply = ?", String.valueOf(weekTask.getItemID()), "1").find(Acceptance.class);
-                if (acceptances != null && !acceptances.isEmpty()) {
+                //List<Acceptance> acceptances = DataSupport.where("ItemID = ? and isSupply = ?", String.valueOf(weekTask.getItemID()), "1").find(Acceptance.class);
+                String receptionSandTime = weekTask.getReceptionSandTime();
+                if (receptionSandTime != null && !receptionSandTime.equals("")) {
                     ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
                     ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
                 } else {

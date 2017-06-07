@@ -3,15 +3,25 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginBottom="5dp"
+              android:background="#b2d996"
               android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_plan_set_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
-        android:id="@+id/tv_plan_set_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#b2d996"
         android:textColor="#000"
+        android:textSize="18sp"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_plan_set_item_max"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:textColor="#000"
+        android:gravity="center"
         android:textSize="18sp"/>
 </LinearLayout>

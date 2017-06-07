@@ -1,5 +1,7 @@
 package com.kc.shiptransport.mvp.acceptance;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.kc.shiptransport.R;
@@ -41,5 +43,14 @@ public class AcceptanceActivity extends BaseActivity{
         if (acceptanceFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "AcceptanceFragment", acceptanceFragment);
         }
+    }
+
+    /**
+     * 跳转到审核界面
+     */
+    public static void navigateToAcceptanceActivity(Context context) {
+        Intent i = new Intent(context, AcceptanceActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 }

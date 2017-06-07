@@ -17,13 +17,13 @@ import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
  * @desc ${TODO}
  */
 
-public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class PopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
     private final Integer[] icon;
     private final String[] tag;
     private OnRecyclerviewItemClickListener listener;
 
-    public HomeAdapter(Context context, Integer[] icon, String[] tag) {
+    public PopAdapter(Context context, Integer[] icon, String[] tag) {
         this.context = context;
         this.icon = icon;
         this.tag = tag;

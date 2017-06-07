@@ -103,9 +103,6 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         // 根据当前周获取时间
         presenter.start(jumpWeek);
 
-        // 网络请求
-        //List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-        //presenter.doRefresh(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount(), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek), jumpWeek);
         return view;
     }
 
@@ -201,7 +198,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        presenter.getWeekTask(jumpWeek);
+        //presenter.getWeekTask(jumpWeek);
         Log.d("==", "PlanFragment");
     }
 
@@ -287,7 +284,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     }
 
     @Override
-    public void showDayCount(Integer[] integers) {
+    public void showDayCount(Double[] integers) {
         tvTotal0.setText(String.valueOf(integers[0]));
         tvTotal1.setText(String.valueOf(integers[1]));
         tvTotal2.setText(String.valueOf(integers[2]));

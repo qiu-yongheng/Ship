@@ -5,10 +5,10 @@ import android.util.Log;
 
 import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.DataRepository;
-import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -96,22 +96,31 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
      */
     @Override
     public void getStayAcceptanceShip() {
-        int num = 0;
-        // 1. 获取一周任务
-        List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
+        dataRepository
+                .getStayNum(SettingUtil.ACCEPTANCE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-        // 2. 获取一验收任务
-        if (weekTasks != null) {
-            for (WeekTask weektask : weekTasks) {
-                List<Acceptance> acceptances = DataSupport.where("isAcceptance = ? and ItemID = ?", "1", String.valueOf(weektask.getItemID())).find(Acceptance.class);
-                if (!acceptances.isEmpty()) {
-                    num++;
-                }
-            }
+                    }
 
+                    @Override
+                    public void onNext(Integer value) {
+                        view.showStayAcceptanceShip(String.valueOf(value));
+                    }
 
-            view.showStayAcceptanceShip(String.valueOf(weekTasks.size() - num));
-        }
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -158,14 +167,14 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
                 .getDayCount()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer[]>() {
+                .subscribe(new Observer<Double[]>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(Integer[] value) {
+                    public void onNext(Double[] value) {
                         // 计算总计划量
                         view.showDayCount(value);
                     }

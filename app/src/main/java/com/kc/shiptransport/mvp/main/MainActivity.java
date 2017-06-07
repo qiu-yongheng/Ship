@@ -1,16 +1,11 @@
 package com.kc.shiptransport.mvp.main;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.mvp.BaseActivity;
-import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
-import com.kc.shiptransport.mvp.login.LoginActivity;
-import com.kc.shiptransport.mvp.plan.PlanActivity;
-import com.kc.shiptransport.mvp.supply.SupplyActivity;
 
 import butterknife.ButterKnife;
 
@@ -85,25 +80,9 @@ public class MainActivity extends BaseActivity {
 //        });
 //    }
 
-    /**
-     * 跳转到loginActivity
-     */
-    private void navigateToLoginActivity() {
-        Intent i = new Intent(this, LoginActivity.class);
-        // 在新的栈启动activity
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-        finish();
-    }
 
-    /**
-     * 跳转到planActivity
-     */
-    private void navigateToPlanActivity() {
-        Intent i = new Intent(this, PlanActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -113,24 +92,6 @@ public class MainActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
-    }
-
-    /**
-     * 跳转到供沙界面
-     */
-    private void navigateToSupplyActivity() {
-        Intent i = new Intent(this, SupplyActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
-
-    /**
-     * 跳转到审核界面
-     */
-    private void navigateToAcceptanceActivity() {
-        Intent i = new Intent(this, AcceptanceActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
     }
 
     @Override

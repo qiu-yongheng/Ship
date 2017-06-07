@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Ship;
@@ -63,6 +64,12 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     LinearLayout ll;
     @BindView(R.id.recyclerview_add)
     RecyclerView recyclerviewAdd;
+    @BindView(R.id.tv_ship_num)
+    TextView tvShipNum;
+    @BindView(R.id.tv_plan_num)
+    TextView tvPlanNum;
+    @BindView(R.id.ll_plan_set_detail)
+    LinearLayout llPlanSetDetail;
     private Unbinder unbinder;
     private PlanSetContract.Presenter presenter;
     private PlanSetActivity activity;
@@ -179,6 +186,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     /**
      * 获取数据, 显示船舶分类
      * 从数据库获取所有数据
+     *
      * @param value
      * @param date
      */

@@ -35,17 +35,21 @@ public class PlanSetItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         WeekTask weekTask = list.get(position);
+
         ((NormalHolder)holder).mTvPlanSetItem.setText(weekTask.getShipName());
+        ((NormalHolder)holder).mTvPlanSetItemMax.setText(weekTask.getSandSupplyCount());
     }
 
     class NormalHolder extends RecyclerView.ViewHolder {
 
 
         private final AppCompatTextView mTvPlanSetItem;
+        private final AppCompatTextView mTvPlanSetItemMax;
 
         public NormalHolder(View itemView) {
             super(itemView);
             mTvPlanSetItem = (AppCompatTextView) itemView.findViewById(R.id.tv_plan_set_item);
+            mTvPlanSetItemMax = (AppCompatTextView) itemView.findViewById(R.id.tv_plan_set_item_max);
         }
     }
 

@@ -23,6 +23,12 @@ public class SettingUtil {
     /* supply jumpWeek */
     public static final String WEEK_JUMP_SUPPLY = "jump_week_supply";
 
-    /* supply jumpWeek */
+    /* acceptance jumpWeek */
     public static final String WEEK_JUMP_ACCEPTANCE = "jump_week_acceptance";
+
+    /* 验砂 */
+    public static final String SUPPLY = "supply";
+
+    /* 验收 */
+    public static final String ACCEPTANCE = "acceptance";
 }

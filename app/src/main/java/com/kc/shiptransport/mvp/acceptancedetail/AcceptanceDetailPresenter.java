@@ -1,18 +1,22 @@
 package com.kc.shiptransport.mvp.acceptancedetail;
 
-import android.content.ContentValues;
 import android.content.Context;
 
+import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
-import org.litepal.crud.DataSupport;
+import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -89,28 +93,35 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
         view.showLoading(true);
         dataRepository
                 .UpdateForPassReceptionSandTime(itemID, PassReceptionSandTime)
-                .map(new Function<Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer integer) throws Exception {
-
-                        ContentValues values = new ContentValues();
-                        values.put("isAcceptance", integer);
-                        DataSupport.updateAll(Acceptance.class, values, "ItemID = ?", String.valueOf(itemID));
-
-                        return integer;
-                    }
-                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer>() {
+                .doOnNext(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        view.showCommitResult(integer == success);
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<Integer, Observable<List<WeekTaskBean>>>() {
+                    @Override
+                    public Observable<List<WeekTaskBean>> apply(Integer integer) throws Exception {
+                        if (integer == success) {
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_ACCEPTANCE));
+                        } else {
+                            return null;
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<WeekTaskBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(Integer value) {
-                        view.showCommitResult(value == success);
+                    public void onNext(List<WeekTaskBean> value) {
+
                     }
 
                     @Override

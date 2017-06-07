@@ -43,15 +43,60 @@ public class MainFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
         initView(view);
+        initListener();
         return view;
     }
+
 
     private void initView(View view) {
         // 绑定view
         viewpager.setAdapter(new TabAdapter(getActivity().getSupportFragmentManager(), new HomeFragment(), new UpcomingFragment(), new MineFragment()));
         // 绑定viewpage
         tabLayout.setupWithViewPager(viewpager);
+
+        tabLayout.getTabAt(0).setIcon(R.mipmap.home);
+        tabLayout.getTabAt(1).setIcon(R.mipmap.un_upcoming);
+        tabLayout.getTabAt(2).setIcon(R.mipmap.un_mine);
     }
+
+    private void initListener() {
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                resetTab();
+                switch (tab.getPosition()) {
+                    case 0:
+                        tabLayout.getTabAt(0).setIcon(R.mipmap.home);
+                        break;
+                    case 1:
+                        tabLayout.getTabAt(1).setIcon(R.mipmap.upcoming);
+                        break;
+                    case 2:
+                        tabLayout.getTabAt(2).setIcon(R.mipmap.mine);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void resetTab() {
+        tabLayout.getTabAt(0).setIcon(R.mipmap.un_home);
+        tabLayout.getTabAt(1).setIcon(R.mipmap.un_upcoming);
+        tabLayout.getTabAt(2).setIcon(R.mipmap.un_mine);
+    }
+
+
+
 
     @Override
     public void onDestroyView() {

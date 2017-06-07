@@ -14,7 +14,10 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        app:tabGravity="fill"
+        app:tabTextAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        app:tabPaddingBottom="-5dp"
+        android:layout_height="?actionBarSize"
         android:layout_alignParentBottom="true"
         android:background="#fff"
         app:tabIndicatorHeight="0dp"/>

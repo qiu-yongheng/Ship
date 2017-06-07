@@ -1,5 +1,7 @@
 package com.kc.shiptransport.mvp.plan;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -41,5 +43,14 @@ public class PlanActivity extends BaseActivity {
         if (planFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "PlanFragment", planFragment);
         }
+    }
+
+    /**
+     * 跳转到planActivity
+     */
+    public static void navigateToPlanActivity(Context context) {
+        Intent i = new Intent(context, PlanActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 }

@@ -16,6 +16,7 @@ import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -39,13 +40,13 @@ import io.reactivex.ObservableOnSubscribe;
 public class DataRepository implements DataSouceImpl {
     private Gson gson = new Gson();
     private RemoteDataSource mRemoteDataSource = new RemoteDataSource();
-    private int day_0 = 0;
-    private int day_1 = 0;
-    private int day_2 = 0;
-    private int day_3 = 0;
-    private int day_4 = 0;
-    private int day_5 = 0;
-    private int day_6 = 0;
+    private double day_0 = 0;
+    private double day_1 = 0;
+    private double day_2 = 0;
+    private double day_3 = 0;
+    private double day_4 = 0;
+    private double day_5 = 0;
+    private double day_6 = 0;
 
 
     @Override
@@ -129,39 +130,39 @@ public class DataRepository implements DataSouceImpl {
     }
 
     @Override
-    public Observable<Integer[]> getDayCount() {
-        return Observable.create(new ObservableOnSubscribe<Integer[]>() {
+    public Observable<Double[]> getDayCount() {
+        return Observable.create(new ObservableOnSubscribe<Double[]>() {
             @Override
-            public void subscribe(ObservableEmitter<Integer[]> e) throws Exception {
+            public void subscribe(ObservableEmitter<Double[]> e) throws Exception {
                 reset();
                 // 从数据库获取一周任务分配数据
                 List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
                 for (WeekTask weekTask : weekLists) {
                     switch (Integer.valueOf(weekTask.getPosition()) % 7) {
                         case 0:
-                            day_0 += Integer.valueOf(weekTask.getSandSupplyCount());
+                            day_0 += Double.valueOf(weekTask.getSandSupplyCount());
                             break;
                         case 1:
-                            day_1 += Integer.valueOf(weekTask.getSandSupplyCount());
+                            day_1 += Double.valueOf(weekTask.getSandSupplyCount());
                             break;
                         case 2:
-                            day_2 += Integer.valueOf(weekTask.getSandSupplyCount());
+                            day_2 += Double.valueOf(weekTask.getSandSupplyCount());
                             break;
                         case 3:
-                            day_3 += Integer.valueOf(weekTask.getSandSupplyCount());
+                            day_3 += Double.valueOf(weekTask.getSandSupplyCount());
                             break;
                         case 4:
-                            day_4 += Integer.valueOf(weekTask.getSandSupplyCount());
+                            day_4 += Double.valueOf(weekTask.getSandSupplyCount());
                             break;
                         case 5:
-                            day_5 += Integer.valueOf(weekTask.getSandSupplyCount());
+                            day_5 += Double.valueOf(weekTask.getSandSupplyCount());
                             break;
                         case 6:
-                            day_6 += Integer.valueOf(weekTask.getSandSupplyCount());
+                            day_6 += Double.valueOf(weekTask.getSandSupplyCount());
                             break;
                     }
                 }
-                Integer[] integers = new Integer[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
+                Double[] integers = new Double[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
 
                 e.onNext(integers);
                 e.onComplete();
@@ -174,6 +175,7 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<List<WeekTaskBean>>() {
             @Override
             public void subscribe(ObservableEmitter<List<WeekTaskBean>> e) throws Exception {
+                Log.d("==", "第二");
                 /* 获取分包商账号 */
                 String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
                 /* 开始时间 */
@@ -207,6 +209,8 @@ public class DataRepository implements DataSouceImpl {
                     weekTask.setShipType(bean.getShipType()); // 船舶类型
                     weekTask.setShipName(bean.getShipName()); // 船舶名字
                     weekTask.setSandSupplyCount(bean.getSandSupplyCount()); // 船舶最大运沙量
+                    weekTask.setReceptionSandTime(bean.getReceptionSandTime()); // 验收时间
+                    weekTask.setPassReceptionSandTime(bean.getPassReceptionSandTime()); // 验砂时间
                     weekTask.save();
                 }
 
@@ -266,6 +270,7 @@ public class DataRepository implements DataSouceImpl {
 
 
                 // 通知presenter从DB获取数据
+                e.onNext(lists);
                 e.onComplete();
             }
         });
@@ -300,62 +305,71 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<Acceptance>() {
             @Override
             public void subscribe(ObservableEmitter<Acceptance> e) throws Exception {
-                // 1. 发送网络请求
-                String data = mRemoteDataSource.getAcceptanceByItemID(itemID);
-                Log.d("==", data);
+                /* 判断本地是否有缓存 */
+                List<Acceptance> acceptances = DataSupport.where("ItemID = ?", String.valueOf(itemID)).find(Acceptance.class);
 
-                // 2. 解析成对象
-                List<AcceptanceBean> lists = gson.fromJson(data, new TypeToken<List<AcceptanceBean>>() {
-                }.getType());
-                AcceptanceBean accepBean = lists.get(0);
+                if (acceptances != null && !acceptances.isEmpty()) {
+                    e.onNext(acceptances.get(0));
 
-                // 3. 保存到数据库
-                Acceptance accep = new Acceptance();
-                /**
-                 * ItemID : 396
-                 * SubmitDate : 2017-05-24
-                 * SubcontractorAccount : slgj
-                 * SubcontractorName : 森菱国际
-                 * PlanDay : 2017-05-25
-                 * ShipAccount : ygzh0708
-                 * ShipName : 粤广州货0708
-                 * ShipType : B类
-                 * DeadweightTon : 2962
-                 * MaxTakeInWater : 0
-                 * SandSupplyCount : 3000
-                 * SystemDate : 2017-05-26
-                 * Capacity : null
-                 * DeckGauge : null
-                 * ReceptionSandTime : null
-                 * PassReceptionSandTime : null
-                 * TotalCompleteRide : 0
-                 * TotalCompleteSquare : 0
-                 * AvgSquare : 0
-                 * CurrentTide : 0
-                 */
-                accep.setItemID(accepBean.getItemID());
-                accep.setSubmitDate(accepBean.getSubmitDate());
-                accep.setSubcontractorAccount(accepBean.getSubcontractorAccount());
-                accep.setSubcontractorName(accepBean.getSubcontractorName());
-                accep.setPlanDay(accepBean.getPlanDay());
-                accep.setShipAccount(accepBean.getShipAccount());
-                accep.setShipName(accepBean.getShipName());
-                accep.setShipType(accepBean.getShipType());
-                accep.setDeadweightTon(accepBean.getDeadweightTon());
-                accep.setMaxTakeInWater(accepBean.getMaxTakeInWater());
-                accep.setSandSupplyCount(accepBean.getSandSupplyCount());
-                accep.setSystemDate(accepBean.getSystemDate());
-                accep.setCapacity(accepBean.getCapacity());
-                accep.setDeckGauge(accepBean.getDeckGauge());
-                accep.setReceptionSandTime(accepBean.getReceptionSandTime());
-                accep.setPassReceptionSandTime(accepBean.getPassReceptionSandTime());
-                accep.setTotalCompleteRide(accepBean.getTotalCompleteRide());
-                accep.setTotalCompleteSquare(accepBean.getTotalCompleteSquare());
-                accep.setAvgSquare(accepBean.getAvgSquare());
-                accep.setCurrentTide(accepBean.getCurrentTide());
-                accep.save();
-                // 4. 返回存到数据库的数据
-                e.onNext(accep);
+                } else {
+                    // 1. 发送网络请求
+                    String data = mRemoteDataSource.getAcceptanceByItemID(itemID);
+                    Log.d("==", data);
+
+                    // 2. 解析成对象
+                    List<AcceptanceBean> lists = gson.fromJson(data, new TypeToken<List<AcceptanceBean>>() {
+                    }.getType());
+                    AcceptanceBean accepBean = lists.get(0);
+
+                    // 3. 保存到数据库
+                    Acceptance accep = new Acceptance();
+                    /**
+                     * ItemID : 396
+                     * SubmitDate : 2017-05-24
+                     * SubcontractorAccount : slgj
+                     * SubcontractorName : 森菱国际
+                     * PlanDay : 2017-05-25
+                     * ShipAccount : ygzh0708
+                     * ShipName : 粤广州货0708
+                     * ShipType : B类
+                     * DeadweightTon : 2962
+                     * MaxTakeInWater : 0
+                     * SandSupplyCount : 3000
+                     * SystemDate : 2017-05-26
+                     * Capacity : null
+                     * DeckGauge : null
+                     * ReceptionSandTime : null
+                     * PassReceptionSandTime : null
+                     * TotalCompleteRide : 0
+                     * TotalCompleteSquare : 0
+                     * AvgSquare : 0
+                     * CurrentTide : 0
+                     */
+                    accep.setItemID(accepBean.getItemID());
+                    accep.setSubmitDate(accepBean.getSubmitDate());
+                    accep.setSubcontractorAccount(accepBean.getSubcontractorAccount());
+                    accep.setSubcontractorName(accepBean.getSubcontractorName());
+                    accep.setPlanDay(accepBean.getPlanDay());
+                    accep.setShipAccount(accepBean.getShipAccount());
+                    accep.setShipName(accepBean.getShipName());
+                    accep.setShipType(accepBean.getShipType());
+                    accep.setDeadweightTon(accepBean.getDeadweightTon());
+                    accep.setMaxTakeInWater(accepBean.getMaxTakeInWater());
+                    accep.setSandSupplyCount(accepBean.getSandSupplyCount());
+                    accep.setSystemDate(accepBean.getSystemDate());
+                    accep.setCapacity(accepBean.getCapacity());
+                    accep.setDeckGauge(accepBean.getDeckGauge());
+                    accep.setReceptionSandTime(accepBean.getReceptionSandTime());
+                    accep.setPassReceptionSandTime(accepBean.getPassReceptionSandTime());
+                    accep.setTotalCompleteRide(accepBean.getTotalCompleteRide());
+                    accep.setTotalCompleteSquare(accepBean.getTotalCompleteSquare());
+                    accep.setAvgSquare(accepBean.getAvgSquare());
+                    accep.setCurrentTide(accepBean.getCurrentTide());
+                    accep.save();
+                    // 4. 返回存到数据库的数据
+                    e.onNext(accep);
+                }
+
                 e.onComplete();
             }
         });
@@ -375,6 +389,7 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                Log.d("==", "第一");
                 String result = mRemoteDataSource.UpdateForReceptionSandTime(itemID, ReceptionSandTime, Capacity, DeckGauge);
                 Log.d("==", result);
 
@@ -398,6 +413,7 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                Log.d("==", "第一");
                 String result = mRemoteDataSource.UpdateForPassReceptionSandTime(itemID, PassReceptionSandTime);
                 Log.d("==", result);
 
@@ -405,6 +421,42 @@ public class DataRepository implements DataSouceImpl {
 
                 e.onNext(Integer.valueOf(bean.getMessage()));
                 e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 统计未验收船的数量
+     *
+     * @param type
+     * @return
+     */
+    @Override
+    public Observable<Integer> getStayNum(final String type) {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                int num = 0;
+                // 1. 获取一周任务
+                List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
+
+                // 2. 统计未验收任务
+                if (weekTasks != null && !weekTasks.isEmpty()) {
+                    for (WeekTask weektask : weekTasks) {
+                        String time = null;
+                        if (type.equals(SettingUtil.ACCEPTANCE)) {
+                            time = weektask.getPassReceptionSandTime();
+                        } else if (type.equals(SettingUtil.SUPPLY)) {
+                            time = weektask.getReceptionSandTime();
+                        }
+
+                        if (time == null || time.equals("")) {
+                            num++;
+                        }
+                    }
+                }
+
+                e.onNext(num);
             }
         });
     }

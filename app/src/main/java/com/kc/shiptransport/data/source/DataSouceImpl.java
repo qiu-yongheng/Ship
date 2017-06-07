@@ -16,6 +16,7 @@ import io.reactivex.Observable;
  */
 
 public interface DataSouceImpl {
+
     /**
      * 获取分包商信息, 并缓存到数据库
      */
@@ -54,7 +55,7 @@ public interface DataSouceImpl {
      *
      * @return
      */
-    Observable<Integer[]> getDayCount();
+    Observable<Double[]> getDayCount();
 
     /**
      * 网络请求
@@ -94,4 +95,13 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Integer> UpdateForPassReceptionSandTime(int itemID, String PassReceptionSandTime);
+
+    /**
+     * 统计未验收的船的数量
+     * @param type
+     * @return
+     */
+    Observable<Integer> getStayNum(String type);
+
+
 }

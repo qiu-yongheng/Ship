@@ -1,5 +1,7 @@
 package com.kc.shiptransport.mvp.supply;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.kc.shiptransport.R;
@@ -40,5 +42,14 @@ public class SupplyActivity extends BaseActivity{
         if (supplyFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "SupplyFragment", supplyFragment);
         }
+    }
+
+    /**
+     * 跳转到供沙界面
+     */
+    public static void navigateToSupplyActivity(Context context) {
+        Intent i = new Intent(context, SupplyActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 }

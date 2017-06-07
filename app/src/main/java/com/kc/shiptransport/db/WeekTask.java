@@ -27,6 +27,10 @@ public class WeekTask extends DataSupport{
     private String ShipName;
     // 供沙量
     private String SandSupplyCount;
+    // 预验收时间
+    private String ReceptionSandTime;
+    // 验砂时间
+    private String PassReceptionSandTime;
 
 
     public String getShipName() {
@@ -109,5 +113,19 @@ public class WeekTask extends DataSupport{
         ShipType = shipType;
     }
 
+    public String getReceptionSandTime() {
+        return ReceptionSandTime;
+    }
 
+    public void setReceptionSandTime(String receptionSandTime) {
+        ReceptionSandTime = receptionSandTime;
+    }
+
+    public String getPassReceptionSandTime() {
+        return PassReceptionSandTime;
+    }
+
+    public void setPassReceptionSandTime(String passReceptionSandTime) {
+        PassReceptionSandTime = passReceptionSandTime;
+    }
 }
