@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.supplydetail.SupplyDetailActivity;
@@ -222,9 +221,8 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
                 public void onItemClick(View view, int position) {
                     List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
                     if (weekTasks != null && !weekTasks.isEmpty()) {
-                        List<Acceptance> acceptances = DataSupport.where("ItemID = ? and isSupply = ?", String.valueOf(weekTasks.get(0).getItemID()), "1").find(Acceptance.class);
-
-                        if (acceptances != null && !acceptances.isEmpty()) {
+                        String receptionSandTime = weekTasks.get(0).getReceptionSandTime();
+                        if (receptionSandTime != null && !receptionSandTime.isEmpty()) {
                             // 已验收
                             SupplyDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), true);
                         } else {

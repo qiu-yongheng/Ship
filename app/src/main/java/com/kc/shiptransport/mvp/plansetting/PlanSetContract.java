@@ -14,9 +14,16 @@ import java.util.List;
 
 public interface PlanSetContract {
     interface View extends BaseView<Presenter> {
+        // 显示船舶类型
         void showShipCategory(List<List<Ship>> value, String list);
+        // 显示船舶数量
+        void showShipcount(int num);
+        // 显示计划量
+        void showPlanMeasure(double measure);
     }
     interface Presenter extends BasePresenter {
         void getShipCategory(String s);
+        void getShipCount(String date);
+        void getPlanMeasure(String date);
     }
 }

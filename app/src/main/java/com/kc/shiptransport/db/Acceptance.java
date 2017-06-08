@@ -29,6 +29,7 @@ public class Acceptance extends DataSupport{
     private String TotalCompleteSquare;
     private String AvgSquare;
     private String CurrentTide;
+    private String ShipItemNum;
 
     private String isSupply; // "1" : 已提交 "0" : 未提交
     private String isAcceptance; // "1" : 已提交 "0" : 未提交
@@ -208,5 +209,13 @@ public class Acceptance extends DataSupport{
 
     public void setIsAcceptance(String isAcceptance) {
         this.isAcceptance = isAcceptance;
+    }
+
+    public String getShipItemNum() {
+        return ShipItemNum;
+    }
+
+    public void setShipItemNum(String shipItemNum) {
+        ShipItemNum = shipItemNum;
     }
 }

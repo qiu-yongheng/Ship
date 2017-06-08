@@ -20,6 +20,7 @@ public class AcceptanceDetailActivity extends BaseActivity{
     private AcceptanceDetailFragment acceptanceDetailFragment;
     public int itemID;
     public boolean isAcceptance;
+    public int acceptanceDetailActivity_evaluationID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class AcceptanceDetailActivity extends BaseActivity{
         Bundle bundle = getIntent().getExtras();
         itemID = bundle.getInt("AcceptanceDetailActivity_itemID");
         isAcceptance = bundle.getBoolean("AcceptanceDetailActivity_isAcceptance");
+        acceptanceDetailActivity_evaluationID = bundle.getInt("AcceptanceDetailActivity_evaluationID");
 
         if (savedInstanceState != null) {
             acceptanceDetailFragment = (AcceptanceDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "AcceptanceDetailFragment");
@@ -62,11 +64,14 @@ public class AcceptanceDetailActivity extends BaseActivity{
      * @param isAcceptance
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Activity activity, int itemID, boolean isAcceptance) {
+    public static void startActivity(Activity activity, int itemID, boolean isAcceptance, int evaluationID) {
         Intent intent = new Intent(activity, AcceptanceDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("AcceptanceDetailActivity_itemID", itemID);
+        // 是否验收
         bundle.putBoolean("AcceptanceDetailActivity_isAcceptance", isAcceptance);
+        // 评价ID
+        bundle.putInt("AcceptanceDetailActivity_evaluationID", evaluationID);
         // TODO 要传过来的数据
         intent.putExtras(bundle);
         activity.startActivity(intent, bundle);

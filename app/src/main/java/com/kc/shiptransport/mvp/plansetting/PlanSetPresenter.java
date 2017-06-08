@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -23,11 +24,13 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
     private final Context context;
     private final PlanSetContract.View view;
     private final DataRepository mDataRepository;
+    private final CompositeDisposable compositeDisposable;
 
     public PlanSetPresenter(Context context, PlanSetContract.View view) {
         this.context = context;
         this.view = view;
         mDataRepository = new DataRepository();
+        compositeDisposable = new CompositeDisposable();
         view.setPresenter(this);
     }
 
@@ -48,26 +51,6 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
     @Override
     public void getShipCategory(final String date) {
         Log.d("==", "----PlanSetPresenter: 获取所有ship, 分类, 传递当前时间----");
-//        Observable.create(new ObservableOnSubscribe<List<List<Ship>>>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<List<List<Ship>>> e) throws Exception {
-//                List<List<Ship>> lists = new ArrayList<>();
-//                List<Ship> all = DataSupport.findAll(Ship.class);
-//                // 根据type进行分类
-//                Set set = new HashSet();
-//                for (Ship ship : all) {
-//                    String type = ship.getShipType();
-//                    if (set.contains(type)) {
-//
-//                    } else {
-//                        set.add(type);
-//                        lists.add(DataSupport.where("ShipType = ?", type).find(Ship.class));
-//                    }
-//                }
-//
-//                e.onNext(lists);
-//            }
-//        })
         mDataRepository
                 .getShipCategory()
                 .subscribeOn(Schedulers.io())
@@ -82,6 +65,70 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
                     public void onNext(List<List<Ship>> value) {
                         // 传递当前选中日期
                         view.showShipCategory(value, date);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    /**
+     * 获取指定日期计划船舶数量
+     */
+    @Override
+    public void getShipCount(String date) {
+        mDataRepository
+                .getShipCount(date)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(Integer value) {
+                        view.showShipcount(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    /**
+     * 获取指定日期计划量
+     */
+    @Override
+    public void getPlanMeasure(String date) {
+        mDataRepository
+                .getPlanMeasure(date)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Double>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(Double value) {
+                        view.showPlanMeasure(value);
                     }
 
                     @Override

@@ -25,10 +25,12 @@ public class WeekTaskBean {
     private String ShipName;
     private String ShipType;
     private String SandSupplyCount;
-    // 预验收时间
-    private String ReceptionSandTime;
     // 验砂时间
+    private String ReceptionSandTime;
+    // 预验收时间
     private String PassReceptionSandTime;
+    // 分包商评价ID
+    private int SandSubcontractorPreAcceptanceEvaluationID;
 
     public int getItemID() {
         return ItemID;
@@ -100,5 +102,13 @@ public class WeekTaskBean {
 
     public void setPassReceptionSandTime(String passReceptionSandTime) {
         PassReceptionSandTime = passReceptionSandTime;
+    }
+
+    public int getSandSubcontractorPreAcceptanceEvaluationID() {
+        return SandSubcontractorPreAcceptanceEvaluationID;
+    }
+
+    public void setSandSubcontractorPreAcceptanceEvaluationID(int sandSubcontractorPreAcceptanceEvaluationID) {
+        SandSubcontractorPreAcceptanceEvaluationID = sandSubcontractorPreAcceptanceEvaluationID;
     }
 }

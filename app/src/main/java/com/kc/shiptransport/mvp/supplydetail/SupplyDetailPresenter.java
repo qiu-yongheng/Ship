@@ -95,8 +95,8 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
 
     @Override
     public void getTotalVolume(String ship, String deck) {
-        int i1 = ship.equals("") ? 0 : Integer.valueOf(ship);
-        int i2 = deck.equals("") ? 0 : Integer.valueOf(deck);
+        double i1 = ship.equals("") ? 0 : Double.valueOf(ship);
+        double i2 = deck.equals("") ? 0 : Double.valueOf(deck);
         view.showTotalVolume(String.valueOf(i1 + i2));
     }
 

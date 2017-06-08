@@ -71,6 +71,7 @@ public class HomeItemPop extends BasePopWindown {
         //如果不马上显示popupwindow, 建议刷新界面
         mPopupWindow.update();
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());//设置一个空白的bitmap
+        mPopupWindow.setAnimationStyle(R.anim.alpha);
 
         /**------------3. 初始化子控件------------**/
         mRvHomeSupply = (RecyclerView) view.findViewById(R.id.rv_home_supply);

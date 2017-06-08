@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
@@ -239,16 +238,17 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
                 @Override
                 public void onItemClick(View view, int position) {
                     List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
+                    // 如果item有数据, 设置点击事件
                     if (weekTasks != null && !weekTasks.isEmpty()) {
                         // 判断是否验收
-                        List<Acceptance> acceptances = DataSupport.where("ItemID = ? and isAcceptance = ?", String.valueOf(weekTasks.get(0).getItemID()), "1").find(Acceptance.class);
+                        String passReceptionSandTime = weekTasks.get(0).getPassReceptionSandTime();
 
-                        if (acceptances != null && !acceptances.isEmpty()) {
+                        if (passReceptionSandTime != null && !passReceptionSandTime.isEmpty()) {
                             // 已验收
-                            AcceptanceDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), true);
+                            AcceptanceDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), true, weekTasks.get(0).getSandSubcontractorPreAcceptanceEvaluationID());
                         } else {
                             // 未验收
-                            AcceptanceDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), false);
+                            AcceptanceDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), false, weekTasks.get(0).getSandSubcontractorPreAcceptanceEvaluationID());
                         }
                     }
                 }

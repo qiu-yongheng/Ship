@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">综合生产调度系统</string>
+    <string name="app_name">测试环境</string>
     <string name="title_login">综合生产调度系统</string>
     <string name="hint_username">"  请输入用户名:"</string>
     <string name="hint_password">" 请输入密码:"</string>

@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Presenter{
+public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Presenter {
     private final Context context;
     private final AcceptanceDetailContract.View view;
     private final DataRepository dataRepository;
@@ -88,11 +88,20 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
         view.showAcceptanceTime(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"));
     }
 
+    /**
+     *
+     * @param SubcontractorInterimApproachPlanID 进场ID
+     * @param time 审核时间
+     * @param itemID 评价ID
+     * @param rbcomplete 材料完整性
+     * @param rbtimely 材料及时性
+     * @param shipnum 船次编号
+     */
     @Override
-    public void commit(final int itemID, String PassReceptionSandTime) {
+    public void commit(final int SubcontractorInterimApproachPlanID, String time, final int itemID, final int rbcomplete, final int rbtimely, final String shipnum) {
         view.showLoading(true);
         dataRepository
-                .UpdateForPassReceptionSandTime(itemID, PassReceptionSandTime)
+                .InsertPreAcceptanceEvaluation(itemID, rbcomplete, rbtimely, time, shipnum, SubcontractorInterimApproachPlanID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<Integer>() {
@@ -102,7 +111,7 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                     }
                 })
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<Integer, Observable<List<WeekTaskBean>>>() {
+                .flatMap(new Function<Integer, Observable<List<WeekTaskBean>>>() { // 同步
                     @Override
                     public Observable<List<WeekTaskBean>> apply(Integer integer) throws Exception {
                         if (integer == success) {
@@ -146,5 +155,10 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
     public void start(int itemID) {
         getShipDetail(itemID);
         getAcceptanceTime();
+    }
+
+    @Override
+    public void doEvaluation() {
+
     }
 }

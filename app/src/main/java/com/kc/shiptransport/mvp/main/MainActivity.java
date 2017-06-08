@@ -35,55 +35,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-//    private void initView() {
-//        sp = PreferenceManager.getDefaultSharedPreferences(this);
-//    }
-//
-//    private void initListener() {
-//        /* 添加计划 */
-//        btnPlan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                navigateToPlanActivity();
-//            }
-//        });
-//
-//        /* 验沙 */
-//        btnSupplySand.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                navigateToSupplyActivity();
-//            }
-//        });
-//
-//        /* 验收 */
-//        btnAcceptance.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                navigateToAcceptanceActivity();
-//            }
-//        });
-//
-//        /* 离开 */
-//        btnExit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                SharedPreferences.Editor edit = sp.edit();
-//                edit.putString(SettingUtil.DATA_USERNAME, "");
-//                edit.putString(SettingUtil.DATA_PASSWORD, "");
-//                edit.putBoolean(SettingUtil.KEY_REMEMBER_PASSWORD, false);
-//                edit.putBoolean(SettingUtil.KEY_AUTHOR_LOGIN, false);
-//                edit.apply();
-//
-//                navigateToLoginActivity();
-//            }
-//        });
-//    }
-
-
-
-
-
     @Override
     public void onBackPressed() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {

@@ -29,6 +29,6 @@ public interface ShipSelectContract {
         void doCancle(String currentSelectShipType, String date);
         void doCommit(String currentSelectShipType, String currentSelectDate);
         // 刷新数据
-        void doRefresh(String SubcontractorAccount, String StartDay, String EndDay, int jumpWeek);
+        void doRefresh(int jumpWeek);
     }
 }

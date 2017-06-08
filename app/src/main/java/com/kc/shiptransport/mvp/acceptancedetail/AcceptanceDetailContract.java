@@ -28,8 +28,9 @@ public interface AcceptanceDetailContract {
     interface Presenter extends BasePresenter {
         void getShipDetail(int itemID);
         void getAcceptanceTime();
-        void commit(int itemID, String PassReceptionSandTime);
+        void commit(int SubcontractorInterimApproachPlanID, String time, int itemID, int rbcomplete, int rbtimely, String shipnum);
         void cancle();
         void start(int itemID);
+        void doEvaluation();
     }
 }

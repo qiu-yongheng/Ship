@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -62,8 +63,15 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     AppCompatButton btnAcceptanceCommit;
     @BindView(R.id.ll)
     LinearLayout ll;
+    @BindView(R.id.rb_complete)
+    RatingBar rbComplete;
+    @BindView(R.id.rb_timely)
+    RatingBar rbTimely;
     private AcceptanceDetailContract.Presenter presenter;
     private AcceptanceDetailActivity activity;
+    private int rbcomplete = 0;
+    private int rbtimely = 0;
+    private String shipItemNum;
 
     @Nullable
     @Override
@@ -98,11 +106,11 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String trim = tvAcceptanceTime.getText().toString().trim();
-                if (trim.equals("")) {
-                    Toast.makeText(activity, "验收时间不能为空", Toast.LENGTH_SHORT).show();
+                String time = tvAcceptanceTime.getText().toString().trim();
+                if (time.equals("") || rbcomplete == 0 || rbtimely == 0) {
+                    Toast.makeText(activity, "验收时间或评价不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    presenter.commit(activity.itemID, trim);
+                    presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, shipItemNum);
                 }
             }
         });
@@ -127,6 +135,22 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                 timePickerDialog.show();
             }
         });
+
+        /* 评价 */
+        rbComplete.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                rbcomplete = (int) v;
+            }
+        });
+
+        /* 评价 */
+        rbTimely.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                rbtimely = (int) v;
+            }
+        });
     }
 
     @Override
@@ -142,9 +166,18 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         if (activity.isAcceptance) {
             // 已验收
             btnAcceptanceCommit.setVisibility(View.GONE);
+
+            // 回显评价
+            rbComplete.setStepSize(rbcomplete);
+            rbTimely.setStepSize(rbtimely);
+            rbComplete.setIsIndicator(true);
+            rbTimely.setIsIndicator(true);
         } else {
             // 未验收
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
+
+            rbComplete.setIsIndicator(false);
+            rbTimely.setIsIndicator(false);
         }
     }
 
@@ -170,8 +203,9 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
      */
     @Override
     public void showShipDetail(Acceptance value) {
+        shipItemNum = value.getShipItemNum();
         tvShipName.setText(value.getShipName());
-        tvShipId.setText("船次: " + value.getPlanDay());
+        tvShipId.setText("船次: " + shipItemNum);
         tvSubontractor.setText("供应商: " + value.getSubcontractorName());
         tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
         tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");

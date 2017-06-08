@@ -199,6 +199,9 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     public void onResume() {
         super.onResume();
         //presenter.getWeekTask(jumpWeek);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
         Log.d("==", "PlanFragment");
     }
 

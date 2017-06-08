@@ -28,6 +28,7 @@ public class AcceptanceBean {
      * TotalCompleteSquare : 0
      * AvgSquare : 0
      * CurrentTide : 0
+     * ShipItemNum
      */
 
     private int ItemID;
@@ -50,6 +51,7 @@ public class AcceptanceBean {
     private String TotalCompleteSquare;
     private String AvgSquare;
     private String CurrentTide;
+    private String ShipItemNum;
 
     public int getItemID() {
         return ItemID;
@@ -209,5 +211,13 @@ public class AcceptanceBean {
 
     public void setCurrentTide(String CurrentTide) {
         this.CurrentTide = CurrentTide;
+    }
+
+    public String getShipItemNum() {
+        return ShipItemNum;
+    }
+
+    public void setShipItemNum(String shipItemNum) {
+        ShipItemNum = shipItemNum;
     }
 }

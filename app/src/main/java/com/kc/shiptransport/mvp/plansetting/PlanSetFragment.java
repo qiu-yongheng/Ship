@@ -101,11 +101,18 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
                 // 设置title时间
                 tvPlanSetDate.setText(CalendarUtil.getdateOfWeek("yyyy年MM月dd日", jumpWeek).get(spinnerSelectDate.getSelectedItemPosition()));
 
-                // TODO 根据选择时间, 重新从数据库获取weektask数据
-                presenter.getShipCategory(CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek).get(spinnerSelectDate.getSelectedItemPosition()));
-
                 // 保存当前选中的日期
                 selectData = CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek).get(spinnerSelectDate.getSelectedItemPosition());
+
+                // TODO 根据选择时间, 重新从数据库获取weektask数据
+                presenter.getShipCategory(selectData);
+
+                // 设置船舶数
+                presenter.getShipCount(selectData);
+
+                // 设置计划量
+                presenter.getPlanMeasure(selectData);
+
             }
 
             @Override
@@ -208,9 +215,19 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
             });
             recyclerviewAdd.setAdapter(adapter);
         } else {
-            adapter.setDates(value, date);
+            //adapter.setDates(value, date);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void showShipcount(int num) {
+        tvShipNum.setText("船舶数: " + num);
+    }
+
+    @Override
+    public void showPlanMeasure(double measure) {
+        tvPlanNum.setText("计划量: " + measure);
     }
 
     /**
