@@ -37,6 +37,7 @@ import butterknife.Unbinder;
  */
 
 public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContract.View {
+
     @BindView(R.id.toolbar_supply_detail)
     Toolbar toolbarSupplyDetail;
     @BindView(R.id.tv_ship_name)
@@ -59,11 +60,15 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     EditText etDeckVolume;
     @BindView(R.id.tv_total_volume)
     TextView tvTotalVolume;
-    @BindView(R.id.btn_supply_detail_commit)
-    AppCompatButton btnSupplyDetailCommit;
-    Unbinder unbinder;
     @BindView(R.id.tv_supply_time)
     TextView tvSupplyTime;
+    @BindView(R.id.btn_acceptance_cancel)
+    AppCompatButton btnAcceptanceCancel;
+    @BindView(R.id.btn_acceptance_commit)
+    AppCompatButton btnAcceptanceCommit;
+    @BindView(R.id.ll)
+    LinearLayout ll;
+    private Unbinder unbinder;
     private SupplyDetailContract.Presenter presenter;
     private SupplyDetailActivity activity;
 
@@ -95,19 +100,21 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             // 禁止软键盘
             etShipVolume.setInputType(InputType.TYPE_NULL);
             etDeckVolume.setInputType(InputType.TYPE_NULL);
-            btnSupplyDetailCommit.setVisibility(View.GONE);
+            btnAcceptanceCommit.setVisibility(View.GONE);
+            btnAcceptanceCancel.setText(R.string.btn_return);
 
         } else {
             // 开启软键盘
             etShipVolume.setInputType(InputType.TYPE_CLASS_TEXT);
             etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
-            btnSupplyDetailCommit.setVisibility(View.VISIBLE);
+            btnAcceptanceCommit.setVisibility(View.VISIBLE);
+            btnAcceptanceCancel.setText(R.string.btn_cancle);
         }
     }
 
     private void initListener() {
         /* 提交 */
-        btnSupplyDetailCommit.setOnClickListener(new View.OnClickListener() {
+        btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String ship = etShipVolume.getText().toString().trim();
@@ -117,6 +124,14 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                 } else {
                     presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), ship, deck);
                 }
+            }
+        });
+
+        /* 返回 */
+        btnAcceptanceCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.onBackPressed();
             }
         });
 
@@ -210,8 +225,9 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
      */
     @Override
     public void showShipDetail(Acceptance value) {
+        String shipItemNum = value.getShipItemNum();
         tvShipName.setText(value.getShipName());
-        tvShipId.setText("船次: " + value.getPlanDay());
+        tvShipId.setText("船次: " + shipItemNum == null ? "" : shipItemNum);
         tvSubontractor.setText("供应商: " + value.getSubcontractorName());
         tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
         tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
@@ -253,6 +269,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     public void showCommitResult(boolean active) {
         if (active) {
             Toast.makeText(activity, "提交成功!", Toast.LENGTH_SHORT).show();
+            btnAcceptanceCancel.setText(R.string.btn_return);
         } else {
             Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
         }

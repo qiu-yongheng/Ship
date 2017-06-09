@@ -6,7 +6,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -29,7 +28,6 @@ public class HomeItemPop extends BasePopWindown {
     private static HomeItemPop mInstanst;
     private PopupWindow mPopupWindow;
     private RecyclerView mRvHomeSupply;
-    private ImageView mIvHomePop;
 
     private HomeItemPop(Context context) {
         super(context);
@@ -100,14 +98,6 @@ public class HomeItemPop extends BasePopWindown {
             }
         });
         mRvHomeSupply.setAdapter(adapter);
-
-        mIvHomePop = (ImageView) view.findViewById(R.id.iv_home_pop);
-        mIvHomePop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onDismiss();
-            }
-        });
 
         /**------------4. 初始化数据------------**/
 

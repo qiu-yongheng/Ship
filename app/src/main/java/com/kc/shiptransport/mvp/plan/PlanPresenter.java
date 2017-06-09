@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.WeekTask;
@@ -252,14 +251,14 @@ public class PlanPresenter implements PlanContract.Presenter {
                 .doRefresh(jumpWeek)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<WeekTaskBean>>() {
+                .subscribe(new Observer<Boolean>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(List<WeekTaskBean> value) {
+                    public void onNext(Boolean value) {
 
                     }
 

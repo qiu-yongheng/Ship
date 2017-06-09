@@ -1,6 +1,5 @@
 package com.kc.shiptransport.mvp.login;
 
-import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -16,9 +15,10 @@ public interface LoginContract {
         void showNetworkError();
         void showCheckRememberError();
         void showCheckAutoError();
-        void showResult(LoginResult msg);
+        void showResult(boolean result);
         void navigateToMain();
         void changeDailogInfo(String title, String msg);
+        void showSyncError();
     }
 
     interface Presenter extends BasePresenter {

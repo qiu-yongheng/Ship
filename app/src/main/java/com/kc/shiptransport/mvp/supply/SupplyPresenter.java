@@ -3,7 +3,6 @@ package com.kc.shiptransport.mvp.supply;
 import android.content.Context;
 import android.util.Log;
 
-import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
@@ -208,14 +207,14 @@ public class SupplyPresenter implements SupplyContract.Presenter {
                 .doRefresh(jumpWeek)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<WeekTaskBean>>() {
+                .subscribe(new Observer<Boolean>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(List<WeekTaskBean> value) {
+                    public void onNext(Boolean value) {
 
                     }
 

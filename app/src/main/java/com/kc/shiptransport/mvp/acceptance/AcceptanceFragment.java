@@ -317,7 +317,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String s = (String) adapterView.getItemAtPosition(i);
-                Toast.makeText(activity, s, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(activity, s, Toast.LENGTH_SHORT).show();
                 if (i != 0) {
                     subcontractorAccount = value.get(i - 1).getSubcontractorAccount();
                     presenter.doRefresh(jumpWeek);

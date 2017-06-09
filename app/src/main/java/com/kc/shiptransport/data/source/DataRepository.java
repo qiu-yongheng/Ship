@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.data.bean.AcceptanceBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
+import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
@@ -175,10 +176,10 @@ public class DataRepository implements DataSouceImpl {
     }
 
     @Override
-    public Observable<List<WeekTaskBean>> doRefresh(final int jumpWeek) {
-        return Observable.create(new ObservableOnSubscribe<List<WeekTaskBean>>() {
+    public Observable<Boolean> doRefresh(final int jumpWeek) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void subscribe(ObservableEmitter<List<WeekTaskBean>> e) throws Exception {
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 Log.d("==", "第二");
                 /* 获取分包商账号 */
                 String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
@@ -275,7 +276,7 @@ public class DataRepository implements DataSouceImpl {
 
 
                 // 通知presenter从DB获取数据
-                e.onNext(lists);
+                e.onNext(true);
                 e.onComplete();
             }
         });
@@ -306,18 +307,20 @@ public class DataRepository implements DataSouceImpl {
     }
 
     /**
+     *
      * @param itemID
+     * @param isCashe 是否从缓存获取数据, true: 优先从DB获取     false: 优先从网络获取
      * @return
      */
     @Override
-    public Observable<Acceptance> getAcceptanceByItemID(final int itemID) {
+    public Observable<Acceptance> getAcceptanceByItemID(final int itemID, final boolean isCashe) {
         return Observable.create(new ObservableOnSubscribe<Acceptance>() {
             @Override
             public void subscribe(ObservableEmitter<Acceptance> e) throws Exception {
                 /* 判断本地是否有缓存 */
                 List<Acceptance> acceptances = DataSupport.where("ItemID = ?", String.valueOf(itemID)).find(Acceptance.class);
 
-                if (acceptances != null && !acceptances.isEmpty()) {
+                if (acceptances != null && !acceptances.isEmpty() && isCashe) {
                     e.onNext(acceptances.get(0));
 
                 } else {
@@ -330,7 +333,9 @@ public class DataRepository implements DataSouceImpl {
                     }.getType());
                     AcceptanceBean accepBean = lists.get(0);
 
-                    // 3. 保存到数据库
+                    // 3. 保存到数据库 TODO 先删除item对应数据, 再插入
+                    int i = DataSupport.deleteAll(Acceptance.class, "ItemID = ?", String.valueOf(itemID));
+                    Log.d("==", "删除item: " + i);
                     Acceptance accep = new Acceptance();
                     /**
                      * ItemID : 396
@@ -698,6 +703,93 @@ public class DataRepository implements DataSouceImpl {
                 CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
 
                 e.onNext(resultBean.getMessage());
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取分包商信息
+     * @param username 分包商账号名, 如果填null, 获取所有分包商列表
+     * @return
+     */
+    @Override
+    public Observable<Boolean> getSubcontractor(final String username) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                // 1. 获取数据, 缓存到数据库
+                String subcontractorInfo = mRemoteDataSource.getSubcontractorInfo(username);
+                Log.d("info", "分包商json: " + subcontractorInfo);
+                // 保存到数据库
+                List<SubcontractorBean> ls = gson.fromJson(subcontractorInfo, new TypeToken<List<SubcontractorBean>>() {
+                }.getType());
+                if (ls != null && !ls.isEmpty()) {
+                    // 清空数据
+                    DataSupport.deleteAll(Subcontractor.class);
+                    for (SubcontractorBean bean : ls) {
+                        Subcontractor subcontractor = new Subcontractor();
+                        subcontractor.setSubcontractorAccount(bean.getSubcontractorAccount());
+                        subcontractor.setSubcontractorName(bean.getSubcontractorName());
+                        subcontractor.save();
+                    }
+                }
+
+                e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取船舶信息
+     * @param username 分包商账号名, 如果填null, 获取所有船舶列表
+     * @return
+     */
+    @Override
+    public Observable<Boolean> getShip(final String username) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                // 2. 获取数据, 缓存到数据库
+                String shipInfo = mRemoteDataSource.getShipInfo(username);
+                List<ShipBean> list = gson.fromJson(shipInfo, new TypeToken<List<ShipBean>>() {
+                }.getType());
+                if (list != null && !list.isEmpty()) {
+                    DataSupport.deleteAll(Ship.class);
+                    for (ShipBean listBean : list) {
+                        Ship ship = new Ship();
+                        ship.setItemID(listBean.getItemID());
+                        ship.setShipID(listBean.getShipID());
+                        ship.setShipAccount(listBean.getShipAccount());
+                        ship.setShipName(listBean.getShipName());
+                        ship.setShipType(listBean.getShipType());
+                        ship.setMaxSandSupplyCount(listBean.getMaxSandSupplyCount());
+                        ship.setSelected("0");
+                        ship.save();
+                    }
+                }
+
+                e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 登录
+     * @param username
+     * @param password
+     * @return
+     */
+    @Override
+    public Observable<Boolean> login(final String username, final String password) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String loginInfo = mRemoteDataSource.getLoginInfo(username, password);
+                LoginResult loginResult = gson.fromJson(loginInfo, LoginResult.class);
+                e.onNext(loginResult.getMessage() == 1);
                 e.onComplete();
             }
         });

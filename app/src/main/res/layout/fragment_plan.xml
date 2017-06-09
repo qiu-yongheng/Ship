@@ -131,14 +131,14 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_plan"
             android:layout_width="match_parent"
-            android:layout_height="306dp"/>
+            android:layout_height="255dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_total_0"

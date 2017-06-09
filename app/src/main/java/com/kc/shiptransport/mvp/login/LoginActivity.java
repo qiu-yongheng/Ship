@@ -15,7 +15,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.mvp.BaseActivity;
 import com.kc.shiptransport.mvp.main.MainActivity;
 import com.kc.shiptransport.util.SettingUtil;
@@ -60,7 +59,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         init();
         initListener();
-
     }
 
     /**
@@ -207,18 +205,18 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     /**
      * 获取登录结果
      *
-     * @param loginResult
+     * @param result
      */
     @Override
-    public void showResult(LoginResult loginResult) {
-        if (loginResult == null || loginResult.getMessage() == 0) {
-            // 登录失败
-            tip("账号或密码错误, 请重新输入");
-            showloading(false);
-        } else if (loginResult.getMessage() == 1) {
+    public void showResult(boolean result) {
+        if (result) {
             // 登录成功, 读取数据
             presenter.loadData(sp.getString(SettingUtil.DATA_USERNAME, ""));
             changeDailogInfo("同步数据", "正在获取分包商数据");
+        } else {
+            // 登录失败
+            tip("账号或密码错误, 请重新输入");
+            showloading(false);
         }
     }
 
@@ -230,6 +228,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void changeDailogInfo(String title, String msg) {
         changeProgressDailogInfo(title, msg);
+    }
+
+    @Override
+    public void showSyncError() {
+        tip("同步数据失败");
     }
 
     /**

@@ -2,21 +2,17 @@ package com.kc.shiptransport.mvp.acceptancedetail;
 
 import android.content.Context;
 
-import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -56,7 +52,7 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
     public void getShipDetail(int itemID) {
         view.showLoading(true);
         dataRepository
-                .getAcceptanceByItemID(itemID)
+                .getAcceptanceByItemID(itemID, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Acceptance>() {
@@ -89,7 +85,9 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
     }
 
     /**
-     *
+     * 1. 提交验收评价
+     * 2. 同步数据
+     * 3. 更新供砂任务明细
      * @param SubcontractorInterimApproachPlanID 进场ID
      * @param time 审核时间
      * @param itemID 评价ID
@@ -103,17 +101,10 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
         dataRepository
                 .InsertPreAcceptanceEvaluation(itemID, rbcomplete, rbtimely, time, shipnum, SubcontractorInterimApproachPlanID)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) throws Exception {
-                        view.showCommitResult(integer == success);
-                    }
-                })
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<Integer, Observable<List<WeekTaskBean>>>() { // 同步
+                .flatMap(new Function<Integer, Observable<Boolean>>() { // 同步
                     @Override
-                    public Observable<List<WeekTaskBean>> apply(Integer integer) throws Exception {
+                    public Observable<Boolean> apply(Integer integer) throws Exception {
                         if (integer == success) {
                             return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_ACCEPTANCE));
                         } else {
@@ -121,16 +112,22 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                         }
                     }
                 })
+                .flatMap(new Function<Boolean, Observable<Acceptance>>() { // 更新
+                    @Override
+                    public Observable<Acceptance> apply(Boolean aBoolean) throws Exception {
+                        return dataRepository.getAcceptanceByItemID(SubcontractorInterimApproachPlanID, false);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<WeekTaskBean>>() {
+                .subscribe(new Observer<Acceptance>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(List<WeekTaskBean> value) {
-
+                    public void onNext(Acceptance value) {
+                        view.showCommitResult(true);
                     }
 
                     @Override

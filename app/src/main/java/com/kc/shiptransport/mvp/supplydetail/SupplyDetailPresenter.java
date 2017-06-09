@@ -2,21 +2,17 @@ package com.kc.shiptransport.mvp.supplydetail;
 
 import android.content.Context;
 
-import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -61,7 +57,7 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
     public void getShipDetail(int itemID) {
         view.showLoading(true);
         dataRepository
-                .getAcceptanceByItemID(itemID)
+                .getAcceptanceByItemID(itemID, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Acceptance>() {
@@ -109,17 +105,10 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
         dataRepository
                 .updateForReceptionSandTime(itemID, ReceptionSandTime, Capacity, DeckGauge)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) throws Exception {
-                        view.showCommitResult(integer == success);
-                    }
-                })
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<Integer, Observable<List<WeekTaskBean>>>() {
+                .flatMap(new Function<Integer, Observable<Boolean>>() { // 同步
                     @Override
-                    public Observable<List<WeekTaskBean>> apply(Integer integer) throws Exception {
+                    public Observable<Boolean> apply(Integer integer) throws Exception {
                         if (integer == success) {
                             return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_SUPPLY));
                         } else {
@@ -127,16 +116,22 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
                         }
                     }
                 })
+                .flatMap(new Function<Boolean, Observable<Acceptance>>() { // 更新
+                    @Override
+                    public Observable<Acceptance> apply(Boolean aBoolean) throws Exception {
+                        return dataRepository.getAcceptanceByItemID(itemID, false);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<WeekTaskBean>>() {
+                .subscribe(new Observer<Acceptance>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(List<WeekTaskBean> value) {
-
+                    public void onNext(Acceptance value) {
+                        view.showCommitResult(true);
                     }
 
                     @Override

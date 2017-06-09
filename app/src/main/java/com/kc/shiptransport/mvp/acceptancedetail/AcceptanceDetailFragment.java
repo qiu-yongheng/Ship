@@ -166,10 +166,11 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         if (activity.isAcceptance) {
             // 已验收
             btnAcceptanceCommit.setVisibility(View.GONE);
+            btnAcceptanceCancel.setText(R.string.btn_return);
 
-            // 回显评价
-            rbComplete.setStepSize(rbcomplete);
-            rbTimely.setStepSize(rbtimely);
+            // 回显评价 TODO 接口并没有返回数据, 不可以回显
+//            rbComplete.setStepSize(rbcomplete);
+//            rbTimely.setStepSize(rbtimely);
             rbComplete.setIsIndicator(true);
             rbTimely.setIsIndicator(true);
         } else {
@@ -205,7 +206,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     public void showShipDetail(Acceptance value) {
         shipItemNum = value.getShipItemNum();
         tvShipName.setText(value.getShipName());
-        tvShipId.setText("船次: " + shipItemNum);
+        tvShipId.setText("船次: " + shipItemNum == null ? "" : shipItemNum);
         tvSubontractor.setText("供应商: " + value.getSubcontractorName());
         tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
         tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
@@ -242,6 +243,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     public void showCommitResult(boolean active) {
         if (active) {
             Toast.makeText(activity, "提交成功!", Toast.LENGTH_SHORT).show();
+            btnAcceptanceCancel.setText(R.string.btn_return);
         } else {
             Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
         }

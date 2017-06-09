@@ -1,6 +1,5 @@
 package com.kc.shiptransport.data.source;
 
-import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.WeekTask;
@@ -64,7 +63,7 @@ public interface DataSouceImpl {
      * @param jumpWeek
      * @return
      */
-    Observable<List<WeekTaskBean>> doRefresh(int jumpWeek);
+    Observable<Boolean> doRefresh(int jumpWeek);
 
     /**
      * 根据船的类型对数据进行分类
@@ -79,7 +78,7 @@ public interface DataSouceImpl {
      * @param itemID
      * @return
      */
-    Observable<Acceptance> getAcceptanceByItemID(int itemID);
+    Observable<Acceptance> getAcceptanceByItemID(int itemID, boolean isCashe);
 
     /**
      * 提交验沙审核结果
@@ -165,4 +164,26 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<String> doCommit(String type, String date);
+
+    /**
+     * 获取分包商信息
+     * @param username 分包商账号名, 如果填null, 获取所有分包商列表
+     * @return
+     */
+    Observable<Boolean> getSubcontractor(String username);
+
+    /**
+     * 获取船舶信息
+     * @param username 分包商账号名, 如果填null, 获取所有船舶列表
+     * @return
+     */
+    Observable<Boolean> getShip(String username);
+
+    /**
+     * 登录
+     * @param username
+     * @param password
+     * @return
+     */
+    Observable<Boolean> login(String username, String password);
 }
