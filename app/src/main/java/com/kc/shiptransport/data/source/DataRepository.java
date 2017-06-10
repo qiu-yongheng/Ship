@@ -11,12 +11,14 @@ import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
+import com.kc.shiptransport.data.bean.TaskVolumeBean;
 import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.CommitShip;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
@@ -790,6 +792,45 @@ public class DataRepository implements DataSouceImpl {
                 String loginInfo = mRemoteDataSource.getLoginInfo(username, password);
                 LoginResult loginResult = gson.fromJson(loginInfo, LoginResult.class);
                 e.onNext(loginResult.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取分包商预计划量
+     * @return
+     */
+    @Override
+    public Observable<TaskVolume> getTaskVolume(final int jumpWeek) {
+        return Observable.create(new ObservableOnSubscribe<TaskVolume>() {
+            @Override
+            public void subscribe(ObservableEmitter<TaskVolume> e) throws Exception {
+                /* 获取分包商账号 */
+                String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
+                /* 开始时间 */
+                String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
+                /* 结束时间 */
+                String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
+
+                String result = mRemoteDataSource.PublicSubcontractorSandPlanList(subcontractorAccount, startDay, endDay);
+                TaskVolumeBean taskPlanListBean = gson.fromJson(result, TaskVolumeBean.class);
+                // 初始化表
+                DataSupport.deleteAll(TaskVolume.class);
+                // 保存数据到数据库
+                TaskVolume taskPlanList = new TaskVolume();
+                taskPlanList.setItemID(taskPlanListBean.getItemID());
+                taskPlanList.setSubcontractorAccount(taskPlanListBean.getSubcontractorAccount());
+                taskPlanList.setSubcontractorName(taskPlanListBean.getSubcontractorName());
+                taskPlanList.setDate(taskPlanListBean.getDate());
+                taskPlanList.setBoatA(taskPlanListBean.getBoatA());
+                taskPlanList.setBoatB(taskPlanListBean.getBoatB());
+                taskPlanList.setBoatC(taskPlanListBean.getBoatC());
+                taskPlanList.setBoatD(taskPlanListBean.getBoatD());
+                taskPlanList.setAllBoatSum(taskPlanListBean.getAllBoatSum());
+                taskPlanList.save();
+
+                e.onNext(taskPlanList);
                 e.onComplete();
             }
         });

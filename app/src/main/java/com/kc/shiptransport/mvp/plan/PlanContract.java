@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.plan;
 
+import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -18,7 +19,7 @@ public interface PlanContract {
         // 当前日期
         void showCurrentDate(String date);
         // 任务量
-        void showTaskVolume();
+        void showTaskVolume(TaskVolume value);
         // 任务要求
         void showTaskRequire();
         // 当前任务总量
@@ -36,7 +37,7 @@ public interface PlanContract {
         // 当前日期
         void getCurrentDate(int jumpWeek);
         // 任务量
-        void getTaskVolume();
+        void getTaskVolume(int jumpWeek);
         // 任务要求
         void getTaskRequire();
         // 当前任务总量

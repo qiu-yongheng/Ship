@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.plansetting.PlanSetActivity;
@@ -230,8 +231,8 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     }
 
     @Override
-    public void showTaskVolume() {
-
+    public void showTaskVolume(TaskVolume value) {
+        titleTask.setText("任务工程量: " + value.getAllBoatSum());
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.kc.shiptransport.data.source;
 
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 
 import java.util.List;
@@ -186,4 +187,11 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> login(String username, String password);
+
+    /**
+     * 获取分包商预计划量
+     * @return
+     */
+    Observable<TaskVolume> getTaskVolume(int jumpWeek);
+//    Observable<TaskVolume> getTaskVolume(String account, String startDate, String endDate);
 }

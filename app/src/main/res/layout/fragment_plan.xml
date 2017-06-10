@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="任务工程量: 5000"
+                android:text="@string/task_valume"
                 android:textColor="#fff"
                 android:textSize="18sp"/>
         </LinearLayout>

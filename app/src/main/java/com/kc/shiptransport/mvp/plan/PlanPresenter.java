@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
+import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
 
@@ -54,6 +55,9 @@ public class PlanPresenter implements PlanContract.Presenter {
 
         // 3. 刷新
         doRefresh(jumpWeek);
+
+        // 4. 获取分包商计划量
+        getTaskVolume(jumpWeek);
     }
 
     @Override
@@ -134,8 +138,32 @@ public class PlanPresenter implements PlanContract.Presenter {
      * 获取任务量
      */
     @Override
-    public void getTaskVolume() {
+    public void getTaskVolume(int jumpWeek) {
+        mDataRepository
+                .getTaskVolume(jumpWeek)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<TaskVolume>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(TaskVolume value) {
+                        view.showTaskVolume(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     /**
