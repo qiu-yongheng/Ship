@@ -53,14 +53,14 @@ public class SupplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
             List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
-            if (weekTasks != null && !weekTasks.isEmpty()) {
+            // 必须验收后才能显示
+            if (weekTasks != null && !weekTasks.isEmpty() && weekTasks.get(0).getPassReceptionSandTime() != null) {
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                 ((NormalHolder) holder).mTvQuantum.setText(weekTask.getSandSupplyCount());
                 ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
 
                 // 判断是否已审核
-                //List<Acceptance> acceptances = DataSupport.where("ItemID = ? and isSupply = ?", String.valueOf(weekTask.getItemID()), "1").find(Acceptance.class);
                 String receptionSandTime = weekTask.getReceptionSandTime();
                 if (receptionSandTime != null && !receptionSandTime.equals("")) {
                     ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);

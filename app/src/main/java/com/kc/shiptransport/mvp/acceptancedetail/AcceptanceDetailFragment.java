@@ -206,7 +206,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     public void showShipDetail(Acceptance value) {
         shipItemNum = value.getShipItemNum();
         tvShipName.setText(value.getShipName());
-        tvShipId.setText("船次: " + shipItemNum == null ? "" : shipItemNum);
+        tvShipId.setText("船次: " + (shipItemNum == null ? "" : shipItemNum));
         tvSubontractor.setText("供应商: " + value.getSubcontractorName());
         tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
         tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");

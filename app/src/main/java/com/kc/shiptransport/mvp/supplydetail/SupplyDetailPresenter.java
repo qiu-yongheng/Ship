@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.supplydetail;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Acceptance;
@@ -91,9 +92,13 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
 
     @Override
     public void getTotalVolume(String ship, String deck) {
-        double i1 = ship.equals("") ? 0 : Double.valueOf(ship);
-        double i2 = deck.equals("") ? 0 : Double.valueOf(deck);
-        view.showTotalVolume(String.valueOf(i1 + i2));
+        try {
+            double i1 = ship.equals("") ? 0 : Double.valueOf(ship);
+            double i2 = deck.equals("") ? 0 : Double.valueOf(deck);
+            view.showTotalVolume(String.valueOf(i1 + i2));
+        } catch (Exception e) {
+            Toast.makeText(context, "请输入数字", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

@@ -29,7 +29,7 @@ public interface PlanContract {
         // 每天任务量统计
         void showDayCount(Double[] integers);
         void showLoading(boolean active);
-        void showSuccess();
+        void showError(String msg);
     }
 
     interface Presenter extends BasePresenter {

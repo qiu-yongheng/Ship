@@ -8,6 +8,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Ship;
@@ -57,8 +58,18 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((NormalHolder) holder).mRecyclerViewShipType.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
             ((NormalHolder) holder).mRecyclerViewShipType.setAdapter(new PlanSetItemAdapter(context, weekTasks));
             ((NormalHolder) holder).mRecyclerViewShipType.setVisibility(View.VISIBLE);
+
+            // 设置统计控件显示
+            ((NormalHolder) holder).mTvPlanAddTotal.setVisibility(View.VISIBLE);
+            // 统计
+            double d = 0;
+            for (WeekTask weekTask : weekTasks) {
+                d += Double.valueOf(weekTask.getSandSupplyCount());
+            }
+            ((NormalHolder) holder).mTvPlanAddTotal.setText(type + "统计: " + d);
         } else {
             ((NormalHolder) holder).mRecyclerViewShipType.setVisibility(View.GONE);
+            ((NormalHolder) holder).mTvPlanAddTotal.setVisibility(View.GONE);
         }
         /*----------------------查询对应type的计划数据-----------------------*/
 
@@ -85,10 +96,12 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private final AppCompatButton mBtnShipTypeSelect;
         private final AppCompatTextView mTvShipTypeName;
         private final RecyclerView mRecyclerViewShipType;
+        private final TextView mTvPlanAddTotal;
 
         public NormalHolder(View itemView) {
             super(itemView);
             mTvShipTypeName = (AppCompatTextView) itemView.findViewById(R.id.tv_ship_type_name);
+            mTvPlanAddTotal = (TextView) itemView.findViewById(R.id.tv_plan_add_total);
             mBtnShipTypeSelect = (AppCompatButton) itemView.findViewById(R.id.btn_ship_type_select);
             mRecyclerViewShipType = (RecyclerView) itemView.findViewById(R.id.recyclerview_ship_type);
         }

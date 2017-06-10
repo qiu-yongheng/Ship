@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.data.bean.AcceptanceBean;
+import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.ShipBean;
@@ -15,6 +16,7 @@ import com.kc.shiptransport.data.bean.TaskVolumeBean;
 import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.CommitShip;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
@@ -831,6 +833,38 @@ public class DataRepository implements DataSouceImpl {
                 taskPlanList.save();
 
                 e.onNext(taskPlanList);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 根据账号获取可以显示的模块
+     * @param account
+     * @return
+     */
+    @Override
+    public Observable<Boolean> getAppList(final String account) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                // 发送网络请求
+                String appList = mRemoteDataSource.getAppList(account);
+                // 解析数据
+                List<AppListBean> lists = gson.fromJson(appList, new TypeToken<List<AppListBean>>() {
+                }.getType());
+                // 保存数据到数据库
+                DataSupport.deleteAll(AppList.class);
+                for (AppListBean bean : lists) {
+                    AppList list = new AppList();
+                    list.setAppID(bean.getAppID());
+                    list.setAppPID(bean.getAppPID());
+                    list.setAppName(bean.getAppName());
+                    list.setAppUrl(bean.getAppUrl());
+                    list.save();
+                }
+
+                e.onNext(true);
                 e.onComplete();
             }
         });

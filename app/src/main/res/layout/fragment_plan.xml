@@ -30,8 +30,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="分包商A-40周进场计划"
-                    android:textColor="#fff"
-                    android:textSize="22sp"/>
+                    android:textColor="#fff"/>
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 
@@ -49,8 +48,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="2017年5月"
-                android:textColor="#fff"
-                android:textSize="18sp"/>
+                android:textColor="#fff"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/title_task"
@@ -59,8 +57,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/task_valume"
-                android:textColor="#fff"
-                android:textSize="18sp"/>
+                android:textColor="#fff"/>
         </LinearLayout>
 
         <LinearLayout

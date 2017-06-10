@@ -11,7 +11,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -64,9 +64,14 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .getShip(username)
                 .subscribeOn(Schedulers.io());
 
-        Observable.zip(subcontractor, ship, new BiFunction<Boolean, Boolean, Boolean>() {
+        // 获取要显示的模块
+        Observable<Boolean> appList = mDataRepository
+                .getAppList(username)
+                .subscribeOn(Schedulers.io());
+
+        Observable.zip(subcontractor, ship, appList, new Function3<Boolean, Boolean, Boolean, Boolean>() {
             @Override
-            public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception {
+            public Boolean apply(Boolean aBoolean, Boolean aBoolean2, Boolean aBoolean3) throws Exception {
                 return true;
             }
         }).observeOn(AndroidSchedulers.mainThread())

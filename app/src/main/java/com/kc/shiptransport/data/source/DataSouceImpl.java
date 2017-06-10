@@ -194,4 +194,11 @@ public interface DataSouceImpl {
      */
     Observable<TaskVolume> getTaskVolume(int jumpWeek);
 //    Observable<TaskVolume> getTaskVolume(String account, String startDate, String endDate);
+
+    /**
+     * 根据账号获取可以显示的模块
+     * @param account
+     * @return
+     */
+    Observable<Boolean> getAppList(String account);
 }

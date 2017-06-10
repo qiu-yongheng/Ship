@@ -86,7 +86,6 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_supply, container, false);
         unbinder = ButterKnife.bind(this, view);
-
         initViews(view);
         initListener();
         // TODO 获取数据

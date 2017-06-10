@@ -7,10 +7,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:orientation="vertical"
         android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_supply"
@@ -29,16 +29,15 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="验砂"
-                    android:textColor="#fff"
-                    android:textSize="22sp"/>
+                    android:textColor="#fff"/>
+
                 <TextView
                     android:id="@+id/toolbar_supply_man"
-                    android:text="验砂人: XXX"
-                    android:padding="5dp"
-                    android:textSize="22sp"
-                    android:textColor="#fff"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="验砂人: XXX"
+                    android:textColor="#fff"/>
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 
@@ -56,8 +55,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="2017年5月"
-                android:textColor="#fff"
-                android:textSize="18sp"/>
+                android:textColor="#fff"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/title_stay_supply"
@@ -66,8 +64,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="待验砂船次: 1"
-                android:textColor="#fff"
-                android:textSize="18sp"/>
+                android:textColor="#fff"/>
         </LinearLayout>
 
         <LinearLayout
@@ -138,7 +135,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_plan"
             android:layout_width="match_parent"
-            android:layout_height="306dp"/>
+            android:layout_height="255dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -212,22 +209,20 @@
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_task_require"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="18sp"
                 android:text="红色字体: 已验沙"
                 android:textColor="#dd00"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_total_quantum"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#000"
-                android:textSize="18sp"
-                android:text="黑色字体: 未验沙"/>
+                android:text="黑色字体: 未验沙"
+                android:textColor="#000"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -247,14 +242,14 @@
             android:textColor="#fff"/>
 
         <android.support.v7.widget.AppCompatButton
-            android:visibility="gone"
             android:id="@+id/btn_commit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="?colorPrimary"
             android:text="提交"
-            android:textColor="#fff"/>
+            android:textColor="#fff"
+            android:visibility="gone"/>
     </LinearLayout>
 
 

@@ -181,7 +181,11 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     public void onResume() {
         super.onResume();
         Log.d("==", "PlanSetFragment Resume");
-        presenter.getShipCategory(CalendarUtil.getdateToWeek("yyyy-MM-dd")[spinnerSelectDate.getSelectedItemPosition()]);
+        if (selectData != null) {
+            presenter.getShipCategory(selectData);
+            presenter.getShipCount(selectData);
+            presenter.getPlanMeasure(selectData);
+        }
     }
 
     @Override

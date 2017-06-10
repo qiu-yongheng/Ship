@@ -308,8 +308,8 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     }
 
     @Override
-    public void showSuccess() {
-        Toast.makeText(activity, "刷新成功", Toast.LENGTH_SHORT).show();
+    public void showError(String msg) {
+        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
