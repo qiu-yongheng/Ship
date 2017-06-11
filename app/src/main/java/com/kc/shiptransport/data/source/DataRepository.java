@@ -804,10 +804,10 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<TaskVolume> getTaskVolume(final int jumpWeek) {
-        return Observable.create(new ObservableOnSubscribe<TaskVolume>() {
+    public Observable<Float> getTaskVolume(final int jumpWeek) {
+        return Observable.create(new ObservableOnSubscribe<Float>() {
             @Override
-            public void subscribe(ObservableEmitter<TaskVolume> e) throws Exception {
+            public void subscribe(ObservableEmitter<Float> e) throws Exception {
                 /* 获取分包商账号 */
                 String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
                 /* 开始时间 */
@@ -816,23 +816,28 @@ public class DataRepository implements DataSouceImpl {
                 String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
 
                 String result = mRemoteDataSource.PublicSubcontractorSandPlanList(subcontractorAccount, startDay, endDay);
-                TaskVolumeBean taskPlanListBean = gson.fromJson(result, TaskVolumeBean.class);
+                List<TaskVolumeBean> lists = gson.fromJson(result, new TypeToken<List<TaskVolumeBean>>() {
+                }.getType());
                 // 初始化表
                 DataSupport.deleteAll(TaskVolume.class);
-                // 保存数据到数据库
-                TaskVolume taskPlanList = new TaskVolume();
-                taskPlanList.setItemID(taskPlanListBean.getItemID());
-                taskPlanList.setSubcontractorAccount(taskPlanListBean.getSubcontractorAccount());
-                taskPlanList.setSubcontractorName(taskPlanListBean.getSubcontractorName());
-                taskPlanList.setDate(taskPlanListBean.getDate());
-                taskPlanList.setBoatA(taskPlanListBean.getBoatA());
-                taskPlanList.setBoatB(taskPlanListBean.getBoatB());
-                taskPlanList.setBoatC(taskPlanListBean.getBoatC());
-                taskPlanList.setBoatD(taskPlanListBean.getBoatD());
-                taskPlanList.setAllBoatSum(taskPlanListBean.getAllBoatSum());
-                taskPlanList.save();
+                float f = 0;
+                for (TaskVolumeBean bean : lists) {
+                    // 保存数据到数据库
+                    TaskVolume taskPlanList = new TaskVolume();
+                    taskPlanList.setItemID(bean.getItemID());
+                    taskPlanList.setSubcontractorAccount(bean.getSubcontractorAccount());
+                    taskPlanList.setSubcontractorName(bean.getSubcontractorName());
+                    taskPlanList.setDate(bean.getDate());
+                    taskPlanList.setBoatA(bean.getBoatA());
+                    taskPlanList.setBoatB(bean.getBoatB());
+                    taskPlanList.setBoatC(bean.getBoatC());
+                    taskPlanList.setBoatD(bean.getBoatD());
+                    taskPlanList.setAllBoatSum(bean.getAllBoatSum());
+                    taskPlanList.save();
+                    f += bean.getAllBoatSum();
+                }
 
-                e.onNext(taskPlanList);
+                e.onNext(f);
                 e.onComplete();
             }
         });

@@ -1,5 +1,7 @@
 package com.kc.shiptransport.data.source.remote;
 
+import com.kc.shiptransport.util.BaseUrl;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -14,13 +16,11 @@ import java.io.IOException;
  * @desc ${TODD}
  */
 public class RemoteDataSource {
-    /** 正式服 */
-//    private final String EndPoint = "http://cchk3.ccgdc.com/AppService/cchk3WebService.asmx";
+    private final String EndPoint = BaseUrl.EndPoint;
 
-    /** 测试服 */
-    private final String EndPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
     /**
      * 登录
+     *
      * @return
      */
     public String getLoginInfo(String username, String password) {
@@ -66,6 +66,7 @@ public class RemoteDataSource {
 
     /**
      * 获取分包商信息
+     *
      * @param subcontractorAccount 用户名
      * @return
      */
@@ -111,6 +112,7 @@ public class RemoteDataSource {
 
     /**
      * 获取船信息
+     *
      * @param subcontractorAccount 用户名
      * @return
      */
@@ -156,9 +158,10 @@ public class RemoteDataSource {
 
     /**
      * 获取任务计划
+     *
      * @param SubcontractorAccount 用户名
-     * @param StartDay 开始时间 2017-05-18
-     * @param EndDay 结束时间 2017-05-18
+     * @param StartDay             开始时间 2017-05-18
+     * @param EndDay               结束时间 2017-05-18
      * @return
      */
     public String getWeekTaskInfo(String SubcontractorAccount, String StartDay, String EndDay) throws IOException, XmlPullParserException {
@@ -189,7 +192,7 @@ public class RemoteDataSource {
         envelope.setOutputSoapObject(rpc);
 
         HttpTransportSE transport = new HttpTransportSE(endPoint);
-            // 调用WebService
+        // 调用WebService
         transport.call(soapAction, envelope);
 
         // 获取返回的数据
@@ -201,6 +204,7 @@ public class RemoteDataSource {
 
     /**
      * 提交一周计划
+     *
      * @param jsonData json数据
      * @return
      */
@@ -246,6 +250,7 @@ public class RemoteDataSource {
 
     /**
      * 根据ItemID, 返回验收明细
+     *
      * @param itemID
      */
     public String getAcceptanceByItemID(int itemID) {
@@ -291,6 +296,7 @@ public class RemoteDataSource {
     /**
      * 提交验沙结果
      * UpdateForReceptionSandTime
+     *
      * @return
      */
     public String UpdateForReceptionSandTime(int itemID, String ReceptionSandTime, String Capacity, String DeckGauge) {
@@ -339,11 +345,12 @@ public class RemoteDataSource {
 
     /**
      * 提交验收结果
+     *
      * @param itemID
      * @param PassReceptionSandTime
      * @return
      */
-    public String UpdateForPassReceptionSandTime (int itemID, String PassReceptionSandTime) {
+    public String UpdateForPassReceptionSandTime(int itemID, String PassReceptionSandTime) {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
@@ -387,10 +394,11 @@ public class RemoteDataSource {
 
     /**
      * 分包商预验收评价
+     *
      * @param json
      * @return
      */
-    public String InsertPreAcceptanceEvaluation (String json) {
+    public String InsertPreAcceptanceEvaluation(String json) {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
@@ -432,18 +440,19 @@ public class RemoteDataSource {
 
     /**
      * 获取分包商预供砂计划
+     *
      * @param SubcontractorAccount
      * @param StartDate
      * @param EndDate
      * @return
      */
-    public String PublicSubcontractorSandPlanList (String SubcontractorAccount, String StartDate, String EndDate) {
+    public String PublicSubcontractorSandPlanList(String SubcontractorAccount, String StartDate, String EndDate) {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
         String methodName = "PublicSubcontractorSandPlanList";
         // EndPoint
-        String endPoint = EndPoint;
+        String endPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
         // SOAP Action
         String soapAction = "http://tempuri.org/PublicSubcontractorSandPlanList";
 
@@ -481,10 +490,11 @@ public class RemoteDataSource {
 
     /**
      * 根据账号进行权限管理
+     *
      * @param SubcontractorAccount
      * @return
      */
-    public String getAppList (String SubcontractorAccount) {
+    public String getAppList(String SubcontractorAccount) {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称

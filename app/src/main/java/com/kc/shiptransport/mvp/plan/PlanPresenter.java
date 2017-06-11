@@ -6,7 +6,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
-import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
 
@@ -143,14 +142,14 @@ public class PlanPresenter implements PlanContract.Presenter {
                 .getTaskVolume(jumpWeek)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<TaskVolume>() {
+                .subscribe(new Observer<Float>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(TaskVolume value) {
+                    public void onNext(Float value) {
                         view.showTaskVolume(value);
                     }
 

@@ -19,7 +19,7 @@ public interface PlanContract {
         // 当前日期
         void showCurrentDate(String date);
         // 任务量
-        void showTaskVolume(TaskVolume value);
+        void showTaskVolume(Float value);
         // 任务要求
         void showTaskRequire();
         // 当前任务总量
