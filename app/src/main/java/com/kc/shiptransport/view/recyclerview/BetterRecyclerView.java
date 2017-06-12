@@ -1,4 +1,4 @@
-package com.kc.shiptransport.view;
+package com.kc.shiptransport.view.recyclerview;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

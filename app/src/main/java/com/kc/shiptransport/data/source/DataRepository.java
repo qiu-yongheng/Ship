@@ -40,6 +40,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 
+import static org.litepal.crud.DataSupport.findAll;
+
 /**
  * @author 邱永恒
  * @time 2017/5/31 21:05
@@ -106,7 +108,7 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
                 // 从数据库获取分包商
-                List<Subcontractor> subcontractorList = DataSupport.findAll(Subcontractor.class);
+                List<Subcontractor> subcontractorList = findAll(Subcontractor.class);
                 int weekOfYearNum = CalendarUtil.getWeekOfYearNum(jumpWeek);
                 e.onNext(subcontractorList.get(0).getSubcontractorName() + "-" + weekOfYearNum + "周进场计划");
             }
@@ -130,7 +132,7 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(ObservableEmitter<List<WeekTask>> e) throws Exception {
                 // 从数据库获取一周任务分配数据 (每次请求, 初始化表, 所以只有一周的数据)
-                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
+                List<WeekTask> weekLists = findAll(WeekTask.class);
                 Log.d("==", "计划数量: " + weekLists.size());
                 e.onNext(weekLists);
                 e.onComplete();
@@ -145,7 +147,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<Double[]> e) throws Exception {
                 reset();
                 // 从数据库获取一周任务分配数据
-                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
+                List<WeekTask> weekLists = findAll(WeekTask.class);
                 for (WeekTask weekTask : weekLists) {
                     switch (Integer.valueOf(weekTask.getPosition()) % 7) {
                         case 0:
@@ -186,7 +188,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 Log.d("==", "第二");
                 /* 获取分包商账号 */
-                String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
+                String subcontractorAccount = findAll(Subcontractor.class).get(0).getSubcontractorAccount();
                 /* 开始时间 */
                 String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
                 /* 结束时间 */
@@ -206,7 +208,7 @@ public class DataRepository implements DataSouceImpl {
                 /* 3. 初始化数据库 */
                 DataSupport.deleteAll(WeekTask.class);
 
-                Log.d("==", "初始化数据库后: " + DataSupport.findAll(WeekTask.class).size());
+                Log.d("==", "初始化数据库后: " + findAll(WeekTask.class).size());
 
                 /* 4. 保存数据到数据库 */
                 for (WeekTaskBean bean : lists) {
@@ -224,7 +226,7 @@ public class DataRepository implements DataSouceImpl {
                     weekTask.save();
                 }
 
-                Log.d("==", "保存数据到数据库后: " + DataSupport.findAll(WeekTask.class).size());
+                Log.d("==", "保存数据到数据库后: " + findAll(WeekTask.class).size());
 
 
 
@@ -257,7 +259,7 @@ public class DataRepository implements DataSouceImpl {
 
 
                 // 从数据库获取一周任务分配数据
-                List<WeekTask> weekLists = DataSupport.findAll(WeekTask.class);
+                List<WeekTask> weekLists = findAll(WeekTask.class);
                 Log.d("==", "计划数量: " + weekLists.size());
 
                 // 重置ship的选择状态
@@ -292,7 +294,7 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(ObservableEmitter<List<List<Ship>>> e) throws Exception {
                 List<List<Ship>> lists = new ArrayList<>();
-                List<Ship> all = DataSupport.findAll(Ship.class);
+                List<Ship> all = DataSupport.order("ShipType asc").find(Ship.class);
                 // 根据type进行分类
                 Set set = new HashSet();
                 for (Ship ship : all) {
@@ -457,7 +459,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
                 int num = 0;
                 // 1. 获取一周任务
-                List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
+                List<WeekTask> weekTasks = findAll(WeekTask.class);
 
                 // 2. 统计未验收任务
                 if (weekTasks != null && !weekTasks.isEmpty()) {
@@ -630,7 +632,7 @@ public class DataRepository implements DataSouceImpl {
                 /* 1. 创建要提交的对象 */
                 SubmitBean bean = new SubmitBean(); // 创建一个对象
                 bean.setSubmitDate(CalendarUtil.getCurrentDate("yyyy-MM-dd")); // 提交时间
-                bean.setSubcontractorAccount(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount()); // 提交账号
+                bean.setSubcontractorAccount(findAll(Subcontractor.class).get(0).getSubcontractorAccount()); // 提交账号
 
                 List<Integer> removeItemIDS = new ArrayList<>();
 
@@ -809,7 +811,7 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(ObservableEmitter<Float> e) throws Exception {
                 /* 获取分包商账号 */
-                String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
+                String subcontractorAccount = findAll(Subcontractor.class).get(0).getSubcontractorAccount();
                 /* 开始时间 */
                 String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
                 /* 结束时间 */

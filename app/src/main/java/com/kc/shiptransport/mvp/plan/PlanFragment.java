@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -84,6 +85,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     private float dowmX;
     private float upX;
     private int jumpWeek = 0; // 要显示的week, 默认当周
+    private GestureDetector mGestureDetector;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
