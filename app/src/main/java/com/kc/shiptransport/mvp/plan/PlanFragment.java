@@ -46,17 +46,31 @@ import butterknife.Unbinder;
 
 public class PlanFragment extends Fragment implements PlanContract.View {
 
-    @BindView(R.id.toolbar_plan)
-    Toolbar toolbarPlan;
     Unbinder unbinder;
     @BindView(R.id.toolbar_plan_title)
     TextView toolbarPlanTitle;
+    @BindView(R.id.toolbar_plan)
+    Toolbar toolbarPlan;
     @BindView(R.id.title_time)
     AppCompatTextView titleTime;
     @BindView(R.id.title_task)
     AppCompatTextView titleTask;
-    @BindView(R.id.recyclerview_plan)
+    @BindView(R.id.recyclerview)
     RecyclerView recyclerviewPlan;
+    @BindView(R.id.tv_total_demand_0)
+    AppCompatTextView tvTotalDemand0;
+    @BindView(R.id.tv_total_demand_1)
+    AppCompatTextView tvTotalDemand1;
+    @BindView(R.id.tv_total_demand_2)
+    AppCompatTextView tvTotalDemand2;
+    @BindView(R.id.tv_total_demand_3)
+    AppCompatTextView tvTotalDemand3;
+    @BindView(R.id.tv_total_demand_4)
+    AppCompatTextView tvTotalDemand4;
+    @BindView(R.id.tv_total_demand_5)
+    AppCompatTextView tvTotalDemand5;
+    @BindView(R.id.tv_total_demand_6)
+    AppCompatTextView tvTotalDemand6;
     @BindView(R.id.tv_total_0)
     AppCompatTextView tvTotal0;
     @BindView(R.id.tv_total_1)
@@ -71,14 +85,13 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     AppCompatTextView tvTotal5;
     @BindView(R.id.tv_total_6)
     AppCompatTextView tvTotal6;
-    @BindView(R.id.tv_task_require)
-    AppCompatTextView tvTaskRequire;
-    @BindView(R.id.tv_total_quantum)
+    @BindView(R.id.tv_tip_black)
     AppCompatTextView tvTotalQuantum;
-    @BindView(R.id.btn_commit)
-    AppCompatButton btnCommit;
     @BindView(R.id.btn_refresh)
     AppCompatButton btnRefresh;
+    @BindView(R.id.btn_commit)
+    AppCompatButton btnCommit;
+
     private PlanContract.Presenter presenter;
     private PlanAdapter adapter;
     private PlanActivity activity;
@@ -137,7 +150,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
                     case MotionEvent.ACTION_MOVE:
                         if (dowmX == 0) {
                             dowmX = motionEvent.getX();
-                        Log.d("==", "MOVE X = " + motionEvent.getX());
+                            Log.d("==", "MOVE X = " + motionEvent.getX());
                         }
                         break;
                     case MotionEvent.ACTION_UP:
@@ -150,7 +163,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
                             jumpWeek--;
                             SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
                             presenter.start(jumpWeek);
-                        } else if(upX - dowmX < -100) {
+                        } else if (upX - dowmX < -100) {
                             Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求下一周数据
                             jumpWeek++;
@@ -231,9 +244,15 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         titleTime.setText(date);
     }
 
+    /**
+     * 任务缺口
+     *
+     * @param value
+     */
     @Override
     public void showTaskVolume(Float value) {
-        titleTask.setText("任务工程量: " + value);
+        String s = getResources().getText(R.string.task_valume).toString();
+        titleTask.setText(s + value);
     }
 
     @Override
@@ -288,6 +307,11 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         }
     }
 
+    /**
+     * 每日计划量
+     *
+     * @param integers
+     */
     @Override
     public void showDayCount(Double[] integers) {
         tvTotal0.setText(String.valueOf(integers[0]));
@@ -311,6 +335,22 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     @Override
     public void showError(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 每日需求
+     *
+     * @param datas
+     */
+    @Override
+    public void showDemandDayCount(Float[] datas) {
+        tvTotalDemand0.setText("");
+        tvTotalDemand1.setText("");
+        tvTotalDemand2.setText("");
+        tvTotalDemand3.setText("");
+        tvTotalDemand4.setText("");
+        tvTotalDemand5.setText("");
+        tvTotalDemand6.setText("");
     }
 
     /**

@@ -9,12 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
-
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 /**
  * @author 邱永恒
@@ -24,11 +19,11 @@ import java.util.List;
 
 public class PopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
-    private final Integer[] icon;
+    private final int[] icon;
     private final String[] tag;
     private OnRecyclerviewItemClickListener listener;
 
-    public PopAdapter(Context context, Integer[] icon, String[] tag) {
+    public PopAdapter(Context context, int[] icon, String[] tag) {
         this.context = context;
         this.icon = icon;
         this.tag = tag;
@@ -45,12 +40,12 @@ public class PopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         ((ItemHolder) holder).mTvHomeItem.setText(tag[position]);
 
         // 权限管理, 设置要显示的模块
-        List<AppList> appLists = DataSupport.where("AppID = ?", String.valueOf(position + 10)).find(AppList.class);
-        if (appLists != null && !appLists.isEmpty()) {
-            ((ItemHolder) holder).itemView.setVisibility(View.VISIBLE);
-        } else {
-            ((ItemHolder) holder).itemView.setVisibility(View.GONE);
-        }
+//        List<AppList> appLists = DataSupport.where("AppID = ?", String.valueOf(position + 10)).find(AppList.class);
+//        if (appLists != null && !appLists.isEmpty()) {
+//            ((ItemHolder) holder).itemView.setVisibility(View.VISIBLE);
+//        } else {
+//            ((ItemHolder) holder).itemView.setVisibility(View.GONE);
+//        }
 
         // 设置点击事件
         ((ItemHolder) holder).mIvHomeItem.setOnClickListener(new View.OnClickListener() {

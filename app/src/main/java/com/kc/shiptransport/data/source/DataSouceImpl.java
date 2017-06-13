@@ -200,4 +200,16 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> getAppList(String account);
+
+    /**
+     * 获取每日任务需求
+     * @return
+     */
+    Observable<Float[]> getDemandDayCount();
+
+    /**
+     * 获取分包商名字
+     * @return
+     */
+    Observable<String> getSubcontractorName();
 }

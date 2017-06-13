@@ -122,6 +122,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<String> e) throws Exception {
                 String date = CalendarUtil.getMonthOfYear(jumpWeek);
                 e.onNext(date);
+                e.onComplete();
             }
         });
     }
@@ -872,6 +873,41 @@ public class DataRepository implements DataSouceImpl {
                 }
 
                 e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 每日需求
+     * @return
+     */
+    @Override
+    public Observable<Float[]> getDemandDayCount() {
+        return Observable.create(new ObservableOnSubscribe<Float[]>() {
+            @Override
+            public void subscribe(ObservableEmitter<Float[]> e) throws Exception {
+                List<TaskVolume> all = DataSupport.order("Date asc").find(TaskVolume.class);
+
+            }
+        });
+    }
+
+    /**
+     * 获取分包商名字
+     * @return
+     */
+    @Override
+    public Observable<String> getSubcontractorName() {
+        return Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                if (!all.isEmpty()) {
+                    e.onNext(all.get(0).getSubcontractorName());
+                } else {
+                    e.onNext("");
+                }
                 e.onComplete();
             }
         });

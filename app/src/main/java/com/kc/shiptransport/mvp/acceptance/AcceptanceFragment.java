@@ -55,7 +55,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     AppCompatTextView titleTime;
     @BindView(R.id.title_stay_acceptance)
     AppCompatTextView titleStayAcceptance;
-    @BindView(R.id.recyclerview_plan)
+    @BindView(R.id.recyclerview)
     RecyclerView recyclerviewPlan;
     @BindView(R.id.tv_total_0)
     AppCompatTextView tvTotal0;
@@ -71,9 +71,9 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     AppCompatTextView tvTotal5;
     @BindView(R.id.tv_total_6)
     AppCompatTextView tvTotal6;
-    @BindView(R.id.tv_task_require)
+    @BindView(R.id.tv_tip_red)
     AppCompatTextView tvTaskRequire;
-    @BindView(R.id.tv_total_quantum)
+    @BindView(R.id.tv_tip_black)
     AppCompatTextView tvTotalQuantum;
     @BindView(R.id.btn_refresh)
     AppCompatButton btnRefresh;

@@ -27,6 +27,7 @@
         <activity android:name=".mvp.acceptance.AcceptanceActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.supplydetail.SupplyDetailActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.acceptancedetail.AcceptanceDetailActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.voyageinfo.VoyageInfoActivity" android:launchMode="singleTask"/>
     </application>
 
 </manifest>

@@ -29,7 +29,7 @@ public class RemoteDataSource {
         // 调用的方法名称
         String methodName = "getLogin";
         // EndPoint
-        String endPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
+        String endPoint = EndPoint;
         // SOAP Action
         String soapAction = "http://tempuri.org/getLogin";
 
@@ -50,6 +50,7 @@ public class RemoteDataSource {
         envelope.setOutputSoapObject(rpc);
 
         HttpTransportSE transport = new HttpTransportSE(endPoint);
+
         try {
             // 调用WebService
             transport.call(soapAction, envelope);

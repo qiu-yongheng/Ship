@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="50dp">
-
+    <!-- 显示数据 -->
     <LinearLayout
         android:id="@+id/ll_task"
         android:layout_width="match_parent"
@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
+    <!-- 显示日期 -->
     <LinearLayout
         android:id="@+id/ll_date"
         android:layout_width="match_parent"

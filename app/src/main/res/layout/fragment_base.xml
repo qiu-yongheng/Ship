@@ -7,13 +7,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_supply"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?colorPrimary"
@@ -25,6 +25,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -32,7 +33,7 @@
                     android:textColor="#fff"/>
 
                 <TextView
-                    android:id="@+id/toolbar_supply_man"
+                    android:id="@+id/toolbar_other_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -58,7 +59,7 @@
                 android:textColor="#fff"/>
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/title_stay_supply"
+                android:id="@+id/title_stay_info"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -133,7 +134,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_plan"
+            android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="255dp"/>
 
@@ -174,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="30000"/>
+                android:text="0"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_total_4"
@@ -198,7 +199,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="5000"/>
+                android:text="0"/>
         </LinearLayout>
 
         <LinearLayout
@@ -207,22 +208,22 @@
             android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_task_require"
+                android:id="@+id/tv_tip_red"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="红色字体: 已验沙"
-                android:textColor="#dd00"/>
+                android:textColor="@color/text_red"/>
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_total_quantum"
+                android:id="@+id/tv_tip_black"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="黑色字体: 未验沙"
-                android:textColor="#000"/>
+                android:textColor="@color/text_black"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -11,9 +11,11 @@ import com.kc.shiptransport.util.CalendarUtil;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -55,8 +57,40 @@ public class PlanPresenter implements PlanContract.Presenter {
         // 3. 刷新
         doRefresh(jumpWeek);
 
-        // 4. 获取分包商计划量
+        // 4. 获取分包商计划量缺口
         getTaskVolume(jumpWeek);
+    }
+
+    /**
+     * 获取每日需求
+     */
+    @Override
+    public void getDemandDayCount() {
+        mDataRepository
+                .getDemandDayCount()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Float[]>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Float[] value) {
+                        view.showDemandDayCount(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -138,10 +172,25 @@ public class PlanPresenter implements PlanContract.Presenter {
      */
     @Override
     public void getTaskVolume(int jumpWeek) {
-        mDataRepository
+        Observable<Double[]> daycount = mDataRepository
+                .getDayCount()
+                .subscribeOn(Schedulers.io());
+
+        Observable<Float> taskvolume = mDataRepository
                 .getTaskVolume(jumpWeek)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+
+        Observable.zip(daycount, taskvolume, new BiFunction<Double[], Float, Float>() {
+            @Override
+            public Float apply(Double[] doubles, Float aFloat) throws Exception {
+                int total = 0;
+                for (Double integer : doubles) {
+                    total += integer;
+                }
+                float v = aFloat - total;
+                return v > 0 ? v : 0;
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Float>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -160,7 +209,8 @@ public class PlanPresenter implements PlanContract.Presenter {
 
                     @Override
                     public void onComplete() {
-
+                        // 获取每日需求
+                        getDemandDayCount();
                     }
                 });
     }
@@ -185,6 +235,8 @@ public class PlanPresenter implements PlanContract.Presenter {
             total += integer;
         }
         view.showTotalTaskVolume(total);
+
+
     }
 
     /**
@@ -269,7 +321,6 @@ public class PlanPresenter implements PlanContract.Presenter {
     /**
      * 网络请求
      * 保存数据到数据库
-     *
      */
     @Override
     public void doRefresh(final int jumpWeek) {

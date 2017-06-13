@@ -139,7 +139,7 @@
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_plan"
+            android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="255dp"/>
 
@@ -213,7 +213,7 @@
             android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_task_require"
+                android:id="@+id/tv_tip_red"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -222,7 +222,7 @@
                 android:textColor="#dd00"/>
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_total_quantum"
+                android:id="@+id/tv_tip_black"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

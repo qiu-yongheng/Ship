@@ -15,6 +15,7 @@ import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.home.PopAdapter;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
+import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
 
 
 /**
@@ -74,19 +75,27 @@ public class HomeItemPop extends BasePopWindown {
         /**------------3. 初始化子控件------------**/
         mRvHomeSupply = (RecyclerView) view.findViewById(R.id.rv_home_supply);
         mRvHomeSupply.setLayoutManager(new GridLayoutManager(context, 3));
-        PopAdapter adapter = new PopAdapter(context, new Integer[]{R.mipmap.plan, R.mipmap.acceptance, R.mipmap.supply_sand}, new String[]{"分包商进场计划", "待验收航次", "待验砂船次"});
+        PopAdapter adapter = new PopAdapter(context, new int[] {R.mipmap.plan, R.mipmap.acceptance, R.mipmap.supply_sand, R.mipmap.supply_sand}, context.getResources().getStringArray(R.array.home_item_pop));
+
         adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 switch (position) {
                     case 0:
+                        // 分包商进场计划
                         PlanActivity.navigateToPlanActivity(context);
                         break;
                     case 1:
+                        // 待验收航次
                         AcceptanceActivity.navigateToAcceptanceActivity(context);
                         break;
                     case 2:
+                        // 待验砂航次
                         SupplyActivity.navigateToSupplyActivity(context);
+                        break;
+                    case 3:
+                        // 分包商航次信息完善
+                        VoyageInfoActivity.navigateToVoyageInfoActivity(context);
                         break;
                 }
                 onDismiss();

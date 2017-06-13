@@ -1,6 +1,5 @@
 package com.kc.shiptransport.mvp.plan;
 
-import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -30,6 +29,8 @@ public interface PlanContract {
         void showDayCount(Double[] integers);
         void showLoading(boolean active);
         void showError(String msg);
+        // 每日需求
+        void showDemandDayCount(Float[] datas);
     }
 
     interface Presenter extends BasePresenter {
@@ -52,5 +53,7 @@ public interface PlanContract {
         void doRefresh(int jumpWeek);
         //
         void start(int jumpWeek);
+        // 获取每日需求
+        void getDemandDayCount();
     }
 }

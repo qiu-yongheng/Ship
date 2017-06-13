@@ -1,4 +1,4 @@
-package com.kc.shiptransport.mvp.supply;
+package com.kc.shiptransport.mvp.voyageinfo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
-import com.kc.shiptransport.mvp.supplydetail.SupplyDetailActivity;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -35,21 +30,24 @@ import butterknife.Unbinder;
 
 /**
  * @author qiuyongheng
- * @time 2017/5/31  17:03
+ * @time 2017/6/13  15:40
  * @desc ${TODD}
  */
 
-public class SupplyFragment extends Fragment implements SupplyContract.View {
+public class VoyageFragment extends Fragment implements VoyageContract.View {
 
-    Unbinder unbinder;
+    @BindView(R.id.toolbar_title)
+    TextView toolbarTitle;
     @BindView(R.id.toolbar_other_info)
-    TextView toolbarSupplyMan;
+    TextView toolbarOtherInfo;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.title_time)
     AppCompatTextView titleTime;
     @BindView(R.id.title_stay_info)
-    AppCompatTextView titleStaySupply;
+    AppCompatTextView titleStayInfo;
     @BindView(R.id.recyclerview)
-    RecyclerView recyclerviewPlan;
+    RecyclerView recyclerview;
     @BindView(R.id.tv_total_0)
     AppCompatTextView tvTotal0;
     @BindView(R.id.tv_total_1)
@@ -65,42 +63,31 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
     @BindView(R.id.tv_total_6)
     AppCompatTextView tvTotal6;
     @BindView(R.id.tv_tip_red)
-    AppCompatTextView tvTaskRequire;
+    AppCompatTextView tvTipRed;
     @BindView(R.id.tv_tip_black)
-    AppCompatTextView tvTotalQuantum;
+    AppCompatTextView tvTipBlack;
     @BindView(R.id.btn_refresh)
     AppCompatButton btnRefresh;
     @BindView(R.id.btn_commit)
     AppCompatButton btnCommit;
-    @BindView(R.id.toolbar)
-    Toolbar toolbarSupply;
-    private SupplyContract.Presenter presenter;
-    private SupplyActivity activity;
-    private int jumpWeek = 0; // 要显示的week, 默认当周
+    Unbinder unbinder;
+    private VoyageInfoActivity activity;
+    private VoyageContract.Presenter presenter;
     private float dowmX;
     private float upX;
-    private SupplyAdapter adapter;
+    private int jumpWeek = 0; // 要显示的week, 默认当周
+    private RecyclerAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_base, container, false);
+        View view = inflater.inflate(R.layout.fragment_voyage, container, false);
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
         // TODO 获取数据
         presenter.start(jumpWeek);
         return view;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void initListener() {
@@ -113,7 +100,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
         });
 
         /* 滑动监听 */
-        recyclerviewPlan.setOnTouchListener(new View.OnTouchListener() {
+        recyclerview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
@@ -149,7 +136,6 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
                 return false;
             }
         });
-
     }
 
     @Override
@@ -157,17 +143,17 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
         SharePreferenceUtil.saveInt(getContext(), SettingUtil.WEEK_JUMP_SUPPLY, 0);
         // 允许使用menu
         setHasOptionsMenu(true);
-        activity = (SupplyActivity) getActivity();
-        activity.setSupportActionBar(toolbarSupply);
+        activity = (VoyageInfoActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerviewPlan.setLayoutManager(new GridLayoutManager(getActivity(), 7));
+        recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         // 添加边框
-        recyclerviewPlan.addItemDecoration(new DividerGridItemDecoration(getActivity()));
+        recyclerview.addItemDecoration(new DividerGridItemDecoration(getActivity()));
     }
 
     @Override
-    public void setPresenter(SupplyContract.Presenter presenter) {
+    public void setPresenter(VoyageContract.Presenter presenter) {
         this.presenter = presenter;
     }
 
@@ -177,58 +163,34 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
         unbinder.unbind();
     }
 
-    /**
-     * 显示验沙人
-     *
-     * @param supplyMan
-     */
     @Override
-    public void showSupplyMan(String supplyMan) {
-        toolbarSupplyMan.setText("验砂人: " + supplyMan);
+    public void showTitle(String data) {
+        toolbarTitle.setText(data);
     }
 
-    /**
-     * 显示当前时间
-     *
-     * @param date
-     */
     @Override
-    public void showCurrentDate(String date) {
-        titleTime.setText(date);
+    public void showTitleOtherInfo(String data) {
+        toolbarOtherInfo.setText(data);
     }
 
-    /**
-     * 显示未验沙船
-     */
     @Override
-    public void showStaySupplyShip(String num) {
-        titleStaySupply.setText("待验砂船次:" + num);
+    public void showTime(String data) {
+        titleTime.setText(data);
     }
 
-    /**
-     * 创建adapter, 绑定recyclerview
-     *
-     * @param dates
-     * @param weekLists
-     */
     @Override
-    public void showWeekTask(List<String> dates, final List<WeekTask> weekLists) {
+    public void showStayInfo(String data) {
+        titleStayInfo.setText(data);
+    }
+
+    @Override
+    public void showWeekTask(List<String> dates) {
         if (adapter == null) {
-            adapter = new SupplyAdapter(getContext(), dates, weekLists);
+            adapter = new RecyclerAdapter(getContext(), dates);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
-                    if (weekTasks != null && !weekTasks.isEmpty()) {
-                        String receptionSandTime = weekTasks.get(0).getReceptionSandTime();
-                        if (receptionSandTime != null && !receptionSandTime.isEmpty()) {
-                            // 已验收
-                            SupplyDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), true);
-                        } else {
-                            // 未验收
-                            SupplyDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), false);
-                        }
-                    }
+
                 }
 
                 @Override
@@ -236,68 +198,26 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
 
                 }
             });
-            recyclerviewPlan.setAdapter(adapter);
+
+            recyclerview.setAdapter(adapter);
+
         } else {
             adapter.notifyDataSetChanged();
         }
     }
 
-    /**
-     * 显示每日总量
-     *
-     * @param integers
-     */
     @Override
     public void showDayCount(Double[] integers) {
-        tvTotal0.setText(String.valueOf(integers[0]));
-        tvTotal1.setText(String.valueOf(integers[1]));
-        tvTotal2.setText(String.valueOf(integers[2]));
-        tvTotal3.setText(String.valueOf(integers[3]));
-        tvTotal4.setText(String.valueOf(integers[4]));
-        tvTotal5.setText(String.valueOf(integers[5]));
-        tvTotal6.setText(String.valueOf(integers[6]));
+
     }
 
-    /**
-     * 是否显示加载
-     *
-     * @param active
-     */
     @Override
     public void showLoading(boolean active) {
-        if (active) {
-            activity.showProgressDailog("加载中", "加载中");
-        } else {
-            activity.hideProgressDailog();
-        }
-    }
 
-    /**
-     * 显示错误
-     */
-    @Override
-    public void showError() {
-        Toast.makeText(activity, "加载失败", Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * 退出时, 取消所有rxjava操作
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        presenter.unsubscribe();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
+    public void showError(String msg) {
 
-        if (presenter != null) {
-            presenter.getStaySupplyShip();
-        }
     }
 }
