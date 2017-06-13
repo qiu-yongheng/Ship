@@ -23,24 +23,26 @@
     <string name="text_plan_demand">红色字体: 需求</string>
     <string name="text_plan_plan">黑色字体: 计划</string>
     <string name="text_save_voyage">保存打印</string>
-    <string name="text_ship_location">装船地点: </string>
+    <string name="text_ship_location">装船地点</string>
     <string name="text_unfilled">未填写</string>
-    <string name="text_ship_date">装船日期:</string>
-    <string name="text_sample_num">基样编号:</string>
-    <string name="text_material_from">料源来源地:</string>
-    <string name="text_start_date">开始装船时间:</string>
-    <string name="text_end_date">结束装船时间:</string>
-    <string name="text_come_date">抵达码头时间:</string>
-    <string name="text_exit_date">离开码头时间:</string>
-    <string name="text_come_anchor_date">到达锚地时间:</string>
-    <string name="text_clean_date">清关时间:</string>
-    <string name="text_material_ordar">材料分类:</string>
+    <string name="text_ship_date">装船日期</string>
+    <string name="text_sample_num">基样编号</string>
+    <string name="text_material_from">料源来源地</string>
+    <string name="text_start_date">开始装船时间</string>
+    <string name="text_end_date">结束装船时间</string>
+    <string name="text_come_date">抵达码头时间</string>
+    <string name="text_exit_date">离开码头时间</string>
+    <string name="text_come_anchor_date">到达锚地时间</string>
+    <string name="text_clean_date">清关时间</string>
+    <string name="text_material_ordar">材料分类</string>
+    <string name="title_voyage">船次记录表</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
         <item>分包商进场计划</item>
         <item>待验收航次</item>
         <item>待验砂船次</item>
+        <item>分包商航次信息完善</item>
         <item>分包商航次信息完善</item>
     </array>
 </resources>

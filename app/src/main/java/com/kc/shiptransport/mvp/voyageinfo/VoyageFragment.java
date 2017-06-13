@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.mvp.voyagedetail.VoyageDetailActivity;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
@@ -190,7 +191,7 @@ public class VoyageFragment extends Fragment implements VoyageContract.View {
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-
+                    VoyageDetailActivity.startActivity(activity, position);
                 }
 
                 @Override
@@ -213,11 +214,15 @@ public class VoyageFragment extends Fragment implements VoyageContract.View {
 
     @Override
     public void showLoading(boolean active) {
-
+        if (active) {
+            activity.showProgressDailog("加载中", "加载中...");
+        } else {
+            activity.hideProgressDailog();
+        }
     }
 
     @Override
     public void showError(String msg) {
-
+        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
     }
 }

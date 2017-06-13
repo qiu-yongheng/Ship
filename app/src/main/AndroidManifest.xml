@@ -28,6 +28,8 @@
         <activity android:name=".mvp.supplydetail.SupplyDetailActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.acceptancedetail.AcceptanceDetailActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.voyageinfo.VoyageInfoActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.voyagedetail.VoyageDetailActivity" android:launchMode="singleTask"/>
+        <activity android:name=".view.actiivty.InputActivity" android:launchMode="singleTask"/>
     </application>
 
 </manifest>

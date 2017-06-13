@@ -1,5 +1,9 @@
 package com.kc.shiptransport.mvp.voyagedetail;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.kc.shiptransport.R;
@@ -15,11 +19,17 @@ import com.kc.shiptransport.mvp.BaseActivity;
 public class VoyageDetailActivity extends BaseActivity{
 
     private VoyageDetailFragment fragment;
+    private final String TAG_POSITION = "VoyageDetailActivity_position";
+    public int mPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
+
+        // 获取position
+        Bundle extras = getIntent().getExtras();
+        mPosition = extras.getInt(TAG_POSITION);
 
         if (savedInstanceState != null) {
             fragment = (VoyageDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "VoyageDetailFragment");
@@ -35,5 +45,28 @@ public class VoyageDetailActivity extends BaseActivity{
         }
 
         new VoyageDetailPresenter(this, fragment, new DataRepository());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (fragment.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, "VoyageDetailFragment", fragment);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static void startActivity(Activity activity, int position) {
+        Intent intent = new Intent(activity, VoyageDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("VoyageDetailActivity_position", position);
+        intent.putExtras(bundle);
+        activity.startActivity(intent, bundle);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fragment.onActivityResult(requestCode, resultCode, data);
     }
 }
