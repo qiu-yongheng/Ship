@@ -31,4 +31,30 @@ public class SettingUtil {
 
     /* 验收 */
     public static final String ACCEPTANCE = "acceptance";
+
+
+    /*-----------------------------------------------checkbox单选框--------------------------------------------------*/
+    /* 已验收 */
+    public static final String ACCEPTED = "Accepted";
+
+    /* 未验收 */
+    public static final String NO_ACCEPTED = "No_Accepted";
+
+
+
+
+    /*-----------------------------------------------checkbox单选框--------------------------------------------------*/
+
+
+
+
+
+    /*-----------------------------------------------审核类型--------------------------------------------------*/
+    /* 验收 */
+    public static final int TYPE_ACCEPT = 1;
+    /* 验砂 */
+    public static final int TYPE_SUPPLY = 2;
+    /* 量方 */
+    public static final int TYPE_AMOUNT = 3;
+    /*-----------------------------------------------审核类型--------------------------------------------------*/
 }

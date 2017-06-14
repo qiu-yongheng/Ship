@@ -8,4 +8,7 @@
     <color name="text_black">#000</color>
     <color name="text_white">#fff</color>
     <color name="view_gray">#888</color>
+    <color name="text_gray_bg">#EEEEEB</color>
+    <color name="text_gray">#b4b4b4</color>
+    <color name="text_tag_gray">#515151</color>
 </resources>

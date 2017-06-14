@@ -38,6 +38,7 @@ import butterknife.Unbinder;
 
 public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContract.View {
 
+
     @BindView(R.id.toolbar_supply_detail)
     Toolbar toolbarSupplyDetail;
     @BindView(R.id.tv_ship_name)
@@ -62,6 +63,8 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     TextView tvTotalVolume;
     @BindView(R.id.tv_supply_time)
     TextView tvSupplyTime;
+    @BindView(R.id.et_batch)
+    EditText etBatch;
     @BindView(R.id.btn_acceptance_cancel)
     AppCompatButton btnAcceptanceCancel;
     @BindView(R.id.btn_acceptance_commit)
@@ -117,12 +120,11 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String ship = etShipVolume.getText().toString().trim();
-                String deck = etDeckVolume.getText().toString().trim();
-                if (ship.equals("") && deck.equals("")) {
-                    Toast.makeText(activity, "舱容或甲板方不能为空", Toast.LENGTH_SHORT).show();
+                String batch = etBatch.getText().toString().trim();
+                if (batch.equals("")) {
+                    Toast.makeText(activity, "BATCH不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), ship, deck);
+                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), batch);
                 }
             }
         });

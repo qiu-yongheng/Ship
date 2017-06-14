@@ -9,83 +9,118 @@ package com.kc.shiptransport.data.bean;
 public class WeekTaskBean {
 
     /**
-     * ItemID : 2
+     * ItemID : 510
      * SubcontractorAccount : yflf
-     * PlanDay : 2017-05-20
-     * ShipAccount : zd386
-     * ShipName : 振东386
+     * SubcontractorName : 誉丰联发
+     * PlanDay : 2017-06-09
+     * ShipAccount : shh233
+     * ShipName : 順宏海233
      * ShipType : A类
-     * SandSupplyCount : 3000
+     * SandSupplyCount : 3000.0
+     * Capacity : null
+     * DeckGauge : null
+     * ReceptionSandTime : null
+     * PreAcceptanceTime : null
+     * SandSubcontractorPreAcceptanceEvaluationID : null
+     *  DefaultCapacity  : null
+     * defaultDeckGauge : null
      */
 
     private int ItemID;
     private String SubcontractorAccount;
+    private String SubcontractorName;
     private String PlanDay;
     private String ShipAccount;
     private String ShipName;
     private String ShipType;
-    private String SandSupplyCount;
-    // 验砂时间
+    private double SandSupplyCount;
+    private Float Capacity;
+    private Float DeckGauge;
     private String ReceptionSandTime;
-    // 预验收时间
-    private String PassReceptionSandTime;
-    // 分包商评价ID
+    private String PreAcceptanceTime;
+    private String TheAmountOfTime; // 量方时间
     private int SandSubcontractorPreAcceptanceEvaluationID;
+    private Float DefaultCapacity;
+    private Float defaultDeckGauge;
 
     public int getItemID() {
         return ItemID;
     }
 
-    public void setItemID(int ItemID) {
-        this.ItemID = ItemID;
+    public void setItemID(int itemID) {
+        ItemID = itemID;
     }
 
     public String getSubcontractorAccount() {
         return SubcontractorAccount;
     }
 
-    public void setSubcontractorAccount(String SubcontractorAccount) {
-        this.SubcontractorAccount = SubcontractorAccount;
+    public void setSubcontractorAccount(String subcontractorAccount) {
+        SubcontractorAccount = subcontractorAccount;
+    }
+
+    public String getSubcontractorName() {
+        return SubcontractorName;
+    }
+
+    public void setSubcontractorName(String subcontractorName) {
+        SubcontractorName = subcontractorName;
     }
 
     public String getPlanDay() {
         return PlanDay;
     }
 
-    public void setPlanDay(String PlanDay) {
-        this.PlanDay = PlanDay;
+    public void setPlanDay(String planDay) {
+        PlanDay = planDay;
     }
 
     public String getShipAccount() {
         return ShipAccount;
     }
 
-    public void setShipAccount(String ShipAccount) {
-        this.ShipAccount = ShipAccount;
+    public void setShipAccount(String shipAccount) {
+        ShipAccount = shipAccount;
     }
 
     public String getShipName() {
         return ShipName;
     }
 
-    public void setShipName(String ShipName) {
-        this.ShipName = ShipName;
+    public void setShipName(String shipName) {
+        ShipName = shipName;
     }
 
     public String getShipType() {
         return ShipType;
     }
 
-    public void setShipType(String ShipType) {
-        this.ShipType = ShipType;
+    public void setShipType(String shipType) {
+        ShipType = shipType;
     }
 
-    public String getSandSupplyCount() {
+    public double getSandSupplyCount() {
         return SandSupplyCount;
     }
 
-    public void setSandSupplyCount(String SandSupplyCount) {
-        this.SandSupplyCount = SandSupplyCount;
+    public void setSandSupplyCount(double sandSupplyCount) {
+        SandSupplyCount = sandSupplyCount;
+    }
+
+    public Float getCapacity() {
+        return Capacity;
+    }
+
+    public void setCapacity(Float capacity) {
+        Capacity = capacity;
+    }
+
+    public Float getDeckGauge() {
+        return DeckGauge;
+    }
+
+    public void setDeckGauge(Float deckGauge) {
+        DeckGauge = deckGauge;
     }
 
     public String getReceptionSandTime() {
@@ -96,12 +131,12 @@ public class WeekTaskBean {
         ReceptionSandTime = receptionSandTime;
     }
 
-    public String getPassReceptionSandTime() {
-        return PassReceptionSandTime;
+    public String getPreAcceptanceTime() {
+        return PreAcceptanceTime;
     }
 
-    public void setPassReceptionSandTime(String passReceptionSandTime) {
-        PassReceptionSandTime = passReceptionSandTime;
+    public void setPreAcceptanceTime(String preAcceptanceTime) {
+        PreAcceptanceTime = preAcceptanceTime;
     }
 
     public int getSandSubcontractorPreAcceptanceEvaluationID() {
@@ -110,5 +145,29 @@ public class WeekTaskBean {
 
     public void setSandSubcontractorPreAcceptanceEvaluationID(int sandSubcontractorPreAcceptanceEvaluationID) {
         SandSubcontractorPreAcceptanceEvaluationID = sandSubcontractorPreAcceptanceEvaluationID;
+    }
+
+    public Float getDefaultCapacity() {
+        return DefaultCapacity;
+    }
+
+    public void setDefaultCapacity(Float defaultCapacity) {
+        DefaultCapacity = defaultCapacity;
+    }
+
+    public String getTheAmountOfTime() {
+        return TheAmountOfTime;
+    }
+
+    public void setTheAmountOfTime(String theAmountOfTime) {
+        TheAmountOfTime = theAmountOfTime;
+    }
+
+    public Float getDefaultDeckGauge() {
+        return defaultDeckGauge;
+    }
+
+    public void setDefaultDeckGauge(Float defaultDeckGauge) {
+        this.defaultDeckGauge = defaultDeckGauge;
     }
 }

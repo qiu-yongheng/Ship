@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -54,20 +56,28 @@ public class SupplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
             // 必须验收后才能显示
-            if (weekTasks != null && !weekTasks.isEmpty() && weekTasks.get(0).getPassReceptionSandTime() != null) {
+            if (weekTasks != null && !weekTasks.isEmpty() && weekTasks.get(0).getPreAcceptanceTime() != null) {
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
-                ((NormalHolder) holder).mTvQuantum.setText(weekTask.getSandSupplyCount());
-                ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
+                ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
+                //((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
 
                 // 判断是否已审核
                 String receptionSandTime = weekTask.getReceptionSandTime();
                 if (receptionSandTime != null && !receptionSandTime.equals("")) {
                     ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
                     ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
+
+                    // 根据单选判断是否显示
+                    boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
+                    ((NormalHolder) holder).mLlTask.setVisibility(isAccepted? View.VISIBLE : View.INVISIBLE);
                 } else {
                     ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
                     ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
+
+                    // 根据单选判断是否显示
+                    boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.NO_ACCEPTED);
+                    ((NormalHolder) holder).mLlTask.setVisibility(isAccepted? View.VISIBLE : View.INVISIBLE);
                 }
 
             } else {

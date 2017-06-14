@@ -30,7 +30,7 @@ public interface SupplyDetailContract {
         void getShipDetail(int itemID);
         void getSupplyTime();
         void getTotalVolume(String ship, String deck);
-        void commit(int itemID, String ReceptionSandTime, String Capacity, String DeckGauge);
+        void commit(int itemID, String ReceptionSandTime, String Batch);
         void start(int itemID);
     }
 }

@@ -37,7 +37,7 @@ public class PlanSetItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         WeekTask weekTask = list.get(position);
 
         ((NormalHolder)holder).mTvPlanSetItem.setText(weekTask.getShipName());
-        ((NormalHolder)holder).mTvPlanSetItemMax.setText(weekTask.getSandSupplyCount());
+        ((NormalHolder)holder).mTvPlanSetItemMax.setText(String.valueOf(weekTask.getSandSupplyCount()));
     }
 
     class NormalHolder extends RecyclerView.ViewHolder {

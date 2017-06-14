@@ -23,13 +23,17 @@ public class Acceptance extends DataSupport{
     private String SystemDate;
     private String Capacity;
     private String DeckGauge;
+    private Float Deduction;
     private String ReceptionSandTime;
     private String PassReceptionSandTime;
+    private String TheAmountOfTime; // 量方时间
     private int TotalCompleteRide;
     private String TotalCompleteSquare;
     private String AvgSquare;
     private String CurrentTide;
     private String ShipItemNum;
+    private Float DefaultCapacity; // 默认舱容
+    private Float defaultDeckGauge; // 默认甲板方
 
     private String isSupply; // "1" : 已提交 "0" : 未提交
     private String isAcceptance; // "1" : 已提交 "0" : 未提交
@@ -217,5 +221,37 @@ public class Acceptance extends DataSupport{
 
     public void setShipItemNum(String shipItemNum) {
         ShipItemNum = shipItemNum;
+    }
+
+    public Float getDefaultCapacity() {
+        return DefaultCapacity;
+    }
+
+    public void setDefaultCapacity(Float defaultCapacity) {
+        DefaultCapacity = defaultCapacity;
+    }
+
+    public Float getDefaultDeckGauge() {
+        return defaultDeckGauge;
+    }
+
+    public void setDefaultDeckGauge(Float defaultDeckGauge) {
+        this.defaultDeckGauge = defaultDeckGauge;
+    }
+
+    public Float getDeduction() {
+        return Deduction;
+    }
+
+    public void setDeduction(Float deduction) {
+        Deduction = deduction;
+    }
+
+    public String getTheAmountOfTime() {
+        return TheAmountOfTime;
+    }
+
+    public void setTheAmountOfTime(String theAmountOfTime) {
+        TheAmountOfTime = theAmountOfTime;
     }
 }

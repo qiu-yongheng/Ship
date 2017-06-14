@@ -30,6 +30,12 @@
         <activity android:name=".mvp.voyageinfo.VoyageInfoActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.voyagedetail.VoyageDetailActivity" android:launchMode="singleTask"/>
         <activity android:name=".view.actiivty.InputActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.scanner.ScannerActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.scannerdetail.ScannerDetailActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.amount.AmountActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.amountdetail.AmountDetailActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.sample.SampleActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.sampledetail.SampleDetailActivity" android:launchMode="singleTask"/>
     </application>
 
 </manifest>

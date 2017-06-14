@@ -55,7 +55,7 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (weekTasks != null && !weekTasks.isEmpty()) {
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
-                ((NormalHolder) holder).mTvQuantum.setText(weekTask.getSandSupplyCount());
+                ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
                 ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
             } else {
                 ((NormalHolder) holder).mLlTask.setVisibility(View.INVISIBLE);

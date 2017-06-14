@@ -85,11 +85,10 @@ public interface DataSouceImpl {
      *
      * @param itemID
      * @param ReceptionSandTime
-     * @param Capacity
-     * @param DeckGauge
+     * @param Batch
      * @return
      */
-    Observable<Integer> updateForReceptionSandTime(int itemID, String ReceptionSandTime, String Capacity, String DeckGauge);
+    Observable<Integer> updateForReceptionSandTime(int itemID, String ReceptionSandTime, String Batch);
 
 //    /**
 //     * 提交验收审核结果
@@ -204,12 +203,19 @@ public interface DataSouceImpl {
     /**
      * 获取每日任务需求
      * @return
+     * @param jumpWeek
      */
-    Observable<Float[]> getDemandDayCount();
+    Observable<Double[]> getDemandDayCount(int jumpWeek);
 
     /**
      * 获取分包商名字
      * @return
      */
     Observable<String> getSubcontractorName();
+
+    /**
+     * 更新量方数据
+     * @return
+     */
+    Observable<Boolean> UpdateTheAmountOfSideData(int itemID, String TheAmountOfTime, String Capacity, String DeckGauge, String Deduction);
 }

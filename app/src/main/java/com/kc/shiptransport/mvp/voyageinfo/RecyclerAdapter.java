@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.voyageinfo;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -27,10 +30,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final Context context;
     private List<String> dates;
     private OnRecyclerviewItemClickListener listener;
+    private int type;
 
-    public RecyclerAdapter(Context context, List<String> dates) {
+    public RecyclerAdapter(Context context, List<String> dates, int type) {
         this.context = context;
         this.dates = dates;
+        this.type = type;
     }
 
     @Override
@@ -54,8 +59,36 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (weekTasks != null && !weekTasks.isEmpty()) {
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
-                ((NormalHolder) holder).mTvQuantum.setText(weekTask.getSandSupplyCount());
-                ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
+                ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
+                //((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
+
+
+                String time = "";
+                // 判断是否已审核
+                if (type == SettingUtil.TYPE_ACCEPT) { // 验收
+                    time = weekTask.getPreAcceptanceTime();
+                } else if (type == SettingUtil.TYPE_SUPPLY) { // 验砂
+                    time = weekTask.getReceptionSandTime();
+                } else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
+                    time = weekTask.getTheAmountOfTime();
+                }
+
+                if (time != null && !time.equals("")) {
+                    ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
+                    ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
+
+                    // 根据单选判断是否显示
+                    boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
+                    ((NormalHolder) holder).mLlTask.setVisibility(isAccepted? View.VISIBLE : View.INVISIBLE);
+                } else {
+                    ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
+                    ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
+
+                    // 根据单选判断是否显示
+                    boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.NO_ACCEPTED);
+                    ((NormalHolder) holder).mLlTask.setVisibility(isAccepted? View.VISIBLE : View.INVISIBLE);
+                }
+
 
                 // 设置点击事件
                 if (listener != null) {
@@ -67,7 +100,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         }
                     });
                 }
-
             } else {
                 ((NormalHolder) holder).mLlTask.setVisibility(View.INVISIBLE);
             }

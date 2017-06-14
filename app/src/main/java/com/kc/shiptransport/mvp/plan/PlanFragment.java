@@ -343,14 +343,14 @@ public class PlanFragment extends Fragment implements PlanContract.View {
      * @param datas
      */
     @Override
-    public void showDemandDayCount(Float[] datas) {
-        tvTotalDemand0.setText("");
-        tvTotalDemand1.setText("");
-        tvTotalDemand2.setText("");
-        tvTotalDemand3.setText("");
-        tvTotalDemand4.setText("");
-        tvTotalDemand5.setText("");
-        tvTotalDemand6.setText("");
+    public void showDemandDayCount(Double[] datas) {
+        tvTotalDemand0.setText(String.valueOf(datas[0]));
+        tvTotalDemand1.setText(String.valueOf(datas[1]));
+        tvTotalDemand2.setText(String.valueOf(datas[2]));
+        tvTotalDemand3.setText(String.valueOf(datas[3]));
+        tvTotalDemand4.setText(String.valueOf(datas[4]));
+        tvTotalDemand5.setText(String.valueOf(datas[5]));
+        tvTotalDemand6.setText(String.valueOf(datas[6]));
     }
 
     /**

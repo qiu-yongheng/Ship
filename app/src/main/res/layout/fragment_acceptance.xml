@@ -66,10 +66,10 @@
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/spinner_select_subcontractor"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:textAlignment="center"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_select"/>
+                android:layout_below="@+id/tv_select"
+                android:layout_weight="1"
+                android:textAlignment="center"/>
 
         </LinearLayout>
 
@@ -212,21 +212,23 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_tip_red"
+            <CheckBox
+                android:id="@+id/cb_tip_red"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:checked="true"
+                android:gravity="center_vertical"
                 android:text="@string/acceptance_red"
                 android:textColor="#dd00"/>
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_tip_black"
+            <CheckBox
+                android:id="@+id/cb_tip_black"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:checked="true"
+                android:gravity="center_vertical"
                 android:text="@string/acceptance_black"
                 android:textColor="#000"/>
         </LinearLayout>

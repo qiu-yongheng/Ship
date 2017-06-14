@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,14 +44,18 @@ import butterknife.Unbinder;
 public class SupplyFragment extends Fragment implements SupplyContract.View {
 
     Unbinder unbinder;
+    @BindView(R.id.toolbar_title)
+    TextView toolbarTitle;
     @BindView(R.id.toolbar_other_info)
-    TextView toolbarSupplyMan;
+    TextView toolbarOtherInfo;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.title_time)
     AppCompatTextView titleTime;
     @BindView(R.id.title_stay_info)
-    AppCompatTextView titleStaySupply;
+    AppCompatTextView titleStayInfo;
     @BindView(R.id.recyclerview)
-    RecyclerView recyclerviewPlan;
+    RecyclerView recyclerview;
     @BindView(R.id.tv_total_0)
     AppCompatTextView tvTotal0;
     @BindView(R.id.tv_total_1)
@@ -64,16 +70,15 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
     AppCompatTextView tvTotal5;
     @BindView(R.id.tv_total_6)
     AppCompatTextView tvTotal6;
-    @BindView(R.id.tv_tip_red)
-    AppCompatTextView tvTaskRequire;
-    @BindView(R.id.tv_tip_black)
-    AppCompatTextView tvTotalQuantum;
+    @BindView(R.id.cb_tip_red)
+    CheckBox cbTipRed;
+    @BindView(R.id.cb_tip_black)
+    CheckBox cbTipBlack;
     @BindView(R.id.btn_refresh)
     AppCompatButton btnRefresh;
     @BindView(R.id.btn_commit)
     AppCompatButton btnCommit;
-    @BindView(R.id.toolbar)
-    Toolbar toolbarSupply;
+
     private SupplyContract.Presenter presenter;
     private SupplyActivity activity;
     private int jumpWeek = 0; // 要显示的week, 默认当周
@@ -113,7 +118,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
         });
 
         /* 滑动监听 */
-        recyclerviewPlan.setOnTouchListener(new View.OnTouchListener() {
+        recyclerview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
@@ -150,6 +155,28 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
             }
         });
 
+        // 已验收
+        cbTipRed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.ACCEPTED, b);
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        // 未验收
+        cbTipBlack.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.NO_ACCEPTED, b);
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -158,12 +185,16 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
         // 允许使用menu
         setHasOptionsMenu(true);
         activity = (SupplyActivity) getActivity();
-        activity.setSupportActionBar(toolbarSupply);
+        activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerviewPlan.setLayoutManager(new GridLayoutManager(getActivity(), 7));
+        recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         // 添加边框
-        recyclerviewPlan.addItemDecoration(new DividerGridItemDecoration(getActivity()));
+        recyclerview.addItemDecoration(new DividerGridItemDecoration(getActivity()));
+
+        // 设置单选框
+        cbTipRed.setText(R.string.supply_red);
+        cbTipBlack.setText(R.string.supply_black);
     }
 
     @Override
@@ -184,7 +215,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
      */
     @Override
     public void showSupplyMan(String supplyMan) {
-        toolbarSupplyMan.setText("验砂人: " + supplyMan);
+        toolbarOtherInfo.setText("验砂人: " + supplyMan);
     }
 
     /**
@@ -202,7 +233,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
      */
     @Override
     public void showStaySupplyShip(String num) {
-        titleStaySupply.setText("待验砂船次:" + num);
+        titleStayInfo.setText("待验砂船次:" + num);
     }
 
     /**
@@ -236,7 +267,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
 
                 }
             });
-            recyclerviewPlan.setAdapter(adapter);
+            recyclerview.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
         }

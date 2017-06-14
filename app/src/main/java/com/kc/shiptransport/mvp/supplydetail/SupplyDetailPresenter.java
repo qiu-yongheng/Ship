@@ -105,10 +105,10 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
      * 提交
      */
     @Override
-    public void commit(final int itemID, String ReceptionSandTime, String Capacity, String DeckGauge) {
+    public void commit(final int itemID, String ReceptionSandTime, String Batch) {
         view.showLoading(true);
         dataRepository
-                .updateForReceptionSandTime(itemID, ReceptionSandTime, Capacity, DeckGauge)
+                .updateForReceptionSandTime(itemID, ReceptionSandTime, Batch)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<Integer, Observable<Boolean>>() { // 同步

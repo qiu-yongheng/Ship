@@ -30,7 +30,7 @@ public interface PlanContract {
         void showLoading(boolean active);
         void showError(String msg);
         // 每日需求
-        void showDemandDayCount(Float[] datas);
+        void showDemandDayCount(Double[] datas);
     }
 
     interface Presenter extends BasePresenter {
@@ -54,6 +54,6 @@ public interface PlanContract {
         //
         void start(int jumpWeek);
         // 获取每日需求
-        void getDemandDayCount();
+        void getDemandDayCount(int jumpWeek);
     }
 }

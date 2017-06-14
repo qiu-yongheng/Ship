@@ -13,35 +13,22 @@ public class WeekTask extends DataSupport{
     private String position;
     private String selected;
 
-    // 条目编号
     private int ItemID;
-    // 分包商账号
     private String SubcontractorAccount;
-    // 计划日期
+    private String SubcontractorName;
     private String PlanDay;
-    // 船舶账号
     private String ShipAccount;
-    // 船舶类型
-    private String ShipType;
-    // 船舶名
     private String ShipName;
-    // 供沙量
-    private String SandSupplyCount;
-    // 验砂时间
+    private String ShipType;
+    private double SandSupplyCount;
+    private Float Capacity;
+    private Float DeckGauge;
     private String ReceptionSandTime;
-    // 预验收时间
-    private String PassReceptionSandTime;
-    // 分包商评价ID
+    private String PreAcceptanceTime;
+    private String TheAmountOfTime; // 量方时间
     private int SandSubcontractorPreAcceptanceEvaluationID;
-
-
-    public String getShipName() {
-        return ShipName;
-    }
-
-    public void setShipName(String shipName) {
-        ShipName = shipName;
-    }
+    private Float DefaultCapacity;
+    private Float defaultDeckGauge;
 
     public int getId() {
         return id;
@@ -67,14 +54,6 @@ public class WeekTask extends DataSupport{
         this.selected = selected;
     }
 
-    public String getSandSupplyCount() {
-        return SandSupplyCount;
-    }
-
-    public void setSandSupplyCount(String sandSupplyCount) {
-        SandSupplyCount = sandSupplyCount;
-    }
-
     public int getItemID() {
         return ItemID;
     }
@@ -89,6 +68,14 @@ public class WeekTask extends DataSupport{
 
     public void setSubcontractorAccount(String subcontractorAccount) {
         SubcontractorAccount = subcontractorAccount;
+    }
+
+    public String getSubcontractorName() {
+        return SubcontractorName;
+    }
+
+    public void setSubcontractorName(String subcontractorName) {
+        SubcontractorName = subcontractorName;
     }
 
     public String getPlanDay() {
@@ -107,12 +94,44 @@ public class WeekTask extends DataSupport{
         ShipAccount = shipAccount;
     }
 
+    public String getShipName() {
+        return ShipName;
+    }
+
+    public void setShipName(String shipName) {
+        ShipName = shipName;
+    }
+
     public String getShipType() {
         return ShipType;
     }
 
     public void setShipType(String shipType) {
         ShipType = shipType;
+    }
+
+    public double getSandSupplyCount() {
+        return SandSupplyCount;
+    }
+
+    public void setSandSupplyCount(double sandSupplyCount) {
+        SandSupplyCount = sandSupplyCount;
+    }
+
+    public Float getCapacity() {
+        return Capacity;
+    }
+
+    public void setCapacity(Float capacity) {
+        Capacity = capacity;
+    }
+
+    public Float getDeckGauge() {
+        return DeckGauge;
+    }
+
+    public void setDeckGauge(Float deckGauge) {
+        DeckGauge = deckGauge;
     }
 
     public String getReceptionSandTime() {
@@ -123,12 +142,12 @@ public class WeekTask extends DataSupport{
         ReceptionSandTime = receptionSandTime;
     }
 
-    public String getPassReceptionSandTime() {
-        return PassReceptionSandTime;
+    public String getPreAcceptanceTime() {
+        return PreAcceptanceTime;
     }
 
-    public void setPassReceptionSandTime(String passReceptionSandTime) {
-        PassReceptionSandTime = passReceptionSandTime;
+    public void setPreAcceptanceTime(String preAcceptanceTime) {
+        PreAcceptanceTime = preAcceptanceTime;
     }
 
     public int getSandSubcontractorPreAcceptanceEvaluationID() {
@@ -137,5 +156,29 @@ public class WeekTask extends DataSupport{
 
     public void setSandSubcontractorPreAcceptanceEvaluationID(int sandSubcontractorPreAcceptanceEvaluationID) {
         SandSubcontractorPreAcceptanceEvaluationID = sandSubcontractorPreAcceptanceEvaluationID;
+    }
+
+    public Float getDefaultCapacity() {
+        return DefaultCapacity;
+    }
+
+    public void setDefaultCapacity(Float defaultCapacity) {
+        DefaultCapacity = defaultCapacity;
+    }
+
+    public Float getDefaultDeckGauge() {
+        return defaultDeckGauge;
+    }
+
+    public void setDefaultDeckGauge(Float defaultDeckGauge) {
+        this.defaultDeckGauge = defaultDeckGauge;
+    }
+
+    public String getTheAmountOfTime() {
+        return TheAmountOfTime;
+    }
+
+    public void setTheAmountOfTime(String theAmountOfTime) {
+        TheAmountOfTime = theAmountOfTime;
     }
 }

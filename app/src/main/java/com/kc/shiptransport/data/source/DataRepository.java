@@ -96,6 +96,8 @@ public class DataRepository implements DataSouceImpl {
                 ship.setShipName(listBean.getShipName());
                 ship.setShipType(listBean.getShipType());
                 ship.setMaxSandSupplyCount(listBean.getMaxSandSupplyCount());
+                ship.setCapacity(listBean.getCapacity());
+                ship.setDeckGauge(listBean.getDeckGauge());
                 ship.setSelected("0");
                 ship.save();
             }
@@ -216,14 +218,20 @@ public class DataRepository implements DataSouceImpl {
                     WeekTask weekTask = new WeekTask();
                     weekTask.setItemID(bean.getItemID()); // 保存itemID
                     weekTask.setSubcontractorAccount(bean.getSubcontractorAccount()); // 保存账号名
+                    weekTask.setSubcontractorName(bean.getSubcontractorName()); // 用户名
                     weekTask.setPlanDay(bean.getPlanDay()); // 保存计划时间
                     weekTask.setShipAccount(bean.getShipAccount()); //船舶账号
                     weekTask.setShipType(bean.getShipType()); // 船舶类型
                     weekTask.setShipName(bean.getShipName()); // 船舶名字
                     weekTask.setSandSupplyCount(bean.getSandSupplyCount()); // 船舶最大运沙量
-                    weekTask.setReceptionSandTime(bean.getReceptionSandTime()); // 验收时间
-                    weekTask.setPassReceptionSandTime(bean.getPassReceptionSandTime()); // 验砂时间
+                    weekTask.setReceptionSandTime(bean.getReceptionSandTime()); // 验砂时间
+                    weekTask.setPreAcceptanceTime(bean.getPreAcceptanceTime()); // 验收时间
+                    weekTask.setTheAmountOfTime(bean.getTheAmountOfTime()); // 量方时间
                     weekTask.setSandSubcontractorPreAcceptanceEvaluationID(bean.getSandSubcontractorPreAcceptanceEvaluationID()); // 分包商评价ID
+                    weekTask.setCapacity(bean.getCapacity()); // 舱容
+                    weekTask.setDeckGauge(bean.getDeckGauge()); // 甲板方
+                    weekTask.setDefaultCapacity(bean.getDefaultCapacity());
+                    weekTask.setDefaultDeckGauge(bean.getDefaultDeckGauge());
                     weekTask.save();
                 }
 
@@ -380,13 +388,17 @@ public class DataRepository implements DataSouceImpl {
                     accep.setSystemDate(accepBean.getSystemDate());
                     accep.setCapacity(accepBean.getCapacity());
                     accep.setDeckGauge(accepBean.getDeckGauge());
+                    accep.setDeduction(accepBean.getDeduction());
                     accep.setReceptionSandTime(accepBean.getReceptionSandTime());
-                    accep.setPassReceptionSandTime(accepBean.getPassReceptionSandTime());
+                    accep.setPassReceptionSandTime(accepBean.getPreAcceptanceTime());
+                    accep.setTheAmountOfTime(accepBean.getTheAmountOfTime()); // 量方时间
                     accep.setTotalCompleteRide(accepBean.getTotalCompleteRide());
                     accep.setTotalCompleteSquare(accepBean.getTotalCompleteSquare());
                     accep.setAvgSquare(accepBean.getAvgSquare());
                     accep.setCurrentTide(accepBean.getCurrentTide());
                     accep.setShipItemNum(accepBean.getShipItemNum());
+                    accep.setDefaultCapacity(accepBean.getDefaultCapacity());
+                    accep.setDefaultDeckGauge(accepBean.getDefaultDeckGauge());
                     accep.save();
                     // 4. 返回存到数据库的数据
                     e.onNext(accep);
@@ -402,17 +414,16 @@ public class DataRepository implements DataSouceImpl {
      *
      * @param itemID
      * @param ReceptionSandTime
-     * @param Capacity
-     * @param DeckGauge
+     * @param Batch
      * @return
      */
     @Override
-    public Observable<Integer> updateForReceptionSandTime(final int itemID, final String ReceptionSandTime, final String Capacity, final String DeckGauge) {
+    public Observable<Integer> updateForReceptionSandTime(final int itemID, final String ReceptionSandTime, final String Batch) {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
                 Log.d("==", "第一");
-                String result = mRemoteDataSource.UpdateForReceptionSandTime(itemID, ReceptionSandTime, Capacity, DeckGauge);
+                String result = mRemoteDataSource.UpdateForReceptionSandTime(itemID, ReceptionSandTime, Batch);
                 Log.d("==", result);
 
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
@@ -467,7 +478,7 @@ public class DataRepository implements DataSouceImpl {
                     for (WeekTask weektask : weekTasks) {
                         String time = null;
                         if (type.equals(SettingUtil.ACCEPTANCE)) {
-                            time = weektask.getPassReceptionSandTime();
+                            time = weektask.getPreAcceptanceTime();
                         } else if (type.equals(SettingUtil.SUPPLY)) {
                             time = weektask.getReceptionSandTime();
                         }
@@ -515,8 +526,8 @@ public class DataRepository implements DataSouceImpl {
                 double d = 0;
                 List<WeekTask> list = DataSupport.where("PlanDay = ?", date).find(WeekTask.class);
                 for (WeekTask weekTask : list) {
-                    String sandSupplyCount = weekTask.getSandSupplyCount();
-                    d += Double.valueOf(sandSupplyCount);
+                    double sandSupplyCount = weekTask.getSandSupplyCount();
+                    d += sandSupplyCount;
                 }
                 e.onNext(d);
                 e.onComplete();
@@ -546,7 +557,7 @@ public class DataRepository implements DataSouceImpl {
                 jsonObject.put("ItemID", itemID == 0 ? "" : String.valueOf(itemID));
                 jsonObject.put("MaterialIntegrity", String.valueOf(rbcomplete));
                 jsonObject.put("MaterialTimeliness", String.valueOf(rbtimely));
-                jsonObject.put("PassReceptionSandTime", currentDate);
+                jsonObject.put("PreAcceptanceTime", currentDate);
                 jsonObject.put("SubcontractorInterimApproachPlanID", subcontractorInterimApproachPlanID);
                 jsonArray.put(jsonObject);
 
@@ -881,14 +892,28 @@ public class DataRepository implements DataSouceImpl {
     /**
      * 每日需求
      * @return
+     * @param jumpWeek
      */
     @Override
-    public Observable<Float[]> getDemandDayCount() {
-        return Observable.create(new ObservableOnSubscribe<Float[]>() {
+    public Observable<Double[]> getDemandDayCount(final int jumpWeek) {
+        return Observable.create(new ObservableOnSubscribe<Double[]>() {
             @Override
-            public void subscribe(ObservableEmitter<Float[]> e) throws Exception {
-                List<TaskVolume> all = DataSupport.order("Date asc").find(TaskVolume.class);
+            public void subscribe(ObservableEmitter<Double[]> e) throws Exception {
+                List<String> dates = CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek);
 
+                Double[] doubles = new Double[7];
+
+                for (int i = 0; i < dates.size(); i++) {
+                    List<TaskVolume> taskVolumes = DataSupport.where("Date like ?", dates.get(i) + "%").find(TaskVolume.class);
+                    if (taskVolumes != null && !taskVolumes.isEmpty()) {
+                        doubles[i] = taskVolumes.get(0).getAllBoatSum();
+                    } else {
+                        doubles[i] = 0.0;
+                    }
+                }
+
+                e.onNext(doubles);
+                e.onComplete();
             }
         });
     }
@@ -908,6 +933,28 @@ public class DataRepository implements DataSouceImpl {
                 } else {
                     e.onNext("");
                 }
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 更新量方数据
+     * @param itemID
+     * @param TheAmountOfTime
+     * @param Capacity
+     * @param DeckGauge
+     * @param Deduction
+     * @return
+     */
+    @Override
+    public Observable<Boolean> UpdateTheAmountOfSideData(final int itemID, final String TheAmountOfTime, final String Capacity, final String DeckGauge, final String Deduction) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.UpdateTheAmountOfSideData(itemID, TheAmountOfTime, Capacity, DeckGauge, Deduction);
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+                e.onNext(Integer.valueOf(bean.getMessage()) == 1);
                 e.onComplete();
             }
         });

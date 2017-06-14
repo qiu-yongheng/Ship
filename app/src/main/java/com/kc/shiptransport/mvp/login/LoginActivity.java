@@ -18,6 +18,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.mvp.BaseActivity;
 import com.kc.shiptransport.mvp.main.MainActivity;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -160,6 +161,10 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         } else {
             // 不做任何操作
         }
+
+        // 默认显示已验收与未验收数据
+        SharePreferenceUtil.saveBoolean(this, SettingUtil.ACCEPTED, true);
+        SharePreferenceUtil.saveBoolean(this, SettingUtil.NO_ACCEPTED, true);
     }
 
     @Override

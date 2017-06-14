@@ -23,7 +23,7 @@ public class AcceptanceBean {
      * Capacity : null
      * DeckGauge : null
      * ReceptionSandTime : null
-     * PassReceptionSandTime : null
+     * PreAcceptanceTime : null
      * TotalCompleteRide : 0
      * TotalCompleteSquare : 0
      * AvgSquare : 0
@@ -45,13 +45,17 @@ public class AcceptanceBean {
     private String SystemDate;
     private String Capacity;
     private String DeckGauge;
-    private String ReceptionSandTime;
-    private String PassReceptionSandTime;
+    private Float Deduction;
+    private String ReceptionSandTime; // 验砂时间
+    private String PreAcceptanceTime; // 验收时间
+    private String TheAmountOfTime; // 量方时间
     private int TotalCompleteRide;
     private String TotalCompleteSquare;
     private String AvgSquare;
     private String CurrentTide;
     private String ShipItemNum;
+    private Float DefaultCapacity; // 默认舱容
+    private Float defaultDeckGauge; // 默认甲板方
 
     public int getItemID() {
         return ItemID;
@@ -173,12 +177,12 @@ public class AcceptanceBean {
         this.ReceptionSandTime = ReceptionSandTime;
     }
 
-    public String getPassReceptionSandTime() {
-        return PassReceptionSandTime;
+    public String getPreAcceptanceTime() {
+        return PreAcceptanceTime;
     }
 
-    public void setPassReceptionSandTime(String PassReceptionSandTime) {
-        this.PassReceptionSandTime = PassReceptionSandTime;
+    public void setPreAcceptanceTime(String PassReceptionSandTime) {
+        this.PreAcceptanceTime = PassReceptionSandTime;
     }
 
     public int getTotalCompleteRide() {
@@ -219,5 +223,37 @@ public class AcceptanceBean {
 
     public void setShipItemNum(String shipItemNum) {
         ShipItemNum = shipItemNum;
+    }
+
+    public Float getDefaultCapacity() {
+        return DefaultCapacity;
+    }
+
+    public void setDefaultCapacity(Float defaultCapacity) {
+        DefaultCapacity = defaultCapacity;
+    }
+
+    public Float getDefaultDeckGauge() {
+        return defaultDeckGauge;
+    }
+
+    public void setDefaultDeckGauge(Float defaultDeckGauge) {
+        this.defaultDeckGauge = defaultDeckGauge;
+    }
+
+    public Float getDeduction() {
+        return Deduction;
+    }
+
+    public void setDeduction(Float deduction) {
+        Deduction = deduction;
+    }
+
+    public String getTheAmountOfTime() {
+        return TheAmountOfTime;
+    }
+
+    public void setTheAmountOfTime(String theAmountOfTime) {
+        TheAmountOfTime = theAmountOfTime;
     }
 }

@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -62,17 +64,25 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (weekTasks != null && !weekTasks.isEmpty()) {
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
-                ((NormalHolder) holder).mTvQuantum.setText(weekTask.getSandSupplyCount());
-                ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
+                ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
+//                ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
 
                 // 判断是否已审核
-                String passReceptionSandTime = weekTask.getPassReceptionSandTime();
+                String passReceptionSandTime = weekTask.getPreAcceptanceTime();
                 if (passReceptionSandTime != null && !passReceptionSandTime.equals("")) {
                     ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
                     ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
+
+                    // 根据单选判断是否显示
+                    boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
+                    ((NormalHolder) holder).mLlTask.setVisibility(isAccepted? View.VISIBLE : View.INVISIBLE);
                 } else {
                     ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
                     ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
+
+                    // 根据单选判断是否显示
+                    boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.NO_ACCEPTED);
+                    ((NormalHolder) holder).mLlTask.setVisibility(isAccepted? View.VISIBLE : View.INVISIBLE);
                 }
             } else {
                 ((NormalHolder) holder).mLlTask.setVisibility(View.INVISIBLE);

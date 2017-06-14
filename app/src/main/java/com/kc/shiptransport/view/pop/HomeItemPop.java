@@ -12,8 +12,11 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
+import com.kc.shiptransport.mvp.amount.AmountActivity;
 import com.kc.shiptransport.mvp.home.PopAdapter;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
+import com.kc.shiptransport.mvp.sample.SampleActivity;
+import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
 import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
 
@@ -75,7 +78,14 @@ public class HomeItemPop extends BasePopWindown {
         /**------------3. 初始化子控件------------**/
         mRvHomeSupply = (RecyclerView) view.findViewById(R.id.rv_home_supply);
         mRvHomeSupply.setLayoutManager(new GridLayoutManager(context, 3));
-        PopAdapter adapter = new PopAdapter(context, new int[] {R.mipmap.plan, R.mipmap.acceptance, R.mipmap.supply_sand, R.mipmap.supply_sand}, context.getResources().getStringArray(R.array.home_item_pop));
+        PopAdapter adapter = new PopAdapter(context, new int[] {R.mipmap.plan,
+                R.mipmap.acceptance,
+                R.mipmap.supply_sand,
+                R.mipmap.supply_sand,
+                R.mipmap.supply_sand,
+                R.mipmap.supply_sand,
+                R.mipmap.supply_sand},
+                context.getResources().getStringArray(R.array.home_item_pop));
 
         adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
             @Override
@@ -96,6 +106,18 @@ public class HomeItemPop extends BasePopWindown {
                     case 3:
                         // 分包商航次信息完善
                         VoyageInfoActivity.navigateToVoyageInfoActivity(context);
+                        break;
+                    case 4:
+                        // 扫描件
+                        ScannerActivity.navigateToScannerActivity(context);
+                        break;
+                    case 5:
+                        // 量方管理
+                        AmountActivity.navigateToAmountActivity(context);
+                        break;
+                    case 6:
+                        // 验砂取样
+                        SampleActivity.navigateToSampleActivity(context);
                         break;
                 }
                 onDismiss();

@@ -56,28 +56,26 @@ public class PlanPresenter implements PlanContract.Presenter {
 
         // 3. 刷新
         doRefresh(jumpWeek);
-
-        // 4. 获取分包商计划量缺口
-        getTaskVolume(jumpWeek);
     }
 
     /**
      * 获取每日需求
+     * @param jumpWeek
      */
     @Override
-    public void getDemandDayCount() {
+    public void getDemandDayCount(int jumpWeek) {
         mDataRepository
-                .getDemandDayCount()
+                .getDemandDayCount(jumpWeek)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Float[]>() {
+                .subscribe(new Observer<Double[]>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Float[] value) {
+                    public void onNext(Double[] value) {
                         view.showDemandDayCount(value);
                     }
 
@@ -168,14 +166,16 @@ public class PlanPresenter implements PlanContract.Presenter {
     }
 
     /**
-     * 获取任务量
+     * 获取任务缺口
      */
     @Override
-    public void getTaskVolume(int jumpWeek) {
+    public void getTaskVolume(final int jumpWeek) {
+        // 一周计划任务量
         Observable<Double[]> daycount = mDataRepository
                 .getDayCount()
                 .subscribeOn(Schedulers.io());
 
+        // 获取一周计划需求量
         Observable<Float> taskvolume = mDataRepository
                 .getTaskVolume(jumpWeek)
                 .subscribeOn(Schedulers.io());
@@ -210,7 +210,7 @@ public class PlanPresenter implements PlanContract.Presenter {
                     @Override
                     public void onComplete() {
                         // 获取每日需求
-                        getDemandDayCount();
+                        getDemandDayCount(jumpWeek);
                     }
                 });
     }
@@ -272,6 +272,8 @@ public class PlanPresenter implements PlanContract.Presenter {
                     public void onComplete() {
                         // 统计每日计划量
                         getDayCount();
+                        // 4. 获取分包商计划量缺口
+                        getTaskVolume(jumpWeek);
                     }
                 });
     }

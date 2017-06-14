@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,8 @@ import butterknife.Unbinder;
 
 public class VoyageFragment extends Fragment implements VoyageContract.View {
 
+
+    Unbinder unbinder;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar_other_info)
@@ -63,15 +66,14 @@ public class VoyageFragment extends Fragment implements VoyageContract.View {
     AppCompatTextView tvTotal5;
     @BindView(R.id.tv_total_6)
     AppCompatTextView tvTotal6;
-    @BindView(R.id.tv_tip_red)
-    AppCompatTextView tvTipRed;
-    @BindView(R.id.tv_tip_black)
-    AppCompatTextView tvTipBlack;
+    @BindView(R.id.cb_tip_red)
+    CheckBox cbTipRed;
+    @BindView(R.id.cb_tip_black)
+    CheckBox cbTipBlack;
     @BindView(R.id.btn_refresh)
     AppCompatButton btnRefresh;
     @BindView(R.id.btn_commit)
     AppCompatButton btnCommit;
-    Unbinder unbinder;
     private VoyageInfoActivity activity;
     private VoyageContract.Presenter presenter;
     private float dowmX;
@@ -187,7 +189,7 @@ public class VoyageFragment extends Fragment implements VoyageContract.View {
     @Override
     public void showWeekTask(List<String> dates) {
         if (adapter == null) {
-            adapter = new RecyclerAdapter(getContext(), dates);
+            adapter = new RecyclerAdapter(getContext(), dates, SettingUtil.TYPE_AMOUNT);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {

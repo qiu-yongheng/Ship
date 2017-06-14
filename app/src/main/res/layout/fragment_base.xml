@@ -206,24 +206,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_tip_red"
+            <CheckBox
+                android:id="@+id/cb_tip_red"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="红色字体: 已验沙"
-                android:textColor="@color/text_red"/>
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:textColor="#dd00"/>
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_tip_black"
+            <CheckBox
+                android:id="@+id/cb_tip_black"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="黑色字体: 未验沙"
-                android:textColor="@color/text_black"/>
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:textColor="#000"/>
         </LinearLayout>
     </LinearLayout>
 

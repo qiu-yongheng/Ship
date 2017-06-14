@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,8 +57,10 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     AppCompatTextView titleTime;
     @BindView(R.id.title_stay_acceptance)
     AppCompatTextView titleStayAcceptance;
+    @BindView(R.id.spinner_select_subcontractor)
+    AppCompatSpinner spinnerSelectSubcontractor;
     @BindView(R.id.recyclerview)
-    RecyclerView recyclerviewPlan;
+    RecyclerView recyclerview;
     @BindView(R.id.tv_total_0)
     AppCompatTextView tvTotal0;
     @BindView(R.id.tv_total_1)
@@ -71,16 +75,15 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     AppCompatTextView tvTotal5;
     @BindView(R.id.tv_total_6)
     AppCompatTextView tvTotal6;
-    @BindView(R.id.tv_tip_red)
-    AppCompatTextView tvTaskRequire;
-    @BindView(R.id.tv_tip_black)
-    AppCompatTextView tvTotalQuantum;
+    @BindView(R.id.cb_tip_red)
+    CheckBox cbTipRed;
+    @BindView(R.id.cb_tip_black)
+    CheckBox cbTipBlack;
     @BindView(R.id.btn_refresh)
     AppCompatButton btnRefresh;
     @BindView(R.id.btn_commit)
     AppCompatButton btnCommit;
-    @BindView(R.id.spinner_select_subcontractor)
-    AppCompatSpinner spinnerSelectSubcontractor;
+
     private AcceptanceActivity activity;
     private AcceptanceContract.Presenter presenter;
     private int jumpWeek = 0; // 要显示的week, 默认当周
@@ -111,7 +114,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         });
 
         /* 滑动监听 */
-        recyclerviewPlan.setOnTouchListener(new View.OnTouchListener() {
+        recyclerview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
@@ -149,6 +152,28 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
                 return false;
             }
         });
+
+        // 已验收
+        cbTipRed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.ACCEPTED, b);
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        // 未验收
+        cbTipBlack.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.NO_ACCEPTED, b);
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -159,9 +184,9 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         activity.setSupportActionBar(toolbarAcceptance);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerviewPlan.setLayoutManager(new GridLayoutManager(getActivity(), 7));
+        recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         // 添加边框
-        recyclerviewPlan.addItemDecoration(new DividerGridItemDecoration(getActivity()));
+        recyclerview.addItemDecoration(new DividerGridItemDecoration(getActivity()));
     }
 
     @Override
@@ -241,7 +266,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
                     // 如果item有数据, 设置点击事件
                     if (weekTasks != null && !weekTasks.isEmpty()) {
                         // 判断是否验收
-                        String passReceptionSandTime = weekTasks.get(0).getPassReceptionSandTime();
+                        String passReceptionSandTime = weekTasks.get(0).getPreAcceptanceTime();
 
                         if (passReceptionSandTime != null && !passReceptionSandTime.isEmpty()) {
                             // 已验收
@@ -258,7 +283,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
 
                 }
             });
-            recyclerviewPlan.setAdapter(adapter);
+            recyclerview.setAdapter(adapter);
         } else {
             adapter.setAccount(subcontractorAccount);
             adapter.notifyDataSetChanged();

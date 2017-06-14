@@ -27,6 +27,9 @@ public class Ship extends DataSupport{
     private String MaxSandSupplyCount;
     private String Selected;
 
+    private float Capacity; // 舱容
+    private float DeckGauge; // 甲板方
+
     public int getId() {
         return id;
     }
@@ -89,5 +92,21 @@ public class Ship extends DataSupport{
 
     public void setMaxSandSupplyCount(String MaxSandSupplyCount) {
         this.MaxSandSupplyCount = MaxSandSupplyCount;
+    }
+
+    public float getCapacity() {
+        return Capacity;
+    }
+
+    public void setCapacity(float capacity) {
+        Capacity = capacity;
+    }
+
+    public float getDeckGauge() {
+        return DeckGauge;
+    }
+
+    public void setDeckGauge(float deckGauge) {
+        DeckGauge = deckGauge;
     }
 }
