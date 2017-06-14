@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.amount;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.amountdetail.AmountDetailActivity;
 import com.kc.shiptransport.mvp.voyageinfo.RecyclerAdapter;
@@ -255,13 +257,24 @@ public class AmountFragment extends Fragment implements AmountContract.View {
 
     @Override
     public void showDayCount(Double[] integers) {
-
+        tvTotal0.setText(String.valueOf(integers[0]));
+        tvTotal1.setText(String.valueOf(integers[1]));
+        tvTotal2.setText(String.valueOf(integers[2]));
+        tvTotal3.setText(String.valueOf(integers[3]));
+        tvTotal4.setText(String.valueOf(integers[4]));
+        tvTotal5.setText(String.valueOf(integers[5]));
+        tvTotal6.setText(String.valueOf(integers[6]));
     }
 
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog("加载中", "加载中...");
+            activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             activity.hideProgressDailog();
         }

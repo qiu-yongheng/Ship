@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+
 /**
  * @author 邱永恒
  * @time 2016/9/1  11:28
@@ -37,15 +39,23 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 显示进度对话框
      */
-    public void showProgressDailog(String title, String msg) {
+    public void showProgressDailog(String title, String msg, final OnDailogCancleClickListener listener) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(BaseActivity.this);
         }
         progressDialog.setTitle(title);
         progressDialog.setMessage(msg);
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
+        //progressDialog.setCancelable(false);
         progressDialog.show();
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                Log.d("==", "取消显示");
+                // TODO 取消rxjava的任务
+                listener.onCancle(progressDialog);
+            }
+        });
     }
 
     /**
