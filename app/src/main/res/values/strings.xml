@@ -46,15 +46,24 @@
     <string name="supply_black">黑色字体: 未验沙</string>
     <string name="amount_red">红色字体: 已完善</string>
     <string name="amount_black">黑色字体: 未完善</string>
+    <string name="voyage_red">红色字体:  已完善</string>
+    <string name="voyage_black">黑色字体: 未完善</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
         <item>分包商进场计划</item>
         <item>待验收航次</item>
         <item>待验砂船次</item>
+        <item>量方管理</item>
         <item>分包商航次信息完善</item>
         <item>分包商航次完善扫描件</item>
-        <item>量方管理</item>
         <item>验砂取样</item>
+    </array>
+
+    <array name="voyage_spinner">
+        <item>请选择材料分类</item>
+        <item>细砂（0~3mm）</item>
+        <item>细砂（0~5mm）</item>
+        <item>粗砂</item>
     </array>
 </resources>

@@ -65,7 +65,7 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                 ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
-//                ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
+
 
                 // 判断是否已审核
                 String passReceptionSandTime = weekTask.getPreAcceptanceTime();
@@ -84,20 +84,20 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.NO_ACCEPTED);
                     ((NormalHolder) holder).mLlTask.setVisibility(isAccepted? View.VISIBLE : View.INVISIBLE);
                 }
+
+                // 根据不同的position设置点击事件
+                if (listener != null) {
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int pos = holder.getLayoutPosition();
+                            listener.onItemClick(holder.itemView, pos);
+                        }
+                    });
+                }
             } else {
                 ((NormalHolder) holder).mLlTask.setVisibility(View.INVISIBLE);
             }
-        }
-
-        // 根据不同的position设置点击事件
-        if (listener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int pos = holder.getLayoutPosition();
-                    listener.onItemClick(holder.itemView, pos);
-                }
-            });
         }
     }
 

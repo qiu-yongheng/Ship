@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.acceptance;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,8 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.acceptancedetail.AcceptanceDetailActivity;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
@@ -286,6 +288,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
             recyclerview.setAdapter(adapter);
         } else {
             adapter.setAccount(subcontractorAccount);
+            adapter.setDates(dates);
             adapter.notifyDataSetChanged();
         }
     }
@@ -309,7 +312,12 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog("加载中", "加载中");
+            activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             activity.hideProgressDailog();
         }
@@ -321,10 +329,10 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     }
 
     @Override
-    public void showSpinner(final List<Subcontractor> value) {
+    public void showSpinner(final List<SubcontractorList> value) {
         List<String> datas = new ArrayList<>();
         datas.add("请选择分包商");
-        for (Subcontractor subcontractor : value) {
+        for (SubcontractorList subcontractor : value) {
             datas.add(subcontractor.getSubcontractorName());
         }
 

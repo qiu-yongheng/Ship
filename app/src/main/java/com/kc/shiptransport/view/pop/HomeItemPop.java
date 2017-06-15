@@ -104,16 +104,16 @@ public class HomeItemPop extends BasePopWindown {
                         SupplyActivity.navigateToSupplyActivity(context);
                         break;
                     case 3:
+                        // 量方管理
+                        AmountActivity.navigateToAmountActivity(context);
+                        break;
+                    case 4:
                         // 分包商航次信息完善
                         VoyageInfoActivity.navigateToVoyageInfoActivity(context);
                         break;
-                    case 4:
+                    case 5:
                         // 扫描件
                         ScannerActivity.navigateToScannerActivity(context);
-                        break;
-                    case 5:
-                        // 量方管理
-                        AmountActivity.navigateToAmountActivity(context);
                         break;
                     case 6:
                         // 验砂取样

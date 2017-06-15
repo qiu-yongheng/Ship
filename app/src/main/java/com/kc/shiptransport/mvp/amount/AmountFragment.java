@@ -215,7 +215,7 @@ public class AmountFragment extends Fragment implements AmountContract.View {
 
     @Override
     public void showStayInfo(String data) {
-        titleStayInfo.setText(data);
+        titleStayInfo.setText("待量方船次: " + data);
     }
 
     @Override
@@ -283,5 +283,14 @@ public class AmountFragment extends Fragment implements AmountContract.View {
     @Override
     public void showError(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+            presenter.getStayInfo();
+        }
     }
 }

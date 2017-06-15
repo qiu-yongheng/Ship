@@ -138,6 +138,70 @@
             android:paddingTop="2dp">
 
             <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_0"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_total_demand_0"
                 android:layout_width="0dp"
                 android:textColor="@color/text_red"
@@ -171,7 +235,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="30000"/>
+                android:text="0"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_total_demand_4"
@@ -198,71 +262,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="5000"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_total_0"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
                 android:text="0"/>
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_total_1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="0"/>
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_total_2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="0"/>
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_total_3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="30000"/>
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_total_4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="0"/>
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_total_5"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="0"/>
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_total_6"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="5000"/>
         </LinearLayout>
 
         <LinearLayout

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
@@ -27,15 +28,16 @@ import java.util.List;
 
 public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
+    private final int jumpWeek;
     private List<List<Ship>> value;
     private String date;
     private OnRecyclerviewItemClickListener listener;
 
-
-    public PlanSetAdapter(Context context, List<List<Ship>> value, String date) {
+    public PlanSetAdapter(Context context, List<List<Ship>> value, String date, int jumpWeek) {
         this.context = context;
         this.value = value;
         this.date = date;
+        this.jumpWeek = jumpWeek;
     }
 
     @Override
@@ -76,6 +78,28 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
 
+        /*----------------------查询对应日期的计划需求-----------------------*/
+        List<TaskVolume> taskVolumes = DataSupport.where("Date like ?", date + "%").find(TaskVolume.class);
+        if (taskVolumes != null && !taskVolumes.isEmpty()) {
+            if ("A类".equals(type)) {
+                ((NormalHolder) holder).mTvPlanAddDemand.setText(type + "需求: " + taskVolumes.get(0).getBoatA());
+            } else if ("B类".equals(type)) {
+                ((NormalHolder) holder).mTvPlanAddDemand.setText(type + "需求: " + taskVolumes.get(0).getBoatB());
+            } else if ("C类".equals(type)) {
+                ((NormalHolder) holder).mTvPlanAddDemand.setText(type + "需求: " + taskVolumes.get(0).getBoatC());
+            } else if ("D类".equals(type)) {
+                ((NormalHolder) holder).mTvPlanAddDemand.setText(type + "需求: " + taskVolumes.get(0).getBoatD());
+            }
+        } else {
+            // 如果在数据库中找不到, 默认为0
+            ((NormalHolder) holder).mTvPlanAddDemand.setText(type + "需求: " + 0);
+        }
+        /*----------------------查询对应日期的计划需求-----------------------*/
+
+
+
+
+
         // 设置按钮点击事件
         ((NormalHolder) holder).mBtnShipTypeSelect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,11 +121,13 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private final AppCompatTextView mTvShipTypeName;
         private final RecyclerView mRecyclerViewShipType;
         private final TextView mTvPlanAddTotal;
+        private final TextView mTvPlanAddDemand;
 
         public NormalHolder(View itemView) {
             super(itemView);
             mTvShipTypeName = (AppCompatTextView) itemView.findViewById(R.id.tv_ship_type_name);
             mTvPlanAddTotal = (TextView) itemView.findViewById(R.id.tv_plan_add_total);
+            mTvPlanAddDemand = (TextView) itemView.findViewById(R.id.tv_plan_add_demand);
             mBtnShipTypeSelect = (AppCompatButton) itemView.findViewById(R.id.btn_ship_type_select);
             mRecyclerViewShipType = (RecyclerView) itemView.findViewById(R.id.recyclerview_ship_type);
         }

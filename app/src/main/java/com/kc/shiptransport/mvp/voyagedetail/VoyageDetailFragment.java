@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.voyagedetail;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,11 +10,18 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.VoyageInfoBean;
+import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.view.actiivty.InputActivity;
 
@@ -75,10 +83,23 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     TextView mTvComeAnchorDate;
     @BindView(R.id.tv_clean_date)
     TextView mTvCleanDate;
-    @BindView(R.id.tv_material_ordar)
-    TextView mTvMaterialOrdar;
+    @BindView(R.id.sp_material_ordar)
+    Spinner mSpMaterialOrdar;
     private VoyageDetailContract.Presenter presenter;
     private VoyageDetailActivity activity;
+    private String itemID;
+    private Subcontractor sub;
+    private String loadingPlace;
+    private final String DEFAULT = "未填写";
+    private String loadingDate;
+    private String baseNumber;
+    private String sourceOfSource;
+    private String startLoadingTime;
+    private String endLoadingTime;
+    private String arrivedAtTheDockTime;
+    private String leaveTheDockTime;
+    private String arrivaOfAnchorageTime;
+    private String clearanceTime;
 
     @Nullable
     @Override
@@ -88,6 +109,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         initViews(view);
         initListener();
         // TODO
+
         return view;
     }
 
@@ -125,6 +147,39 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setTitle(R.string.title_voyage);
+
+
+
+
+
+        // 适配器
+        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.voyage_spinner));
+        // 设置样式
+        arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // 加载适配器
+        mSpMaterialOrdar.setAdapter(arr_adapter);
+        // 根据上一个界面传过来的position设置当前显示的item
+//        mSpMaterialOrdar.setSelection(0);
+
+        // 点击后, 筛选分包商的数据
+        mSpMaterialOrdar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i != 0) {
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+        // 获取position对应的数据
+        presenter.getItemIDForPosition(activity.mPosition);
+        presenter.getSubcontractor();
     }
 
     @Override
@@ -175,14 +230,44 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             case R.id.rl_exit_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvExitDate);
                 break;
+            case R.id.rl_come_anchor_date:
+                CalendarUtil.showTimePickerDialog(getContext(), mTvComeAnchorDate);
+                break;
             case R.id.rl_clean_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvCleanDate);
                 break;
             case R.id.rl_material_ordar:
-
+                // 弹出选择框
                 break;
             case R.id.btn_commit:
+                // 提交
+                VoyageInfoBean bean = new VoyageInfoBean();
+                bean.setItemID("");
+                bean.setSubcontractorInterimApproachPlanID(itemID);
+                loadingPlace = mTvShipLocation.getText().toString().trim();
+                bean.setLoadingPlace(loadingPlace.equals(DEFAULT) ? "" : loadingPlace);
+                loadingDate = mTvShipDate.getText().toString().trim();
+                bean.setLoadingDate(loadingDate.equals(DEFAULT) ? "" : loadingDate);
+                baseNumber = mTvSampleNum.getText().toString().trim();
+                bean.setBaseNumber(baseNumber.equals(DEFAULT) ? "" : baseNumber);
+                sourceOfSource = mTvMaterialFrom.getText().toString().trim();
+                bean.setSourceOfSource(sourceOfSource.equals(DEFAULT) ? "" : sourceOfSource);
+                startLoadingTime = mTvStartDate.getText().toString().trim();
+                bean.setStartLoadingTime(startLoadingTime.equals(DEFAULT) ? "" : startLoadingTime);
+                endLoadingTime = mTvEndDate.getText().toString().trim();
+                bean.setEndLoadingTime(endLoadingTime.equals(DEFAULT) ? "" : endLoadingTime);
+                arrivedAtTheDockTime = mTvComeDate.getText().toString().trim();
+                bean.setArrivedAtTheDockTime(arrivedAtTheDockTime.equals(DEFAULT) ? "" : arrivedAtTheDockTime);
+                leaveTheDockTime = mTvExitDate.getText().toString().trim();
+                bean.setLeaveTheDockTime(leaveTheDockTime.equals(DEFAULT) ? "" : leaveTheDockTime);
+                arrivaOfAnchorageTime = mTvComeAnchorDate.getText().toString().trim();
+                bean.setArrivaOfAnchorageTime(arrivaOfAnchorageTime.equals(DEFAULT) ? "" : arrivaOfAnchorageTime);
+                clearanceTime = mTvCleanDate.getText().toString().trim();
+                bean.setClearanceTime(clearanceTime.equals(DEFAULT) ? "" : clearanceTime);
+                bean.setMaterialClassification(getResources().getStringArray(R.array.voyage_spinner)[mSpMaterialOrdar.getSelectedItemPosition()]);
+                bean.setCreator(sub.getSubcontractorAccount());
 
+                presenter.doCommit(bean);
                 break;
         }
     }
@@ -209,6 +294,48 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 mTvMaterialFrom.setText(str);
                 break;
 
+        }
+    }
+
+    /**
+     * 获取itemID
+     * @param itemID
+     */
+    @Override
+    public void showItemID(String itemID) {
+        this.itemID = itemID;
+    }
+
+    @Override
+    public void showSubcontractor(Subcontractor sub) {
+        this.sub = sub;
+    }
+
+    @Override
+    public void showError(String msg) {
+        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCommitResult(boolean isSuccess) {
+        if (isSuccess) {
+            Toast.makeText(activity, "提交成功", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(activity, "提交失败! 请重试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+        if (isShow) {
+            activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
+        } else {
+            activity.hideProgressDailog();
         }
     }
 }

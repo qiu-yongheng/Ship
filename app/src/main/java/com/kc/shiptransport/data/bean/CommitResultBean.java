@@ -12,13 +12,13 @@ public class CommitResultBean {
      * message : 1
      */
 
-    private String message;
+    private int message;
 
-    public String getMessage() {
+    public int getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(int message) {
         this.message = message;
     }
 }

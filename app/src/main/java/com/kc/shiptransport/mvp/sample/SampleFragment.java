@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.sample;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.sampledetail.SampleDetailActivity;
+import com.kc.shiptransport.mvp.sampledetail.SampleDetailContract;
 import com.kc.shiptransport.mvp.voyageinfo.RecyclerAdapter;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
 import com.kc.shiptransport.util.SettingUtil;
@@ -218,7 +221,12 @@ public class SampleFragment extends Fragment implements SampleContract.View {
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog("加载中", "加载中...");
+            activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             activity.hideProgressDailog();
         }

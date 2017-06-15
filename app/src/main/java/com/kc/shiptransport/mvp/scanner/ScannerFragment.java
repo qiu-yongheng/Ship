@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.scanner;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.scannerdetail.ScannerDetailActivity;
 import com.kc.shiptransport.mvp.voyageinfo.RecyclerAdapter;
@@ -218,7 +220,12 @@ public class ScannerFragment extends Fragment implements ScannerContract.View {
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog("加载中", "加载中...");
+            activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             activity.hideProgressDailog();
         }

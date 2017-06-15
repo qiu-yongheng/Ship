@@ -81,7 +81,7 @@ public class PlanPresenter implements PlanContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        view.showError("获取计划需求失败");
                     }
 
                     @Override
@@ -204,7 +204,7 @@ public class PlanPresenter implements PlanContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        view.showError("获取任务缺口失败");
                     }
 
                     @Override

@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.supplydetail;
 
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -251,7 +253,12 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog("提交中", "提交中...");
+            activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             activity.hideProgressDailog();
         }

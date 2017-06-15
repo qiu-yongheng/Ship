@@ -1,7 +1,9 @@
 package com.kc.shiptransport.data.source;
 
+import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 
 import java.util.List;
@@ -218,4 +220,21 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> UpdateTheAmountOfSideData(int itemID, String TheAmountOfTime, String Capacity, String DeckGauge, String Deduction);
+
+    /**
+     * 信息完善
+     * @return
+     */
+    Observable<Boolean> InsertPerfectBoatRecord(VoyageInfoBean bean);
+
+    /**
+     * 根据position获取对应的计划
+     */
+    Observable<WeekTask> getWeekTaskForPosition(int position);
+
+    /**
+     * 获取当前登录的分包商
+     * @return
+     */
+    Observable<Subcontractor> getCurrentSubcontractor();
 }

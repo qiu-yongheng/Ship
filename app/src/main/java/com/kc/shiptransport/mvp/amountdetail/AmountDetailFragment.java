@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.amountdetail;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 
 import butterknife.BindView;
@@ -96,6 +98,14 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             @Override
             public void onClick(View view) {
                // TODO
+                // 量方时间
+                String theAmountTime = tvSupplyTime.getText().toString().trim();
+                // 甲板方
+                String deck = etDeckVolume.getText().toString().trim();
+                // 扣方
+                String dedu = etShipVolume.getText().toString().trim();
+
+                presenter.commit(activity.itemID, theAmountTime, capacity, deck, dedu);
             }
         });
 
@@ -205,8 +215,8 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
         tvWarehouseSpace.setText("舱容: " + (capacity == null ? "" : capacity));
 
-        etShipVolume.setText(String.valueOf(value.getDeduction()));
-        etDeckVolume.setText(value.getDeckGauge());
+        etShipVolume.setText(String.valueOf(value.getDeduction() == null ? 0 : value.getDeduction()));
+        etDeckVolume.setText(value.getDeckGauge() == null ? "0" : value.getDeckGauge());
     }
 
     @Override
@@ -222,7 +232,12 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog("提交中", "提交中...");
+            activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             activity.hideProgressDailog();
         }

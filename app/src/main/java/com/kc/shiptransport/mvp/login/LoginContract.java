@@ -19,6 +19,7 @@ public interface LoginContract {
         void navigateToMain();
         void changeDailogInfo(String title, String msg);
         void showSyncError();
+        void showError(String msg);
     }
 
     interface Presenter extends BasePresenter {

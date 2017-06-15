@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.plan;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.plansetting.PlanSetActivity;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
@@ -216,6 +218,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         //presenter.getWeekTask(jumpWeek);
         if (adapter != null) {
             adapter.notifyDataSetChanged();
+            presenter.getDayCount();
         }
         Log.d("==", "PlanFragment");
     }
@@ -326,7 +329,12 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog("加载中", "加载中");
+            activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             activity.hideProgressDailog();
         }

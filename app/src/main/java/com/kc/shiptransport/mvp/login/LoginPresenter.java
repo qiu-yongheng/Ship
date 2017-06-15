@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 
+import java.net.SocketTimeoutException;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -89,6 +91,9 @@ public class LoginPresenter implements LoginContract.Presenter {
                     @Override
                     public void onError(Throwable e) {
                         view.showloading(false);
+                        if (e instanceof SocketTimeoutException) {
+                            view.showError("当前网络不稳定, 请稍候重试");
+                        }
                         view.showSyncError();
                     }
 
@@ -125,6 +130,9 @@ public class LoginPresenter implements LoginContract.Presenter {
                     public void onError(Throwable e) {
                         view.showloading(false);
                         view.showNetworkError();
+                        if (e instanceof SocketTimeoutException) {
+                            view.showError("当前网络不稳定, 请稍候重试");
+                        }
                     }
 
                     @Override

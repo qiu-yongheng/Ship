@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.acceptancedetail;
 
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -168,17 +170,15 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
             btnAcceptanceCommit.setVisibility(View.GONE);
             btnAcceptanceCancel.setText(R.string.btn_return);
 
-            // 回显评价 TODO 接口并没有返回数据, 不可以回显
-//            rbComplete.setStepSize(rbcomplete);
-//            rbTimely.setStepSize(rbtimely);
-            rbComplete.setIsIndicator(true);
-            rbTimely.setIsIndicator(true);
+            // 设置只能用来看
+//            rbComplete.setIsIndicator(true);
+//            rbTimely.setIsIndicator(true);
         } else {
             // 未验收
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
 
-            rbComplete.setIsIndicator(false);
-            rbTimely.setIsIndicator(false);
+//            rbComplete.setRating(2);
+//            rbComplete.setIsIndicator(false);
         }
     }
 
@@ -213,6 +213,12 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
         tvShipCurrentTide.setText("当前潮水: " + value.getCurrentTide());
         tvShipMaxDraft.setText("最大吃水: " + value.getMaxTakeInWater());
+
+        Float materialIntegrity = value.getMaterialIntegrity();
+        Float materialTimeliness = value.getMaterialTimeliness();
+        // 回显评价
+        rbComplete.setRating(materialIntegrity == null ? 0 : materialIntegrity);
+        rbTimely.setRating(materialTimeliness == null ? 0 : materialTimeliness);
     }
 
     @Override
@@ -223,7 +229,12 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog("提交中", "提交中...");
+            activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             activity.hideProgressDailog();
         }

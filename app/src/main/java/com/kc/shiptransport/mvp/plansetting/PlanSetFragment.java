@@ -204,7 +204,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     @Override
     public void showShipCategory(final List<List<Ship>> value, String date) {
         if (adapter == null) {
-            adapter = new PlanSetAdapter(activity, value, date);
+            adapter = new PlanSetAdapter(activity, value, date, jumpWeek);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {

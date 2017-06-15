@@ -27,6 +27,8 @@ public class Acceptance extends DataSupport{
     private String ReceptionSandTime;
     private String PassReceptionSandTime;
     private String TheAmountOfTime; // 量方时间
+    private Float MaterialIntegrity; // 材料完整性
+    private Float MaterialTimeliness; // 材料及时性
     private int TotalCompleteRide;
     private String TotalCompleteSquare;
     private String AvgSquare;
@@ -253,5 +255,21 @@ public class Acceptance extends DataSupport{
 
     public void setTheAmountOfTime(String theAmountOfTime) {
         TheAmountOfTime = theAmountOfTime;
+    }
+
+    public Float getMaterialIntegrity() {
+        return MaterialIntegrity;
+    }
+
+    public void setMaterialIntegrity(Float materialIntegrity) {
+        MaterialIntegrity = materialIntegrity;
+    }
+
+    public Float getMaterialTimeliness() {
+        return MaterialTimeliness;
+    }
+
+    public void setMaterialTimeliness(Float materialTimeliness) {
+        MaterialTimeliness = materialTimeliness;
     }
 }

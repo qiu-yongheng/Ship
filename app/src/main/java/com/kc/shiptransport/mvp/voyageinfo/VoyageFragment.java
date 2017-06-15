@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.voyageinfo;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,10 +15,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.voyagedetail.VoyageDetailActivity;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
@@ -139,6 +142,28 @@ public class VoyageFragment extends Fragment implements VoyageContract.View {
                 return false;
             }
         });
+
+        // 已验收
+        cbTipRed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.ACCEPTED, b);
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        // 未验收
+        cbTipBlack.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.NO_ACCEPTED, b);
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -153,6 +178,9 @@ public class VoyageFragment extends Fragment implements VoyageContract.View {
         recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         // 添加边框
         recyclerview.addItemDecoration(new DividerGridItemDecoration(getActivity()));
+
+        cbTipRed.setText(R.string.voyage_red);
+        cbTipBlack.setText(R.string.voyage_black);
     }
 
     @Override
@@ -217,7 +245,12 @@ public class VoyageFragment extends Fragment implements VoyageContract.View {
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog("加载中", "加载中...");
+            activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             activity.hideProgressDailog();
         }

@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,8 +14,10 @@ import android.support.v7.widget.AppCompatEditText;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.BaseActivity;
 import com.kc.shiptransport.mvp.main.MainActivity;
 import com.kc.shiptransport.util.SettingUtil;
@@ -180,7 +183,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void showloading(boolean active) {
         if (active) {
-            showProgressDailog(getResources().getString(R.string.dailog_title_update), "正在登陆");
+            showProgressDailog(getResources().getString(R.string.dailog_title_update), "正在登陆", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
         } else {
             hideProgressDailog();
         }
@@ -238,6 +246,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void showSyncError() {
         tip("同步数据失败");
+    }
+
+    @Override
+    public void showError(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**

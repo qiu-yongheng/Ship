@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
@@ -238,26 +239,26 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
 
     @Override
     public void getSubcontractor() {
-        Observable.create(new ObservableOnSubscribe<List<Subcontractor>>() {
+        Observable.create(new ObservableOnSubscribe<List<SubcontractorList>>() {
             @Override
-            public void subscribe(ObservableEmitter<List<Subcontractor>> e) throws Exception {
+            public void subscribe(ObservableEmitter<List<SubcontractorList>> e) throws Exception {
                 dataRepository.getSubcontractorInfo("");
                 // 从数据库获取分包商
-                List<Subcontractor> subcontractorList = DataSupport.findAll(Subcontractor.class);
+                List<SubcontractorList> subcontractorList = DataSupport.findAll(SubcontractorList.class);
 
                 e.onNext(subcontractorList);
             }
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Subcontractor>>() {
+                .subscribe(new Observer<List<SubcontractorList>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(List<Subcontractor> value) {
+                    public void onNext(List<SubcontractorList> value) {
                         view.showSpinner(value);
                     }
 

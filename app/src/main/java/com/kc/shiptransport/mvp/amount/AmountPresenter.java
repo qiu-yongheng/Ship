@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class AmountPresenter implements AmountContract.Presenter{
 
     @Override
     public void getTitle() {
-        view.showTitle("");
+        view.showTitle("量方管理");
     }
 
     @Override
@@ -109,6 +110,31 @@ public class AmountPresenter implements AmountContract.Presenter{
     @Override
     public void getStayInfo() {
         // TODO 待完善船次
+        dataRepository
+                .getStayNum(SettingUtil.AMOUNT)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Integer value) {
+                        view.showStayInfo(String.valueOf(value));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -182,6 +208,8 @@ public class AmountPresenter implements AmountContract.Presenter{
                     @Override
                     public void onComplete() {
                         view.showLoading(false);
+
+                        getStayInfo();
                     }
                 });
     }

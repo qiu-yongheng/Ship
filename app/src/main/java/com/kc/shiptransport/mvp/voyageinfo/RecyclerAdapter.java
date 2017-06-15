@@ -56,11 +56,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
 
-            if (weekTasks != null && !weekTasks.isEmpty()) {
+            // 必须验收后才能显示
+            if (weekTasks != null && !weekTasks.isEmpty()  && weekTasks.get(0).getPreAcceptanceTime() != null) {
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                 ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
-                //((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
 
 
                 String time = "";
