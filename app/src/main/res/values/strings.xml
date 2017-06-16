@@ -48,6 +48,10 @@
     <string name="amount_black">黑色字体: 未完善</string>
     <string name="voyage_red">红色字体:  已完善</string>
     <string name="voyage_black">黑色字体: 未完善</string>
+    <string name="recorded_red">红色字体: 已完善</string>
+    <string name="recorded_black">黑色字体: 未完善</string>
+    <string name="recorded_title">过砂记录</string>
+    <string name="dialog_loading">加载中</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
@@ -58,6 +62,7 @@
         <item>分包商航次信息完善</item>
         <item>分包商航次完善扫描件</item>
         <item>验砂取样</item>
+        <item>过砂记录</item>
     </array>
 
     <array name="voyage_spinner">

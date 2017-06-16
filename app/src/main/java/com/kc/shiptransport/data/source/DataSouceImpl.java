@@ -107,7 +107,7 @@ public interface DataSouceImpl {
      * @param type
      * @return
      */
-    Observable<Integer> getStayNum(String type);
+    Observable<Integer> getStayNum(int type);
 
     /**
      * 获取指定日期计划船舶数量
@@ -237,4 +237,10 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Subcontractor> getCurrentSubcontractor();
+
+    /**
+     * 获取施工船舶
+     * @return
+     */
+    Observable<Boolean> GetConstructionBoat();
 }

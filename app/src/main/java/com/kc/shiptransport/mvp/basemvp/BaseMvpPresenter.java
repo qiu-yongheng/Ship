@@ -1,51 +1,42 @@
-package com.kc.shiptransport.mvp.acceptance;
+package com.kc.shiptransport.mvp.basemvp;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.kc.shiptransport.data.source.DataRepository;
-import com.kc.shiptransport.db.Subcontractor;
-import com.kc.shiptransport.db.SubcontractorList;
-import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
-import com.kc.shiptransport.util.SettingUtil;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author qiuyongheng
- * @time 2017/6/1  15:12
+ * @time 2017/6/13  15:43
  * @desc ${TODD}
  */
 
-public class AcceptancePresenter implements AcceptanceContract.Presenter {
-    private final Context context;
-    private final AcceptanceContract.View view;
-    private final DataRepository dataRepository;
-    private final CompositeDisposable compositeDisposable;
+public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter{
+    protected final Context context;
+    protected final BaseMvpContract.View view;
+    protected final DataRepository dataRepository;
+    protected final CompositeDisposable compositeDisposable;
 
-    public AcceptancePresenter(Context context, AcceptanceContract.View view) {
+    public BaseMvpPresenter(Context context, BaseMvpContract.View view, DataRepository dataRepository) {
         this.context = context;
         this.view = view;
+        this.dataRepository = dataRepository;
         view.setPresenter(this);
-        dataRepository = new DataRepository();
         compositeDisposable = new CompositeDisposable();
     }
 
     @Override
     public void subscribe() {
-
+        
     }
 
     @Override
@@ -53,17 +44,52 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
         compositeDisposable.clear();
     }
 
-    /**
-     * 验收人名字
-     */
     @Override
-    public void getAcceptanceManName() {
-        List<Subcontractor> subcontractorList = DataSupport.findAll(Subcontractor.class);
-        view.showAcceptanceMan(subcontractorList.get(0).getSubcontractorName());
+    public void getTitle() {
+        view.showTitle(getTit());
     }
 
+    // 获取标题
+    protected abstract String getTit();
+
+
+    /**
+     * 获取操作人
+     */
     @Override
-    public void getCurrentDate(int jumpWeek) {
+    public void getTitleOtherInfo() {
+        dataRepository
+                .getSubcontractorName()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(String value) {
+                        view.showTitleOtherInfo(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        view.showError("分包商信息获取失败");
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }});
+    }
+
+    /**
+     * 获取时间
+     * @param jumpWeek
+     */
+    @Override
+    public void getTime(int jumpWeek) {
         dataRepository
                 .getCurrentMouthDate(jumpWeek)
                 .subscribeOn(Schedulers.io())
@@ -76,7 +102,7 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
 
                     @Override
                     public void onNext(String value) {
-                        view.showCurrentDate(value);
+                        view.showTime(value);
                     }
 
                     @Override
@@ -92,12 +118,14 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
     }
 
     /**
-     * 待验收航次
+     * 根据类型显示 待验收船
+     * @param type
      */
     @Override
-    public void getStayAcceptanceShip() {
+    public void getStayInfo(int type) {
+        // TODO 待完善船次
         dataRepository
-                .getStayNum(SettingUtil.TYPE_ACCEPT)
+                .getStayNum(type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Integer>() {
@@ -108,7 +136,7 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
 
                     @Override
                     public void onNext(Integer value) {
-                        view.showStayAcceptanceShip(String.valueOf(value));
+                        view.showStayInfo(String.valueOf(value));
                     }
 
                     @Override
@@ -124,43 +152,13 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
     }
 
     @Override
-    public void getWeekTask(final int jumpWeek) {
-        dataRepository
-                .getWeekTask()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<WeekTask>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
+    public void getWeekTask(int jumpWeek) {
 
-                    @Override
-                    public void onNext(List<WeekTask> value) {
-                        // 获取一周日期数据
-                        List<String> dates = CalendarUtil.getdateOfWeek("dd", jumpWeek);
-                        Log.d("==", dates.toString());
-                        view.showWeekTask(dates, value);
-                        view.showLoading(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        view.showLoading(false);
-                        view.showError();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        // 统计每日计划量
-                        getDayCount();
-
-                        // 统计未验收量
-                        getStayAcceptanceShip();
-                    }
-                });
     }
 
+    /**
+     * 每日计划量统计
+     */
     @Override
     public void getDayCount() {
         dataRepository
@@ -181,7 +179,6 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-
                     }
 
                     @Override
@@ -191,12 +188,32 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
                 });
     }
 
+    /**
+     * 刷新数据
+     * @param jumpWeek
+     */
     @Override
-    public void doRefresh(final int jumpWeek) {
+    public void doRefresh(final int jumpWeek, final int type) {
         view.showLoading(true);
         dataRepository
                 .doRefresh(jumpWeek)
                 .subscribeOn(Schedulers.io())
+                .doOnNext(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            // 统计每日计划量
+                            getDayCount();
+                        }
+                    }
+                })
+                .doOnNext(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        // 获取待验收船次
+                        getStayInfo(type);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
                     @Override
@@ -206,71 +223,29 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
 
                     @Override
                     public void onNext(Boolean value) {
-
+                        // 获取一周日期数据
+                        List<String> dates = CalendarUtil.getdateOfWeek("dd", jumpWeek);
+                        view.showWeekTask(dates);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         view.showLoading(false);
-                        view.showError();
+                        view.showError("数据获取失败!");
                     }
 
                     @Override
                     public void onComplete() {
-                        getWeekTask(jumpWeek);
+                        view.showLoading(false);
                     }
                 });
     }
 
     @Override
-    public void start(int jumpWeek) {
-        // 1. 获取当前月
-        getCurrentDate(jumpWeek);
-
-        // 2. 刷新数据
-        doRefresh(jumpWeek);
-
-        // 3. 验收人
-        getAcceptanceManName();
-
-        // 4. 获取所有分包商
-        getSubcontractor();
-    }
-
-    @Override
-    public void getSubcontractor() {
-        Observable.create(new ObservableOnSubscribe<List<SubcontractorList>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<SubcontractorList>> e) throws Exception {
-                dataRepository.getSubcontractorInfo("");
-                // 从数据库获取分包商
-                List<SubcontractorList> subcontractorList = DataSupport.findAll(SubcontractorList.class);
-
-                e.onNext(subcontractorList);
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<SubcontractorList>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<SubcontractorList> value) {
-                        view.showSpinner(value);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+    public void start(int jumpWeek, int type) {
+        getTitle();
+        getTitleOtherInfo();
+        getTime(jumpWeek);
+        doRefresh(jumpWeek, type);
     }
 }

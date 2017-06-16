@@ -111,7 +111,7 @@ public class AmountPresenter implements AmountContract.Presenter{
     public void getStayInfo() {
         // TODO 待完善船次
         dataRepository
-                .getStayNum(SettingUtil.AMOUNT)
+                .getStayNum(SettingUtil.TYPE_AMOUNT)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Integer>() {

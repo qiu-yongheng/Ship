@@ -13,7 +13,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function3;
+import io.reactivex.functions.Function4;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -71,10 +71,20 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .getAppList(username)
                 .subscribeOn(Schedulers.io());
 
-        Observable.zip(subcontractor, ship, appList, new Function3<Boolean, Boolean, Boolean, Boolean>() {
+        // 获取施工船舶(用在过砂记录)
+        Observable<Boolean> construction = mDataRepository
+                .GetConstructionBoat()
+                .subscribeOn(Schedulers.io());
+
+
+        Observable.zip(subcontractor, ship, appList, construction, new Function4<Boolean, Boolean, Boolean, Boolean, Boolean>() {
             @Override
-            public Boolean apply(Boolean aBoolean, Boolean aBoolean2, Boolean aBoolean3) throws Exception {
-                return true;
+            public Boolean apply(Boolean aBoolean, Boolean aBoolean2, Boolean aBoolean3, Boolean aBoolean4) throws Exception {
+                if (aBoolean && aBoolean2 && aBoolean3 && aBoolean4) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
@@ -85,7 +95,11 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     @Override
                     public void onNext(Boolean value) {
-
+                        if (value) {
+                            view.navigateToMain();
+                        } else {
+                            view.showSyncError();
+                        }
                     }
 
                     @Override
@@ -100,7 +114,6 @@ public class LoginPresenter implements LoginContract.Presenter {
                     @Override
                     public void onComplete() {
                         view.showloading(false);
-                        view.navigateToMain();
                     }
                 });
     }

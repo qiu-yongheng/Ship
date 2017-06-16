@@ -15,6 +15,7 @@ import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.amount.AmountActivity;
 import com.kc.shiptransport.mvp.home.PopAdapter;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
+import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
 import com.kc.shiptransport.mvp.sample.SampleActivity;
 import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
@@ -84,6 +85,7 @@ public class HomeItemPop extends BasePopWindown {
                 R.mipmap.supply_sand,
                 R.mipmap.supply_sand,
                 R.mipmap.supply_sand,
+                R.mipmap.supply_sand,
                 R.mipmap.supply_sand},
                 context.getResources().getStringArray(R.array.home_item_pop));
 
@@ -119,13 +121,50 @@ public class HomeItemPop extends BasePopWindown {
                         // 验砂取样
                         SampleActivity.navigateToSampleActivity(context);
                         break;
+                    case 7:
+                        // 过砂记录
+                        RecordedSandActivity.startActivity(context);
+                        break;
                 }
                 onDismiss();
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-
+                switch (position) {
+                    case 0:
+                        // 分包商进场计划
+                        Toast.makeText(context, "没有权限使用此功能", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        // 待验收航次
+                        Toast.makeText(context, "没有权限使用此功能", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        // 待验砂航次
+                        Toast.makeText(context, "没有权限使用此功能", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 3:
+                        // 量方管理
+                        Toast.makeText(context, "没有权限使用此功能", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 4:
+                        // 分包商航次信息完善
+                        Toast.makeText(context, "没有权限使用此功能", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 5:
+                        // 扫描件
+                        Toast.makeText(context, "没有权限使用此功能", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 6:
+                        // 验砂取样
+                        Toast.makeText(context, "没有权限使用此功能", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 7:
+                        // 过砂记录
+                        Toast.makeText(context, "没有权限使用此功能", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         });
         mRvHomeSupply.setAdapter(adapter);

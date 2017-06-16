@@ -98,7 +98,7 @@ public class SupplyPresenter implements SupplyContract.Presenter {
     @Override
     public void getStaySupplyShip() {
         dataRepository
-                .getStayNum(SettingUtil.SUPPLY)
+                .getStayNum(SettingUtil.TYPE_SUPPLY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Integer>() {

@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.data.bean.AcceptanceBean;
 import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
+import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
@@ -19,6 +20,7 @@ import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.CommitShip;
+import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
@@ -468,7 +470,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Integer> getStayNum(final String type) {
+    public Observable<Integer> getStayNum(final int type) {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
@@ -481,18 +483,18 @@ public class DataRepository implements DataSouceImpl {
                     for (WeekTask weektask : weekTasks) {
                         String time = null;
                         String time2 = null;
-                        if (type.equals(SettingUtil.ACCEPTANCE)) {
+                        if (type == SettingUtil.TYPE_ACCEPT) {
                             time = weektask.getPreAcceptanceTime();
                             if (time == null || time.equals("")) {
                                 num++;
                             }
-                        } else if (type.equals(SettingUtil.SUPPLY)) {
+                        } else if (type == SettingUtil.TYPE_SUPPLY) {
                             time = weektask.getPreAcceptanceTime();
                             time2 = weektask.getReceptionSandTime();
                             if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
                                 num++;
                             }
-                        } else if (type.equals(SettingUtil.AMOUNT)) {
+                        } else if (type == SettingUtil.TYPE_AMOUNT) {
                             time = weektask.getPreAcceptanceTime();
                             time2 = weektask.getTheAmountOfTime();
                             if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
@@ -897,6 +899,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 // 发送网络请求
                 String appList = mRemoteDataSource.getAppList(account);
+                Log.d("==", appList);
                 // 解析数据
                 List<AppListBean> lists = gson.fromJson(appList, new TypeToken<List<AppListBean>>() {
                 }.getType());
@@ -1036,6 +1039,7 @@ public class DataRepository implements DataSouceImpl {
 
                 // 发送网络请求
                 String result = mRemoteDataSource.InsertPerfectBoatRecord(json);
+                Log.d("==", "信息完善: " + result);
                 CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
                 e.onNext(resultBean.getMessage() == 1);
                 e.onComplete();
@@ -1082,6 +1086,33 @@ public class DataRepository implements DataSouceImpl {
                 } else {
                     e.onError(new RuntimeException("获取分包商信息失败"));
                 }
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取施工船舶
+     * @return
+     */
+    @Override
+    public Observable<Boolean> GetConstructionBoat() {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.GetConstructionBoat();
+                List<ConstructionBoatBean> list = gson.fromJson(result, new TypeToken<List<ConstructionBoatBean>>() {
+                }.getType());
+
+                // 保存到数据库
+                for (ConstructionBoatBean boatBean : list) {
+                    ConstructionBoat boat = new ConstructionBoat();
+                    boat.setShipNum(boatBean.getShipNum());
+                    boat.setShipName(boatBean.getShipName());
+                    boat.save();
+                }
+
+                e.onNext(true);
                 e.onComplete();
             }
         });

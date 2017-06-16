@@ -1,6 +1,8 @@
 package com.kc.shiptransport.mvp.home;
 
 import android.content.Context;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,24 +43,45 @@ public class PopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+
         ((ItemHolder) holder).mIvHomeItem.setImageResource(icon[position]);
         ((ItemHolder) holder).mTvHomeItem.setText(tag[position]);
 
         // 权限管理, 设置要显示的模块
         List<AppList> appLists = DataSupport.where("AppID = ?", String.valueOf(position + 10)).find(AppList.class);
         if (appLists != null && !appLists.isEmpty()) {
-            ((ItemHolder) holder).itemView.setVisibility(View.VISIBLE);
+            // 需要显示的功能
+//            ((ItemHolder) holder).itemView.setVisibility(View.VISIBLE);
+
+            ((ItemHolder) holder).mIvHomeItem.setColorFilter(null); // 如果想恢复彩色显示，设置为null即可
+
+
+            // 设置点击事件
+            ((ItemHolder) holder).mIvHomeItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(holder.itemView, holder.getLayoutPosition());
+                }
+            });
         } else {
-            ((ItemHolder) holder).itemView.setVisibility(View.GONE);
+            // 没有权限使用的功能
+//            ((ItemHolder) holder).itemView.setVisibility(View.GONE);
+
+            ColorMatrix cm = new ColorMatrix();
+            cm.setSaturation(0); // 设置饱和度
+            ColorMatrixColorFilter grayColorFilter = new ColorMatrixColorFilter(cm);
+            ((ItemHolder) holder).mIvHomeItem.setColorFilter(grayColorFilter); // 如果想恢复彩色显示，设置为null即可
+
+            // 点击提示没有权限使用, 懒得添加接口啦
+            ((ItemHolder) holder).mIvHomeItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
+                }
+            });
         }
 
-        // 设置点击事件
-        ((ItemHolder) holder).mIvHomeItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onItemClick(holder.itemView, holder.getLayoutPosition());
-            }
-        });
+
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {

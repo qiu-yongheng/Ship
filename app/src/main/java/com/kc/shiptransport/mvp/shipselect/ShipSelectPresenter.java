@@ -7,13 +7,20 @@ import com.google.gson.Gson;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.Subcontractor;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -131,16 +138,36 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
         dataRepository
                 .doCommit(type, date)
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<String, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> apply(String s) throws Exception {
+                        if (s.equals("1")) {
+                        // 提交后, 更新船舶列表
+                        String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
+                        return dataRepository.getShip(subcontractorAccount);
+
+                        } else {
+                            return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                                @Override
+                                public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                                    e.onNext(false);
+                                    e.onComplete();
+                                }
+                            });
+                        }
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
+                .subscribe(new Observer<Boolean>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(String value) {
-                        if (value.equals("1")) {
+                    public void onNext(Boolean value) {
+                        if (value) {
                             // 同步数据
                             view.showCommitSuccess();
                             view.changeDailogInfo();
@@ -152,12 +179,12 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("==", e.toString());
+                        Log.d("==", "提交错误" + e.toString());
                         // 服务器返回null报错, 暂时屏蔽
-                        //view.showLoading(false);
-                        //view.showError();
-                        view.showCommitSuccess();
-                        view.changeDailogInfo();
+                        view.showLoading(false);
+                        view.showError();
+//                        view.showCommitSuccess();
+//                        view.changeDailogInfo();
                     }
 
                     @Override
