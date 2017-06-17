@@ -23,8 +23,8 @@ public class WeekTask extends DataSupport{
     private double SandSupplyCount;
     private Float Capacity;
     private Float DeckGauge;
-    private String ReceptionSandTime;
-    private String PreAcceptanceTime;
+    private String ReceptionSandTime; // 验砂时间
+    private String PreAcceptanceTime; // 验收时间
     private String TheAmountOfTime; // 量方时间
     private int SandSubcontractorPreAcceptanceEvaluationID;
     private Float DefaultCapacity;

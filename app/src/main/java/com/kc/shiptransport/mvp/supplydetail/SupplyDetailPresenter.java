@@ -115,7 +115,8 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
                     @Override
                     public Observable<Boolean> apply(Integer integer) throws Exception {
                         if (integer == success) {
-                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_SUPPLY));
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_SUPPLY),
+                                    SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
                             return null;
                         }

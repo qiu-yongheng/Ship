@@ -121,7 +121,7 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return 77;
+        return SettingUtil.Recycler_item_num;
     }
 
     public void setOnItemClickListener(OnRecyclerviewItemClickListener listener) {

@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.mvp.BaseActivity;
+import com.kc.shiptransport.view.pop.HomeItemPop;
 
 import butterknife.ButterKnife;
 
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, "再点一次，退出", Toast.LENGTH_SHORT).show();
             exitTime = System.currentTimeMillis();
         } else {
+            HomeItemPop.stopPop();
             super.onBackPressed();
         }
     }

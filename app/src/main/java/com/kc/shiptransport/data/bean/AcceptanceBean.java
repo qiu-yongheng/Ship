@@ -59,6 +59,7 @@ public class AcceptanceBean {
     private String ShipItemNum;
     private Float DefaultCapacity; // 默认舱容
     private Float defaultDeckGauge; // 默认甲板方
+    private String batch; //batch
 
     public int getItemID() {
         return ItemID;
@@ -274,5 +275,13 @@ public class AcceptanceBean {
 
     public void setMaterialTimeliness(Float materialTimeliness) {
         MaterialTimeliness = materialTimeliness;
+    }
+
+    public String getBatch() {
+        return batch;
+    }
+
+    public void setBatch(String batch) {
+        this.batch = batch;
     }
 }

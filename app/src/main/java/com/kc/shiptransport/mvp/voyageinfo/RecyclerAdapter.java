@@ -53,11 +53,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else {
             ((NormalHolder) holder).mLlDate.setVisibility(View.INVISIBLE);
 
-
+            // 根据position查询数据
             List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
 
             // 必须验收后才能显示
-            if (weekTasks != null && !weekTasks.isEmpty()  && weekTasks.get(0).getPreAcceptanceTime() != null) {
+            if (weekTasks != null && !weekTasks.isEmpty()) {
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                 ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
@@ -126,7 +126,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return 77;
+        return SettingUtil.Recycler_item_num;
     }
 
     public void setOnItemClickListener(OnRecyclerviewItemClickListener listener) {

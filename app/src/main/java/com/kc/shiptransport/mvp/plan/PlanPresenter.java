@@ -16,6 +16,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -247,6 +248,13 @@ public class PlanPresenter implements PlanContract.Presenter {
         mDataRepository
                 .getWeekTask()
                 .subscribeOn(Schedulers.io())
+                .doOnNext(new Consumer<List<WeekTask>>() {
+                    @Override
+                    public void accept(List<WeekTask> weekTasks) throws Exception {
+                        // 统计每日计划量
+                        getDayCount();
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<WeekTask>>() {
                     @Override
@@ -270,8 +278,6 @@ public class PlanPresenter implements PlanContract.Presenter {
 
                     @Override
                     public void onComplete() {
-                        // 统计每日计划量
-                        getDayCount();
                         // 4. 获取分包商计划量缺口
                         getTaskVolume(jumpWeek);
                     }

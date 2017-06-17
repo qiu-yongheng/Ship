@@ -59,6 +59,13 @@ public interface DataSouceImpl {
     Observable<Double[]> getDayCount();
 
     /**
+     * 计算每天任务总量
+     *
+     * @return
+     */
+    Observable<Double[]> getDayCount(int type);
+
+    /**
      * 网络请求
      * 请求选中周的任务计划
      *
@@ -66,6 +73,16 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> doRefresh(int jumpWeek);
+
+    /**
+     * 网络请求
+     * 请求选中周的任务计划
+     *
+     * @param jumpWeek
+     * @param account
+     * @return
+     */
+    Observable<Boolean> doRefresh(int jumpWeek, String account);
 
     /**
      * 根据船的类型对数据进行分类
@@ -243,4 +260,11 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> GetConstructionBoat();
+
+    /**
+     * 删除未验收的数据
+     * 对数据库数据进行重新排序
+     * @return
+     */
+    Observable<Boolean> getWeekTaskSort(int jumpWeek);
 }

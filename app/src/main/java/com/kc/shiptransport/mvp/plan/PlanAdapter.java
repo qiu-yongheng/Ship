@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.SettingUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -94,7 +95,7 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 77;
+        return SettingUtil.Recycler_item_num;
     }
 
     public void setOnItemClickListener(OnRecyclerviewItemClickListener listener) {

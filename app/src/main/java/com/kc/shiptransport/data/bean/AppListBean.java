@@ -14,11 +14,12 @@ public class AppListBean {
      * AppName : 电子地图
      * AppUrl : null
      */
-
     private String AppID;
     private String AppPID;
     private String AppName;
-    private Object AppUrl;
+    private String AppUrl;
+    private Double sortNum;
+
 
     public String getAppID() {
         return AppID;
@@ -44,11 +45,19 @@ public class AppListBean {
         this.AppName = AppName;
     }
 
-    public Object getAppUrl() {
+    public String getAppUrl() {
         return AppUrl;
     }
 
-    public void setAppUrl(Object AppUrl) {
+    public void setAppUrl(String AppUrl) {
         this.AppUrl = AppUrl;
+    }
+
+    public Double getSortNum() {
+        return sortNum;
+    }
+
+    public void setSortNum(Double sortNum) {
+        this.sortNum = sortNum;
     }
 }

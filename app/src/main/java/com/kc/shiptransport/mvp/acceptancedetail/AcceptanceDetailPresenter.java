@@ -105,8 +105,10 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                 .flatMap(new Function<Integer, Observable<Boolean>>() { // 同步
                     @Override
                     public Observable<Boolean> apply(Integer integer) throws Exception {
+                        // 更新当前选中的分包商计划
                         if (integer == success) {
-                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_ACCEPTANCE));
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_ACCEPTANCE),
+                                    SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
                             return null;
                         }

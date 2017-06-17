@@ -3,7 +3,6 @@ package com.kc.shiptransport.util;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -202,6 +201,7 @@ public class CalendarUtil {
 
     /**
      * 弹出时间选择器
+     * DateFormat.is24HourFormat(context) 判断
      * @param context
      * @param view
      */
@@ -227,7 +227,7 @@ public class CalendarUtil {
                         String format = df.format(c.getTime());
                         view.setText(format);
                     }
-                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), DateFormat.is24HourFormat(context));
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
 
                 timePickerDialog.show();
 

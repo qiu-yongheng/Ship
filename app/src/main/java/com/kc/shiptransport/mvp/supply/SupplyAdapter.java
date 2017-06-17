@@ -118,7 +118,7 @@ public class SupplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return 77;
+        return SettingUtil.Recycler_item_num;
     }
 
     public void setOnItemClickListener(OnRecyclerviewItemClickListener listener) {

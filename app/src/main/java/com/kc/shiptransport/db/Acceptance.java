@@ -36,6 +36,7 @@ public class Acceptance extends DataSupport{
     private String ShipItemNum;
     private Float DefaultCapacity; // 默认舱容
     private Float defaultDeckGauge; // 默认甲板方
+    private String batch; //batch
 
     private String isSupply; // "1" : 已提交 "0" : 未提交
     private String isAcceptance; // "1" : 已提交 "0" : 未提交
@@ -271,5 +272,13 @@ public class Acceptance extends DataSupport{
 
     public void setMaterialTimeliness(Float materialTimeliness) {
         MaterialTimeliness = materialTimeliness;
+    }
+
+    public String getBatch() {
+        return batch;
+    }
+
+    public void setBatch(String batch) {
+        this.batch = batch;
     }
 }

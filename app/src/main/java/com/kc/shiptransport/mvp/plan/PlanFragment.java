@@ -98,7 +98,9 @@ public class PlanFragment extends Fragment implements PlanContract.View {
     private PlanAdapter adapter;
     private PlanActivity activity;
     private float dowmX;
+    private float dowmY;
     private float upX;
+    private float upY;
     private int jumpWeek = 0; // 要显示的week, 默认当周
     private GestureDetector mGestureDetector;
 
@@ -154,18 +156,26 @@ public class PlanFragment extends Fragment implements PlanContract.View {
                             dowmX = motionEvent.getX();
                             Log.d("==", "MOVE X = " + motionEvent.getX());
                         }
+
+                        if (dowmY == 0) {
+                            dowmY = motionEvent.getY();
+                            Log.d("==", "MOVE Y = " + motionEvent.getY());
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
                         upX = motionEvent.getX();
+                        upY = motionEvent.getY();
                         Log.d("==", "UP X = " + motionEvent.getX());
+                        Log.d("==", "UP Y = " + motionEvent.getY());
 
-                        if (upX - dowmX > 100) {
+                        // Y轴位移必须小于X轴
+                        if (upX - dowmX > 100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX)) {
                             Toast.makeText(activity, "上一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求上一周数据
                             jumpWeek--;
                             SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
                             presenter.start(jumpWeek);
-                        } else if (upX - dowmX < -100) {
+                        } else if (upX - dowmX < -100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX)) {
                             Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求下一周数据
                             jumpWeek++;
@@ -173,6 +183,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
                             presenter.start(jumpWeek);
                         }
                         dowmX = 0;
+                        dowmY = 0;
                         break;
                 }
                 return false;
@@ -218,7 +229,10 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         //presenter.getWeekTask(jumpWeek);
         if (adapter != null) {
             adapter.notifyDataSetChanged();
+            // 重新计算每日计划量
             presenter.getDayCount();
+            // 重新计算任务缺口
+            presenter.getTaskVolume(jumpWeek);
         }
         Log.d("==", "PlanFragment");
     }

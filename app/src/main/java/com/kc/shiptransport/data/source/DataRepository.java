@@ -152,9 +152,58 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<Double[]>() {
             @Override
             public void subscribe(ObservableEmitter<Double[]> e) throws Exception {
+                synchronized (DataRepository.class) {
+                    reset();
+                    // 从数据库获取一周任务分配数据
+                    List<WeekTask> weekLists = findAll(WeekTask.class);
+                    for (WeekTask weekTask : weekLists) {
+                        switch (Integer.valueOf(weekTask.getPosition()) % 7) {
+                            case 0:
+                                day_0 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 1:
+                                day_1 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 2:
+                                day_2 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 3:
+                                day_3 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 4:
+                                day_4 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 5:
+                                day_5 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 6:
+                                day_6 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                        }
+                    }
+                    Double[] integers = new Double[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
+
+                    e.onNext(integers);
+                    e.onComplete();
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<Double[]> getDayCount(final int type) {
+        return Observable.create(new ObservableOnSubscribe<Double[]>() {
+            @Override
+            public void subscribe(ObservableEmitter<Double[]> e) throws Exception {
                 reset();
-                // 从数据库获取一周任务分配数据
-                List<WeekTask> weekLists = findAll(WeekTask.class);
+                List<WeekTask> weekLists;
+                if (type == SettingUtil.TYPE_SUPPLY || type == SettingUtil.TYPE_AMOUNT) {
+                    weekLists = DataSupport.where("PreAcceptanceTime IS NOT NULL").find(WeekTask.class);
+                } else {
+                    // 从数据库获取一周任务分配数据
+                    weekLists = findAll(WeekTask.class);
+                }
+
                 for (WeekTask weekTask : weekLists) {
                     switch (Integer.valueOf(weekTask.getPosition()) % 7) {
                         case 0:
@@ -205,6 +254,117 @@ public class DataRepository implements DataSouceImpl {
 
                 /* 1. 获取请求数据 */
                 String weekTaskInfo = mRemoteDataSource.getWeekTaskInfo(subcontractorAccount, startDay, endDay);
+
+                /* 2. 解析数据成对象 */
+                List<WeekTaskBean> lists = gson.fromJson(weekTaskInfo, new TypeToken<List<WeekTaskBean>>() {
+                }.getType());
+
+                Log.d("==", "一周计划数量: " + lists.size());
+
+                /* 3. 初始化数据库 */
+                DataSupport.deleteAll(WeekTask.class);
+
+                Log.d("==", "初始化数据库后: " + findAll(WeekTask.class).size());
+
+                /* 4. 保存数据到数据库 */
+                for (WeekTaskBean bean : lists) {
+                    WeekTask weekTask = new WeekTask();
+                    weekTask.setItemID(bean.getItemID()); // 保存itemID
+                    weekTask.setSubcontractorAccount(bean.getSubcontractorAccount()); // 保存账号名
+                    weekTask.setSubcontractorName(bean.getSubcontractorName()); // 用户名
+                    weekTask.setPlanDay(bean.getPlanDay()); // 保存计划时间
+                    weekTask.setShipAccount(bean.getShipAccount()); //船舶账号
+                    weekTask.setShipType(bean.getShipType()); // 船舶类型
+                    weekTask.setShipName(bean.getShipName()); // 船舶名字
+                    weekTask.setSandSupplyCount(bean.getSandSupplyCount()); // 船舶最大运沙量
+                    weekTask.setReceptionSandTime(bean.getReceptionSandTime()); // 验砂时间
+                    weekTask.setPreAcceptanceTime(bean.getPreAcceptanceTime()); // 验收时间
+                    weekTask.setTheAmountOfTime(bean.getTheAmountOfTime()); // 量方时间
+                    weekTask.setSandSubcontractorPreAcceptanceEvaluationID(bean.getSandSubcontractorPreAcceptanceEvaluationID()); // 分包商评价ID
+                    weekTask.setCapacity(bean.getCapacity()); // 舱容
+                    weekTask.setDeckGauge(bean.getDeckGauge()); // 甲板方
+                    weekTask.setDefaultCapacity(bean.getDefaultCapacity());
+                    weekTask.setDefaultDeckGauge(bean.getDefaultDeckGauge());
+                    weekTask.save();
+                }
+
+                Log.d("==", "保存数据到数据库后: " + findAll(WeekTask.class).size());
+
+
+
+
+
+
+                /* 5. 根据日期对数据进行分类 */
+                List<List<WeekTask>> totalLists = new ArrayList<>();
+
+                Set set = new HashSet();
+                for (WeekTaskBean bean : lists) {
+                    String planDay = bean.getPlanDay();
+                    if (set.contains(planDay)) {
+
+                    } else {
+                        set.add(planDay);
+                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(WeekTask.class));
+                    }
+                }
+
+                /* 6. 更新position */
+                for (List<WeekTask> list : totalLists) {
+                    for (int i = 1; i <= list.size(); i++) {
+                        // 更新数据
+                        WeekTask weekTask = list.get(i - 1);
+                        weekTask.setPosition(String.valueOf(dateToPosition(weekTask.getPlanDay(), i, jumpWeek)));
+                        weekTask.save();
+                    }
+                }
+
+
+                // 从数据库获取一周任务分配数据
+                List<WeekTask> weekLists = findAll(WeekTask.class);
+                Log.d("==", "计划数量: " + weekLists.size());
+
+                // 重置ship的选择状态
+                ContentValues v = new ContentValues();
+                v.put("Selected", "0");
+                DataSupport.updateAll(Ship.class, v);
+
+                Log.d("==", "重置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+
+
+                // 根据计划, 设置ship select = 1
+                ContentValues values = new ContentValues();
+                values.put("Selected", "1");
+                for (WeekTask weekTask : weekLists) {
+                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
+                }
+
+                Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+                Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
+
+
+                // 通知presenter从DB获取数据
+                e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    @Override
+    public Observable<Boolean> doRefresh(final int jumpWeek, final String account) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                Log.d("==", "第二");
+                /* 开始时间 */
+                String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
+                /* 结束时间 */
+                String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
+
+                Log.d("==", "请求日期: " + startDay + "-" + endDay);
+
+                /* 1. 获取请求数据 */
+                String weekTaskInfo = mRemoteDataSource.getWeekTaskInfo(account, startDay, endDay);
 
                 /* 2. 解析数据成对象 */
                 List<WeekTaskBean> lists = gson.fromJson(weekTaskInfo, new TypeToken<List<WeekTaskBean>>() {
@@ -404,6 +564,7 @@ public class DataRepository implements DataSouceImpl {
                     accep.setShipItemNum(accepBean.getShipItemNum());
                     accep.setDefaultCapacity(accepBean.getDefaultCapacity());
                     accep.setDefaultDeckGauge(accepBean.getDefaultDeckGauge());
+                    accep.setBatch(accepBean.getBatch());
                     accep.save();
                     // 4. 返回存到数据库的数据
                     e.onNext(accep);
@@ -911,6 +1072,7 @@ public class DataRepository implements DataSouceImpl {
                     list.setAppPID(bean.getAppPID());
                     list.setAppName(bean.getAppName());
                     list.setAppUrl(bean.getAppUrl());
+                    list.setSortNum(bean.getSortNum());
                     list.save();
                 }
 
@@ -1093,6 +1255,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 获取施工船舶
+     *
      * @return
      */
     @Override
@@ -1118,7 +1281,30 @@ public class DataRepository implements DataSouceImpl {
         });
     }
 
+    /**
+     * 删除未验收的数据
+     * 对数据库数据进行排序
+     * @return
+     */
+    @Override
+    public Observable<Boolean> getWeekTaskSort(final int jumpWeek) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                // 1. 删除未验收的数据
+                DataSupport.deleteAll(WeekTask.class, "PreAcceptanceTime IS NULL");
 
+                dataSort(jumpWeek);
+
+                e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     *
+     */
     private void reset() {
         day_0 = 0;
         day_1 = 0;
@@ -1140,11 +1326,44 @@ public class DataRepository implements DataSouceImpl {
         try {
             // 获取时间差
             dataBetween = CalendarUtil.getDataBetween(CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek), date);
-            Log.d("==", "" + dataBetween);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return (int) (dataBetween + 7 * itemID);
+    }
+
+    /**
+     * 对数据进行重新排序
+     * @param jumpWeek
+     */
+    private void dataSort(int jumpWeek) {
+        // 1. 创建一个二维集合存放分类好的数据
+        List<List<WeekTask>> totalLists = new ArrayList<>();
+
+        // 2. 查询数据
+        List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
+
+        // 3. 按照时间进行分类
+        Set set = new HashSet();
+        for (WeekTask bean : weekTasks) {
+            String planDay = bean.getPlanDay();
+            if (set.contains(planDay)) {
+
+            } else {
+                set.add(planDay);
+                totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(WeekTask.class));
+            }
+        }
+
+        // 4. 更新position
+        for (List<WeekTask> list : totalLists) {
+            for (int i = 1; i <= list.size(); i++) {
+                // 更新数据
+                WeekTask weekTask = list.get(i - 1);
+                weekTask.setPosition(String.valueOf(dateToPosition(weekTask.getPlanDay(), i, jumpWeek)));
+                weekTask.save();
+            }
+        }
     }
 }
 

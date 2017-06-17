@@ -3,10 +3,16 @@ package com.kc.shiptransport.mvp.basemvp;
 import android.content.Context;
 
 import com.kc.shiptransport.data.source.DataRepository;
+import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.util.CalendarUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -193,7 +199,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter{
      * @param jumpWeek
      */
     @Override
-    public void doRefresh(final int jumpWeek, final int type) {
+    public void doRefresh(final int jumpWeek, final int type, String account) {
         view.showLoading(true);
         dataRepository
                 .doRefresh(jumpWeek)
@@ -241,11 +247,51 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter{
                 });
     }
 
+    /**
+     * 获取所有分包商
+     */
     @Override
-    public void start(int jumpWeek, int type) {
+    public void getSubcontractorList() {
+        Observable.create(new ObservableOnSubscribe<List<SubcontractorList>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<SubcontractorList>> e) throws Exception {
+                dataRepository.getSubcontractorInfo("");
+                // 从数据库获取分包商
+                List<SubcontractorList> subcontractorList = DataSupport.findAll(SubcontractorList.class);
+
+                e.onNext(subcontractorList);
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<SubcontractorList>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<SubcontractorList> value) {
+                        view.showSpinner(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    @Override
+    public void start(int jumpWeek, int type, String account) {
         getTitle();
         getTitleOtherInfo();
         getTime(jumpWeek);
-        doRefresh(jumpWeek, type);
+        doRefresh(jumpWeek, type, account);
     }
 }

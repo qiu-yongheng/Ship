@@ -93,6 +93,8 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     private float upX;
     private AcceptanceAdapter adapter;
     private String subcontractorAccount;
+    private double dowmY;
+    private float upY;
 
     @Nullable
     @Override
@@ -102,7 +104,9 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         initViews(view);
         initListener();
         // 默认获取所有计划任务
-        presenter.start(jumpWeek);
+        presenter.getCurrentDate(jumpWeek);
+        presenter.getAcceptanceManName();
+        presenter.getSubcontractor();
         return view;
     }
 
@@ -111,7 +115,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.doRefresh(jumpWeek);
+                presenter.doRefresh(jumpWeek, subcontractorAccount);
             }
         });
 
@@ -128,27 +132,34 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
                             dowmX = motionEvent.getX();
                             Log.d("==", "MOVE X = " + motionEvent.getX());
                         }
+
+                        if (dowmY == 0) {
+                            dowmY = motionEvent.getY();
+                            Log.d("==", "MOVE Y = " + motionEvent.getY());
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
                         upX = motionEvent.getX();
+                        upY = motionEvent.getY();
                         Log.d("==", "UP X = " + motionEvent.getX());
+                        Log.d("==", "UP Y = " + motionEvent.getY());
 
-                        if (upX - dowmX > 100) {
+                        // Y轴位移必须小于X轴
+                        if (upX - dowmX > 100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX)) {
                             Toast.makeText(activity, "上一周", Toast.LENGTH_SHORT).show();
-                            Log.d("==", "上一周");
                             // TODO 请求上一周数据
                             jumpWeek--;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_ACCEPTANCE, jumpWeek);
-                            presenter.start(jumpWeek);
-                        } else if (upX - dowmX < -100) {
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            presenter.start(jumpWeek, subcontractorAccount);
+                        } else if (upX - dowmX < -100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX)) {
                             Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
-                            Log.d("==", "下一周");
                             // TODO 请求下一周数据
                             jumpWeek++;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_ACCEPTANCE, jumpWeek);
-                            presenter.start(jumpWeek);
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            presenter.start(jumpWeek, subcontractorAccount);
                         }
                         dowmX = 0;
+                        dowmY = 0;
                         break;
                 }
                 return false;
@@ -181,6 +192,10 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     @Override
     public void initViews(View view) {
         SharePreferenceUtil.saveInt(getContext(), SettingUtil.WEEK_JUMP_ACCEPTANCE, 0);
+
+        // 还原当前选中的分包商账号
+        SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, "");
+
         setHasOptionsMenu(true);
         activity = (AcceptanceActivity) getActivity();
         activity.setSupportActionBar(toolbarAcceptance);
@@ -331,7 +346,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     @Override
     public void showSpinner(final List<SubcontractorList> value) {
         List<String> datas = new ArrayList<>();
-        datas.add("请选择分包商");
+        datas.add("所有分包商");
         for (SubcontractorList subcontractor : value) {
             datas.add(subcontractor.getSubcontractorName());
         }
@@ -352,9 +367,16 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
                 String s = (String) adapterView.getItemAtPosition(i);
                 //Toast.makeText(activity, s, Toast.LENGTH_SHORT).show();
                 if (i != 0) {
+                    // 这里的账号是提供给adapter去数据库查询数据的
                     subcontractorAccount = value.get(i - 1).getSubcontractorAccount();
-                    presenter.doRefresh(jumpWeek);
+                    // 这里应该根据选择的账号重新
+                    presenter.doRefresh(jumpWeek, subcontractorAccount);
+                } else if (i == 0) {
+                    subcontractorAccount = "";
+                    presenter.doRefresh(jumpWeek, subcontractorAccount);
                 }
+                // 保存当前选中的分包商账号
+                SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, subcontractorAccount);
             }
 
             @Override

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +15,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
@@ -31,6 +35,7 @@ import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -81,12 +86,17 @@ public class AmountFragment extends Fragment implements AmountContract.View {
     AppCompatButton btnRefresh;
     @BindView(R.id.btn_commit)
     AppCompatButton btnCommit;
+    @BindView(R.id.title_spinner)
+    AppCompatSpinner mTitleSpinner;
     private AmountActivity activity;
     private AmountContract.Presenter presenter;
     private float dowmX;
     private float upX;
     private int jumpWeek = 0; // 要显示的week, 默认当周
     private RecyclerAdapter adapter;
+    private String subcontractorAccount;
+    private double dowmY;
+    private float upY;
 
     @Nullable
     @Override
@@ -96,7 +106,10 @@ public class AmountFragment extends Fragment implements AmountContract.View {
         initViews(view);
         initListener();
         // TODO 获取数据
-        presenter.start(jumpWeek);
+        presenter.getTitle();
+        presenter.getTitleOtherInfo();
+        presenter.getTime(jumpWeek);
+        presenter.getSubcontractor();
         return view;
     }
 
@@ -105,7 +118,7 @@ public class AmountFragment extends Fragment implements AmountContract.View {
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.doRefresh(jumpWeek);
+                presenter.doRefresh(jumpWeek, subcontractorAccount);
             }
         });
 
@@ -122,25 +135,34 @@ public class AmountFragment extends Fragment implements AmountContract.View {
                             dowmX = motionEvent.getX();
                             Log.d("==", "MOVE X = " + motionEvent.getX());
                         }
+
+                        if (dowmY == 0) {
+                            dowmY = motionEvent.getY();
+                            Log.d("==", "MOVE Y = " + motionEvent.getY());
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
                         upX = motionEvent.getX();
+                        upY = motionEvent.getY();
                         Log.d("==", "UP X = " + motionEvent.getX());
+                        Log.d("==", "UP Y = " + motionEvent.getY());
 
-                        if (upX - dowmX > 100) {
+                        // Y轴位移必须小于X轴
+                        if (upX - dowmX > 100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX)) {
                             Toast.makeText(activity, "上一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求上一周数据
                             jumpWeek--;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_SUPPLY, jumpWeek);
-                            presenter.start(jumpWeek);
-                        } else if (upX - dowmX < -100) {
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            presenter.start(jumpWeek, subcontractorAccount);
+                        } else if (upX - dowmX < -100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX)) {
                             Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求下一周数据
                             jumpWeek++;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_SUPPLY, jumpWeek);
-                            presenter.start(jumpWeek);
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            presenter.start(jumpWeek, subcontractorAccount);
                         }
                         dowmX = 0;
+                        dowmY = 0;
                         break;
                 }
                 return false;
@@ -173,6 +195,10 @@ public class AmountFragment extends Fragment implements AmountContract.View {
     @Override
     public void initViews(View view) {
         SharePreferenceUtil.saveInt(getContext(), SettingUtil.WEEK_JUMP_SUPPLY, 0);
+
+        // 还原当前选中的分包商账号
+        SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, "");
+
         // 允许使用menu
         setHasOptionsMenu(true);
         activity = (AmountActivity) getActivity();
@@ -251,6 +277,8 @@ public class AmountFragment extends Fragment implements AmountContract.View {
             recyclerview.setAdapter(adapter);
 
         } else {
+            // 更新日期
+            adapter.setDates(dates);
             adapter.notifyDataSetChanged();
         }
     }
@@ -283,6 +311,53 @@ public class AmountFragment extends Fragment implements AmountContract.View {
     @Override
     public void showError(String msg) {
         Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSpinner(final List<SubcontractorList> value) {
+        mTitleSpinner.setVisibility(View.VISIBLE);
+        List<String> datas = new ArrayList<>();
+        datas.add("所有分包商");
+        for (SubcontractorList subcontractor : value) {
+            datas.add(subcontractor.getSubcontractorName());
+        }
+
+        // 适配器
+        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(activity, R.layout.spinner_hear, datas);
+        // 设置样式
+        arr_adapter.setDropDownViewResource(R.layout.spinner_item);
+        // 加载适配器
+        mTitleSpinner.setAdapter(arr_adapter);
+        // 根据上一个界面传过来的position设置当前显示的item
+        mTitleSpinner.setSelection(0);
+
+        // 点击后, 筛选分包商的数据
+        mTitleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String s = (String) adapterView.getItemAtPosition(i);
+                //Toast.makeText(activity, s, Toast.LENGTH_SHORT).show();
+                if (i != 0) {
+                    // 这里的账号是提供给adapter去数据库查询数据的
+                    subcontractorAccount = value.get(i - 1).getSubcontractorAccount();
+                    // 这里应该根据选择的账号重新
+                    presenter.doRefresh(jumpWeek, subcontractorAccount);
+                } else if (i == 0) {
+                    subcontractorAccount = "";
+                    presenter.doRefresh(jumpWeek, subcontractorAccount);
+                }
+                // 保存当前选中的分包商账号
+                SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, subcontractorAccount);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override

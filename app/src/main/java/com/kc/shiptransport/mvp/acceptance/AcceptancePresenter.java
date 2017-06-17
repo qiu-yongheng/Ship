@@ -192,10 +192,10 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
     }
 
     @Override
-    public void doRefresh(final int jumpWeek) {
+    public void doRefresh(final int jumpWeek, String subcontractorAccount) {
         view.showLoading(true);
         dataRepository
-                .doRefresh(jumpWeek)
+                .doRefresh(jumpWeek, subcontractorAccount)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
@@ -217,26 +217,30 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
 
                     @Override
                     public void onComplete() {
+                        // TODO 没必要
                         getWeekTask(jumpWeek);
                     }
                 });
     }
 
     @Override
-    public void start(int jumpWeek) {
+    public void start(int jumpWeek, String subcontractorAccount) {
         // 1. 获取当前月
         getCurrentDate(jumpWeek);
 
         // 2. 刷新数据
-        doRefresh(jumpWeek);
+        doRefresh(jumpWeek, subcontractorAccount);
 
         // 3. 验收人
-        getAcceptanceManName();
+//        getAcceptanceManName();
 
         // 4. 获取所有分包商
-        getSubcontractor();
+//        getSubcontractor();
     }
 
+    /**
+     * 获取所有分包商
+     */
     @Override
     public void getSubcontractor() {
         Observable.create(new ObservableOnSubscribe<List<SubcontractorList>>() {

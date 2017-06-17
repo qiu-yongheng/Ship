@@ -106,7 +106,8 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                     @Override
                     public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
                         if (aBoolean) {
-                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_SUPPLY));
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_SUPPLY),
+                                    SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
                             return null;
                         }

@@ -211,8 +211,12 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
         tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
         tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
-        tvShipCurrentTide.setText("当前潮水: " + value.getCurrentTide());
-        tvShipMaxDraft.setText("最大吃水: " + value.getMaxTakeInWater());
+
+        String currentTide = value.getCurrentTide();
+        tvShipCurrentTide.setText("当前潮水: " + (currentTide == null ? "0" : currentTide));
+
+        String maxTakeInWater = value.getMaxTakeInWater();
+        tvShipMaxDraft.setText("最大吃水: " + (maxTakeInWater == null ? "0" : maxTakeInWater));
 
         Float materialIntegrity = value.getMaterialIntegrity();
         Float materialTimeliness = value.getMaterialTimeliness();

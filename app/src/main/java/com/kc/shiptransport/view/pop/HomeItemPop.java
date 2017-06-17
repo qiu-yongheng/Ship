@@ -15,11 +15,7 @@ import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.amount.AmountActivity;
 import com.kc.shiptransport.mvp.home.PopAdapter;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
-import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
-import com.kc.shiptransport.mvp.sample.SampleActivity;
-import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
-import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
 
 
 /**
@@ -54,6 +50,12 @@ public class HomeItemPop extends BasePopWindown {
         return mInstanst;
     }
 
+    public static void stopPop() {
+        if (mInstanst != null) {
+            mInstanst = null;
+        }
+    }
+
     /**
      * 创建对话框
      *
@@ -80,7 +82,7 @@ public class HomeItemPop extends BasePopWindown {
         mRvHomeSupply = (RecyclerView) view.findViewById(R.id.rv_home_supply);
         mRvHomeSupply.setLayoutManager(new GridLayoutManager(context, 3));
         PopAdapter adapter = new PopAdapter(context, new int[] {R.mipmap.plan,
-                R.mipmap.acceptance,
+                R.mipmap.supply_sand,
                 R.mipmap.supply_sand,
                 R.mipmap.supply_sand,
                 R.mipmap.supply_sand,
@@ -98,35 +100,39 @@ public class HomeItemPop extends BasePopWindown {
                         PlanActivity.navigateToPlanActivity(context);
                         break;
                     case 1:
+                        // 分包商航次信息完善
+//                        VoyageInfoActivity.navigateToVoyageInfoActivity(context);
+                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        // 扫描件
+//                        ScannerActivity.navigateToScannerActivity(context);
+                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 3:
                         // 待验收航次
                         AcceptanceActivity.navigateToAcceptanceActivity(context);
                         break;
-                    case 2:
-                        // 待验砂航次
-                        SupplyActivity.navigateToSupplyActivity(context);
-                        break;
-                    case 3:
+                    case 4:
                         // 量方管理
                         AmountActivity.navigateToAmountActivity(context);
                         break;
-                    case 4:
-                        // 分包商航次信息完善
-                        VoyageInfoActivity.navigateToVoyageInfoActivity(context);
-                        break;
                     case 5:
-                        // 扫描件
-                        ScannerActivity.navigateToScannerActivity(context);
+                        // 待验砂航次
+                        SupplyActivity.navigateToSupplyActivity(context);
                         break;
                     case 6:
                         // 验砂取样
-                        SampleActivity.navigateToSampleActivity(context);
+//                        SampleActivity.navigateToSampleActivity(context);
+                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
                         break;
                     case 7:
                         // 过砂记录
-                        RecordedSandActivity.startActivity(context);
+//                        RecordedSandActivity.startActivity(context);
+                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
                         break;
                 }
-                onDismiss();
+                //onDismiss();
             }
 
             @Override

@@ -13,6 +13,7 @@ import android.widget.Button;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.mvp.login.LoginActivity;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.view.pop.HomeItemPop;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +52,8 @@ public class MineFragment extends Fragment {
         btnMineExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                HomeItemPop.stopPop();
+
                 SharedPreferences.Editor edit = sp.edit();
                 edit.putString(SettingUtil.DATA_USERNAME, "");
                 edit.putString(SettingUtil.DATA_PASSWORD, "");

@@ -98,13 +98,14 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         // 可以显示menu
         setHasOptionsMenu(true);
         activity.setSupportActionBar(toolbarSupplyDetail);
-        activity.getSupportActionBar().setTitle("验方管理(进场)");
+        activity.getSupportActionBar().setTitle("验砂管理");
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (activity.isSupply) {
             // 禁止软键盘
             etShipVolume.setInputType(InputType.TYPE_NULL);
             etDeckVolume.setInputType(InputType.TYPE_NULL);
+            etBatch.setInputType(InputType.TYPE_NULL);
             btnAcceptanceCommit.setVisibility(View.GONE);
             btnAcceptanceCancel.setText(R.string.btn_return);
 
@@ -112,6 +113,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             // 开启软键盘
             etShipVolume.setInputType(InputType.TYPE_CLASS_TEXT);
             etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
+            etBatch.setInputType(InputType.TYPE_CLASS_TEXT);
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
             btnAcceptanceCancel.setText(R.string.btn_cancle);
         }
@@ -238,6 +240,8 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
 
         etShipVolume.setText(value.getCapacity());
+        String batch = value.getBatch();
+        etBatch.setText(batch == null ? "" : batch);
     }
 
     @Override

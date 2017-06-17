@@ -7,6 +7,11 @@ package com.kc.shiptransport.util;
  */
 
 public class SettingUtil {
+    /* 列表item数 */
+    public static final int Recycler_item_num = 147;
+
+
+
     /* 记住密码 */
     public static final String KEY_REMEMBER_PASSWORD = "remember_password";
     /* 自动登录 */
@@ -25,6 +30,9 @@ public class SettingUtil {
 
     /* acceptance jumpWeek */
     public static final String WEEK_JUMP_ACCEPTANCE = "jump_week_acceptance";
+
+    /* 工程人员当前审核分包商账号 */
+    public static final String SUBCONTRACTOR_ACCOUNT = "subcontractor_account";
 
 
     /* 通用 */

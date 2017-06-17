@@ -42,8 +42,8 @@
     <string name="title_amount_detail">量方管理</string>
     <string name="text_batch">BATCH:</string>
     <string name="btn_add_sample">添加取样</string>
-    <string name="supply_red">红色字体: 已验沙</string>
-    <string name="supply_black">黑色字体: 未验沙</string>
+    <string name="supply_red">红色字体: 已验砂</string>
+    <string name="supply_black">黑色字体: 未验砂</string>
     <string name="amount_red">红色字体: 已完善</string>
     <string name="amount_black">黑色字体: 未完善</string>
     <string name="voyage_red">红色字体:  已完善</string>
@@ -56,11 +56,11 @@
     <!-- 供砂管理title -->
     <array name="home_item_pop">
         <item>分包商进场计划</item>
-        <item>待验收航次</item>
-        <item>待验砂船次</item>
-        <item>量方管理</item>
         <item>分包商航次信息完善</item>
         <item>分包商航次完善扫描件</item>
+        <item>待验收航次</item>
+        <item>量方管理</item>
+        <item>待验砂船次</item>
         <item>验砂取样</item>
         <item>过砂记录</item>
     </array>

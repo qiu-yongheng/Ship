@@ -48,7 +48,7 @@ public class PopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         ((ItemHolder) holder).mTvHomeItem.setText(tag[position]);
 
         // 权限管理, 设置要显示的模块
-        List<AppList> appLists = DataSupport.where("AppID = ?", String.valueOf(position + 10)).find(AppList.class);
+        List<AppList> appLists = DataSupport.where("sortNum = ?", String.valueOf(Double.valueOf(position + 1))).find(AppList.class);
         if (appLists != null && !appLists.isEmpty()) {
             // 需要显示的功能
 //            ((ItemHolder) holder).itemView.setVisibility(View.VISIBLE);

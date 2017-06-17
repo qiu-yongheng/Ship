@@ -45,9 +45,9 @@ public interface AcceptanceContract {
         // 每天任务量统计
         void getDayCount();
         // 刷新数据
-        void doRefresh(int jumpWeek);
+        void doRefresh(int jumpWeek, String subcontractorAccount);
         // 加载数据
-        void start(int jumpWeek);
+        void start(int jumpWeek, String subcontractorAccount);
         // 获取所有分包商
         void getSubcontractor();
     }

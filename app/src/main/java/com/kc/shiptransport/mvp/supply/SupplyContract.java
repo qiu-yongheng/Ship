@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.supply;
 
+import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -28,6 +29,8 @@ public interface SupplyContract {
         void showLoading(boolean active);
         // 显示失败
         void showError();
+        // 初始化spinner
+        void showSpinner(List<SubcontractorList> value);
     }
 
     interface Presenter extends BasePresenter {
@@ -42,8 +45,10 @@ public interface SupplyContract {
         // 每天任务量统计
         void getDayCount();
         // 刷新数据
-        void doRefresh(int jumpWeek);
+        void doRefresh(int jumpWeek, String subcontractorAccount);
         //
-        void start(int jumpWeek);
+        void start(int jumpWeek, String subcontractorAccount);
+        // 获取所有分包商
+        void getSubcontractor();
     }
 }
