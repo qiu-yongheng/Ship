@@ -12,4 +12,5 @@
     <color name="text_gray">#b4b4b4</color>
     <color name="text_tag_gray">#515151</color>
     <color name="Dividing_line">#EDEEEB</color>
+    <color name="btn_bg_blue">#3db0e9</color>
 </resources>

@@ -76,5 +76,9 @@ public class SettingUtil {
     public static final int TYPE_SUPPLY = 2;
     /* 量方 */
     public static final int TYPE_AMOUNT = 3;
+    /* 过砂记录 */
+    public static final int TYPE_RECORDEDSAND = 4;
+    /* 分包商航次信息完善 */
+    public static final int TYPE_VOYAGEINFO = 5;
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 }

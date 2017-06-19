@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,6 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
-import com.kc.shiptransport.mvp.voyageinfo.RecyclerAdapter;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
@@ -86,15 +86,15 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
     protected BaseMvpContract.Presenter presenter;
     @BindView(R.id.title_spinner)
     AppCompatSpinner mTitleSpinner;
-    private float dowmX;
-    private float upX;
-    private int jumpWeek = 0; // 要显示的week, 默认当周
-    private RecyclerAdapter adapter;
-    private int TYPE;
+    protected float dowmX;
+    protected float upX;
+    protected int jumpWeek = 0; // 要显示的week, 默认当周
+    protected RecyclerAdapter adapter;
+    protected int TYPE;
 
-    private String subcontractorAccount;
-    private double dowmY;
-    private float upY;
+    protected String subcontractorAccount;
+    protected double dowmY;
+    protected float upY;
 
 
     @Nullable
@@ -108,10 +108,15 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
 
         initViews(view);
         initListener();
-        // TODO 获取数据
-        presenter.start(jumpWeek, TYPE, subcontractorAccount);
+        // TODO 获取数据, 给子类处理
+        initData();
         return view;
     }
+
+    /**
+     * 获取数据
+     */
+    protected abstract void initData();
 
     /**
      * 获取要显示的数据类型
@@ -155,13 +160,13 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
                         Log.d("==", "UP Y = " + motionEvent.getY());
 
                         // Y轴位移必须小于X轴
-                        if (upX - dowmX > 100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX)) {
+                        if (upX - dowmX > 100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX) && dowmX != 0 && dowmY != 0) {
                             Toast.makeText(getContext(), "上一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求上一周数据
                             jumpWeek--;
                             SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
                             presenter.start(jumpWeek, TYPE, subcontractorAccount);
-                        } else if (upX - dowmX < -100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX)) {
+                        } else if (upX - dowmX < -100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX) && dowmX != 0 && dowmY != 0) {
                             Toast.makeText(getContext(), "下一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求下一周数据
                             jumpWeek++;
@@ -170,6 +175,8 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
                         }
                         dowmX = 0;
                         dowmY = 0;
+                        upX = 0;
+                        upY = 0;
                         break;
                 }
                 return false;
@@ -215,6 +222,16 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
         cbTipRed.setText(getRedText());
         cbTipBlack.setText(getBlackText());
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

@@ -267,4 +267,11 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> getWeekTaskSort(int jumpWeek);
+
+    /**
+     * 获取过砂记录
+     * @param jumpWeek
+     * @return
+     */
+    Observable<Boolean> getOverSandRecordList(int jumpWeek);
 }

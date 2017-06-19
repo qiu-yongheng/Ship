@@ -10,6 +10,7 @@ import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LoginResult;
+import com.kc.shiptransport.data.bean.RecordListBean;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
@@ -21,6 +22,7 @@ import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.CommitShip;
 import com.kc.shiptransport.db.ConstructionBoat;
+import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
@@ -44,6 +46,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 
+import static org.litepal.crud.DataSupport.deleteAll;
 import static org.litepal.crud.DataSupport.findAll;
 
 /**
@@ -636,37 +639,50 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
                 int num = 0;
-                // 1. 获取一周任务
-                List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
 
-                // 2. 统计未验收任务
-                if (weekTasks != null && !weekTasks.isEmpty()) {
-                    for (WeekTask weektask : weekTasks) {
-                        String time = null;
-                        String time2 = null;
-                        if (type == SettingUtil.TYPE_ACCEPT) {
-                            time = weektask.getPreAcceptanceTime();
-                            if (time == null || time.equals("")) {
-                                num++;
+                /** 根据类型计算没有做相关处理的船次 */
+                if (type == SettingUtil.TYPE_RECORDEDSAND) {
+                    // 过砂记录, IsFinish = 0的个数
+                    num = DataSupport.where("IsFinish = ?", "0").count(RecordList.class);
+
+                } else {
+                    // 1. 获取一周任务
+                    List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
+
+                    // 2. 统计未验收任务
+                    if (weekTasks != null && !weekTasks.isEmpty()) {
+                        for (WeekTask weektask : weekTasks) {
+                            String time = null;
+                            String time2 = null;
+                            if (type == SettingUtil.TYPE_ACCEPT) {
+                                time = weektask.getPreAcceptanceTime();
+                                if (time == null || time.equals("")) {
+                                    num++;
+                                }
+                            } else if (type == SettingUtil.TYPE_SUPPLY) {
+                                time = weektask.getPreAcceptanceTime();
+                                time2 = weektask.getReceptionSandTime();
+                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
+                                    num++;
+                                }
+                            } else if (type == SettingUtil.TYPE_AMOUNT) {
+                                time = weektask.getPreAcceptanceTime();
+                                time2 = weektask.getTheAmountOfTime();
+                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
+                                    num++;
+                                }
+                            } else if (type == SettingUtil.TYPE_VOYAGEINFO) {
+                                // TODO 判断是否已完善信息
+                                time = weektask.getPreAcceptanceTime();
+
                             }
-                        } else if (type == SettingUtil.TYPE_SUPPLY) {
-                            time = weektask.getPreAcceptanceTime();
-                            time2 = weektask.getReceptionSandTime();
-                            if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
-                                num++;
-                            }
-                        } else if (type == SettingUtil.TYPE_AMOUNT) {
-                            time = weektask.getPreAcceptanceTime();
-                            time2 = weektask.getTheAmountOfTime();
-                            if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
-                                num++;
-                            }
+
                         }
-
                     }
                 }
 
                 e.onNext(num);
+                e.onComplete();
             }
         });
     }
@@ -1197,11 +1213,14 @@ public class DataRepository implements DataSouceImpl {
 
 
                 // 解析成json
-                String json = gson.toJson(jsonArray);
+                String json = jsonArray.toString();
+                Log.d("==", "信息完善请求json: " + json);
+
+
 
                 // 发送网络请求
                 String result = mRemoteDataSource.InsertPerfectBoatRecord(json);
-                Log.d("==", "信息完善: " + result);
+                Log.d("==", "信息完善请求结果: " + result);
                 CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
                 e.onNext(resultBean.getMessage() == 1);
                 e.onComplete();
@@ -1284,6 +1303,7 @@ public class DataRepository implements DataSouceImpl {
     /**
      * 删除未验收的数据
      * 对数据库数据进行排序
+     *
      * @return
      */
     @Override
@@ -1295,6 +1315,92 @@ public class DataRepository implements DataSouceImpl {
                 DataSupport.deleteAll(WeekTask.class, "PreAcceptanceTime IS NULL");
 
                 dataSort(jumpWeek);
+
+                e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取过砂记录
+     *
+     * @param jumpWeek
+     * @return
+     */
+    @Override
+    public Observable<Boolean> getOverSandRecordList(final int jumpWeek) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                /* 获取分包商账号 */
+                String subcontractorAccount = findAll(Subcontractor.class).get(0).getSubcontractorAccount();
+                /* 开始时间 */
+                String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
+                /* 结束时间 */
+                String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
+
+                Log.d("==", "请求日期: " + startDay + "-" + endDay);
+
+                /* 1. 获取请求数据 */
+                String recordList = mRemoteDataSource.GetOverSandRecordList(subcontractorAccount, startDay, endDay);
+
+                /* 2. 解析数据成对象 */
+                List<RecordListBean> lists = gson.fromJson(recordList, new TypeToken<List<RecordListBean>>() {
+                }.getType());
+
+                /* 3. 初始化数据库 */
+                deleteAll(RecordList.class);
+
+                /* 4. 保存数据到数据库 */
+                for (RecordListBean bean : lists) {
+                    RecordList record = new RecordList();
+                    record.setItemID(bean.getItemID());
+                    record.setSubcontractorAccount(bean.getSubcontractorAccount());
+                    record.setSubcontractorName(bean.getSubcontractorName());
+                    record.setPlanDay(bean.getPlanDay());
+                    record.setShipAccount(bean.getShipAccount());
+                    record.setShipName(bean.getShipName());
+                    record.setShipType(bean.getShipType());
+                    record.setSandSupplyCount(bean.getSandSupplyCount());
+                    record.setCapacity(bean.getCapacity());
+                    record.setDeckGauge(bean.getDeckGauge());
+                    record.setReceptionSandTime(bean.getReceptionSandTime());
+                    record.setPreAcceptanceTime(bean.getPreAcceptanceTime());
+                    record.setShipItemNum(bean.getShipItemNum());
+                    record.setIsFinish(bean.getIsFinish());
+                    record.save();
+                }
+
+                /* 5. 对数据进行排序 */
+
+                // 1. 创建一个二维集合存放分类好的数据
+                List<List<RecordList>> totalLists = new ArrayList<>();
+
+                // 2. 查询数据
+                List<RecordList> recordLists = DataSupport.findAll(RecordList.class);
+
+                // 3. 按照时间进行分类
+                Set set = new HashSet();
+                for (RecordList bean : recordLists) {
+                    String planDay = bean.getPlanDay();
+                    if (set.contains(planDay)) {
+
+                    } else {
+                        set.add(planDay);
+                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(RecordList.class));
+                    }
+                }
+
+                // 4. 更新position
+                for (List<RecordList> list : totalLists) {
+                    for (int i = 1; i <= list.size(); i++) {
+                        // 更新数据
+                        RecordList record = list.get(i - 1);
+                        record.setPosition(String.valueOf(dateToPosition(record.getPlanDay(), i, jumpWeek)));
+                        record.save();
+                    }
+                }
 
                 e.onNext(true);
                 e.onComplete();
@@ -1334,6 +1440,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 对数据进行重新排序
+     *
      * @param jumpWeek
      */
     private void dataSort(int jumpWeek) {

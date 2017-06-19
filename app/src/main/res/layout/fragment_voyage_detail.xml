@@ -23,9 +23,10 @@
             <RelativeLayout
                 android:id="@+id/rl_ship_location"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -49,9 +50,10 @@
             <RelativeLayout
                 android:id="@+id/rl_ship_date"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -75,9 +77,10 @@
             <RelativeLayout
                 android:id="@+id/rl_sample_num"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -101,9 +104,10 @@
             <RelativeLayout
                 android:id="@+id/rl_material_from"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -127,9 +131,10 @@
             <RelativeLayout
                 android:id="@+id/rl_start_date"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -153,9 +158,10 @@
             <RelativeLayout
                 android:id="@+id/rl_end_date"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -179,9 +185,10 @@
             <RelativeLayout
                 android:id="@+id/rl_come_date"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -205,9 +212,10 @@
             <RelativeLayout
                 android:id="@+id/rl_exit_date"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -231,9 +239,10 @@
             <RelativeLayout
                 android:id="@+id/rl_come_anchor_date"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -257,9 +266,10 @@
             <RelativeLayout
                 android:id="@+id/rl_clean_date"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -283,9 +293,10 @@
             <RelativeLayout
                 android:id="@+id/rl_material_ordar"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/item_height">
                 <TextView
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"
@@ -312,11 +323,11 @@
 
     <Button
         android:id="@+id/btn_commit"
-        android:background="?colorPrimary"
+        android:background="@color/btn_bg_blue"
         android:text="@string/text_save_voyage"
         android:textColor="@color/text_white"
         android:textSize="@dimen/text_18sp"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_height="@dimen/btn_height"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>

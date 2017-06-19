@@ -15,7 +15,11 @@ import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.amount.AmountActivity;
 import com.kc.shiptransport.mvp.home.PopAdapter;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
+import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
+import com.kc.shiptransport.mvp.sample.SampleActivity;
+import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
+import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
 
 
 /**
@@ -101,13 +105,13 @@ public class HomeItemPop extends BasePopWindown {
                         break;
                     case 1:
                         // 分包商航次信息完善
-//                        VoyageInfoActivity.navigateToVoyageInfoActivity(context);
-                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
+                        VoyageInfoActivity.navigateToVoyageInfoActivity(context);
+//                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
                         break;
                     case 2:
                         // 扫描件
-//                        ScannerActivity.navigateToScannerActivity(context);
-                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
+                        ScannerActivity.navigateToScannerActivity(context);
+//                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
                         break;
                     case 3:
                         // 待验收航次
@@ -123,13 +127,13 @@ public class HomeItemPop extends BasePopWindown {
                         break;
                     case 6:
                         // 验砂取样
-//                        SampleActivity.navigateToSampleActivity(context);
-                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
+                        SampleActivity.navigateToSampleActivity(context);
+//                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
                         break;
                     case 7:
                         // 过砂记录
-//                        RecordedSandActivity.startActivity(context);
-                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
+                        RecordedSandActivity.startActivity(context);
+//                        Toast.makeText(context, "功能待开发", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 //onDismiss();

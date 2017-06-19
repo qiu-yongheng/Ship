@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/view_toolbar"/>
+
+    <ScrollView
+        android:layout_marginTop="?actionBarSize"
+        android:layout_marginBottom="@dimen/btn_height"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/rl_ship_location"
+                android:gravity="center_vertical"
+                android:padding="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height">
+                <TextView
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"
+                    android:text="@string/text_ship_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/tv_ship_location"
+                    android:textSize="@dimen/text_normal_size"
+                    android:textColor="@color/text_gray"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:layout_alignParentBottom="true"
+        android:text="@string/btn_commit"
+        android:textSize="@dimen/text_18sp"
+        android:textColor="@color/text_white"
+        android:id="@+id/btn_commit"
+        android:background="@color/btn_bg_blue"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"/>
+
+</RelativeLayout>

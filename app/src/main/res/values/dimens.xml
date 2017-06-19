@@ -5,4 +5,5 @@
     <dimen name="text_13sp">13sp</dimen>
     <dimen name="btn_height">45dp</dimen>
     <dimen name="text_18sp">18sp</dimen>
+    <dimen name="item_height">45dp</dimen>
 </resources>

@@ -8,6 +8,7 @@ import android.view.View;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.basemvp.BaseMvpFragment;
+import com.kc.shiptransport.mvp.recordedsanddetail.RecordedSandDetailActivity;
 import com.kc.shiptransport.util.SettingUtil;
 
 /**
@@ -35,12 +36,20 @@ public class RecordedSandFragment extends BaseMvpFragment{
     }
 
     /**
+     *　初始化数据
+     */
+    @Override
+    protected void initData() {
+        presenter.start(jumpWeek, TYPE, subcontractorAccount);
+    }
+
+    /**
      * TODO
      * @return
      */
     @Override
     protected int getType() {
-        return SettingUtil.TYPE_SUPPLY;
+        return SettingUtil.TYPE_RECORDEDSAND;
     }
 
     @Override
@@ -70,8 +79,13 @@ public class RecordedSandFragment extends BaseMvpFragment{
         return "待完善航次: " + data;
     }
 
+    /**
+     * 点击跳转到过砂记录界面
+     * @param view
+     * @param position
+     */
     @Override
     protected void abs_onItemClick(View view, int position) {
-
+        RecordedSandDetailActivity.startActivity(getActivity());
     }
 }

@@ -11,5 +11,6 @@
         <mapping class="com.kc.shiptransport.db.AppList"/>
         <mapping class="com.kc.shiptransport.db.SubcontractorList"/>
         <mapping class="com.kc.shiptransport.db.ConstructionBoat"/>
+        <mapping class="com.kc.shiptransport.db.RecordList"/>
     </list>
 </litepal>

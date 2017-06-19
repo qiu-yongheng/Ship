@@ -22,7 +22,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.scannerdetail.ScannerDetailActivity;
-import com.kc.shiptransport.mvp.voyageinfo.RecyclerAdapter;
+import com.kc.shiptransport.mvp.basemvp.RecyclerAdapter;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;

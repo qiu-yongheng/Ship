@@ -104,6 +104,10 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            String gaga = savedInstanceState.getString("gaga");
+            Toast.makeText(activity, gaga, Toast.LENGTH_SHORT).show();
+        }
         View view = inflater.inflate(R.layout.fragment_voyage_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
@@ -137,6 +141,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         // 材料分类
         rlMaterialOrdar.setOnClickListener(this);
 
+        // 提交
         btnCommit.setOnClickListener(this);
     }
 
@@ -197,6 +202,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         this.presenter = presenter;
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -237,7 +243,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 CalendarUtil.showTimePickerDialog(getContext(), mTvCleanDate);
                 break;
             case R.id.rl_material_ordar:
-                // 弹出选择框
+                // TODO 弹出选择框 -> initView()
                 break;
             case R.id.btn_commit:
                 // 提交
@@ -337,5 +343,19 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         } else {
             activity.hideProgressDailog();
         }
+    }
+
+    /**
+     * 保存
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("gaga", "gaga");
     }
 }

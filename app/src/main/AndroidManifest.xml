@@ -37,6 +37,7 @@
         <activity android:name=".mvp.sample.SampleActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.sampledetail.SampleDetailActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.recordedsand.RecordedSandActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.recordedsanddetail.RecordedSandDetailActivity" android:launchMode="singleTask"/>
     </application>
 
 </manifest>
