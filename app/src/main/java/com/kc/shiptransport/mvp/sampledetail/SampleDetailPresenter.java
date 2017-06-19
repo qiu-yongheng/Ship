@@ -35,4 +35,9 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter{
     public void unsubscribe() {
         compositeDisposable.clear();
     }
+
+    @Override
+    public void getShipNumber() {
+
+    }
 }

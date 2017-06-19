@@ -11,10 +11,10 @@ import com.kc.shiptransport.mvp.BaseView;
 
 public interface SampleDetailContract {
     interface View extends BaseView<Presenter> {
-
+        void showShipNumber(String num);
     }
 
     interface Presenter extends BasePresenter {
-
+        void getShipNumber();
     }
 }

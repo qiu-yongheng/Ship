@@ -68,9 +68,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/btn_commit"
+            android:background="?colorPrimary"
             android:textColor="@color/text_white"
-            android:textSize="@dimen/text_18sp"
-            app:backgroundTint="?colorPrimary"/>
+            android:textSize="@dimen/text_18sp"/>
 
         <View
             android:layout_width="4dp"
@@ -82,8 +82,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/btn_add_sample"
+            android:background="?colorPrimary"
             android:textColor="@color/text_white"
-            android:textSize="@dimen/text_18sp"
-            app:backgroundTint="?colorPrimary"/>
+            android:textSize="@dimen/text_18sp"/>
     </LinearLayout>
 </RelativeLayout>

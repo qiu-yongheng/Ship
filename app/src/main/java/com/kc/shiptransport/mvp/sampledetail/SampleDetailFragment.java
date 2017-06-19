@@ -3,6 +3,8 @@ package com.kc.shiptransport.mvp.sampledetail;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -13,6 +15,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +50,8 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     Button btnAdd;
     Unbinder unbinder;
     private SampleDetailContract.Presenter presenter;
+    private SampleDetailActivity activity;
+    private SampleDetailAdapter mAdapter;
 
     @Nullable
     @Override
@@ -71,13 +78,27 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
             @Override
             public void onClick(View view) {
                 // TODO
+                mAdapter.addData(1);
             }
         });
     }
 
     @Override
     public void initViews(View view) {
+        // 初始化toolbar
+        activity = (SampleDetailActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setTitle(R.string.sampledetail_title);
 
+        // 初始化recyclerview
+        recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        List<String> list = new ArrayList<>();
+        list.add("gaga");
+        list.add("haha");
+        list.add("yaya");
+        mAdapter = new SampleDetailAdapter(getContext(), list);
+        recyclerview.setItemAnimator(new DefaultItemAnimator());
+        recyclerview.setAdapter(mAdapter);
     }
 
     @Override
@@ -89,5 +110,10 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void showShipNumber(String num) {
+
     }
 }
