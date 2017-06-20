@@ -8,6 +8,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +19,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.SampleRecordList;
+import com.kc.shiptransport.data.bean.SampleRecordListBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +65,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     private SampleDetailContract.Presenter presenter;
     private SampleDetailActivity activity;
     private SampleDetailAdapter mAdapter;
+    private int itemID;
 
     @Nullable
     @Override
@@ -69,6 +75,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         initViews(view);
         initListener();
         // TODO
+        showItemID(250);
         return view;
     }
 
@@ -151,19 +158,28 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
 
     @Override
     public void showItemID(int itemID) {
+        this.itemID = itemID;
         if (mAdapter == null) {
             // 初始化recyclerview
             recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-            // 默认有3条记录
-            List<SampleRecordList> list = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                SampleRecordList sampleRecordList = new SampleRecordList();
-                sampleRecordList.setItemID(itemID);
-                sampleRecordList.setPosition(i);
-                sampleRecordList.save();
-                list.add(sampleRecordList);
+
+            List<SampleRecordListBean> list = new ArrayList<>();
+            // 判断该itemID是否有缓存
+            String string = SharePreferenceUtil.getString(getContext(), String.valueOf(itemID), "");
+            if (TextUtils.isEmpty(string)) {
+                // 默认有3条记录
+                for (int i = 0; i < 3; i++) {
+                    SampleRecordListBean sampleRecordList = new SampleRecordListBean();
+                    sampleRecordList.setItemID(itemID);
+                    list.add(sampleRecordList);
+                }
+            } else {
+                // 有缓存, 解析
+                list = new Gson().fromJson(string, new TypeToken<List<SampleRecordListBean>>() {
+                }.getType());
             }
+
 
             mAdapter = new SampleDetailAdapter(getContext(), list, itemID);
             recyclerview.setItemAnimator(new DefaultItemAnimator());
@@ -176,9 +192,8 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                 @Override
                                 public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
                                     // 保存图片地址
-                                    SampleRecordList sampleRecordList = mAdapter.list.get(position);
+                                    SampleRecordListBean sampleRecordList = mAdapter.list.get(position);
                                     sampleRecordList.setImage_1(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
-                                    sampleRecordList.save();
                                     mAdapter.notifyDataSetChanged();
                                 }
                             });
@@ -188,13 +203,13 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                 @Override
                                 public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
                                     // 保存图片地址
-                                    SampleRecordList sampleRecordList = mAdapter.list.get(position);
+                                    SampleRecordListBean sampleRecordList = mAdapter.list.get(position);
                                     sampleRecordList.setImage_2(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
-                                    sampleRecordList.save();
                                     mAdapter.notifyDataSetChanged();
                                 }
                             });
                             break;
+
                     }
                 }
 
@@ -219,5 +234,16 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         } else {
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * 当界面不显示时, 缓存数据到sp中
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        String json = new Gson().toJson(mAdapter.list);
+        Log.d("==", json);
+        SharePreferenceUtil.saveString(getContext(), String.valueOf(itemID), json);
     }
 }

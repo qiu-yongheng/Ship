@@ -1,6 +1,4 @@
-package com.kc.shiptransport.db;
-
-import org.litepal.crud.DataSupport;
+package com.kc.shiptransport.data.bean;
 
 /**
  * @author qiuyongheng
@@ -8,12 +6,11 @@ import org.litepal.crud.DataSupport;
  * @desc 保存itemID对应的图片
  */
 
-public class SampleRecordList extends DataSupport{
+public class SampleRecordListBean{
     private int ItemID;
     private String image_1;
     private String image_2;
     private String sample_num;
-    private int position;
 
     public int getItemID() {
         return ItemID;
@@ -45,13 +42,5 @@ public class SampleRecordList extends DataSupport{
 
     public void setSample_num(String sample_num) {
         this.sample_num = sample_num;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
     }
 }

@@ -13,6 +13,5 @@
         <mapping class="com.kc.shiptransport.db.ConstructionBoat"/>
         <mapping class="com.kc.shiptransport.db.RecordList"/>
         <mapping class="com.kc.shiptransport.db.SandSample"/>
-        <mapping class="com.kc.shiptransport.db.SampleRecordList"/>
     </list>
 </litepal>

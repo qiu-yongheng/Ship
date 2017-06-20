@@ -2,7 +2,8 @@ package com.kc.shiptransport.mvp.sampledetail;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.SampleRecordList;
+import com.kc.shiptransport.data.bean.SampleRecordListBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -28,11 +27,11 @@ import java.util.List;
 public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context context;
-    public final List<SampleRecordList> list;
+    public final List<SampleRecordListBean> list;
     private final int itemID;
     private OnRecyclerviewItemClickListener listener;
 
-    public SampleDetailAdapter(Context context, List<SampleRecordList> list, int itemID) {
+    public SampleDetailAdapter(Context context, List<SampleRecordListBean> list, int itemID) {
         this.context = context;
         this.list = list;
         this.itemID = itemID;
@@ -49,9 +48,10 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // 单选图片后, 保存地址到集合中, 保存到数据库, 记录position
 
         // 显示图片
-        SampleRecordList sampleRecordList = list.get(position);
+        final SampleRecordListBean sampleRecordList = list.get(position);
         RxGalleryUtil.showImage(context, sampleRecordList.getImage_1(), null, null, ((NormalHolder)holder).mBtnImage1);
         RxGalleryUtil.showImage(context, sampleRecordList.getImage_2(), null, null, ((NormalHolder)holder).mBtnImage2);
+        ((NormalHolder) holder).mEditText.setText(sampleRecordList.getSample_num() == null ? "" : sampleRecordList.getSample_num());
 
         /* 点击后单选图片 */
         ((NormalHolder) holder).mBtnImage1.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +71,25 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
+        /* 点击编辑验砂取样码 */
+        ((NormalHolder) holder).mEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                    sampleRecordList.setSample_num(editable.toString());
+            }
+        });
+
+        /* 长按删除 */
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -104,10 +123,8 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void addData(int pos) {
-        SampleRecordList sampleRecordList = new SampleRecordList();
+        SampleRecordListBean sampleRecordList = new SampleRecordListBean();
         sampleRecordList.setItemID(itemID);
-        sampleRecordList.setPosition(pos);
-        sampleRecordList.save();
 
         list.add(pos, sampleRecordList);
         notifyItemInserted(pos);
@@ -116,9 +133,6 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void delete(int pos) {
         // 从集合中删除
         list.remove(pos);
-        // 从数据库中删除position对应的数据
-        int i = DataSupport.deleteAll(SampleRecordList.class, "position = ?", String.valueOf(pos));
-        Log.d("==", "删除条目: " + i);
         notifyItemRemoved(pos);
     }
 }
