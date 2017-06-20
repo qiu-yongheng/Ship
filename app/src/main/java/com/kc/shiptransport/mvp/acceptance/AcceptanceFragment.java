@@ -278,7 +278,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
             adapter = new AcceptanceAdapter(getContext(), dates, weekLists);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position) {
+                public void onItemClick(View view, int position, int... type) {
                     List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
                     // 如果item有数据, 设置点击事件
                     if (weekTasks != null && !weekTasks.isEmpty()) {

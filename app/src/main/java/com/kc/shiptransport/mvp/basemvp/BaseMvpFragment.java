@@ -294,7 +294,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
             adapter = new RecyclerAdapter(getContext(), dates, TYPE);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position) {
+                public void onItemClick(View view, int position, int... type) {
                     abs_onItemClick(view, position);
                 }
 

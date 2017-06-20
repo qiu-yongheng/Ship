@@ -19,11 +19,17 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class SampleDetailActivity extends BaseActivity{
     private SampleDetailFragment fragment;
+    public int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_plan);
+
+
+        Bundle bundle = getIntent().getExtras();
+        position = bundle.getInt("SampleDetailActivity_position");
+
 
         if (savedInstanceState != null) {
             fragment = (SampleDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "SampleDetailFragment");
@@ -50,9 +56,10 @@ public class SampleDetailActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Activity activity) {
+    public static void startActivity(Activity activity, int position) {
         Intent intent = new Intent(activity, SampleDetailActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putInt("SampleDetailActivity_position", position);
         intent.putExtras(bundle);
         activity.startActivity(intent, bundle);
     }

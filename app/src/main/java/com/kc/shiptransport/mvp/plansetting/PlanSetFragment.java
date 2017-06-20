@@ -207,7 +207,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
             adapter = new PlanSetAdapter(activity, value, date, jumpWeek);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position) {
+                public void onItemClick(View view, int position, int... type) {
                     // 传递类型
                     navigationToShipSelectActivity(value.get(position).get(0).getShipType());
                 }

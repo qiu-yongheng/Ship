@@ -11,6 +11,7 @@ import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.RecordListBean;
+import com.kc.shiptransport.data.bean.SandSampleBean;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
@@ -23,6 +24,7 @@ import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.CommitShip;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.RecordList;
+import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
@@ -45,6 +47,7 @@ import java.util.Set;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.annotations.NonNull;
 
 import static org.litepal.crud.DataSupport.deleteAll;
 import static org.litepal.crud.DataSupport.findAll;
@@ -1241,9 +1244,32 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<WeekTask> e) throws Exception {
                 List<WeekTask> tasks = DataSupport.where("position = ?", String.valueOf(position)).find(WeekTask.class);
                 if (tasks.isEmpty()) {
-                    e.onNext(null);
+                    e.onError(new Exception("数据获取失败"));
                 } else {
                     e.onNext(tasks.get(0));
+                }
+
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 根据position获取对应的计划
+     *
+     * @param position
+     * @return
+     */
+    @Override
+    public Observable<SandSample> getSampleTaskForPosition(final int position) {
+        return Observable.create(new ObservableOnSubscribe<SandSample>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<SandSample> e) throws Exception {
+                List<SandSample> sandSamples = DataSupport.where("position = ?", String.valueOf(position)).find(SandSample.class);
+                if (sandSamples.isEmpty()) {
+                    e.onNext(null);
+                } else {
+                    e.onNext(sandSamples.get(0));
                 }
 
                 e.onComplete();
@@ -1397,6 +1423,91 @@ public class DataRepository implements DataSouceImpl {
                     for (int i = 1; i <= list.size(); i++) {
                         // 更新数据
                         RecordList record = list.get(i - 1);
+                        record.setPosition(String.valueOf(dateToPosition(record.getPlanDay(), i, jumpWeek)));
+                        record.save();
+                    }
+                }
+
+                e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取验砂取样信息
+     * @param jumpWeek
+     * @param exitTime
+     * @return
+     */
+    @Override
+    public Observable<Boolean> getSandSamplingList(final int jumpWeek, final String exitTime) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                /* 获取分包商账号 */
+                String subcontractorAccount = findAll(Subcontractor.class).get(0).getSubcontractorAccount();
+                /* 开始时间 */
+                String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
+                /* 结束时间 */
+                String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
+
+                Log.d("==", "请求日期: " + startDay + "-" + endDay);
+
+                // 发送网络请求
+                String result = mRemoteDataSource.GetSandSamplingList(subcontractorAccount, startDay, endDay, exitTime);
+
+                // 解析数据
+                List<SandSampleBean> lists = gson.fromJson(result, new TypeToken<List<SandSampleBean>>() {
+                }.getType());
+
+                /* 3. 初始化数据库 */
+                deleteAll(SandSample.class);
+
+                /* 4. 保存数据到数据库 */
+                for (SandSampleBean bean : lists) {
+                    SandSample sandSample = new SandSample();
+                    sandSample.setItemID(bean.getItemID());
+                    sandSample.setSubcontractorAccount(bean.getSubcontractorAccount());
+                    sandSample.setSubcontractorName(bean.getSubcontractorName());
+                    sandSample.setPlanDay(bean.getPlanDay());
+                    sandSample.setShipAccount(bean.getShipAccount());
+                    sandSample.setShipName(bean.getShipName());
+                    sandSample.setShipType(bean.getShipType());
+                    sandSample.setSandSupplyCount(bean.getSandSupplyCount());
+                    sandSample.setCapacity(bean.getCapacity());
+                    sandSample.setDeckGauge(bean.getDeckGauge());
+                    sandSample.setReceptionSandTime(bean.getReceptionSandTime());
+                    sandSample.setPreAcceptanceTime(bean.getPreAcceptanceTime());
+                    sandSample.setShipItemNum(bean.getShipItemNum());
+                    sandSample.save();
+                }
+
+                /* 5. 对数据进行排序 */
+
+                // 1. 创建一个二维集合存放分类好的数据
+                List<List<SandSample>> totalLists = new ArrayList<>();
+
+                // 2. 查询数据
+                List<SandSample> recordLists = DataSupport.findAll(SandSample.class);
+
+                // 3. 按照时间进行分类
+                Set set = new HashSet();
+                for (SandSample bean : recordLists) {
+                    String planDay = bean.getPlanDay();
+                    if (set.contains(planDay)) {
+
+                    } else {
+                        set.add(planDay);
+                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(SandSample.class));
+                    }
+                }
+
+                // 4. 更新position
+                for (List<SandSample> list : totalLists) {
+                    for (int i = 1; i <= list.size(); i++) {
+                        // 更新数据
+                        SandSample record = list.get(i - 1);
                         record.setPosition(String.valueOf(dateToPosition(record.getPlanDay(), i, jumpWeek)));
                         record.save();
                     }

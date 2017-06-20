@@ -292,7 +292,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
             adapter = new PlanAdapter(getActivity(), dates, weekLists);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position) {
+                public void onItemClick(View view, int position, int... type) {
                     if (position < 7) {
                         //Toast.makeText(getActivity(), dates.get(position) + "", Toast.LENGTH_SHORT).show();
                         navigationToPlanSetActivity(position);

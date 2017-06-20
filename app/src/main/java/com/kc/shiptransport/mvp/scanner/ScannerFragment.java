@@ -195,7 +195,7 @@ public class ScannerFragment extends Fragment implements ScannerContract.View {
             adapter = new RecyclerAdapter(getContext(), dates, SettingUtil.TYPE_AMOUNT);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position) {
+                public void onItemClick(View view, int position, int... type) {
                     ScannerDetailActivity.startActivity(activity);
                 }
 

@@ -275,7 +275,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
             adapter = new SupplyAdapter(getContext(), dates, weekLists);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position) {
+                public void onItemClick(View view, int position, int... type) {
                     List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
                     if (weekTasks != null && !weekTasks.isEmpty()) {
                         String receptionSandTime = weekTasks.get(0).getReceptionSandTime();

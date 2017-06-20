@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
         HomeAdapter adapter = new HomeAdapter(getContext(), icon, tag);
         adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(View view, int position, int... type) {
                 switch (position) {
                     case 0:
                         tip("功能待开发");

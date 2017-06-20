@@ -2,6 +2,7 @@ package com.kc.shiptransport.data.source;
 
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
@@ -250,6 +251,11 @@ public interface DataSouceImpl {
     Observable<WeekTask> getWeekTaskForPosition(int position);
 
     /**
+     * 根据position获取对应的计划
+     */
+    Observable<SandSample> getSampleTaskForPosition(int position);
+
+    /**
      * 获取当前登录的分包商
      * @return
      */
@@ -274,4 +280,12 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> getOverSandRecordList(int jumpWeek);
+
+    /**
+     * 1.13获取验砂取样信息
+     * @return
+     */
+    Observable<Boolean> getSandSamplingList(int jumpWeek, String exitTime);
+
+
 }

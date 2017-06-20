@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
+    <View
+        android:background="@color/text_gray_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_margin"/>
+    <RelativeLayout
+        android:background="@color/text_white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/text_ship_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/marginleft_14"
+            android:textColor="@color/text_tag_gray"
+            android:textSize="@dimen/text_15sp"/>
+
+        <EditText
+            android:paddingLeft="@dimen/marginleft_14"
+            android:id="@+id/et_sample_num"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:hint="@string/hint_fill"
+            android:paddingRight="@dimen/marginleft_14"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="@dimen/text_15sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/Dividing_line"/>
+
+    <LinearLayout
+        android:background="@color/text_white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_sample_image_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_image_1"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size"
+            android:layout_marginLeft="@dimen/marginleft_14"
+            android:background="@mipmap/icon_add_imag"/>
+
+        <ImageButton
+            android:id="@+id/btn_image_2"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size"
+            android:layout_marginLeft="@dimen/marginleft_20"
+            android:background="@mipmap/icon_add_imag"/>
+    </LinearLayout>
+
+</LinearLayout>

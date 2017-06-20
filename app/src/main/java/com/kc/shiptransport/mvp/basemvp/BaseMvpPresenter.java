@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter{
+public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
     protected final Context context;
     protected final BaseMvpContract.View view;
     protected final DataRepository dataRepository;
@@ -45,9 +45,13 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter{
         compositeDisposable = new CompositeDisposable();
     }
 
+    /**
+     * 获取标题
+     */
     @Override
     public void subscribe() {
-        
+        getTitle();
+        getTitleOtherInfo();
     }
 
     @Override
@@ -92,11 +96,13 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter{
                     @Override
                     public void onComplete() {
 
-                    }});
+                    }
+                });
     }
 
     /**
      * 获取时间
+     *
      * @param jumpWeek
      */
     @Override
@@ -130,6 +136,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter{
 
     /**
      * 根据类型显示 待验收船
+     *
      * @param type
      */
     @Override
@@ -201,122 +208,85 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter{
 
     /**
      * 刷新数据
+     *
      * @param jumpWeek
      */
     @Override
     public void doRefresh(final int jumpWeek, final int type, String account) {
         view.showLoading(true);
+        Observable<Boolean> observable = null;
         switch (type) {
             case SettingUtil.TYPE_ACCEPT: // 验收
             case SettingUtil.TYPE_SUPPLY: // 验砂
             case SettingUtil.TYPE_AMOUNT: // 量方
             case SettingUtil.TYPE_VOYAGEINFO: // 信息完善
-                dataRepository
+                observable = dataRepository
                         .doRefresh(jumpWeek)
-                        .subscribeOn(Schedulers.io())
-                        .flatMap(new Function<Boolean, Observable<Boolean>>() {
-                            @Override
-                            public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
-                                // 删除未验收数据后, 进行重新排序
-                                return dataRepository.getWeekTaskSort(jumpWeek);
-                            }
-                        })
-                        .doOnNext(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                if (aBoolean) {
-                                    // 统计每日计划量
-                                    getDayCount();
-                                }
-                            }
-                        })
-                        .doOnNext(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                // 获取待验收船次
-                                getStayInfo(type);
-                            }
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Boolean>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                compositeDisposable.add(d);
-                            }
-
-                            @Override
-                            public void onNext(Boolean value) {
-                                // 获取一周日期数据
-                                List<String> dates = CalendarUtil.getdateOfWeek("dd", jumpWeek);
-                                view.showWeekTask(dates);
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                view.showLoading(false);
-                                view.showError("数据获取失败!");
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                view.showLoading(false);
-                            }
-                        });
+                        .subscribeOn(Schedulers.io());
                 break;
             case SettingUtil.TYPE_RECORDEDSAND: // 过砂记录
-                dataRepository
+                observable = dataRepository
                         .getOverSandRecordList(jumpWeek)
-                        .subscribeOn(Schedulers.io())
-                        .doOnNext(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                if (aBoolean) {
-                                    // 统计每日计划量
-                                    getDayCount();
-                                }
-                            }
-                        })
-                        .doOnNext(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                // 获取待验收船次
-                                getStayInfo(type);
-                            }
-                        })
-                        .flatMap(new Function<Boolean, Observable<Boolean>>() {
-                            @Override
-                            public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
-                                // 删除未验收数据后, 进行重新排序
-                                return dataRepository.getWeekTaskSort(jumpWeek);
-                            }
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Boolean>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                compositeDisposable.add(d);
-                            }
-
-                            @Override
-                            public void onNext(Boolean value) {
-                                // 获取一周日期数据
-                                List<String> dates = CalendarUtil.getdateOfWeek("dd", jumpWeek);
-                                view.showWeekTask(dates);
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                view.showLoading(false);
-                                view.showError("数据获取失败!");
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                view.showLoading(false);
-                            }
-                        });
+                        .subscribeOn(Schedulers.io());
+                break;
+            case SettingUtil.TYPE_SAMPLE: // 验砂取样
+                observable = dataRepository
+                        .getSandSamplingList(jumpWeek, "退场时间")
+                        .subscribeOn(Schedulers.io());
                 break;
         }
+
+        /*  */
+        assert observable != null;
+        observable
+                .flatMap(new Function<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
+                        // 删除未验收数据后, 进行重新排序
+                        return dataRepository.getWeekTaskSort(jumpWeek);
+                    }
+                })
+                .doOnNext(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            // 统计每日计划量
+                            getDayCount();
+                        }
+                    }
+                })
+                .doOnNext(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        // 获取待验收船次
+                        getStayInfo(type);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(Boolean value) {
+                        // 获取一周日期数据
+                        List<String> dates = CalendarUtil.getdateOfWeek("dd", jumpWeek);
+                        view.showWeekTask(dates);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        view.showLoading(false);
+                        view.showError("数据获取失败!");
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
     }
 
     /**
@@ -359,13 +329,18 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter{
                 });
     }
 
+    /**
+     * 获取数据
+     *
+     * @param jumpWeek
+     * @param type
+     * @param account
+     */
     @Override
     public void start(int jumpWeek, int type, String account) {
         this.jumpWeek = jumpWeek;
         this.type = type;
         this.account = account;
-        getTitle();
-        getTitleOtherInfo();
         getTime(jumpWeek);
         doRefresh(jumpWeek, type, account);
     }

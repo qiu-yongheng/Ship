@@ -52,6 +52,13 @@
     <string name="recorded_black">黑色字体: 未完善</string>
     <string name="recorded_title">过砂记录</string>
     <string name="dialog_loading">加载中</string>
+    <string name="sampledetail_title">取样记录</string>
+    <string name="hint_fill">请填写</string>
+    <string name="dialog_delete">删除</string>
+    <string name="dialog_sample_delete_msg">是否删除取样记录</string>
+    <string name="title_sample">验砂取样</string>
+    <string name="sample_red">红色字体: 已完善</string>
+    <string name="sample_black">黑色字体: 未完善</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

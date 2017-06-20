@@ -38,19 +38,13 @@ public class SettingUtil {
     /* 通用 */
     public static final String WEEK_JUMP_BASE = "jump_week_base";
 
-    /*---------------------------------------------------待验收类型---------------------------------------------------*/
-//    /* 验砂 */
-//    public static final String SUPPLY = "supply";
-//
-//    /* 验收 */
-//    public static final String ACCEPTANCE = "acceptance";
-//
-//    /* 量方 */
-//    public static final String AMOUNT = "amount";
+    /*---------------------------------------------------holder控件类型---------------------------------------------------*/
+    /* sample */
+    public static final int HOLDER_IMAGE_1 = 111;
+    public static final int HOLDER_IMAGE_2 = 222;
 
 
-
-    /*---------------------------------------------------待验收类型---------------------------------------------------*/
+    /*---------------------------------------------------holder控件类型---------------------------------------------------*/
 
 
     /*-----------------------------------------------checkbox单选框--------------------------------------------------*/
@@ -80,5 +74,7 @@ public class SettingUtil {
     public static final int TYPE_RECORDEDSAND = 4;
     /* 分包商航次信息完善 */
     public static final int TYPE_VOYAGEINFO = 5;
+    /* 验砂取样 */
+    public static final int TYPE_SAMPLE = 6;
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 }

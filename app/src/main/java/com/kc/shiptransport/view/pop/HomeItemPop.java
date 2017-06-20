@@ -97,7 +97,7 @@ public class HomeItemPop extends BasePopWindown {
 
         adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(View view, int position, int... type) {
                 switch (position) {
                     case 0:
                         // 分包商进场计划
