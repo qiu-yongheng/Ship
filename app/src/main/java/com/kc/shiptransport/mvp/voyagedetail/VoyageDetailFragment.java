@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
+import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -85,6 +87,10 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     TextView mTvCleanDate;
     @BindView(R.id.sp_material_ordar)
     Spinner mSpMaterialOrdar;
+    @BindView(R.id.tv_material_ordar)
+    TextView tvMaterialOrdar;
+    @BindView(R.id.btn_return)
+    Button btnReturn;
     private VoyageDetailContract.Presenter presenter;
     private VoyageDetailActivity activity;
     private String itemID;
@@ -100,20 +106,17 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     private String leaveTheDockTime;
     private String arrivaOfAnchorageTime;
     private String clearanceTime;
+    private PerfectBoatRecord perfectBoatRecord;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            String gaga = savedInstanceState.getString("gaga");
-            Toast.makeText(activity, gaga, Toast.LENGTH_SHORT).show();
-        }
         View view = inflater.inflate(R.layout.fragment_voyage_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
-        initListener();
-        // TODO
 
+        // TODO
+        presenter.start(activity.mPosition);
         return view;
     }
 
@@ -151,10 +154,6 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         activity = (VoyageDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setTitle(R.string.title_voyage);
-
-
-
 
 
         // 适配器
@@ -164,7 +163,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         // 加载适配器
         mSpMaterialOrdar.setAdapter(arr_adapter);
         // 根据上一个界面传过来的position设置当前显示的item
-//        mSpMaterialOrdar.setSelection(0);
+        //        mSpMaterialOrdar.setSelection(0);
 
         // 点击后, 筛选分包商的数据
         mSpMaterialOrdar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -181,10 +180,6 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             }
         });
 
-
-        // 获取position对应的数据
-        presenter.getItemIDForPosition(activity.mPosition);
-        presenter.getSubcontractor();
     }
 
     @Override
@@ -217,6 +212,8 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 break;
             case R.id.rl_ship_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvShipDate);
+                perfectBoatRecord.setLoadingDate(mTvShipDate.getText().toString());
+                perfectBoatRecord.save();
                 break;
             case R.id.rl_sample_num:
                 InputActivity.startActivityForResult(activity, getResources().getString(R.string.text_sample_num), mTvSampleNum.getText().toString(), 2);
@@ -226,21 +223,33 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 break;
             case R.id.rl_start_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvStartDate);
+                perfectBoatRecord.setStartLoadingTime(mTvStartDate.getText().toString());
+                perfectBoatRecord.save();
                 break;
             case R.id.rl_end_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvEndDate);
+                perfectBoatRecord.setEndLoadingTime(mTvEndDate.getText().toString());
+                perfectBoatRecord.save();
                 break;
             case R.id.rl_come_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvComeDate);
+                perfectBoatRecord.setArrivedAtTheDockTime(mTvComeDate.getText().toString());
+                perfectBoatRecord.save();
                 break;
             case R.id.rl_exit_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvExitDate);
+                perfectBoatRecord.setLeaveTheDockTime(mTvExitDate.getText().toString());
+                perfectBoatRecord.save();
                 break;
             case R.id.rl_come_anchor_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvComeAnchorDate);
+                perfectBoatRecord.setArrivaOfAnchorageTime(mTvComeAnchorDate.getText().toString());
+                perfectBoatRecord.save();
                 break;
             case R.id.rl_clean_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvCleanDate);
+                perfectBoatRecord.setClearanceTime(mTvCleanDate.getText().toString());
+                perfectBoatRecord.save();
                 break;
             case R.id.rl_material_ordar:
                 // TODO 弹出选择框 -> initView()
@@ -275,6 +284,9 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
 
                 presenter.doCommit(bean);
                 break;
+            case R.id.btn_return:
+                activity.onBackPressed();
+                break;
         }
     }
 
@@ -289,22 +301,36 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         String str = data.getStringExtra(InputActivity.TAG);
-        switch (requestCode) {
-            case 0:
-                mTvShipLocation.setText(str);
-                break;
-            case 2:
-                mTvSampleNum.setText(str);
-                break;
-            case 3:
-                mTvMaterialFrom.setText(str);
-                break;
-
+        if (!TextUtils.isEmpty(str)) {
+            if (perfectBoatRecord == null) {
+                return;
+            }
+            switch (requestCode) {
+                case 0:
+                    mTvShipLocation.setText(str);
+                    // 保存到数据库
+                    perfectBoatRecord.setLoadingPlace(str);
+                    perfectBoatRecord.save();
+                    break;
+                case 2:
+                    mTvSampleNum.setText(str);
+                    // 保存到数据库
+                    perfectBoatRecord.setBaseNumber(str);
+                    perfectBoatRecord.save();
+                    break;
+                case 3:
+                    mTvMaterialFrom.setText(str);
+                    // 保存到数据库
+                    perfectBoatRecord.setSourceOfSource(str);
+                    perfectBoatRecord.save();
+                    break;
+            }
         }
     }
 
     /**
      * 获取itemID
+     *
      * @param itemID
      */
     @Override
@@ -346,16 +372,77 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     }
 
     /**
+     * 显示船名
+     *
+     * @param name
+     */
+    @Override
+    public void showShipName(String name) {
+        activity.getSupportActionBar().setTitle(name);
+    }
+
+    /**
+     * 回显数据
+     *
+     * @param perfectBoatRecord
+     */
+    @Override
+    public void showDatas(PerfectBoatRecord perfectBoatRecord, boolean isPerfect) {
+        this.perfectBoatRecord = perfectBoatRecord;
+
+        String loadingPlace = perfectBoatRecord.getLoadingPlace();
+        String loadingDate = perfectBoatRecord.getLoadingDate();
+        String baseNumber = perfectBoatRecord.getBaseNumber();
+        String sourceOfSource = perfectBoatRecord.getSourceOfSource();
+        String startLoadingTime = perfectBoatRecord.getStartLoadingTime();
+        String endLoadingTime = perfectBoatRecord.getEndLoadingTime();
+        String arrivedAtTheDockTime = perfectBoatRecord.getArrivedAtTheDockTime();
+        String leaveTheDockTime = perfectBoatRecord.getLeaveTheDockTime();
+        String arrivaOfAnchorageTime = perfectBoatRecord.getArrivaOfAnchorageTime();
+        String clearanceTime = perfectBoatRecord.getClearanceTime();
+        String materialClassification = perfectBoatRecord.getMaterialClassification();
+
+
+        mTvShipLocation.setText(loadingPlace == null ? "未填写" : loadingPlace);
+        mTvShipDate.setText(loadingDate == null ? "未填写" : loadingDate);
+        mTvSampleNum.setText(baseNumber == null ? "未填写" : baseNumber);
+        mTvMaterialFrom.setText(sourceOfSource == null ? "未填写" : sourceOfSource);
+        mTvStartDate.setText(startLoadingTime == null ? "未填写" : startLoadingTime);
+        mTvEndDate.setText(endLoadingTime == null ? "未填写" : endLoadingTime);
+        mTvComeDate.setText(arrivedAtTheDockTime == null ? "未填写" : arrivedAtTheDockTime);
+        mTvExitDate.setText(leaveTheDockTime == null ? "未填写" : leaveTheDockTime);
+        mTvComeAnchorDate.setText(arrivaOfAnchorageTime == null ? "未填写" : arrivaOfAnchorageTime);
+        mTvCleanDate.setText(clearanceTime == null ? "未填写" : clearanceTime);
+        if (TextUtils.isEmpty(materialClassification)) {
+            // 空
+            mSpMaterialOrdar.setVisibility(View.VISIBLE);
+            tvMaterialOrdar.setVisibility(View.GONE);
+        } else {
+            // 有数据
+            mSpMaterialOrdar.setVisibility(View.GONE);
+            tvMaterialOrdar.setVisibility(View.VISIBLE);
+            tvMaterialOrdar.setText(materialClassification);
+        }
+
+        if (isPerfect) {
+            // 已完善
+            btnReturn.setOnClickListener(this);
+            btnCommit.setVisibility(View.GONE);
+            btnReturn.setVisibility(View.VISIBLE);
+        } else {
+            // 未完善
+            initListener();
+            btnCommit.setVisibility(View.VISIBLE);
+            btnReturn.setVisibility(View.GONE);
+        }
+
+    }
+
+    /**
      * 保存
      */
     @Override
     public void onPause() {
         super.onPause();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("gaga", "gaga");
     }
 }

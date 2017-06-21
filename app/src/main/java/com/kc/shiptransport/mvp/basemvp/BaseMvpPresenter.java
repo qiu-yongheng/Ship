@@ -219,33 +219,42 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
             case SettingUtil.TYPE_ACCEPT: // 验收
             case SettingUtil.TYPE_SUPPLY: // 验砂
             case SettingUtil.TYPE_AMOUNT: // 量方
-            case SettingUtil.TYPE_VOYAGEINFO: // 信息完善
+            case SettingUtil.TYPE_SCANNER: // 扫描件
                 observable = dataRepository
                         .doRefresh(jumpWeek)
-                        .subscribeOn(Schedulers.io());
+                        .subscribeOn(Schedulers.io())
+                        .flatMap(new Function<Boolean, Observable<Boolean>>() {
+                            @Override
+                            public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
+                                // 删除未验收数据后, 进行重新排序
+                                return dataRepository.getWeekTaskSort(jumpWeek);
+                            }
+                        });
                 break;
+
             case SettingUtil.TYPE_RECORDEDSAND: // 过砂记录
                 observable = dataRepository
                         .getOverSandRecordList(jumpWeek)
                         .subscribeOn(Schedulers.io());
                 break;
+
             case SettingUtil.TYPE_SAMPLE: // 验砂取样
                 observable = dataRepository
                         .getSandSamplingList(jumpWeek, "退场时间")
                         .subscribeOn(Schedulers.io());
                 break;
+
+            case SettingUtil.TYPE_VOYAGEINFO: // 信息完善
+                observable = dataRepository
+                        .doRefresh(jumpWeek)
+                        .subscribeOn(Schedulers.io());
+                break;
+
         }
 
         /*  */
         assert observable != null;
         observable
-                .flatMap(new Function<Boolean, Observable<Boolean>>() {
-                    @Override
-                    public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
-                        // 删除未验收数据后, 进行重新排序
-                        return dataRepository.getWeekTaskSort(jumpWeek);
-                    }
-                })
                 .doOnNext(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {

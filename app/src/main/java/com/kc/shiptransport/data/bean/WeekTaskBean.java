@@ -42,7 +42,9 @@ public class WeekTaskBean {
     private int SandSubcontractorPreAcceptanceEvaluationID;
     private Float DefaultCapacity;
     private Float defaultDeckGauge;
-
+    private int IsPerfect; // 信息是否完善, 1完善, 0未完善
+    private int PerfectBoatItemCount; // 已填写字段数量
+    private int PerfectBoatRecordID; // 完善船次条目编号
     public int getItemID() {
         return ItemID;
     }
@@ -169,5 +171,29 @@ public class WeekTaskBean {
 
     public void setDefaultDeckGauge(Float defaultDeckGauge) {
         this.defaultDeckGauge = defaultDeckGauge;
+    }
+
+    public int getIsPerfect() {
+        return IsPerfect;
+    }
+
+    public void setIsPerfect(int isPerfect) {
+        IsPerfect = isPerfect;
+    }
+
+    public int getPerfectBoatItemCount() {
+        return PerfectBoatItemCount;
+    }
+
+    public void setPerfectBoatItemCount(int perfectBoatItemCount) {
+        PerfectBoatItemCount = perfectBoatItemCount;
+    }
+
+    public int getPerfectBoatRecordID() {
+        return PerfectBoatRecordID;
+    }
+
+    public void setPerfectBoatRecordID(int perfectBoatRecordID) {
+        PerfectBoatRecordID = perfectBoatRecordID;
     }
 }

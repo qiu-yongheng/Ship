@@ -12,4 +12,6 @@
     <dimen name="item_sample_image_height">80dp</dimen>
     <dimen name="image_size">60dp</dimen>
     <dimen name="marginleft_20">20dp</dimen>
+    <dimen name="cardview_margin">10dp</dimen>
+    <dimen name="cardview_margin_5dp">5dp</dimen>
 </resources>

@@ -2,6 +2,7 @@ package com.kc.shiptransport.data.source;
 
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
@@ -287,5 +288,10 @@ public interface DataSouceImpl {
      */
     Observable<Boolean> getSandSamplingList(int jumpWeek, String exitTime);
 
-
+    /**
+     * 1.17获取对应的航次完善信息明细
+     * @param weekTask
+     * @return
+     */
+    Observable<PerfectBoatRecord> getPerfectBoatRecordByItemID(WeekTask weekTask, boolean isNetwork);
 }

@@ -76,5 +76,7 @@ public class SettingUtil {
     public static final int TYPE_VOYAGEINFO = 5;
     /* 验砂取样 */
     public static final int TYPE_SAMPLE = 6;
+    /* 分包商航次信息扫描件 */
+    public static final int TYPE_SCANNER = 7;
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 }

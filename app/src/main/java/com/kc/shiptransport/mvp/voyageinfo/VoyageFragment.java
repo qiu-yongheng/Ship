@@ -36,6 +36,7 @@ public class VoyageFragment extends BaseMvpFragment {
 
     @Override
     protected void initData() {
+        presenter.subscribe();
         presenter.start(jumpWeek, TYPE, subcontractorAccount);
     }
 

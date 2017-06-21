@@ -29,6 +29,9 @@ public class WeekTask extends DataSupport{
     private int SandSubcontractorPreAcceptanceEvaluationID;
     private Float DefaultCapacity;
     private Float defaultDeckGauge;
+    private int IsPerfect; // 信息是否完善, 1完善, 0未完善
+    private int PerfectBoatItemCount; // 已填写字段数量
+    private int PerfectBoatRecordID; // 完善船次条目编号
 
     public int getId() {
         return id;
@@ -180,5 +183,29 @@ public class WeekTask extends DataSupport{
 
     public void setTheAmountOfTime(String theAmountOfTime) {
         TheAmountOfTime = theAmountOfTime;
+    }
+
+    public int getIsPerfect() {
+        return IsPerfect;
+    }
+
+    public void setIsPerfect(int isPerfect) {
+        IsPerfect = isPerfect;
+    }
+
+    public int getPerfectBoatItemCount() {
+        return PerfectBoatItemCount;
+    }
+
+    public void setPerfectBoatItemCount(int perfectBoatItemCount) {
+        PerfectBoatItemCount = perfectBoatItemCount;
+    }
+
+    public int getPerfectBoatRecordID() {
+        return PerfectBoatRecordID;
+    }
+
+    public void setPerfectBoatRecordID(int perfectBoatRecordID) {
+        PerfectBoatRecordID = perfectBoatRecordID;
     }
 }

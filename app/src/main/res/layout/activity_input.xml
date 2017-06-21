@@ -9,7 +9,19 @@
         app:titleTextColor="@color/text_white"
         android:background="?colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/btn_determine"
+                android:layout_alignParentRight="true"
+                android:text="@string/btn_determine"
+                android:textSize="@dimen/text_15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
     <EditText
         android:id="@+id/et_input"
         android:layout_marginLeft="10dp"

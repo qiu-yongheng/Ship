@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.kc.shiptransport.R;
@@ -30,6 +32,8 @@ public class InputActivity extends BaseActivity {
     public static final String TITLE = "TTITLE";
     public static final String HINT = "HINT";
     public static final int REQUEST = 1;
+    @BindView(R.id.btn_determine)
+    Button btnDetermine;
 
 
     @Override
@@ -49,6 +53,13 @@ public class InputActivity extends BaseActivity {
         if (!getResources().getString(R.string.text_unfilled).equals(hint)) {
             mEtInput.setText(hint);
         }
+
+        btnDetermine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
     }
 

@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.voyagedetail;
 
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
+import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -18,11 +19,16 @@ public interface VoyageDetailContract {
         void showError(String msg);
         void showCommitResult(boolean isSuccess);
         void showLoading(boolean isShow);
+        void showShipName(String name);
+        void showDatas(PerfectBoatRecord perfectBoatRecord, boolean isPerfect);
     }
 
     interface Presenter extends BasePresenter {
         void getItemIDForPosition(int position);
         void getSubcontractor();
         void doCommit(VoyageInfoBean bean);
+        void getShipName();
+        void start(int position);
+        void getVoyageDetailForItemID(int position);
     }
 }

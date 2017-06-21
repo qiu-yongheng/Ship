@@ -10,6 +10,7 @@ import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LoginResult;
+import com.kc.shiptransport.data.bean.PerfectBoatRecordBean;
 import com.kc.shiptransport.data.bean.RecordListBean;
 import com.kc.shiptransport.data.bean.SandSampleBean;
 import com.kc.shiptransport.data.bean.ShipBean;
@@ -23,6 +24,7 @@ import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.CommitShip;
 import com.kc.shiptransport.db.ConstructionBoat;
+import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.Ship;
@@ -291,6 +293,9 @@ public class DataRepository implements DataSouceImpl {
                     weekTask.setDeckGauge(bean.getDeckGauge()); // 甲板方
                     weekTask.setDefaultCapacity(bean.getDefaultCapacity());
                     weekTask.setDefaultDeckGauge(bean.getDefaultDeckGauge());
+                    weekTask.setIsPerfect(bean.getIsPerfect()); // 是否完善信息
+                    weekTask.setPerfectBoatItemCount(bean.getPerfectBoatItemCount()); // 已填写字段数量
+                    weekTask.setPerfectBoatRecordID(bean.getPerfectBoatRecordID()); // 船次信息完善条目ID
                     weekTask.save();
                 }
 
@@ -648,6 +653,9 @@ public class DataRepository implements DataSouceImpl {
                     // 过砂记录, IsFinish = 0的个数
                     num = DataSupport.where("IsFinish = ?", "0").count(RecordList.class);
 
+                } else if (type == SettingUtil.TYPE_VOYAGEINFO) {
+                    // 航次信息完善, IsPerfect = 0的个数
+                    num = DataSupport.where("IsPerfect = ?", "0").count(WeekTask.class);
                 } else {
                     // 1. 获取一周任务
                     List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
@@ -674,12 +682,7 @@ public class DataRepository implements DataSouceImpl {
                                 if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
                                     num++;
                                 }
-                            } else if (type == SettingUtil.TYPE_VOYAGEINFO) {
-                                // TODO 判断是否已完善信息
-                                time = weektask.getPreAcceptanceTime();
-
                             }
-
                         }
                     }
                 }
@@ -1517,6 +1520,67 @@ public class DataRepository implements DataSouceImpl {
                 e.onComplete();
             }
         });
+    }
+
+    /**
+     * 1.17获取对应的航次完善信息明细
+     * @param weekTask
+     * @param isNetwork
+     * @return
+     */
+    @Override
+    public Observable<PerfectBoatRecord> getPerfectBoatRecordByItemID(final WeekTask weekTask, final boolean isNetwork) {
+        return Observable.create(new ObservableOnSubscribe<PerfectBoatRecord>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<PerfectBoatRecord> e) throws Exception {
+                /** 判断本地是否有缓存 */
+                List<PerfectBoatRecord> perfectBoatRecords = DataSupport.where("SubcontractorInterimApproachPlanID = ?", String.valueOf(weekTask.getItemID())).find(PerfectBoatRecord.class);
+                if (!perfectBoatRecords.isEmpty() && !isNetwork) {
+                    // 有缓存, 不发送网络请求
+                    e.onNext(perfectBoatRecords.get(0));
+                } else if (perfectBoatRecords.isEmpty() && !isNetwork) {
+                    // 没有缓存, 不发送网络请求
+                    PerfectBoatRecord perfectBoatRecord = new PerfectBoatRecord();
+                    perfectBoatRecord.setSubcontractorInterimApproachPlanID(weekTask.getItemID()); // 进场ID
+                    perfectBoatRecord.setCreator(weekTask.getSubcontractorAccount()); // 登录账号
+                    perfectBoatRecord.save();
+                    e.onNext(perfectBoatRecord);
+                } else if (perfectBoatRecords.isEmpty() && isNetwork) {
+                    // 没有缓存, 发送网络请求
+
+                    // 1. 发送网络请求
+                    String result = mRemoteDataSource.GetPerfectBoatRecordByItemID(String.valueOf(weekTask.getPerfectBoatRecordID()));
+                    // 2. 解析数据
+                    List<PerfectBoatRecordBean> lists = gson.fromJson(result, new TypeToken<PerfectBoatRecordBean>() {}.getType());
+                    PerfectBoatRecordBean bean = lists.get(0);
+                    // 3. 删除数据库中SubcontractorInterimApproachPlanID对应的数据
+                    DataSupport.deleteAll(PerfectBoatRecord.class, "ItemID = ?", String.valueOf(bean.getItemID()));
+                    // 4. 保存数据到数据库
+                    PerfectBoatRecord perfectBoatRecord = new PerfectBoatRecord();
+                    perfectBoatRecord.setItemID(bean.getItemID());
+                    perfectBoatRecord.setSubcontractorInterimApproachPlanID(bean.getSubcontractorInterimApproachPlanID());
+                    perfectBoatRecord.setLoadingPlace(bean.getLoadingPlace());
+                    perfectBoatRecord.setLoadingDate(bean.getLoadingDate());
+                    perfectBoatRecord.setBaseNumber(bean.getBaseNumber());
+                    perfectBoatRecord.setSourceOfSource(bean.getSourceOfSource());
+                    perfectBoatRecord.setStartLoadingTime(bean.getStartLoadingTime());
+                    perfectBoatRecord.setEndLoadingTime(bean.getEndLoadingTime());
+                    perfectBoatRecord.setArrivedAtTheDockTime(bean.getArrivedAtTheDockTime());
+                    perfectBoatRecord.setLeaveTheDockTime(bean.getLeaveTheDockTime());
+                    perfectBoatRecord.setArrivaOfAnchorageTime(bean.getArrivaOfAnchorageTime());
+                    perfectBoatRecord.setClearanceTime(bean.getClearanceTime());
+                    perfectBoatRecord.setMaterialClassification(bean.getMaterialClassification());
+                    perfectBoatRecord.setCreator(bean.getCreator());
+                    perfectBoatRecord.setSystemDate(bean.getSystemDate());
+                    perfectBoatRecord.setPerfectBoatItemCount(bean.getPerfectBoatItemCount());
+                    perfectBoatRecord.setIsPerfect(bean.getIsPerfect());
+                    perfectBoatRecord.save();
+
+                    e.onNext(perfectBoatRecord);
+                }
+
+                e.onComplete();
+            }});
     }
 
     /**

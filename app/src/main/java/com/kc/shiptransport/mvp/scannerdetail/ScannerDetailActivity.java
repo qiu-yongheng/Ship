@@ -18,11 +18,17 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class ScannerDetailActivity extends BaseActivity{
 
+    private static final String POSITION = "ScannerDetailActivity_position";
     private ScannerDetailFragment fragment;
+    public int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
+
+        Bundle bundle = getIntent().getExtras();
+        position = bundle.getInt(POSITION);
 
         if (savedInstanceState != null) {
             fragment = (ScannerDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ScannerDetailFragment");
@@ -49,9 +55,10 @@ public class ScannerDetailActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Activity activity) {
+    public static void startActivity(Activity activity, int position) {
         Intent intent = new Intent(activity, ScannerDetailActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putInt(POSITION, position);
         intent.putExtras(bundle);
         activity.startActivity(intent, bundle);
     }

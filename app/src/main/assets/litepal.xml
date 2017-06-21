@@ -1,6 +1,6 @@
 <litepal>
     <dbname value="ship_db" />
-    <version value="13"/>
+    <version value="16"/>
     <list>
         <mapping class="com.kc.shiptransport.db.Ship"/>
         <mapping class="com.kc.shiptransport.db.Subcontractor"/>
@@ -13,5 +13,6 @@
         <mapping class="com.kc.shiptransport.db.ConstructionBoat"/>
         <mapping class="com.kc.shiptransport.db.RecordList"/>
         <mapping class="com.kc.shiptransport.db.SandSample"/>
+        <mapping class="com.kc.shiptransport.db.PerfectBoatRecord"/>
     </list>
 </litepal>

@@ -54,7 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else {
             ((NormalHolder) holder).mLlDate.setVisibility(View.INVISIBLE);
 
-            if (type == SettingUtil.TYPE_RECORDEDSAND) {
+            if (type == SettingUtil.TYPE_RECORDEDSAND) { // 过砂记录
                 // 根据position查询数据
                 List<RecordList> recordLists = DataSupport.where("position = ?", position + "").find(RecordList.class);
 
@@ -95,13 +95,59 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 } else {
                     ((NormalHolder) holder).mLlTask.setVisibility(View.INVISIBLE);
                 }
+
+            } else if (type == SettingUtil.TYPE_VOYAGEINFO) { // 航次信息完善
+                // 根据position查询数据
+                List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
+
+                if (!weekTasks.isEmpty()) {
+                    WeekTask weekTask = weekTasks.get(0);
+                    ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
+                    ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getPerfectBoatItemCount()));
+
+                    // 判断信息是否已完善
+                    if (weekTask.getIsPerfect() == 1) {
+                        // 已过砂
+                        ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
+                        ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
+
+                        // 根据单选判断是否显示
+                        boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
+                        ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
+                    } else if (weekTask.getIsPerfect() == 0) {
+                        // 未过砂
+                        ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
+                        ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
+
+                        // 根据单选判断是否显示
+                        boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.NO_ACCEPTED);
+                        ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
+                    }
+
+                    // 设置点击事件
+                    if (listener != null) {
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                int pos = holder.getLayoutPosition();
+                                listener.onItemClick(holder.itemView, pos);
+                            }
+                        });
+                    }
+
+
+                } else {
+                    ((NormalHolder) holder).mLlTask.setVisibility(View.INVISIBLE);
+                }
+
+
             } else {
 
                 /*------------------------------------------------------------------------------------------------*/
                 // 根据position查询数据
                 List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
 
-                // 必须验收后才能显示
+                // 如果有数据就显示
                 if (weekTasks != null && !weekTasks.isEmpty()) {
                     WeekTask weekTask = weekTasks.get(0);
                     ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());

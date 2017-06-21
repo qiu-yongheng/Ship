@@ -22,7 +22,7 @@
     <string name="task_valume">计划缺口:</string>
     <string name="text_plan_demand">红色字体: 需求</string>
     <string name="text_plan_plan">黑色字体: 计划</string>
-    <string name="text_save_voyage">保存打印</string>
+    <string name="text_save_voyage">保存</string>
     <string name="text_ship_location">装船地点</string>
     <string name="text_unfilled">未填写</string>
     <string name="text_ship_date">装船日期</string>
@@ -59,6 +59,21 @@
     <string name="title_sample">验砂取样</string>
     <string name="sample_red">红色字体: 已完善</string>
     <string name="sample_black">黑色字体: 未完善</string>
+    <string name="title_scanner">分包商航次扫描件</string>
+    <string name="scanner_red">红色字体: 已完善</string>
+    <string name="scanner_black">黑色字体: 未完善</string>
+    <string name="scanner_stowage">装舱现场照片</string>
+    <string name="scanner_ship_bill">舱单</string>
+    <string name="scanner_consignment_bill">托运单</string>
+    <string name="scanner_gravel">碎石粉装船记录表</string>
+    <string name="scanner_strip_plot">选择计划航线图</string>
+    <string name="scanner_delivery_bill">送货单</string>
+    <string name="scanner_strip_plot_plan">计划航线图</string>
+    <string name="scanner_qc">预验收质量记录表</string>
+    <string name="scanner_customs">海关放行通知照片</string>
+    <string name="scanner_contrast">航线对比图</string>
+    <string name="scanner_customs_bill">海关单</string>
+    <string name="btn_determine">确定</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
