@@ -34,7 +34,7 @@
         <activity android:name=".mvp.acceptancedetail.AcceptanceDetailActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.voyageinfo.VoyageInfoActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.voyagedetail.VoyageDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".view.actiivty.InputActivity" android:launchMode="singleTask"/>
+        <activity android:name=".view.actiivty.InputActivity"/>
         <activity android:name=".mvp.scanner.ScannerActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.scannerdetail.ScannerDetailActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.amount.AmountActivity" android:launchMode="singleTask"/>

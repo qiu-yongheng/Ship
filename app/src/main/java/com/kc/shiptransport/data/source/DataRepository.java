@@ -33,6 +33,7 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.MyJSONObject;
 import com.kc.shiptransport.util.SettingUtil;
 
 import org.json.JSONArray;
@@ -1199,8 +1200,8 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
-                JSONArray jsonArray = new JSONArray();
-                JSONObject jsonObject = new JSONObject();
+                //JSONArray jsonArray = new JSONArray();
+                MyJSONObject jsonObject = new MyJSONObject();
                 jsonObject.put(bean.key_ItemID, bean.getItemID());
                 jsonObject.put(bean.key_SubcontractorInterimApproachPlanID, bean.getSubcontractorInterimApproachPlanID());
                 jsonObject.put(bean.key_LoadingPlace, bean.getLoadingPlace());
@@ -1215,11 +1216,12 @@ public class DataRepository implements DataSouceImpl {
                 jsonObject.put(bean.key_ClearanceTime, bean.getClearanceTime());
                 jsonObject.put(bean.key_MaterialClassification, bean.getMaterialClassification());
                 jsonObject.put(bean.key_Creator, bean.getCreator());
-                jsonArray.put(jsonObject);
+
+                //jsonArray.put(object);
 
 
                 // 解析成json
-                String json = jsonArray.toString();
+                String json = "[" + jsonObject.toString() + "]";
                 Log.d("==", "信息完善请求json: " + json);
 
 
@@ -1228,6 +1230,7 @@ public class DataRepository implements DataSouceImpl {
                 String result = mRemoteDataSource.InsertPerfectBoatRecord(json);
                 Log.d("==", "信息完善请求结果: " + result);
                 CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
+
                 e.onNext(resultBean.getMessage() == 1);
                 e.onComplete();
             }
@@ -1535,8 +1538,13 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<PerfectBoatRecord> e) throws Exception {
                 /** 判断本地是否有缓存 */
                 List<PerfectBoatRecord> perfectBoatRecords = DataSupport.where("SubcontractorInterimApproachPlanID = ?", String.valueOf(weekTask.getItemID())).find(PerfectBoatRecord.class);
-                if (!perfectBoatRecords.isEmpty() && !isNetwork) {
+                if (!perfectBoatRecords.isEmpty()) {
                     // 有缓存, 不发送网络请求
+                    if (isNetwork) {
+                        // 更新本地数据为已完善
+                        perfectBoatRecords.get(0).setIsPerfect(1);
+                        perfectBoatRecords.get(0).save();
+                    }
                     e.onNext(perfectBoatRecords.get(0));
                 } else if (perfectBoatRecords.isEmpty() && !isNetwork) {
                     // 没有缓存, 不发送网络请求

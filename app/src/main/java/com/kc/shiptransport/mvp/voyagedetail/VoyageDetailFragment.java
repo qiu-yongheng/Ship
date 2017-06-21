@@ -24,6 +24,7 @@ import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.view.actiivty.InputActivity;
 
@@ -170,7 +171,8 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i != 0) {
-
+                    perfectBoatRecord.setMaterialClassification(getResources().getStringArray(R.array.voyage_spinner)[i]);
+                    perfectBoatRecord.save();
                 }
             }
 
@@ -211,9 +213,13 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 InputActivity.startActivityForResult(activity, getResources().getString(R.string.text_ship_location), mTvShipLocation.getText().toString(), 0);
                 break;
             case R.id.rl_ship_date:
-                CalendarUtil.showTimePickerDialog(getContext(), mTvShipDate);
-                perfectBoatRecord.setLoadingDate(mTvShipDate.getText().toString());
-                perfectBoatRecord.save();
+                CalendarUtil.showTimePickerDialog(getContext(), mTvShipDate, new OnTimePickerSureClickListener() {
+                    @Override
+                    public void onSure(String str) {
+                        perfectBoatRecord.setLoadingDate(mTvShipDate.getText().toString());
+                        perfectBoatRecord.save();
+                    }
+                });
                 break;
             case R.id.rl_sample_num:
                 InputActivity.startActivityForResult(activity, getResources().getString(R.string.text_sample_num), mTvSampleNum.getText().toString(), 2);
@@ -222,34 +228,64 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 InputActivity.startActivityForResult(activity, getResources().getString(R.string.text_material_from), mTvMaterialFrom.getText().toString(), 3);
                 break;
             case R.id.rl_start_date:
-                CalendarUtil.showTimePickerDialog(getContext(), mTvStartDate);
-                perfectBoatRecord.setStartLoadingTime(mTvStartDate.getText().toString());
-                perfectBoatRecord.save();
+                CalendarUtil.showTimePickerDialog(getContext(), mTvStartDate, new OnTimePickerSureClickListener() {
+                    @Override
+                    public void onSure(String str) {
+                        perfectBoatRecord.setStartLoadingTime(mTvStartDate.getText().toString());
+                        perfectBoatRecord.save();
+                    }
+                });
+
                 break;
             case R.id.rl_end_date:
-                CalendarUtil.showTimePickerDialog(getContext(), mTvEndDate);
-                perfectBoatRecord.setEndLoadingTime(mTvEndDate.getText().toString());
-                perfectBoatRecord.save();
+                CalendarUtil.showTimePickerDialog(getContext(), mTvEndDate, new OnTimePickerSureClickListener() {
+                    @Override
+                    public void onSure(String str) {
+                        perfectBoatRecord.setEndLoadingTime(mTvEndDate.getText().toString());
+                        perfectBoatRecord.save();
+                    }
+                });
+
                 break;
             case R.id.rl_come_date:
-                CalendarUtil.showTimePickerDialog(getContext(), mTvComeDate);
-                perfectBoatRecord.setArrivedAtTheDockTime(mTvComeDate.getText().toString());
-                perfectBoatRecord.save();
+                CalendarUtil.showTimePickerDialog(getContext(), mTvComeDate, new OnTimePickerSureClickListener() {
+                    @Override
+                    public void onSure(String str) {
+                        perfectBoatRecord.setArrivedAtTheDockTime(mTvComeDate.getText().toString());
+                        perfectBoatRecord.save();
+                    }
+                });
+
                 break;
             case R.id.rl_exit_date:
-                CalendarUtil.showTimePickerDialog(getContext(), mTvExitDate);
-                perfectBoatRecord.setLeaveTheDockTime(mTvExitDate.getText().toString());
-                perfectBoatRecord.save();
+                CalendarUtil.showTimePickerDialog(getContext(), mTvExitDate, new OnTimePickerSureClickListener() {
+                    @Override
+                    public void onSure(String str) {
+                        perfectBoatRecord.setLeaveTheDockTime(mTvExitDate.getText().toString());
+                        perfectBoatRecord.save();
+                    }
+                });
+
                 break;
             case R.id.rl_come_anchor_date:
-                CalendarUtil.showTimePickerDialog(getContext(), mTvComeAnchorDate);
-                perfectBoatRecord.setArrivaOfAnchorageTime(mTvComeAnchorDate.getText().toString());
-                perfectBoatRecord.save();
+                CalendarUtil.showTimePickerDialog(getContext(), mTvComeAnchorDate, new OnTimePickerSureClickListener() {
+                    @Override
+                    public void onSure(String str) {
+                        perfectBoatRecord.setArrivaOfAnchorageTime(mTvComeAnchorDate.getText().toString());
+                        perfectBoatRecord.save();
+                    }
+                });
+
                 break;
             case R.id.rl_clean_date:
-                CalendarUtil.showTimePickerDialog(getContext(), mTvCleanDate);
-                perfectBoatRecord.setClearanceTime(mTvCleanDate.getText().toString());
-                perfectBoatRecord.save();
+                CalendarUtil.showTimePickerDialog(getContext(), mTvCleanDate, new OnTimePickerSureClickListener() {
+                    @Override
+                    public void onSure(String str) {
+                        perfectBoatRecord.setClearanceTime(mTvCleanDate.getText().toString());
+                        perfectBoatRecord.save();
+                    }
+                });
+
                 break;
             case R.id.rl_material_ordar:
                 // TODO 弹出选择框 -> initView()
@@ -257,30 +293,44 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             case R.id.btn_commit:
                 // 提交
                 VoyageInfoBean bean = new VoyageInfoBean();
+                // 条目ID
                 bean.setItemID("");
+                // 进场ID
                 bean.setSubcontractorInterimApproachPlanID(itemID);
-                loadingPlace = mTvShipLocation.getText().toString().trim();
-                bean.setLoadingPlace(loadingPlace.equals(DEFAULT) ? "" : loadingPlace);
-                loadingDate = mTvShipDate.getText().toString().trim();
-                bean.setLoadingDate(loadingDate.equals(DEFAULT) ? "" : loadingDate);
-                baseNumber = mTvSampleNum.getText().toString().trim();
-                bean.setBaseNumber(baseNumber.equals(DEFAULT) ? "" : baseNumber);
-                sourceOfSource = mTvMaterialFrom.getText().toString().trim();
-                bean.setSourceOfSource(sourceOfSource.equals(DEFAULT) ? "" : sourceOfSource);
-                startLoadingTime = mTvStartDate.getText().toString().trim();
-                bean.setStartLoadingTime(startLoadingTime.equals(DEFAULT) ? "" : startLoadingTime);
-                endLoadingTime = mTvEndDate.getText().toString().trim();
-                bean.setEndLoadingTime(endLoadingTime.equals(DEFAULT) ? "" : endLoadingTime);
-                arrivedAtTheDockTime = mTvComeDate.getText().toString().trim();
-                bean.setArrivedAtTheDockTime(arrivedAtTheDockTime.equals(DEFAULT) ? "" : arrivedAtTheDockTime);
-                leaveTheDockTime = mTvExitDate.getText().toString().trim();
-                bean.setLeaveTheDockTime(leaveTheDockTime.equals(DEFAULT) ? "" : leaveTheDockTime);
-                arrivaOfAnchorageTime = mTvComeAnchorDate.getText().toString().trim();
-                bean.setArrivaOfAnchorageTime(arrivaOfAnchorageTime.equals(DEFAULT) ? "" : arrivaOfAnchorageTime);
-                clearanceTime = mTvCleanDate.getText().toString().trim();
-                bean.setClearanceTime(clearanceTime.equals(DEFAULT) ? "" : clearanceTime);
-                bean.setMaterialClassification(getResources().getStringArray(R.array.voyage_spinner)[mSpMaterialOrdar.getSelectedItemPosition()]);
-                bean.setCreator(sub.getSubcontractorAccount());
+                // 装船地点
+                loadingPlace = perfectBoatRecord.getLoadingPlace();
+                bean.setLoadingPlace(TextUtils.isEmpty(loadingPlace) ? "" : loadingPlace);
+                // 装船时间
+                loadingDate = perfectBoatRecord.getLoadingDate();
+                bean.setLoadingDate(TextUtils.isEmpty(loadingDate) ? "" : loadingDate);
+                // 基样编号
+                baseNumber = perfectBoatRecord.getBaseNumber();
+                bean.setBaseNumber(TextUtils.isEmpty(baseNumber) ? "" : baseNumber);
+                // 材料来源地
+                sourceOfSource = perfectBoatRecord.getSourceOfSource();
+                bean.setSourceOfSource(TextUtils.isEmpty(sourceOfSource) ? "" : sourceOfSource);
+                // 开始装船时间
+                startLoadingTime = perfectBoatRecord.getStartLoadingTime();
+                bean.setStartLoadingTime(TextUtils.isEmpty(startLoadingTime) ? "" : startLoadingTime);
+                // 结束装船时间
+                endLoadingTime = perfectBoatRecord.getEndLoadingTime();
+                bean.setEndLoadingTime(TextUtils.isEmpty(endLoadingTime) ? "" : endLoadingTime);
+                // 到达码头时间
+                arrivedAtTheDockTime = perfectBoatRecord.getArrivedAtTheDockTime();
+                bean.setArrivedAtTheDockTime(TextUtils.isEmpty(arrivedAtTheDockTime) ? "" : arrivedAtTheDockTime);
+                // 离开码头时间
+                leaveTheDockTime = perfectBoatRecord.getLeaveTheDockTime();
+                bean.setLeaveTheDockTime(TextUtils.isEmpty(leaveTheDockTime) ? "" : leaveTheDockTime);
+                // 到达锚地时间
+                arrivaOfAnchorageTime = perfectBoatRecord.getArrivaOfAnchorageTime();
+                bean.setArrivaOfAnchorageTime(TextUtils.isEmpty(arrivaOfAnchorageTime) ? "" : arrivaOfAnchorageTime);
+                // 清关时间
+                clearanceTime = perfectBoatRecord.getClearanceTime();
+                bean.setClearanceTime(TextUtils.isEmpty(clearanceTime) ? "" : clearanceTime);
+                // 材料分类
+                bean.setMaterialClassification(TextUtils.isEmpty(perfectBoatRecord.getMaterialClassification()) ? "" : perfectBoatRecord.getMaterialClassification());
+                // 用户账号
+                bean.setCreator(perfectBoatRecord.getCreator());
 
                 presenter.doCommit(bean);
                 break;

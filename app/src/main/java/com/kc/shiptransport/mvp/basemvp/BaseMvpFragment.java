@@ -307,6 +307,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
             recyclerview.setAdapter(adapter);
 
         } else {
+            adapter.setDates(dates);
             adapter.notifyDataSetChanged();
         }
     }

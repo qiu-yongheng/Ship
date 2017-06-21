@@ -7,8 +7,12 @@ import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -112,6 +116,23 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
         dataRepository
                 .InsertPerfectBoatRecord(bean)
                 .subscribeOn(Schedulers.io())
+                .flatMap(new Function<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            // 提交成功, 刷新进场计划
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_BASE));
+                        } else {
+                            return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                                @Override
+                                public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                                    e.onNext(false);
+                                    e.onComplete();
+                                }
+                            });
+                        }
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
                     @Override
@@ -163,7 +184,8 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
                     @Override
                     public void accept(@NonNull WeekTask weekTask) throws Exception {
                         view.showShipName(weekTask.getShipName());
-                    }})
+                    }
+                })
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<WeekTask, Observable<PerfectBoatRecord>>() { // 获取完善信息
                     @Override

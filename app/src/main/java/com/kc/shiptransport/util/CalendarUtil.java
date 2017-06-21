@@ -7,6 +7,8 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -236,6 +238,45 @@ public class CalendarUtil {
         }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
 
         datePickerDialog.show();
+    }
 
+    /**
+     * 弹出时间选择器
+     * DateFormat.is24HourFormat(context) 判断
+     * @param context
+     * @param view
+     */
+    public static void showTimePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener) {
+        final Calendar now = Calendar.getInstance();
+
+        // 显示日期选择器
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                final Calendar c = Calendar.getInstance();
+                c.set(Calendar.YEAR, year);
+                c.set(Calendar.MONTH, month);
+                c.set(Calendar.DAY_OF_MONTH, day);
+
+                // 显示时间选择器
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        c.set(Calendar.HOUR_OF_DAY, hour);
+                        c.set(Calendar.MINUTE, minute);
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        String format = df.format(c.getTime());
+                        view.setText(format);
+                        listener.onSure(format);
+                    }
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
+
+                timePickerDialog.show();
+
+
+            }
+        }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
     }
 }
