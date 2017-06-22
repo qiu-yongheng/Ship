@@ -14,10 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.ScannerImagePathBean;
+import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.BaseActivity;
+import com.kc.shiptransport.util.RxGalleryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +44,13 @@ public class ImageSelectActivity extends BaseActivity {
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
     private String title;
+    private ImageAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_select);
         ButterKnife.bind(this);
-
 
         Bundle bundle = getIntent().getExtras();
         requestcode = bundle.getInt("REQUESTCODE");
@@ -68,8 +71,8 @@ public class ImageSelectActivity extends BaseActivity {
 
         recyclerview.setLayoutManager(new GridLayoutManager(this, 4));
         List<ScannerImagePathBean> list = new ArrayList<>();
-        ImageAdapter adapter = new ImageAdapter(this, list);
-        recyclerview.setAdapter(adapter);
+        mAdapter = new ImageAdapter(this, list);
+        recyclerview.setAdapter(mAdapter);
     }
 
     /**
@@ -80,6 +83,20 @@ public class ImageSelectActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 // TODO 保存图片地址到数据库, 或上传图片
+            }
+        });
+
+        // 设置点击事件
+        mAdapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, int... type) {
+                // 预览图片
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                // 弹出图片选择器
+
             }
         });
     }
@@ -120,6 +137,7 @@ public class ImageSelectActivity extends BaseActivity {
          * item类型: footer，加载更多
          */
         private static final int TYPE_ADD = 1;
+        private OnRecyclerviewItemClickListener listener;
 
         public ImageAdapter(Context context, List<ScannerImagePathBean> list) {
             this.context = context;
@@ -139,11 +157,27 @@ public class ImageSelectActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof NormalHolder) {
+                // 获取图片地址, 显示
+                ScannerImagePathBean scannerImagePathBean = list.get(position);
+                RxGalleryUtil.showImage(context, scannerImagePathBean.getImage_path(), null, null, ((NormalHolder)holder).mIvNormal);
 
+                // 点击图片, 预览图片
+                ((NormalHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onItemClick(holder.itemView, holder.getLayoutPosition());
+                    }
+                });
             } else if (holder instanceof AddHolder) {
-
+                ((AddHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // 弹出图片选择器
+                        listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
+                    }
+                });
             }
         }
 
@@ -152,8 +186,11 @@ public class ImageSelectActivity extends BaseActivity {
          */
         class NormalHolder extends RecyclerView.ViewHolder {
 
+            private final ImageView mIvNormal;
+
             public NormalHolder(View itemView) {
                 super(itemView);
+                mIvNormal = (ImageView)itemView.findViewById(R.id.iv_normal);
             }
         }
 
@@ -183,6 +220,13 @@ public class ImageSelectActivity extends BaseActivity {
         @Override
         public int getItemCount() {
             return list.size() + 1;
+        }
+
+        /**
+         * 设置点击事件
+         */
+        public void setOnRecyclerViewClickListener(OnRecyclerviewItemClickListener listener) {
+            this.listener = listener;
         }
     }
 }

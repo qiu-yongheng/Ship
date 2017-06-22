@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <Button
-                android:backgroundTint="?colorPrimary"
+                android:background="?colorPrimary"
                 android:id="@+id/btn_determine"
                 android:layout_alignParentRight="true"
                 android:text="@string/btn_determine"
