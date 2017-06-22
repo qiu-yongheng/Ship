@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.RecordList;
+import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.SettingUtil;
@@ -103,7 +104,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if (!weekTasks.isEmpty()) {
                     WeekTask weekTask = weekTasks.get(0);
                     ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
-                    ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getPerfectBoatItemCount()));
+                    ((NormalHolder) holder).mTvQuantum.setText("(11/" + String.valueOf(weekTask.getPerfectBoatItemCount()) + ")");
 
                     // 判断信息是否已完善
                     if (weekTask.getIsPerfect() == 1) {
@@ -141,6 +142,49 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
 
 
+            } else if (type == SettingUtil.TYPE_SAMPLE) { // 验砂取样
+
+                // 根据position查询数据
+                List<SandSample> recordLists = DataSupport.where("position = ?", position + "").find(SandSample.class);
+
+                if (!recordLists.isEmpty()) {
+                    SandSample recordList = recordLists.get(0);
+                    ((NormalHolder) holder).mTvShip.setText(recordList.getShipName());
+                    ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(recordList.getSandSupplyCount()));
+                    ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
+
+//                    // 判断是否已过砂
+//                    if (recordList.getIsFinish() == 1) {
+//                        // 已过砂
+//                        ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
+//                        ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
+//
+//                        // 根据单选判断是否显示
+//                        boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
+//                        ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
+//                    } else if (recordList.getIsFinish() == 0) {
+//                        // 未过砂
+//                        ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
+//                        ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
+//
+//                        // 根据单选判断是否显示
+//                        boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.NO_ACCEPTED);
+//                        ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
+//                    }
+
+                    // 设置点击事件
+                    if (listener != null) {
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                int pos = holder.getLayoutPosition();
+                                listener.onItemClick(holder.itemView, pos);
+                            }
+                        });
+                    }
+                } else {
+                    ((NormalHolder) holder).mLlTask.setVisibility(View.INVISIBLE);
+                }
             } else {
 
                 /*------------------------------------------------------------------------------------------------*/

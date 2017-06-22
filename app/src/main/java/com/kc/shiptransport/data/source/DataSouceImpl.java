@@ -4,6 +4,7 @@ import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.SandSample;
+import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
@@ -286,7 +287,7 @@ public interface DataSouceImpl {
      * 1.13获取验砂取样信息
      * @return
      */
-    Observable<Boolean> getSandSamplingList(int jumpWeek, String exitTime);
+    Observable<Boolean> getSandSamplingList(int jumpWeek, String account);
 
     /**
      * 1.17获取对应的航次完善信息明细
@@ -294,4 +295,11 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<PerfectBoatRecord> getPerfectBoatRecordByItemID(WeekTask weekTask, boolean isNetwork);
+
+    /**
+     * 根据itemID获取扫描图片数据
+     * @param weekTask
+     * @return
+     */
+    Observable<ScannerImage> getScannerImageByItemID(WeekTask weekTask);
 }

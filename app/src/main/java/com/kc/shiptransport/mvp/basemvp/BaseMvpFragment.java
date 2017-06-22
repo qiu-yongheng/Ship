@@ -48,7 +48,6 @@ import butterknife.Unbinder;
 public abstract class BaseMvpFragment extends Fragment implements BaseMvpContract.View {
 
 
-    Unbinder unbinder;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar_other_info)
@@ -83,6 +82,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
     AppCompatButton btnRefresh;
     @BindView(R.id.btn_commit)
     AppCompatButton btnCommit;
+    Unbinder unbinder;
     protected BaseMvpContract.Presenter presenter;
     @BindView(R.id.title_spinner)
     AppCompatSpinner mTitleSpinner;
@@ -369,7 +369,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
         }
 
         // 适配器
-        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_hear, datas);
+        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_hear, datas);
         // 设置样式
         arr_adapter.setDropDownViewResource(R.layout.spinner_item);
         // 加载适配器
@@ -389,13 +389,14 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
                 if (i != 0) {
                     // 这里的账号是提供给adapter去数据库查询数据的
                     subcontractorAccount = value.get(i - 1).getSubcontractorAccount();
-                    // 保存当前选中的分包商账号
-                    SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, subcontractorAccount);
                     // 这里应该根据选择的账号重新
                     presenter.doRefresh(jumpWeek, TYPE, subcontractorAccount);
                 } else if (i == 0) {
-                    presenter.doRefresh(jumpWeek, TYPE, "");
+                    subcontractorAccount = "";
+                    presenter.doRefresh(jumpWeek, TYPE, subcontractorAccount);
                 }
+                // 保存当前选中的分包商账号
+                SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, subcontractorAccount);
             }
 
             @Override

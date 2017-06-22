@@ -240,7 +240,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
 
             case SettingUtil.TYPE_SAMPLE: // 验砂取样
                 observable = dataRepository
-                        .getSandSamplingList(jumpWeek, "退场时间")
+                        .getSandSamplingList(jumpWeek, account)
                         .subscribeOn(Schedulers.io());
                 break;
 

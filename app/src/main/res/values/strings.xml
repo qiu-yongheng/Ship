@@ -74,6 +74,9 @@
     <string name="scanner_contrast">航线对比图</string>
     <string name="scanner_customs_bill">海关单</string>
     <string name="btn_determine">确定</string>
+    <string name="item_sample_tag">取样编号:</string>
+    <string name="text_scan_not">未完成</string>
+    <string name="text_scan_alr">已完成</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

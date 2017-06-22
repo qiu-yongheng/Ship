@@ -294,7 +294,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 // 提交
                 VoyageInfoBean bean = new VoyageInfoBean();
                 // 条目ID
-                bean.setItemID("");
+                bean.setItemID(perfectBoatRecord.getItemID() == 0 ? "" : String.valueOf(perfectBoatRecord.getItemID()));
                 // 进场ID
                 bean.setSubcontractorInterimApproachPlanID(itemID);
                 // 装船地点
@@ -453,6 +453,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         String materialClassification = perfectBoatRecord.getMaterialClassification();
 
 
+
         mTvShipLocation.setText(loadingPlace == null ? "未填写" : loadingPlace);
         mTvShipDate.setText(loadingDate == null ? "未填写" : loadingDate);
         mTvSampleNum.setText(baseNumber == null ? "未填写" : baseNumber);
@@ -463,15 +464,15 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         mTvExitDate.setText(leaveTheDockTime == null ? "未填写" : leaveTheDockTime);
         mTvComeAnchorDate.setText(arrivaOfAnchorageTime == null ? "未填写" : arrivaOfAnchorageTime);
         mTvCleanDate.setText(clearanceTime == null ? "未填写" : clearanceTime);
-        if (TextUtils.isEmpty(materialClassification)) {
-            // 空
-            mSpMaterialOrdar.setVisibility(View.VISIBLE);
-            tvMaterialOrdar.setVisibility(View.GONE);
-        } else {
+        if (!TextUtils.isEmpty(materialClassification) && !materialClassification.equals("请选择材料分类")) {
             // 有数据
             mSpMaterialOrdar.setVisibility(View.GONE);
             tvMaterialOrdar.setVisibility(View.VISIBLE);
             tvMaterialOrdar.setText(materialClassification);
+        } else {
+            // 空
+            mSpMaterialOrdar.setVisibility(View.VISIBLE);
+            tvMaterialOrdar.setVisibility(View.GONE);
         }
 
         if (isPerfect) {

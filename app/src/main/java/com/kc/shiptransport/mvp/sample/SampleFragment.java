@@ -40,12 +40,14 @@ public class SampleFragment extends BaseMvpFragment{
     @Override
     protected void initData() {
         presenter.subscribe();
-        presenter.start(jumpWeek, TYPE, subcontractorAccount);
+        // 显示所有分包商
+        presenter.getTime(jumpWeek);
+        presenter.getSubcontractorList();
     }
 
     @Override
     protected int getType() {
-        return SettingUtil.TYPE_AMOUNT;
+        return SettingUtil.TYPE_SAMPLE;
     }
 
     @Override

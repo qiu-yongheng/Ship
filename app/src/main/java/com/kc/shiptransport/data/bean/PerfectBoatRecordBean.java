@@ -28,6 +28,7 @@ public class PerfectBoatRecordBean {
      * IsPerfect : 1
      */
 
+
     private int ItemID;
     private int SubcontractorInterimApproachPlanID;
     private String LoadingPlace;

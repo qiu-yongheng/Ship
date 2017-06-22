@@ -190,11 +190,11 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
                 .flatMap(new Function<WeekTask, Observable<PerfectBoatRecord>>() { // 获取完善信息
                     @Override
                     public Observable<PerfectBoatRecord> apply(@NonNull WeekTask weekTask) throws Exception {
-                        if (weekTask.getIsPerfect() == 1) {
-                            // 已完善, 如果本地没有缓存, 发送网络请求
+                        if (weekTask.getPerfectBoatRecordID() != 0) {
+                            // 已经提交过数据, 如果本地没有缓存, 发送网络请求
                             return dataRepository.getPerfectBoatRecordByItemID(weekTask, true);
                         } else {
-                            // 未完善, 读取本地缓存, 或者创建
+                            // 没有提交过数据, 在数据库创建新的一条数据
                             return dataRepository.getPerfectBoatRecordByItemID(weekTask, false);
                         }
                     }

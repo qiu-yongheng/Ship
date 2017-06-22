@@ -27,6 +27,7 @@ import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.SandSample;
+import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
@@ -650,13 +651,15 @@ public class DataRepository implements DataSouceImpl {
                 int num = 0;
 
                 /** 根据类型计算没有做相关处理的船次 */
-                if (type == SettingUtil.TYPE_RECORDEDSAND) {
+                if (type == SettingUtil.TYPE_RECORDEDSAND) { // 过砂记录
                     // 过砂记录, IsFinish = 0的个数
                     num = DataSupport.where("IsFinish = ?", "0").count(RecordList.class);
 
-                } else if (type == SettingUtil.TYPE_VOYAGEINFO) {
+                } else if (type == SettingUtil.TYPE_VOYAGEINFO) { // 航次信息完善
                     // 航次信息完善, IsPerfect = 0的个数
                     num = DataSupport.where("IsPerfect = ?", "0").count(WeekTask.class);
+                } else if (type == SettingUtil.TYPE_SAMPLE) { // 验砂取样
+
                 } else {
                     // 1. 获取一周任务
                     List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
@@ -666,18 +669,18 @@ public class DataRepository implements DataSouceImpl {
                         for (WeekTask weektask : weekTasks) {
                             String time = null;
                             String time2 = null;
-                            if (type == SettingUtil.TYPE_ACCEPT) {
+                            if (type == SettingUtil.TYPE_ACCEPT) { // 验收
                                 time = weektask.getPreAcceptanceTime();
                                 if (time == null || time.equals("")) {
                                     num++;
                                 }
-                            } else if (type == SettingUtil.TYPE_SUPPLY) {
+                            } else if (type == SettingUtil.TYPE_SUPPLY) { // 验砂
                                 time = weektask.getPreAcceptanceTime();
                                 time2 = weektask.getReceptionSandTime();
                                 if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
                                     num++;
                                 }
-                            } else if (type == SettingUtil.TYPE_AMOUNT) {
+                            } else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
                                 time = weektask.getPreAcceptanceTime();
                                 time2 = weektask.getTheAmountOfTime();
                                 if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
@@ -1225,7 +1228,6 @@ public class DataRepository implements DataSouceImpl {
                 Log.d("==", "信息完善请求json: " + json);
 
 
-
                 // 发送网络请求
                 String result = mRemoteDataSource.InsertPerfectBoatRecord(json);
                 Log.d("==", "信息完善请求结果: " + result);
@@ -1442,17 +1444,18 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 获取验砂取样信息
+     * 获取分包商对应进场计划
+     * 验收后才显示
+     *
      * @param jumpWeek
-     * @param exitTime
+     * @param account
      * @return
      */
     @Override
-    public Observable<Boolean> getSandSamplingList(final int jumpWeek, final String exitTime) {
+    public Observable<Boolean> getSandSamplingList(final int jumpWeek, final String account) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
-                /* 获取分包商账号 */
-                String subcontractorAccount = findAll(Subcontractor.class).get(0).getSubcontractorAccount();
                 /* 开始时间 */
                 String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
                 /* 结束时间 */
@@ -1461,7 +1464,7 @@ public class DataRepository implements DataSouceImpl {
                 Log.d("==", "请求日期: " + startDay + "-" + endDay);
 
                 // 发送网络请求
-                String result = mRemoteDataSource.GetSandSamplingList(subcontractorAccount, startDay, endDay, exitTime);
+                String result = mRemoteDataSource.GetSandSamplingList(account, startDay, endDay, endDay);
 
                 // 解析数据
                 List<SandSampleBean> lists = gson.fromJson(result, new TypeToken<List<SandSampleBean>>() {
@@ -1527,6 +1530,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.17获取对应的航次完善信息明细
+     *
      * @param weekTask
      * @param isNetwork
      * @return
@@ -1538,28 +1542,30 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<PerfectBoatRecord> e) throws Exception {
                 /** 判断本地是否有缓存 */
                 List<PerfectBoatRecord> perfectBoatRecords = DataSupport.where("SubcontractorInterimApproachPlanID = ?", String.valueOf(weekTask.getItemID())).find(PerfectBoatRecord.class);
-                if (!perfectBoatRecords.isEmpty()) {
-                    // 有缓存, 不发送网络请求
-                    if (isNetwork) {
-                        // 更新本地数据为已完善
-                        perfectBoatRecords.get(0).setIsPerfect(1);
-                        perfectBoatRecords.get(0).save();
-                    }
+                if (!perfectBoatRecords.isEmpty() && isNetwork) {
+                    // 有缓存, 且已经提交过数据
+
+                    // 更新本地数据完善标识
+                    perfectBoatRecords.get(0).setIsPerfect(weekTask.getIsPerfect());
+                    // 更新条目ID
+                    perfectBoatRecords.get(0).setItemID(weekTask.getPerfectBoatRecordID());
+                    perfectBoatRecords.get(0).save();
                     e.onNext(perfectBoatRecords.get(0));
                 } else if (perfectBoatRecords.isEmpty() && !isNetwork) {
-                    // 没有缓存, 不发送网络请求
+                    // 没有缓存, 没有提交过数据
                     PerfectBoatRecord perfectBoatRecord = new PerfectBoatRecord();
                     perfectBoatRecord.setSubcontractorInterimApproachPlanID(weekTask.getItemID()); // 进场ID
                     perfectBoatRecord.setCreator(weekTask.getSubcontractorAccount()); // 登录账号
                     perfectBoatRecord.save();
                     e.onNext(perfectBoatRecord);
                 } else if (perfectBoatRecords.isEmpty() && isNetwork) {
-                    // 没有缓存, 发送网络请求
+                    // 没有缓存, 且已经提交过数据
 
                     // 1. 发送网络请求
                     String result = mRemoteDataSource.GetPerfectBoatRecordByItemID(String.valueOf(weekTask.getPerfectBoatRecordID()));
                     // 2. 解析数据
-                    List<PerfectBoatRecordBean> lists = gson.fromJson(result, new TypeToken<PerfectBoatRecordBean>() {}.getType());
+                    List<PerfectBoatRecordBean> lists = gson.fromJson(result, new TypeToken<List<PerfectBoatRecordBean>>() {
+                    }.getType());
                     PerfectBoatRecordBean bean = lists.get(0);
                     // 3. 删除数据库中SubcontractorInterimApproachPlanID对应的数据
                     DataSupport.deleteAll(PerfectBoatRecord.class, "ItemID = ?", String.valueOf(bean.getItemID()));
@@ -1588,7 +1594,48 @@ public class DataRepository implements DataSouceImpl {
                 }
 
                 e.onComplete();
-            }});
+            }
+        });
+    }
+
+    /**
+     * 根据itemID获取扫描图片数据
+     * @param weekTask
+     * @return
+     */
+    @Override
+    public Observable<ScannerImage> getScannerImageByItemID(final WeekTask weekTask) {
+        return Observable.create(new ObservableOnSubscribe<ScannerImage>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<ScannerImage> e) throws Exception {
+                /*
+                * 一. 未完善:
+                *   1. 查询本地缓存
+                *       # 有缓存, 直接返回
+                *       # 没有缓存
+                *           * 在数据库创建一条新的缓存
+                * 二. 已完善:
+                *   1. 全部从网络获取图片显示
+                * */
+
+                // 1. 查询本地缓存
+                List<ScannerImage> images = DataSupport.where("ItemID = ?", String.valueOf(weekTask.getItemID())).find(ScannerImage.class);
+
+                // 2. 判断缓存是否为空
+                if (!images.isEmpty()) {
+                    // 有缓存
+                    e.onNext(images.get(0));
+                } else {
+                    // 没有缓存
+                    ScannerImage scannerImage = new ScannerImage();
+                    scannerImage.setItemID(weekTask.getItemID());
+                    scannerImage.save();
+                    e.onNext(scannerImage);
+                }
+
+                e.onComplete();
+            }
+        });
     }
 
     /**

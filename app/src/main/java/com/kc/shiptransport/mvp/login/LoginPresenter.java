@@ -9,11 +9,15 @@ import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import java.net.SocketTimeoutException;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function4;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -71,19 +75,34 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .getAppList(username)
                 .subscribeOn(Schedulers.io());
 
-        // 获取施工船舶(用在过砂记录)
-        Observable<Boolean> construction = mDataRepository
-                .GetConstructionBoat()
-                .subscribeOn(Schedulers.io());
+        //        // 获取施工船舶(用在过砂记录)
+        //        Observable<Boolean> construction = mDataRepository
+        //                .GetConstructionBoat()
+        //                .subscribeOn(Schedulers.io());
 
 
-        Observable.zip(subcontractor, ship, appList, construction, new Function4<Boolean, Boolean, Boolean, Boolean, Boolean>() {
+        Observable.zip(subcontractor, ship, appList, new Function3<Boolean, Boolean, Boolean, Boolean>() {
             @Override
-            public Boolean apply(Boolean aBoolean, Boolean aBoolean2, Boolean aBoolean3, Boolean aBoolean4) throws Exception {
-                if (aBoolean && aBoolean2 && aBoolean3 && aBoolean4) {
+            public Boolean apply(Boolean aBoolean, Boolean aBoolean2, Boolean aBoolean3) throws Exception {
+                if (aBoolean && aBoolean2 && aBoolean3) {
                     return true;
                 } else {
                     return false;
+                }
+            }
+        }).flatMap(new Function<Boolean, Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    return mDataRepository.GetConstructionBoat();
+                } else {
+                    return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                        @Override
+                        public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                            e.onNext(false);
+                            e.onComplete();
+                        }
+                    });
                 }
             }
         }).observeOn(AndroidSchedulers.mainThread())

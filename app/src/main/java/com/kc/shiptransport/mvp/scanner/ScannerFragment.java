@@ -37,7 +37,7 @@ public class ScannerFragment extends BaseMvpFragment {
     @Override
     protected void initData() {
         presenter.subscribe();
-        presenter.doRefresh(jumpWeek, TYPE, subcontractorAccount);
+        presenter.start(jumpWeek, TYPE, subcontractorAccount);
     }
 
     @Override
