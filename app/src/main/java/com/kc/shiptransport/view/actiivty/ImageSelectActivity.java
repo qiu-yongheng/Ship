@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.ScannerImagePathBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.mvp.BaseActivity;
 import com.kc.shiptransport.util.RxGalleryUtil;
 
@@ -27,6 +28,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 
 /**
  * @author qiuyongheng
@@ -45,6 +47,7 @@ public class ImageSelectActivity extends BaseActivity {
     RecyclerView recyclerview;
     private String title;
     private ImageAdapter mAdapter;
+    private List<ScannerImagePathBean> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +73,8 @@ public class ImageSelectActivity extends BaseActivity {
         getSupportActionBar().setTitle(title);
 
         recyclerview.setLayoutManager(new GridLayoutManager(this, 4));
-        List<ScannerImagePathBean> list = new ArrayList<>();
-        mAdapter = new ImageAdapter(this, list);
+        mList = new ArrayList<>();
+        mAdapter = new ImageAdapter(this, mList);
         recyclerview.setAdapter(mAdapter);
     }
 
@@ -96,7 +99,16 @@ public class ImageSelectActivity extends BaseActivity {
             @Override
             public void onItemLongClick(View view, int position) {
                 // 弹出图片选择器
+                RxGalleryUtil.getImagRadio(ImageSelectActivity.this, new OnRxGalleryRadioListener() {
+                    @Override
+                    public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                        ScannerImagePathBean scannerImagePathBean = new ScannerImagePathBean();
+                        scannerImagePathBean.setImage_path(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+                        mList.add(scannerImagePathBean);
 
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
     }
