@@ -79,4 +79,32 @@ public class SettingUtil {
     /* 分包商航次信息扫描件 */
     public static final int TYPE_SCANNER = 7;
     /*-----------------------------------------------审核类型--------------------------------------------------*/
+
+    /*-----------------------------------------------扫描件类型--------------------------------------------------*/
+    /* 装舱现场照片 */
+    public static final int ID_STOWAGE = 1111;
+    /* 舱单 */
+    public static final int ID_SHIP_BILL = 1112;
+    /* 托运单 */
+    public static final int ID_CONSIGNMENT_BILL = 1113;
+    /* 碎石粉装创记录表 */
+    public static final int ID_GRAVEL = 1114;
+    /* 选择计划航线图 */
+    public static final int ID_STRIP_PLOT = 1115;
+    /* 计划航线图 */
+    public static final int ID_STRIP_PLOT_PLAN = 1116;
+    /* 送货单 */
+    public static final int ID_DELIVERY_BILL = 1117;
+    /* 预验收质量记录表 */
+    public static final int ID_QC = 1118;
+    /* 海关放行通知照片 */
+    public static final int ID_CUSTOMS = 1119;
+    /* 航线对比图 */
+    public static final int ID_CONTRAST = 1120;
+    /* 海关单 */
+    public static final int ID_CUSTOMS_BILL = 1121;
+
+    /* 删除 */
+    public static final int ITEM_DELETE = 1122;
+    /*-----------------------------------------------扫描件类型--------------------------------------------------*/
 }

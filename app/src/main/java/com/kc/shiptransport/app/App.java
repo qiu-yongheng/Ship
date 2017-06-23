@@ -15,5 +15,8 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
         LitePalApplication.initialize(this);
+
+        //收集崩溃信息
+        Thread.setDefaultUncaughtExceptionHandler(new LocalFileHandler(this));
     }
 }

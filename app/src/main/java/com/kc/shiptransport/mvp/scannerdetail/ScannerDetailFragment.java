@@ -20,6 +20,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.ScannerImagePathBean;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.view.actiivty.ImageSelectActivity;
 
 import java.util.List;
@@ -137,6 +138,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     CardView cardviewRight6;
     private ScannerDetailContract.Presenter presenter;
     private ScannerDetailActivity activity;
+    public ScannerImage scannerImage;
 
     @Nullable
     @Override
@@ -221,40 +223,52 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
 
     /**
      * 处理点击事件
+     *
      * @param view
      */
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cardview_1:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_stowage), scannerImage.getItemID(), SettingUtil.ID_STOWAGE);
                 break;
             case R.id.cardview_2:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_ship_bill), scannerImage.getItemID(), SettingUtil.ID_SHIP_BILL);
                 break;
             case R.id.cardview_3:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_consignment_bill), scannerImage.getItemID(), SettingUtil.ID_CONSIGNMENT_BILL);
                 break;
             case R.id.cardview_4:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_gravel), scannerImage.getItemID(), SettingUtil.ID_GRAVEL);
                 break;
             case R.id.cardview_5:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_strip_plot), scannerImage.getItemID(), SettingUtil.ID_STRIP_PLOT);
                 break;
             case R.id.cardview_6:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_strip_plot_plan), scannerImage.getItemID(), SettingUtil.ID_STRIP_PLOT_PLAN);
                 break;
 
             case R.id.cardview_right_1:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_delivery_bill), scannerImage.getItemID(), SettingUtil.ID_DELIVERY_BILL);
                 break;
             case R.id.cardview_right_2:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_qc), scannerImage.getItemID(), SettingUtil.ID_QC);
                 break;
             case R.id.cardview_right_3:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_customs), scannerImage.getItemID(), SettingUtil.ID_CUSTOMS);
                 break;
             case R.id.cardview_right_4:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_contrast), scannerImage.getItemID(), SettingUtil.ID_CONTRAST);
                 break;
             case R.id.cardview_right_5:
+                ImageSelectActivity.startActivity(getActivity(), getResources().getString(R.string.title_scanner_customs_bill), scannerImage.getItemID(), SettingUtil.ID_CUSTOMS_BILL);
                 break;
         }
-        ImageSelectActivity.startActivity(getActivity(), "gaga", 1);
     }
 
     /**
      * 显示标题
+     *
      * @param title
      */
     @Override
@@ -283,10 +297,13 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
 
     /**
      * 根据itemID获取数据 (数据库, 网络请求)
+     *
      * @param scannerImage
      */
     @Override
     public void showDatas(ScannerImage scannerImage) {
+        this.scannerImage = scannerImage;
+
         /** 更新界面item显示 */
 
         // 装舱现场照片
@@ -335,24 +352,32 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     }
 
     /**
-     *
      * @param data
      * @param view_1
      * @param view_2
      * @param num
      */
-    public void setItemData (String data, TextView view_1, TextView view_2, String num) {
+    public void setItemData(String data, TextView view_1, TextView view_2, String num) {
         if (TextUtils.isEmpty(data)) {
             view_1.setText("(" + num + "/0)");
             view_2.setText(R.string.text_scan_not);
         } else {
-            List<ScannerImagePathBean> list = new Gson().fromJson(data, new TypeToken<List<ScannerImagePathBean>>() {}.getType());
+            List<ScannerImagePathBean> list = new Gson().fromJson(data, new TypeToken<List<ScannerImagePathBean>>() {
+            }.getType());
             view_1.setText("(" + num + "/" + String.valueOf(list.size()) + ")");
             if (list.size() == 1) {
                 view_2.setText(R.string.text_scan_alr);
             } else {
                 view_2.setText(R.string.text_scan_not);
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (activity != null) {
+            presenter.getDetailForItemID(activity.position);
         }
     }
 }

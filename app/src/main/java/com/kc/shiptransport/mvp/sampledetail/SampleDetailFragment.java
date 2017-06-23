@@ -29,6 +29,7 @@ import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,6 +196,8 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                     SampleRecordListBean sampleRecordList = mAdapter.list.get(position);
                                     sampleRecordList.setImage_1(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
                                     mAdapter.notifyDataSetChanged();
+
+                                    File file = new File(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
                                 }
                             });
                             break;
