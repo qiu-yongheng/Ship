@@ -1,6 +1,7 @@
 package com.kc.shiptransport.data.source;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -41,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,10 +50,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import top.zibin.luban.Luban;
 
 import static org.litepal.crud.DataSupport.deleteAll;
 import static org.litepal.crud.DataSupport.findAll;
@@ -1636,6 +1643,23 @@ public class DataRepository implements DataSouceImpl {
                 e.onComplete();
             }
         });
+    }
+
+    /**
+     * 压缩图片
+     * @param file
+     * @return
+     */
+    @Override
+    public Flowable<File> compressWithRx(final Context context, File file) {
+        return Flowable.just(file)
+                .observeOn(Schedulers.io())
+                .map(new Function<File, File>() {
+                    @Override public File apply(@NonNull File file) throws Exception {
+                        return Luban.with(context).load(file).get();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**

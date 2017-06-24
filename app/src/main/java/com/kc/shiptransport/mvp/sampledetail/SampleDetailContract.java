@@ -21,5 +21,6 @@ public interface SampleDetailContract {
     interface Presenter extends BasePresenter {
         void getShipInfo(int position);
         void start(int position);
+        //void upImage(Byte[] ByteData, String FileName, );
     }
 }

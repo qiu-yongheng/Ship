@@ -77,6 +77,23 @@
     <string name="item_sample_tag">取样编号:</string>
     <string name="text_scan_not">未完成</string>
     <string name="text_scan_alr">已完成</string>
+    <string name="title_scanner_stowage">装舱现场照片</string>
+    <string name="title_scanner_ship_bill">舱单</string>
+    <string name="title_scanner_consignment_bill">托运单</string>
+    <string name="title_scanner_gravel">碎石粉装记录表</string>
+    <string name="title_scanner_strip_plot">选择计划航线图</string>
+    <string name="title_scanner_strip_plot_plan">计划航线图</string>
+    <string name="title_scanner_delivery_bill">送货单</string>
+    <string name="title_scanner_qc">预验收质量记录表</string>
+    <string name="title_scanner_customs">海关放行通知照片</string>
+    <string name="title_scanner_contrast">航线对比图</string>
+    <string name="title_scanner_customs_bill">海关单</string>
+    <string name="text_supply_ship">供砂船:</string>
+    <string name="text_receive_ship">受砂船:</string>
+    <string name="text_start_time">开始时间:</string>
+    <string name="text_end_time">结束时间:</string>
+    <string name="text_record_before">过砂前吃水</string>
+    <string name="text_record_after">过砂后吃水</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

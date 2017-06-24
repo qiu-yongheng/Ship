@@ -1,5 +1,7 @@
 package com.kc.shiptransport.data.source;
 
+import android.content.Context;
+
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.PerfectBoatRecord;
@@ -9,8 +11,10 @@ import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 
+import java.io.File;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 /**
@@ -302,4 +306,11 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<ScannerImage> getScannerImageByItemID(WeekTask weekTask);
+
+    /**
+     * 压缩图片
+     * @param file
+     * @return
+     */
+    Flowable<File> compressWithRx(Context context, File file);
 }
