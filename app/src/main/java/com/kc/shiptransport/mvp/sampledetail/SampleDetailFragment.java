@@ -209,7 +209,6 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                 }
                             });
                             break;
-
                     }
                 }
 
