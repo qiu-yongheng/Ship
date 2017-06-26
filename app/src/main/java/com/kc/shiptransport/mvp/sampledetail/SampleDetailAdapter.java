@@ -2,13 +2,13 @@ package com.kc.shiptransport.mvp.sampledetail;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.SampleRecordListBean;
@@ -49,43 +49,46 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         // 显示图片
         final SampleRecordListBean sampleRecordList = list.get(position);
-        RxGalleryUtil.showImage(context, sampleRecordList.getImage_1(), null, null, ((NormalHolder)holder).mBtnImage1);
-        RxGalleryUtil.showImage(context, sampleRecordList.getImage_2(), null, null, ((NormalHolder)holder).mBtnImage2);
-        ((NormalHolder) holder).mEditText.setText(sampleRecordList.getSample_num() == null ? "" : sampleRecordList.getSample_num());
+        RxGalleryUtil.showImage(context, sampleRecordList.getImage_1(), null, null, ((NormalHolder) holder).mBtnImage1);
+        RxGalleryUtil.showImage(context, sampleRecordList.getImage_2(), null, null, ((NormalHolder) holder).mBtnImage2);
+        ((NormalHolder) holder).mTvsamplenum.setText(sampleRecordList.getSample_num() == null ? "" : sampleRecordList.getSample_num());
+
 
         /* 点击后单选图片 */
         ((NormalHolder) holder).mBtnImage1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onItemClick(((NormalHolder) holder).mBtnImage1, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_1);
+                // 判断取样编号是否填写
+                String str = ((NormalHolder) holder).mTvsamplenum.getText().toString().trim();
+                if (TextUtils.isEmpty(str) || str.equals("请填写")) {
+                    Toast.makeText(context, "请先填写取样编号", Toast.LENGTH_SHORT).show();
+                } else {
+                    listener.onItemClick(((NormalHolder) holder).mBtnImage1, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_1);
+                }
 
             }
         });
 
         /* 点击后单选图片 */
         ((NormalHolder) holder).mBtnImage2.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                listener.onItemClick(((NormalHolder) holder).mBtnImage2, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_2);
-
+                // 判断取样编号是否填写
+                String str = ((NormalHolder) holder).mTvsamplenum.getText().toString().trim();
+                if (TextUtils.isEmpty(str) || str.equals("请填写")) {
+                    Toast.makeText(context, "请先填写取样编号", Toast.LENGTH_SHORT).show();
+                } else {
+                    listener.onItemClick(((NormalHolder) holder).mBtnImage2, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_2);
+                }
             }
         });
 
         /* 点击编辑验砂取样码 */
-        ((NormalHolder) holder).mEditText.addTextChangedListener(new TextWatcher() {
+        ((NormalHolder) holder).mTvsamplenum.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                    sampleRecordList.setSample_num(editable.toString());
+            public void onClick(View view) {
+                listener.onItemClick(((NormalHolder) holder).mTvsamplenum, holder.getLayoutPosition(), SettingUtil.HOLDER_NUM);
             }
         });
 
@@ -101,13 +104,13 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     class NormalHolder extends RecyclerView.ViewHolder {
 
-        private final EditText mEditText;
+        private final TextView mTvsamplenum;
         private final ImageButton mBtnImage1;
         private final ImageButton mBtnImage2;
 
         public NormalHolder(View itemView) {
             super(itemView);
-            mEditText = (EditText) itemView.findViewById(R.id.et_sample_num);
+            mTvsamplenum = (TextView) itemView.findViewById(R.id.tv_sample_num);
             mBtnImage1 = (ImageButton) itemView.findViewById(R.id.btn_image_1);
             mBtnImage2 = (ImageButton) itemView.findViewById(R.id.btn_image_2);
         }

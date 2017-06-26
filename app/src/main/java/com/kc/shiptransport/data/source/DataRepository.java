@@ -2,6 +2,7 @@ package com.kc.shiptransport.data.source;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -13,6 +14,9 @@ import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.PerfectBoatRecordBean;
 import com.kc.shiptransport.data.bean.RecordListBean;
+import com.kc.shiptransport.data.bean.SampleCommitList;
+import com.kc.shiptransport.data.bean.SampleCommitResult;
+import com.kc.shiptransport.data.bean.SampleRecordListBean;
 import com.kc.shiptransport.data.bean.SandSampleBean;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
@@ -35,8 +39,10 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.FileUtil;
 import com.kc.shiptransport.util.MyJSONObject;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,16 +56,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import top.zibin.luban.Luban;
 
+import static org.litepal.LitePalApplication.getContext;
 import static org.litepal.crud.DataSupport.deleteAll;
 import static org.litepal.crud.DataSupport.findAll;
 
@@ -1651,15 +1655,144 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Flowable<File> compressWithRx(final Context context, File file) {
-        return Flowable.just(file)
-                .observeOn(Schedulers.io())
-                .map(new Function<File, File>() {
-                    @Override public File apply(@NonNull File file) throws Exception {
-                        return Luban.with(context).load(file).get();
+    public Observable<File> compressWithRx(final Context context, final File file) {
+        return Observable.create(new ObservableOnSubscribe<File>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<File> e) throws Exception {
+                e.onNext(Luban.with(context).load(file).get());
+                e.onComplete();
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 获取要提交图片的数据
+     * @param sandSample
+     * @return
+     */
+    @Override
+    public Observable<List<SampleCommitList>> getCommitImageList(final SandSample sandSample) {
+        return Observable.create(new ObservableOnSubscribe<List<SampleCommitList>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<SampleCommitList>> e) throws Exception {
+                // 获取保存的数据
+                String string = SharePreferenceUtil.getString(getContext(), String.valueOf(sandSample.getItemID()), "");
+
+                List<SampleRecordListBean> list = new ArrayList<>();
+                List<SampleCommitList> commitLists = new ArrayList<>();
+                if (TextUtils.isEmpty(string)) {
+                    // 没有数据, 不提交
+                    e.onError(new RuntimeException("没有数据需要提交"));
+                } else {
+                    // 有缓存, 解析
+                    list = new Gson().fromJson(string, new TypeToken<List<SampleRecordListBean>>() {
+                    }.getType());
+                }
+
+                // 判断图片是否已上传, 如果没有上传, 添加到任务队列中
+                for (SampleRecordListBean bean : list) {
+                    if (bean.getIsUpdate() == 0) {
+                        // 添加到队列
+                        /** 图片1 */
+                        if (TextUtils.isEmpty(bean.getImage_1())) {
+                            //e.onError(new RuntimeException("图片未选择两张"));
+                        } else {
+
+                            SampleCommitList sampleCommitList = new SampleCommitList();
+                            // 压缩图片
+                            File file = Luban.with(getContext()).load(new File(bean.getImage_1())).get();
+                            // 转换成字节数组
+                            byte[] bytes = FileUtil.File2byte(file);
+                            sampleCommitList.setByteData(bytes);
+
+                            // 文件名
+                            sampleCommitList.setFileName(bean.getName_1());
+                            // 类型
+                            sampleCommitList.setSuffixName(bean.getType_1());
+                            // 条目ID
+                            sampleCommitList.setItemID(0);
+                            // 进场ID
+                            sampleCommitList.setSubcontractorInterimApproachPlanID(sandSample.getItemID());
+                            // 船舶账号
+                            sampleCommitList.setConstructionBoatAccount(sandSample.getShipAccount());
+                            // 取样编号
+                            sampleCommitList.setSamplingNum(bean.getSample_num());
+                            // 创建者账号
+                            sampleCommitList.setCreator(sandSample.getSubcontractorAccount());
+
+                            // 保存到上传的集合中
+                            commitLists.add(sampleCommitList);
+                        }
+
+                        /**图片2*/
+                        if (TextUtils.isEmpty(bean.getImage_2())) {
+                            //e.onError(new RuntimeException("图片未选择两张"));
+                        } else {
+                            SampleCommitList sample2 = new SampleCommitList();
+                            // 压缩图片
+                            File file2 = Luban.with(getContext()).load(new File(bean.getImage_2())).get();
+                            // 转换成字节数组
+                            byte[] bytes2 = FileUtil.File2byte(file2);
+                            sample2.setByteData(bytes2);
+
+                            // 文件名
+                            sample2.setFileName(bean.getName_2());
+                            // 类型
+                            sample2.setSuffixName(bean.getType_2());
+                            // 条目ID
+                            sample2.setItemID(0);
+                            // 进场ID
+                            sample2.setSubcontractorInterimApproachPlanID(sandSample.getItemID());
+                            // 船舶账号
+                            sample2.setConstructionBoatAccount(sandSample.getShipAccount());
+                            // 取样编号
+                            sample2.setSamplingNum(bean.getSample_num());
+                            // 创建者账号
+                            sample2.setCreator(sandSample.getSubcontractorAccount());
+
+                            // 保存到上传的集合中
+                            commitLists.add(sample2);
+                        }
+                    } else {
+                        // 图片已全部上传
+                        e.onError(new RuntimeException("图片已全部上传"));
                     }
-                })
-                .observeOn(AndroidSchedulers.mainThread());
+                }
+
+                e.onNext(commitLists);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 提交图片
+     * @param commitList
+     * @return
+     */
+    @Override
+    public Observable<Boolean> commitImage(final SampleCommitList commitList) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 发送网络请求, 提交图片
+                String result = mRemoteDataSource.InsertSandSampling(commitList.getByteData(),
+                        commitList.getFileName(),
+                        commitList.getSuffixName(),
+                        commitList.getItemID(),
+                        commitList.getSubcontractorInterimApproachPlanID(),
+                        commitList.getConstructionBoatAccount(),
+                        commitList.getSamplingNum(), commitList.getCreator());
+
+                // 解析返回的数据
+                SampleCommitResult commitResult = gson.fromJson(result, SampleCommitResult.class);
+
+
+
+                e.onNext(commitResult.getMessage() == 1);
+
+            }
+        });
     }
 
     /**

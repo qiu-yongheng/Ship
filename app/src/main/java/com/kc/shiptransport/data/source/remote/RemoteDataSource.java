@@ -886,7 +886,7 @@ public class RemoteDataSource {
      * @param Creator
      * @return
      */
-    public String InsertSandSampling(Byte[] ByteData,
+    public String InsertSandSampling(byte[] ByteData,
                                      String FileName,
                                      String SuffixName,
                                      int ItemID,

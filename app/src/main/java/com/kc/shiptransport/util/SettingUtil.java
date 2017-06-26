@@ -40,9 +40,9 @@ public class SettingUtil {
 
     /*---------------------------------------------------holder控件类型---------------------------------------------------*/
     /* sample */
-    public static final int HOLDER_IMAGE_1 = 111;
-    public static final int HOLDER_IMAGE_2 = 222;
-
+    public static final int HOLDER_IMAGE_1 = 101;
+    public static final int HOLDER_IMAGE_2 = 102;
+    public static final int HOLDER_NUM = 103;
 
     /*---------------------------------------------------holder控件类型---------------------------------------------------*/
 
@@ -106,5 +106,6 @@ public class SettingUtil {
 
     /* 删除 */
     public static final int ITEM_DELETE = 1122;
+
     /*-----------------------------------------------扫描件类型--------------------------------------------------*/
 }

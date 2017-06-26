@@ -2,6 +2,7 @@ package com.kc.shiptransport.data.source;
 
 import android.content.Context;
 
+import com.kc.shiptransport.data.bean.SampleCommitList;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.PerfectBoatRecord;
@@ -14,7 +15,6 @@ import com.kc.shiptransport.db.WeekTask;
 import java.io.File;
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 /**
@@ -312,5 +312,19 @@ public interface DataSouceImpl {
      * @param file
      * @return
      */
-    Flowable<File> compressWithRx(Context context, File file);
+    Observable<File> compressWithRx(Context context, File file);
+
+    /**
+     * 获取要提交图片的数据
+     * @param sandSample
+     * @return
+     */
+    Observable<List<SampleCommitList>> getCommitImageList(SandSample sandSample);
+
+    /**
+     * 提交图片
+     * @param commitList
+     * @return
+     */
+    Observable<Boolean> commitImage(SampleCommitList commitList);
 }

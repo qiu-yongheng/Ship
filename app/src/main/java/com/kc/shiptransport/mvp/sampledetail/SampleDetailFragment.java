@@ -1,6 +1,8 @@
 package com.kc.shiptransport.mvp.sampledetail;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,11 +25,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.SampleRecordListBean;
+import com.kc.shiptransport.db.SandSample;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
+import com.kc.shiptransport.view.actiivty.InputActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +71,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     private SampleDetailActivity activity;
     private SampleDetailAdapter mAdapter;
     private int itemID;
+    private SandSample sandSample;
 
     @Nullable
     @Override
@@ -75,7 +81,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         initViews(view);
         initListener();
         // TODO
-        showItemID(250);
+        presenter.start(activity.position);
         return view;
     }
 
@@ -85,6 +91,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
             @Override
             public void onClick(View view) {
                 // TODO
+                presenter.commit(sandSample);
             }
         });
 
@@ -157,8 +164,9 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     }
 
     @Override
-    public void showItemID(int itemID) {
-        this.itemID = itemID;
+    public void showItemID(SandSample sandSample) {
+        this.itemID = sandSample.getItemID();
+        this.sandSample = sandSample;
         if (mAdapter == null) {
             // 初始化recyclerview
             recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -194,6 +202,13 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                     // 保存图片地址
                                     SampleRecordListBean sampleRecordList = mAdapter.list.get(position);
                                     sampleRecordList.setImage_1(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+
+                                    // 保存图片名
+                                    sampleRecordList.setName_1(imageMultipleResultEvent.getResult().get(0).getTitle());
+                                    // 保存图片类型
+                                    String mimeType = imageMultipleResultEvent.getResult().get(0).getMimeType();
+                                    String[] split = mimeType.split("/");
+                                    sampleRecordList.setType_1(split[split.length - 1]);
                                     mAdapter.notifyDataSetChanged();
                                 }
                             });
@@ -205,9 +220,19 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                     // 保存图片地址
                                     SampleRecordListBean sampleRecordList = mAdapter.list.get(position);
                                     sampleRecordList.setImage_2(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+
+                                    // 保存图片名
+                                    sampleRecordList.setName_2(imageMultipleResultEvent.getResult().get(0).getTitle());
+                                    // 保存图片类型
+                                    String mimeType = imageMultipleResultEvent.getResult().get(0).getMimeType();
+                                    String[] split = mimeType.split("/");
+                                    sampleRecordList.setType_2(split[split.length - 1]);
                                     mAdapter.notifyDataSetChanged();
                                 }
                             });
+                            break;
+                        case SettingUtil.HOLDER_NUM:
+                            InputActivity.startActivityForResult(getActivity(), getResources().getString(R.string.title_sample), "", position);
                             break;
                     }
                 }
@@ -220,7 +245,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    if (mAdapter.list.size() < 3) {
+                                    if (mAdapter.list.size() <= 3) {
                                         Toast.makeText(getContext(), "取样记录不能少于3条", Toast.LENGTH_SHORT).show();
                                     } else {
                                         mAdapter.delete(position);
@@ -232,6 +257,38 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
             recyclerview.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 获取返回的数据
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String str = data.getStringExtra(InputActivity.TAG);
+        if (!TextUtils.isEmpty(str)) {
+            SampleRecordListBean bean = mAdapter.list.get(requestCode);
+            bean.setSample_num(str);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+        if (isShow) {
+            activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
+        } else {
+            activity.hideProgressDailog();
         }
     }
 

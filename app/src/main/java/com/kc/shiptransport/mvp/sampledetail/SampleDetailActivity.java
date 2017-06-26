@@ -63,4 +63,10 @@ public class SampleDetailActivity extends BaseActivity{
         intent.putExtras(bundle);
         activity.startActivity(intent, bundle);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fragment.onActivityResult(requestCode, resultCode, data);
+    }
 }

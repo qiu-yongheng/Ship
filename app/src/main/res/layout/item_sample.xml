@@ -25,14 +25,14 @@
             android:textColor="@color/text_tag_gray"
             android:textSize="@dimen/text_15sp"/>
 
-        <EditText
+        <TextView
             android:paddingLeft="@dimen/marginleft_14"
-            android:id="@+id/et_sample_num"
+            android:id="@+id/tv_sample_num"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:background="@null"
             android:hint="@string/hint_fill"
+            android:gravity="center_vertical"
             android:paddingRight="@dimen/marginleft_14"
             android:textColorHint="@color/colorPrimary"
             android:textSize="@dimen/text_15sp"/>
