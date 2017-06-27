@@ -21,5 +21,6 @@ public interface RecordedSandDetailContract {
     interface Presenter extends BasePresenter {
         void getSpinner();
         void getShip(int position);
+        void commit();
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,6 +39,7 @@ import butterknife.Unbinder;
 
 public class RecordedSandDetailFragment extends Fragment implements RecordedSandDetailContract.View {
 
+    private static final String HINT_TAG = "请填写";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.tv_supply_ship)
@@ -82,6 +85,9 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
     Spinner spReceiveShip;
     private RecordedSandDetailActivity activity;
     private RecordedSandDetailContract.Presenter presenter;
+    private int IsFinish = 0;
+    private int spinner_position;
+    private RecordList recordList;
 
     @Nullable
     @Override
@@ -121,6 +127,45 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
                 });
             }
         });
+
+        // 提交
+        btnCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 2017/6/27
+                if (spinner_position == 0 ||
+                        tvStartTime.getText().equals(HINT_TAG) ||
+                        tvEndTime.getText().equals(HINT_TAG) ||
+                        TextUtils.isEmpty(etBefore1.getText()) ||
+                        etBefore1.getText().toString().equals(HINT_TAG) ||
+                        ) {
+
+                }
+
+            }
+        });
+
+        // 返回
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        // 监听过砂完成
+        radiobtnFinishRecorde.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    // 过砂完成
+                    IsFinish = 1;
+                } else {
+                    // 过砂未完成
+                    IsFinish = 0;
+                }
+            }
+        });
     }
 
     @Override
@@ -155,6 +200,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
 
     /**
      * 显示spinner
+     *
      * @param list
      */
     @Override
@@ -170,11 +216,11 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
 
         // 点击后, 筛选分包商的数据
         spReceiveShip.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i != 0) {
-                    // TODO 保存数据
-                }
+                // TODO 保存数据
+                spinner_position = i;
             }
 
             @Override
@@ -187,6 +233,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
 
     @Override
     public void showShip(RecordList recordList) {
+        this.recordList = recordList;
         tvSupplyShip.setText(recordList.getShipName());
     }
 }

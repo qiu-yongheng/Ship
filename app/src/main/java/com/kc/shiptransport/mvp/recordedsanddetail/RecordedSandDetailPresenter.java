@@ -27,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public class RecordedSandDetailPresenter implements RecordedSandDetailContract.Presenter{
+public class RecordedSandDetailPresenter implements RecordedSandDetailContract.Presenter {
     private final Context context;
     private final RecordedSandDetailContract.View view;
     private final DataRepository dataRepository;
@@ -58,6 +58,8 @@ public class RecordedSandDetailPresenter implements RecordedSandDetailContract.P
             public void subscribe(@NonNull ObservableEmitter<List<String>> e) throws Exception {
                 List<ConstructionBoat> boats = DataSupport.findAll(ConstructionBoat.class);
                 List<String> datas = new ArrayList<>();
+
+                datas.add("请选择施工船");
 
                 for (ConstructionBoat boat : boats) {
                     datas.add(boat.getShipName());
@@ -118,5 +120,10 @@ public class RecordedSandDetailPresenter implements RecordedSandDetailContract.P
 
                     }
                 });
+    }
+
+    @Override
+    public void commit() {
+
     }
 }

@@ -14,6 +14,7 @@ import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.PerfectBoatRecordBean;
 import com.kc.shiptransport.data.bean.RecordListBean;
+import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleCommitList;
 import com.kc.shiptransport.data.bean.SampleCommitResult;
 import com.kc.shiptransport.data.bean.SampleRecordListBean;
@@ -1877,6 +1878,21 @@ public class DataRepository implements DataSouceImpl {
                 }
 
                 e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 提交过砂记录
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertOverSandRecord(RecordedSandUpdataBean bean) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+
             }
         });
     }

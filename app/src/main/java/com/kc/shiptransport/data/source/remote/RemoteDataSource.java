@@ -992,4 +992,52 @@ public class RemoteDataSource {
         String result = object.getProperty(0).toString();
         return result;
     }
+
+    /**
+     * 提交过砂记录
+     * @param json
+     * @return
+     */
+    public String InsertOverSandRecord(String json) {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "InsertOverSandRecord";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/InsertOverSandRecord";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
+
 }

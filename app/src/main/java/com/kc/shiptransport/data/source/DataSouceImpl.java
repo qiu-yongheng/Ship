@@ -2,6 +2,7 @@ package com.kc.shiptransport.data.source;
 
 import android.content.Context;
 
+import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleCommitList;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
@@ -342,4 +343,10 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<ScannerListBean>> getScannerType();
+
+    /**
+     * 提交过砂记录
+     * @return
+     */
+    Observable<Boolean> InsertOverSandRecord(RecordedSandUpdataBean bean);
 }
