@@ -1,8 +1,10 @@
 package com.kc.shiptransport.mvp.scannerdetail;
 
-import com.kc.shiptransport.db.ScannerImage;
+import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
+
+import java.util.List;
 
 /**
  * @author qiuyongheng
@@ -15,12 +17,13 @@ public interface ScannerDetailContract {
         void showTitle(String title);
         void showLoading(boolean isShow);
         void showError(String msg);
-        void showDatas(ScannerImage scannerImage);
+        void showDatas(List<ScannerListBean> scannerImage);
     }
 
     interface Presenter extends BasePresenter {
         void getTitle(int position);
-        void getDetailForItemID(int position);
+        // 获取扫描件类型
+        void getScannerType();
         void start(int position);
     }
 }

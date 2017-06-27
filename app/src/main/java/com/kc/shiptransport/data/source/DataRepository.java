@@ -18,6 +18,7 @@ import com.kc.shiptransport.data.bean.SampleCommitList;
 import com.kc.shiptransport.data.bean.SampleCommitResult;
 import com.kc.shiptransport.data.bean.SampleRecordListBean;
 import com.kc.shiptransport.data.bean.SandSampleBean;
+import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
@@ -211,45 +212,85 @@ public class DataRepository implements DataSouceImpl {
         });
     }
 
+    /**
+     * 根据类型获取每日计划量
+     * @param type
+     * @return
+     */
     @Override
     public Observable<Double[]> getDayCount(final int type) {
         return Observable.create(new ObservableOnSubscribe<Double[]>() {
             @Override
             public void subscribe(ObservableEmitter<Double[]> e) throws Exception {
+                // 初始化每日计划量
                 reset();
-                List<WeekTask> weekLists;
-                if (type == SettingUtil.TYPE_SUPPLY || type == SettingUtil.TYPE_AMOUNT) {
-                    weekLists = DataSupport.where("PreAcceptanceTime IS NOT NULL").find(WeekTask.class);
-                } else {
-                    // 从数据库获取一周任务分配数据
-                    weekLists = findAll(WeekTask.class);
-                }
 
-                for (WeekTask weekTask : weekLists) {
-                    switch (Integer.valueOf(weekTask.getPosition()) % 7) {
-                        case 0:
-                            day_0 += Double.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 1:
-                            day_1 += Double.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 2:
-                            day_2 += Double.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 3:
-                            day_3 += Double.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 4:
-                            day_4 += Double.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 5:
-                            day_5 += Double.valueOf(weekTask.getSandSupplyCount());
-                            break;
-                        case 6:
-                            day_6 += Double.valueOf(weekTask.getSandSupplyCount());
-                            break;
+                if (type == SettingUtil.TYPE_RECORDEDSAND) {
+                    // 过砂记录
+                    List<RecordList> recordLists = DataSupport.findAll(RecordList.class);
+
+                    for (RecordList recordList : recordLists) {
+                        switch (Integer.valueOf(recordList.getPosition()) % 7) {
+                            case 0:
+                                day_0 += Double.valueOf(recordList.getSandSupplyCount());
+                                break;
+                            case 1:
+                                day_1 += Double.valueOf(recordList.getSandSupplyCount());
+                                break;
+                            case 2:
+                                day_2 += Double.valueOf(recordList.getSandSupplyCount());
+                                break;
+                            case 3:
+                                day_3 += Double.valueOf(recordList.getSandSupplyCount());
+                                break;
+                            case 4:
+                                day_4 += Double.valueOf(recordList.getSandSupplyCount());
+                                break;
+                            case 5:
+                                day_5 += Double.valueOf(recordList.getSandSupplyCount());
+                                break;
+                            case 6:
+                                day_6 += Double.valueOf(recordList.getSandSupplyCount());
+                                break;
+                        }
+                    }
+
+                } else {
+                    List<WeekTask> weekLists;
+                    if (type == SettingUtil.TYPE_SUPPLY || type == SettingUtil.TYPE_AMOUNT) { // 验砂 或 量方
+                        weekLists = DataSupport.where("PreAcceptanceTime IS NOT NULL").find(WeekTask.class);
+                    } else {
+                        // 从数据库获取一周任务分配数据
+                        weekLists = findAll(WeekTask.class);
+                    }
+
+                    for (WeekTask weekTask : weekLists) {
+                        switch (Integer.valueOf(weekTask.getPosition()) % 7) {
+                            case 0:
+                                day_0 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 1:
+                                day_1 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 2:
+                                day_2 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 3:
+                                day_3 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 4:
+                                day_4 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 5:
+                                day_5 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                            case 6:
+                                day_6 += Double.valueOf(weekTask.getSandSupplyCount());
+                                break;
+                        }
                     }
                 }
+
                 Double[] integers = new Double[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
 
                 e.onNext(integers);
@@ -1374,21 +1415,19 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> getOverSandRecordList(final int jumpWeek) {
+    public Observable<Boolean> getOverSandRecordList(final int jumpWeek, final String account) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
-                /* 获取分包商账号 */
-                String subcontractorAccount = findAll(Subcontractor.class).get(0).getSubcontractorAccount();
                 /* 开始时间 */
                 String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
                 /* 结束时间 */
                 String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
 
-                Log.d("==", "请求日期: " + startDay + "-" + endDay);
+                Log.d("==", "请求日期: " + startDay + "-" + endDay + ", 账号: " + account);
 
                 /* 1. 获取请求数据 */
-                String recordList = mRemoteDataSource.GetOverSandRecordList(subcontractorAccount, startDay, endDay);
+                String recordList = mRemoteDataSource.GetOverSandRecordList(account, startDay, endDay);
 
                 /* 2. 解析数据成对象 */
                 List<RecordListBean> lists = gson.fromJson(recordList, new TypeToken<List<RecordListBean>>() {
@@ -1791,6 +1830,40 @@ public class DataRepository implements DataSouceImpl {
 
                 e.onNext(commitResult.getMessage() == 1);
 
+            }
+        });
+    }
+
+    /**
+     * 根据position获取过砂记录
+     * @param position
+     * @return
+     */
+    @Override
+    public Observable<RecordList> getRecordListForPosition(int position) {
+        return null;
+    }
+
+    /**
+     * 获取分包商航次完善扫描件类型数据
+     * @return
+     */
+    @Override
+    public Observable<List<ScannerListBean>> getScannerType() {
+        return Observable.create(new ObservableOnSubscribe<List<ScannerListBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<ScannerListBean>> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.GetSubcontractorPerfectBoatScannerAttachmentTypeList();
+                // 解析数据
+                if (TextUtils.isEmpty(result)) {
+                    e.onError(new RuntimeException("服务器异常"));
+                } else {
+                    List<ScannerListBean> list = gson.fromJson(result, new TypeToken<List<ScannerListBean>>() {}.getType());
+                    e.onNext(list);
+                }
+
+                e.onComplete();
             }
         });
     }

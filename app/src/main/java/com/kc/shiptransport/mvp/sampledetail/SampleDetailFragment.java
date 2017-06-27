@@ -280,16 +280,36 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
 
     @Override
     public void showLoading(boolean isShow) {
-        if (isShow) {
-            activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
-                @Override
-                public void onCancle(ProgressDialog dialog) {
-                    presenter.unsubscribe();
+                if (isShow) {
+                    activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
+                        @Override
+                        public void onCancle(ProgressDialog dialog) {
+                            presenter.unsubscribe();
+                        }
+                    });
+                } else {
+                    activity.hideProgressDailog();
                 }
-            });
-        } else {
-            activity.hideProgressDailog();
-        }
+    }
+
+    /**
+     * 进度条
+     * @param max
+     */
+    @Override
+    public void showProgress(int max) {
+        activity.progressDialog("gaga", max, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 取消任务
+                presenter.unsubscribe();
+            }
+        });
+    }
+
+    @Override
+    public void updateProgress() {
+        activity.updataProgress();
     }
 
     /**

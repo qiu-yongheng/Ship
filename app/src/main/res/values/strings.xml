@@ -94,6 +94,8 @@
     <string name="text_end_time">结束时间:</string>
     <string name="text_record_before">过砂前吃水</string>
     <string name="text_record_after">过砂后吃水</string>
+    <string name="et_hint">请填写</string>
+    <string name="setting_recorde_finish">过砂完成</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

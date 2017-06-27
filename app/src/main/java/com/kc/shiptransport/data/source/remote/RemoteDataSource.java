@@ -1,5 +1,8 @@
 package com.kc.shiptransport.data.source.remote;
 
+import android.util.Base64;
+import android.util.Log;
+
 import com.kc.shiptransport.util.BaseUrl;
 import com.kc.shiptransport.util.FakeX509TrustManager;
 
@@ -897,17 +900,19 @@ public class RemoteDataSource {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
-        String methodName = "GetPerfectBoatRecordByItemID";
+        String methodName = "InsertSandSampling";
         // EndPoint
         String endPoint = EndPoint;
         // SOAP Action
-        String soapAction = "http://tempuri.org/GetPerfectBoatRecordByItemID";
+        String soapAction = "http://tempuri.org/InsertSandSampling";
 
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
         // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
-        rpc.addProperty("ByteData", ByteData);
+        String s = new String(Base64.encode(ByteData, Base64.DEFAULT));
+        Log.d("==", "长度: " + s.length());
+        rpc.addProperty("ByteData", s);
         rpc.addProperty("FileName", FileName);
         rpc.addProperty("SuffixName", SuffixName);
         rpc.addProperty("ItemID", ItemID);
@@ -915,6 +920,51 @@ public class RemoteDataSource {
         rpc.addProperty("ConstructionBoatAccount", ConstructionBoatAccount);
         rpc.addProperty("SamplingNum", SamplingNum);
         rpc.addProperty("Creator", Creator);
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
+
+    /**
+     * 获取分包商航次完善扫描件类型数据
+     * @return
+     */
+    public String GetSubcontractorPerfectBoatScannerAttachmentTypeList() {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetSubcontractorPerfectBoatScannerAttachmentTypeList";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetSubcontractorPerfectBoatScannerAttachmentTypeList";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
 
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);

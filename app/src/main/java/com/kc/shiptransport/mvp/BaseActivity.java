@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 
 /**
@@ -19,6 +20,8 @@ public class BaseActivity extends AppCompatActivity {
     protected ProgressDialog progressDialog;
     private AlertDialog alertDialog;
     protected Toast mToast;
+    private ProgressDialog mProgress;
+    private int progress;
 
 
     @Override
@@ -45,8 +48,13 @@ public class BaseActivity extends AppCompatActivity {
         }
         progressDialog.setTitle(title);
         progressDialog.setMessage(msg);
+        // 设置dialog外面不可点击
         progressDialog.setCanceledOnTouchOutside(false);
+        // 设置返回键不可取消显示
         //progressDialog.setCancelable(false);
+        // 设置进度条样式 (水平)
+        //progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
         progressDialog.show();
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -56,6 +64,51 @@ public class BaseActivity extends AppCompatActivity {
                 listener.onCancle(progressDialog);
             }
         });
+    }
+
+    /**
+     * 进度条
+     */
+    public void progressDialog(String title, int max, DialogInterface.OnClickListener listenter){
+        progress = 0;
+        mProgress = new ProgressDialog(BaseActivity.this);
+        // 设置图标
+        mProgress.setIcon(R.mipmap.ic_launcher);
+        mProgress.setTitle(title);
+        mProgress.setMax(max);
+        // 设置进度条样式 (水平)
+        mProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgress.setButton(AlertDialog.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mProgress.dismiss();
+            }
+        });
+        mProgress.setButton(AlertDialog.BUTTON_NEUTRAL, "取消", listenter);
+
+        mProgress.show();
+//        new Thread(new Runnable() {
+//            int progress = 0;
+//            @Override
+//            public void run() {
+//                // TODO Auto-generated method stub
+//                while (progress <= max) {
+//                    mProgress.setProgress(progress);
+//                    try {
+//                        Thread.sleep(100);
+//                    } catch (InterruptedException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//                    progress++;
+//                }
+//            }
+//        }).start();
+    }
+
+    public void updataProgress() {
+        progress ++;
+        mProgress.setProgress(progress);
     }
 
     /**

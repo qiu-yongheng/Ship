@@ -3,6 +3,7 @@ package com.kc.shiptransport.mvp.recordedsand;
 
 import android.app.ProgressDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.kc.shiptransport.R;
@@ -41,7 +42,9 @@ public class RecordedSandFragment extends BaseMvpFragment{
     @Override
     protected void initData() {
         presenter.subscribe();
-        presenter.start(jumpWeek, TYPE, subcontractorAccount);
+        // 显示所有分包商
+        presenter.getTime(jumpWeek);
+        presenter.getSubcontractorList();
     }
 
     /**
@@ -58,6 +61,16 @@ public class RecordedSandFragment extends BaseMvpFragment{
         activity = (RecordedSandActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -87,6 +100,6 @@ public class RecordedSandFragment extends BaseMvpFragment{
      */
     @Override
     protected void abs_onItemClick(View view, int position) {
-        RecordedSandDetailActivity.startActivity(getActivity());
+        RecordedSandDetailActivity.startActivity(getActivity(), position);
     }
 }

@@ -13,4 +13,5 @@
     <color name="text_tag_gray">#515151</color>
     <color name="Dividing_line">#EDEEEB</color>
     <color name="btn_bg_blue">#3db0e9</color>
+    <color name="et_bg">#f3f3f3</color>
 </resources>

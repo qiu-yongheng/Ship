@@ -180,7 +180,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
     @Override
     public void getDayCount() {
         dataRepository
-                .getDayCount()
+                .getDayCount(type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Double[]>() {
@@ -234,7 +234,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
 
             case SettingUtil.TYPE_RECORDEDSAND: // 过砂记录
                 observable = dataRepository
-                        .getOverSandRecordList(jumpWeek)
+                        .getOverSandRecordList(jumpWeek, account)
                         .subscribeOn(Schedulers.io());
                 break;
 
@@ -318,7 +318,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
                 .subscribe(new Observer<List<SubcontractorList>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        compositeDisposable.add(d);
                     }
 
                     @Override

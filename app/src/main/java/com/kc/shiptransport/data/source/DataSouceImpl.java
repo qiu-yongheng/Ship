@@ -3,9 +3,11 @@ package com.kc.shiptransport.data.source;
 import android.content.Context;
 
 import com.kc.shiptransport.data.bean.SampleCommitList;
+import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.PerfectBoatRecord;
+import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.Ship;
@@ -285,7 +287,7 @@ public interface DataSouceImpl {
      * @param jumpWeek
      * @return
      */
-    Observable<Boolean> getOverSandRecordList(int jumpWeek);
+    Observable<Boolean> getOverSandRecordList(int jumpWeek, String account);
 
     /**
      * 1.13获取验砂取样信息
@@ -327,4 +329,17 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> commitImage(SampleCommitList commitList);
+
+    /**
+     * 根据position获取过砂记录
+     * @param position
+     * @return
+     */
+    Observable<RecordList> getRecordListForPosition(int position);
+
+    /**
+     * 获取分包商航次完善扫描件类型数据
+     * @return
+     */
+    Observable<List<ScannerListBean>> getScannerType();
 }

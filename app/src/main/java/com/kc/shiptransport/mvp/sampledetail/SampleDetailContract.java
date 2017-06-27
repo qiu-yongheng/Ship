@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.sampledetail;
 
+import com.kc.shiptransport.data.bean.SampleCommitList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -18,6 +19,8 @@ public interface SampleDetailContract {
         void showError(String msg);
         void showItemID(SandSample sandSample);
         void showLoading(boolean isShow);
+        void showProgress(int max);
+        void updateProgress();
     }
 
     interface Presenter extends BasePresenter {
@@ -25,5 +28,6 @@ public interface SampleDetailContract {
         void start(int position);
         //void upImage(Byte[] ByteData, String FileName, );
         void commit(SandSample sandSample);
+        void upImage(SampleCommitList sampleCommitList);
     }
 }

@@ -2,17 +2,17 @@ package com.kc.shiptransport.mvp.scannerdetail;
 
 import android.content.Context;
 
+import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.source.DataRepository;
-import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.WeekTask;
 
-import io.reactivex.Observable;
+import java.util.List;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -75,31 +75,23 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter{
     }
 
     /**
-     * 根据itemID获取数据
-     * @param position
+     * 获取扫描件类型
      */
     @Override
-    public void getDetailForItemID(int position) {
+    public void getScannerType() {
         view.showLoading(true);
         dataRepository
-                .getWeekTaskForPosition(position)
+                .getScannerType()
                 .subscribeOn(Schedulers.io())
-                .flatMap(new Function<WeekTask, Observable<ScannerImage>>() {
-                    @Override
-                    public Observable<ScannerImage> apply(@NonNull WeekTask weekTask) throws Exception {
-                        // 判断提交情况, 做不同处理
-                        return dataRepository.getScannerImageByItemID(weekTask);
-                    }
-                })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ScannerImage>() {
+                .subscribe(new Observer<List<ScannerListBean>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(@NonNull ScannerImage scannerImage) {
+                    public void onNext(@NonNull List<ScannerListBean> scannerImage) {
                         view.showDatas(scannerImage);
                     }
 
@@ -120,7 +112,7 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter{
     public void start(int position) {
         // 获取船名
         getTitle(position);
-        // 根据itemID获取数据
-        getDetailForItemID(position);
+        // 获取扫描件类型
+        getScannerType();
     }
 }

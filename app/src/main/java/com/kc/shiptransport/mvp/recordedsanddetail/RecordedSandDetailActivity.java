@@ -18,12 +18,17 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class RecordedSandDetailActivity extends BaseActivity{
 
+    private static final String POSITION = "RecordedSandDetailActivity_position";
     private RecordedSandDetailFragment fragment;
+    public int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
+
+        Bundle bundle = getIntent().getExtras();
+        position = bundle.getInt(POSITION);
 
         if (savedInstanceState != null) {
             fragment = (RecordedSandDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "RecordedSandDetailFragment");
@@ -50,9 +55,10 @@ public class RecordedSandDetailActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, int position) {
         Intent intent = new Intent(context, RecordedSandDetailActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putInt(POSITION, position);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

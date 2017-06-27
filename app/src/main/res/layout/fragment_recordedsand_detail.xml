@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/text_gray_bg">
+                android:background="@color/text_gray_bg"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
     <include layout="@layout/view_toolbar"/>
 
@@ -62,11 +64,13 @@
                     android:textColor="@color/text_tag_gray"
                     android:textSize="@dimen/text_normal_size"/>
 
-                <TextView
-                    android:id="@+id/tv_receive_ship"
+                <Spinner
+                    android:id="@+id/sp_receive_ship"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
                     android:textColor="@color/text_gray"
                     android:textSize="@dimen/text_normal_size"/>
             </RelativeLayout>
@@ -130,16 +134,17 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:background="@color/text_white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margintop_8dp"
+                android:background="@color/text_white"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
@@ -152,12 +157,53 @@
                         android:textColor="@color/text_tag_gray"
                         android:textSize="@dimen/text_15sp"/>
 
+                    <EditText
+                        android:id="@+id/et_before_1"
+                        android:layout_width="123dp"
+                        android:layout_height="33dp"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:hint="@string/et_hint"
+                        android:textColorHint="@color/text_gray"/>
+
+                    <EditText
+                        android:id="@+id/et_before_2"
+                        android:layout_width="123dp"
+                        android:layout_height="33dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:hint="@string/et_hint"
+                        android:textColorHint="@color/text_gray"/>
+
+                    <EditText
+                        android:id="@+id/et_before_3"
+                        android:layout_width="123dp"
+                        android:layout_height="33dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:hint="@string/et_hint"
+                        android:textColorHint="@color/text_gray"/>
+
+                    <EditText
+                        android:id="@+id/et_before_4"
+                        android:layout_width="123dp"
+                        android:layout_height="33dp"
+                        android:layout_marginBottom="@dimen/paddingtop_18dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:hint="@string/et_hint"
+                        android:textColorHint="@color/text_gray"/>
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
@@ -170,9 +216,63 @@
                         android:textColor="@color/text_tag_gray"
                         android:textSize="@dimen/text_15sp"/>
 
+                    <EditText
+                        android:id="@+id/et_after_1"
+                        android:layout_width="123dp"
+                        android:layout_height="33dp"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:hint="@string/et_hint"
+                        android:textColorHint="@color/text_gray"/>
+
+                    <EditText
+                        android:id="@+id/et_after_2"
+                        android:layout_width="123dp"
+                        android:layout_height="33dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:hint="@string/et_hint"
+                        android:textColorHint="@color/text_gray"/>
+
+                    <EditText
+                        android:id="@+id/et_after_3"
+                        android:layout_width="123dp"
+                        android:layout_height="33dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:hint="@string/et_hint"
+                        android:textColorHint="@color/text_gray"/>
+
+                    <EditText
+                        android:id="@+id/et_after_4"
+                        android:layout_width="123dp"
+                        android:layout_height="33dp"
+                        android:layout_marginBottom="@dimen/paddingtop_18dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:hint="@string/et_hint"
+                        android:textColorHint="@color/text_gray"/>
+
                 </LinearLayout>
 
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/radiobtn_finish_recorde"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/paddingbottom_16dp"
+                    android:text="@string/setting_recorde_finish"
+                    android:textSize="@dimen/text_15sp"/>
+            </RelativeLayout>
 
 
         </LinearLayout>
@@ -188,5 +288,16 @@
         android:text="@string/btn_commit"
         android:textColor="@color/text_white"
         android:textSize="@dimen/text_18sp"/>
+
+    <Button
+        android:id="@+id/btn_return"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/text_gray"
+        android:text="@string/btn_return"
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/text_18sp"
+        android:visibility="gone"/>
 
 </RelativeLayout>

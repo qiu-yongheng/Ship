@@ -5,34 +5,36 @@
               android:focusable="true"
               android:focusableInTouchMode="true"
               android:orientation="vertical">
+
     <View
-        android:background="@color/text_gray_bg"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_margin"/>
+        android:layout_height="@dimen/item_margin"
+        android:background="@color/text_gray_bg"/>
+
     <RelativeLayout
-        android:background="@color/text_white"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height"
+        android:background="@color/text_white"
         android:gravity="center">
 
         <TextView
-            android:text="@string/item_sample_tag"
             android:id="@+id/text_ship_name"
-            android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:paddingLeft="@dimen/marginleft_14"
+            android:text="@string/item_sample_tag"
             android:textColor="@color/text_tag_gray"
             android:textSize="@dimen/text_15sp"/>
 
         <TextView
-            android:paddingLeft="@dimen/marginleft_14"
             android:id="@+id/tv_sample_num"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:hint="@string/hint_fill"
             android:gravity="center_vertical"
+            android:hint="@string/hint_fill"
+            android:paddingLeft="@dimen/marginleft_14"
             android:paddingRight="@dimen/marginleft_14"
             android:textColorHint="@color/colorPrimary"
             android:textSize="@dimen/text_15sp"/>
@@ -44,9 +46,9 @@
         android:background="@color/Dividing_line"/>
 
     <LinearLayout
-        android:background="@color/text_white"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_sample_image_height"
+        android:background="@color/text_white"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
