@@ -1840,8 +1840,21 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<RecordList> getRecordListForPosition(int position) {
-        return null;
+    public Observable<RecordList> getRecordListForPosition(final int position) {
+        return Observable.create(new ObservableOnSubscribe<RecordList>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<RecordList> e) throws Exception {
+                List<RecordList> recordLists = DataSupport.where("position = ?", String.valueOf(position)).find(RecordList.class);
+                if (recordLists.isEmpty()) {
+                    e.onError(new RuntimeException("获取数据失败！"));
+                } else {
+                    e.onNext(recordLists.get(0));
+                }
+
+                e.onComplete();
+
+            }
+        });
     }
 
     /**

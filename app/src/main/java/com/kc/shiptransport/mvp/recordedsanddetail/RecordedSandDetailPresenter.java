@@ -37,6 +37,7 @@ public class RecordedSandDetailPresenter implements RecordedSandDetailContract.P
         this.context = context;
         this.view = view;
         this.dataRepository = dataRepository;
+        view.setPresenter(this);
         compositeDisposable = new CompositeDisposable();
     }
 
@@ -99,12 +100,12 @@ public class RecordedSandDetailPresenter implements RecordedSandDetailContract.P
                 .subscribe(new Observer<RecordList>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-
+                        compositeDisposable.add(d);
                     }
 
                     @Override
                     public void onNext(@NonNull RecordList recordList) {
-
+                        view.showShip(recordList);
                     }
 
                     @Override

@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 
@@ -90,6 +91,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         initViews(view);
         initListener();
         presenter.subscribe();
+        presenter.getShip(activity.position);
         return view;
     }
 
@@ -182,8 +184,9 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         });
     }
 
-    @Override
-    public void showShip() {
 
+    @Override
+    public void showShip(RecordList recordList) {
+        tvSupplyShip.setText(recordList.getShipName());
     }
 }

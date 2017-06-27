@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.recordedsanddetail;
 
+import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public interface RecordedSandDetailContract {
     interface View extends BaseView<Presenter> {
         void showSpinner(List<String> list);
-        void showShip();
+        void showShip(RecordList recordList);
     }
 
     interface Presenter extends BasePresenter {
