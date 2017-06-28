@@ -5,6 +5,8 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.AttendanceType;
+import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.util.CalendarUtil;
 
 import java.util.List;
 
@@ -37,7 +39,8 @@ public class AttendancePresenter implements AttendanceContract.Presenter{
 
     @Override
     public void subscribe() {
-
+        getCreate();
+        getTime();
     }
 
     @Override
@@ -75,5 +78,40 @@ public class AttendancePresenter implements AttendanceContract.Presenter{
                         view.showLoadding(false);
                     }
                 });
+    }
+
+    @Override
+    public void getCreate() {
+        dataRepository
+                .getCurrentSubcontractor()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Subcontractor>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Subcontractor subcontractor) {
+                        view.showCreate(subcontractor);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+    @Override
+    public void getTime() {
+        view.showTime(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"));
     }
 }

@@ -49,9 +49,10 @@ public class AttendanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), checkedIndex);
                     checkedIndex = holder.getLayoutPosition();
-                    //listener.onItemClick(holder.itemView, holder.getLayoutPosition());
-                    notifyItemChanged(checkedIndex);
+                } else {
+
                 }
             }
         });

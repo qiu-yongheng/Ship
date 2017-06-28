@@ -2,7 +2,6 @@ package com.kc.shiptransport.mvp.attendance;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.AttendanceType;
+import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
@@ -46,6 +47,8 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
     Unbinder unbinder;
     @BindView(R.id.et_remark)
     EditText etRemark;
+    @BindView(R.id.btn_commit)
+    Button mBtnCommit;
     private AttendanceContract.Presenter presenter;
     private AttendanceActivity activity;
     private AttendanceAdapter adapter;
@@ -64,7 +67,12 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
     }
 
     private void initListener() {
+        mBtnCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
     }
 
     @Override
@@ -106,13 +114,8 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
-                    // 刷新
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyItemChanged();
-                        }
-                    }, 1000);
+                    //                    // 刷新
+                    adapter.notifyItemChanged(type[0]);
                 }
 
                 @Override
@@ -144,5 +147,15 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
     @Override
     public void showError(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showCreate(Subcontractor subcontractor) {
+        textName.setText(subcontractor.getSubcontractorName());
+    }
+
+    @Override
+    public void showTime(String time) {
+        textTime.setText(time);
     }
 }
