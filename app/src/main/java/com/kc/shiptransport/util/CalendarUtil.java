@@ -279,4 +279,31 @@ public class CalendarUtil {
 
         datePickerDialog.show();
     }
+
+    /**
+     * 弹出日期选择器
+     * @param context
+     * @param view
+     */
+    public static void showDatePickerDialog(final Context context, final TextView view) {
+        final Calendar now = Calendar.getInstance();
+
+        // 显示日期选择器
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                final Calendar c = Calendar.getInstance();
+                c.set(Calendar.YEAR, year);
+                c.set(Calendar.MONTH, month);
+                c.set(Calendar.DAY_OF_MONTH, day);
+
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String format = df.format(c.getTime());
+                view.setText(format);
+
+            }
+        }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
 }

@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.data.bean.AcceptanceBean;
 import com.kc.shiptransport.data.bean.AppListBean;
+import com.kc.shiptransport.data.bean.AttendanceRecordListBean;
 import com.kc.shiptransport.data.bean.AttendanceTypeBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.ConstructionBoatBean;
@@ -31,6 +32,7 @@ import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
+import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.CommitShip;
 import com.kc.shiptransport.db.ConstructionBoat;
@@ -1994,6 +1996,82 @@ public class DataRepository implements DataSouceImpl {
                     e.onNext(all);
                 }
 
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 提交考勤数据
+     *
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertAttendanceRecord(final String ItemID,
+                                                      final int AttendanceTypeID,
+                                                      final String Creator,
+                                                      final String Remark) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 将数据解析成json
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ItemID", ItemID);
+                jsonObject.put("AttendanceTypeID", AttendanceTypeID);
+                jsonObject.put("Creator", Creator);
+                jsonObject.put("Remark", Remark);
+                jsonArray.put(jsonObject);
+
+                Log.d("==", "提交考勤数据: " + jsonArray.toString());
+
+                String result = mRemoteDataSource.InsertAttendanceRecord(jsonArray.toString());
+
+                CommitResultBean commitResultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(commitResultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取考勤记录
+     *
+     * @param time
+     * @return
+     */
+    @Override
+    public Observable<List<AttendanceRecordList>> GetAttendanceRecords(final String time) {
+        return Observable.create(new ObservableOnSubscribe<List<AttendanceRecordList>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<AttendanceRecordList>> e) throws Exception {
+                List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                // 发送网络请求
+                String result = mRemoteDataSource.GetAttendanceRecords(0, all.get(0).getSubcontractorAccount(), time, time);
+
+                // 解析数据
+                List<AttendanceRecordListBean> list = gson.fromJson(result, new TypeToken<List<AttendanceRecordListBean>>() {
+                }.getType());
+
+                // 初始化数据库
+                DataSupport.deleteAll(AttendanceRecordList.class);
+
+                // 保存数据
+                for (AttendanceRecordListBean bean : list) {
+                    AttendanceRecordList attendanceRecordList = new AttendanceRecordList();
+                    attendanceRecordList.setItemID(bean.getItemID());
+                    attendanceRecordList.setAttendanceTypeID(bean.getAttendanceTypeID());
+                    attendanceRecordList.setAttendanceTypeName(bean.getAttendanceTypeName());
+                    attendanceRecordList.setCreator(bean.getCreator());
+                    attendanceRecordList.setSystemDate(bean.getSystemDate());
+                    attendanceRecordList.setRemark(bean.getRemark());
+                    attendanceRecordList.save();
+                }
+
+                List<AttendanceRecordList> all1 = DataSupport.findAll(AttendanceRecordList.class);
+
+                e.onNext(all1);
                 e.onComplete();
             }
         });

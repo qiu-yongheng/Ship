@@ -20,6 +20,7 @@ public interface AttendanceContract {
         void showError(String msg);
         void showCreate(Subcontractor subcontractor);
         void showTime(String time);
+        void showResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {

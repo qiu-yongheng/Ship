@@ -45,7 +45,7 @@ public class AttendancePresenter implements AttendanceContract.Presenter{
 
     @Override
     public void unsubscribe() {
-
+        compositeDisposable.clear();
     }
 
     @Override
@@ -113,5 +113,36 @@ public class AttendancePresenter implements AttendanceContract.Presenter{
     @Override
     public void getTime() {
         view.showTime(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"));
+    }
+
+    @Override
+    public void commit(int itemID, String creator, String remark) {
+        view.showLoadding(true);
+        dataRepository
+                .InsertAttendanceRecord("", itemID, creator, remark)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoadding(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoadding(false);
+                    }
+                });
     }
 }

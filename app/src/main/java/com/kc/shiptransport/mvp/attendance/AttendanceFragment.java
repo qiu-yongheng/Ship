@@ -21,6 +21,7 @@ import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.mvp.attendancerecord.AttendanceRecordActivity;
 
 import java.util.List;
 
@@ -49,9 +50,14 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
     EditText etRemark;
     @BindView(R.id.btn_commit)
     Button mBtnCommit;
+    @BindView(R.id.btn_quiry)
+    Button mBtnQuiry;
     private AttendanceContract.Presenter presenter;
     private AttendanceActivity activity;
     private AttendanceAdapter adapter;
+    private int mTypeID = -1;
+    private Subcontractor subcontractor;
+    private String time;
 
     @Nullable
     @Override
@@ -61,16 +67,32 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
         initViews(view);
         initListener();
 
+        presenter.subscribe();
         // 获取考勤类型
         presenter.getAttendanceTypeList();
         return view;
     }
 
     private void initListener() {
+        // 提交
         mBtnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (mTypeID != -1) {
+                    String trim = etRemark.getText().toString().trim();
+                    trim = trim.equals("添加备注") ? "" : trim;
+                    presenter.commit(mTypeID, subcontractor.getSubcontractorAccount(), trim);
+                } else {
+                    Toast.makeText(getContext(), "没有选择考勤类型", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
+        // 查看记录
+        mBtnQuiry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AttendanceRecordActivity.startActivity(getContext());
             }
         });
     }
@@ -108,14 +130,16 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
     }
 
     @Override
-    public void showAttendanceType(List<AttendanceType> list) {
+    public void showAttendanceType(final List<AttendanceType> list) {
         if (adapter == null) {
             adapter = new AttendanceAdapter(getContext(), list);
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
-                    //                    // 刷新
+                    // 刷新
                     adapter.notifyItemChanged(type[0]);
+                    // 保存选中类型
+                    mTypeID = list.get(position).getItemID();
                 }
 
                 @Override
@@ -151,11 +175,22 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
 
     @Override
     public void showCreate(Subcontractor subcontractor) {
+        this.subcontractor = subcontractor;
         textName.setText(subcontractor.getSubcontractorName());
     }
 
     @Override
     public void showTime(String time) {
+        this.time = time;
         textTime.setText(time);
+    }
+
+    @Override
+    public void showResult(boolean isSuccess) {
+        if (isSuccess) {
+            Toast.makeText(getContext(), "提交成功", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.kc.shiptransport.data.bean.SampleCommitList;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.RecordList;
@@ -364,4 +365,16 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<AttendanceType>> GetAttendanceTypeList();
+
+    /**
+     * 提交考勤数据
+     * @return
+     */
+    Observable<Boolean> InsertAttendanceRecord(String ItemID, int AttendanceTypeID, String Creator, String Remark);
+
+    /**
+     * 获取考勤记录
+     * @return
+     */
+    Observable<List<AttendanceRecordList>> GetAttendanceRecords(String time);
 }
