@@ -164,13 +164,13 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
                             Toast.makeText(getContext(), "上一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求上一周数据
                             jumpWeek--;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_BASE, jumpWeek);
                             presenter.start(jumpWeek, TYPE, subcontractorAccount);
                         } else if (upX - dowmX < -100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX) && dowmX != 0 && dowmY != 0) {
                             Toast.makeText(getContext(), "下一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求下一周数据
                             jumpWeek++;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_BASE, jumpWeek);
                             presenter.start(jumpWeek, TYPE, subcontractorAccount);
                         }
                         dowmX = 0;

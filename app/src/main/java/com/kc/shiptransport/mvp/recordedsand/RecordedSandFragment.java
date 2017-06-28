@@ -7,10 +7,16 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.basemvp.BaseMvpFragment;
 import com.kc.shiptransport.mvp.recordedsanddetail.RecordedSandDetailActivity;
+import com.kc.shiptransport.mvp.recordedsandshow.RecordedSandShowActivity;
 import com.kc.shiptransport.util.SettingUtil;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 /**
  * @author qiuyongheng
@@ -18,7 +24,7 @@ import com.kc.shiptransport.util.SettingUtil;
  * @desc ${TODD}
  */
 
-public class RecordedSandFragment extends BaseMvpFragment{
+public class RecordedSandFragment extends BaseMvpFragment {
 
     private RecordedSandActivity activity;
 
@@ -37,7 +43,7 @@ public class RecordedSandFragment extends BaseMvpFragment{
     }
 
     /**
-     *　初始化数据
+     * 　初始化数据
      */
     @Override
     protected void initData() {
@@ -49,6 +55,7 @@ public class RecordedSandFragment extends BaseMvpFragment{
 
     /**
      * TODO
+     *
      * @return
      */
     @Override
@@ -95,11 +102,19 @@ public class RecordedSandFragment extends BaseMvpFragment{
 
     /**
      * 点击跳转到过砂记录界面
+     *
      * @param view
      * @param position
      */
     @Override
     protected void abs_onItemClick(View view, int position) {
-        RecordedSandDetailActivity.startActivity(getActivity(), position);
+        List<RecordList> all = DataSupport.where("position = ?", String.valueOf(position)).find(RecordList.class);
+        if (all.get(0).getIsFinish() == 1) {
+            // 跳转到查看界面
+            RecordedSandShowActivity.startActivity(getActivity(), position, all.get(0).getItemID());
+        } else {
+            // 跳转到填写界面
+            RecordedSandDetailActivity.startActivity(getActivity(), position);
+        }
     }
 }

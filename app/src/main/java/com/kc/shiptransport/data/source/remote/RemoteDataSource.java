@@ -1,8 +1,5 @@
 package com.kc.shiptransport.data.source.remote;
 
-import android.util.Base64;
-import android.util.Log;
-
 import com.kc.shiptransport.util.BaseUrl;
 import com.kc.shiptransport.util.FakeX509TrustManager;
 
@@ -878,48 +875,28 @@ public class RemoteDataSource {
     }
 
     /**
-     * 1.21提交验砂取样数据
-     * @param ByteData
-     * @param FileName
+     * 1.21 上传图片接口
+     * @param ByteDataStr
      * @param SuffixName
-     * @param ItemID
-     * @param SubcontractorInterimApproachPlanID
-     * @param ConstructionBoatAccount
-     * @param SamplingNum
-     * @param Creator
+     * @param FileName
      * @return
      */
-    public String InsertSandSampling(byte[] ByteData,
-                                     String FileName,
-                                     String SuffixName,
-                                     int ItemID,
-                                     int SubcontractorInterimApproachPlanID,
-                                     String ConstructionBoatAccount,
-                                     String SamplingNum,
-                                     String Creator) {
+    public String UploadFile(String ByteDataStr, String SuffixName, String FileName) {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
-        String methodName = "InsertSandSampling";
+        String methodName = "UploadFile";
         // EndPoint
         String endPoint = EndPoint;
         // SOAP Action
-        String soapAction = "http://tempuri.org/InsertSandSampling";
+        String soapAction = "http://tempuri.org/UploadFile";
 
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
-        // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
-        String s = new String(Base64.encode(ByteData, Base64.DEFAULT));
-        Log.d("==", "长度: " + s.length());
-        rpc.addProperty("ByteData", s);
-        rpc.addProperty("FileName", FileName);
+        rpc.addProperty("ByteDataStr", ByteDataStr);
         rpc.addProperty("SuffixName", SuffixName);
-        rpc.addProperty("ItemID", ItemID);
-        rpc.addProperty("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
-        rpc.addProperty("ConstructionBoatAccount", ConstructionBoatAccount);
-        rpc.addProperty("SamplingNum", SamplingNum);
-        rpc.addProperty("Creator", Creator);
+        rpc.addProperty("FileName", FileName);
 
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
@@ -1012,6 +989,98 @@ public class RemoteDataSource {
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
         rpc.addProperty("json", json);
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
+
+    /**
+     * 1.19根据进场计划ID获取过砂记录明细（多条）
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    public String GetOverSandRecordBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID) {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetOverSandRecordBySubcontractorInterimApproachPlanID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetOverSandRecordBySubcontractorInterimApproachPlanID";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
+
+    /**
+     * 获取考勤类型
+     * @return
+     */
+    public String GetAttendanceTypeList() {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetAttendanceTypeList";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetAttendanceTypeList";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
 
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);

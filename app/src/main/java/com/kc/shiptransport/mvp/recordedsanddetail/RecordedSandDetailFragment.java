@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.recordedsanddetail;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,11 +20,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
+import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.RecordList;
+import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -83,6 +91,8 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
     Unbinder unbinder;
     @BindView(R.id.sp_receive_ship)
     Spinner spReceiveShip;
+    @BindView(R.id.et_actual_amount_sand)
+    EditText etActualAmountSand;
     private RecordedSandDetailActivity activity;
     private RecordedSandDetailContract.Presenter presenter;
     private int IsFinish = 0;
@@ -138,8 +148,61 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
                         tvEndTime.getText().equals(HINT_TAG) ||
                         TextUtils.isEmpty(etBefore1.getText()) ||
                         etBefore1.getText().toString().equals(HINT_TAG) ||
-                        ) {
+                        TextUtils.isEmpty(etBefore2.getText()) ||
+                        etBefore2.getText().toString().equals(HINT_TAG) ||
+                        TextUtils.isEmpty(etBefore3.getText()) ||
+                        etBefore3.getText().toString().equals(HINT_TAG) ||
+                        TextUtils.isEmpty(etBefore4.getText()) ||
+                        etBefore4.getText().toString().equals(HINT_TAG) ||
+                        TextUtils.isEmpty(etAfter1.getText()) ||
+                        etAfter1.getText().toString().equals(HINT_TAG) ||
+                        TextUtils.isEmpty(etAfter2.getText()) ||
+                        etAfter2.getText().toString().equals(HINT_TAG) ||
+                        TextUtils.isEmpty(etAfter3.getText()) ||
+                        etAfter3.getText().toString().equals(HINT_TAG) ||
+                        TextUtils.isEmpty(etAfter4.getText()) ||
+                        etAfter4.getText().toString().equals(HINT_TAG) ||
+                        TextUtils.isEmpty(etActualAmountSand.getText()) ||
+                        etActualAmountSand.getText().toString().equals(HINT_TAG)) {
+                    Toast.makeText(activity, "还有数据未填写", Toast.LENGTH_SHORT).show();
 
+                } else {
+                    // 数据都填写才能提交
+                    RecordedSandUpdataBean bean = new RecordedSandUpdataBean();
+
+                    bean.setItemID(0);
+
+                    bean.setSubcontractorInterimApproachPlanID(recordList.getItemID());
+
+                    bean.setSandHandlingShipID(recordList.getShipAccount());
+
+
+                    List<ConstructionBoat> boats = DataSupport.findAll(ConstructionBoat.class);
+                    bean.setConstructionShipID(boats.get(spinner_position - 1).getShipNum());
+
+                    bean.setStartTime(tvStartTime.getText().toString());
+
+                    bean.setEndTime(tvEndTime.getText().toString());
+
+                    bean.setBeforeOverSandDraft1(Float.valueOf(etBefore1.getText().toString()));
+                    bean.setBeforeOverSandDraft2(Float.valueOf(etBefore2.getText().toString()));
+                    bean.setBeforeOverSandDraft3(Float.valueOf(etBefore3.getText().toString()));
+                    bean.setBeforeOverSandDraft4(Float.valueOf(etBefore4.getText().toString()));
+
+                    bean.setAfterOverSandDraft1(Float.valueOf(etAfter1.getText().toString()));
+                    bean.setAfterOverSandDraft2(Float.valueOf(etAfter2.getText().toString()));
+                    bean.setAfterOverSandDraft3(Float.valueOf(etAfter3.getText().toString()));
+                    bean.setAfterOverSandDraft4(Float.valueOf(etAfter4.getText().toString()));
+
+                    bean.setActualAmountOfSand(Float.valueOf(etActualAmountSand.getText().toString()));
+
+                    bean.setIsFinish(IsFinish);
+
+                    // 当前登录用户
+                    List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                    bean.setCreator(all.get(0).getSubcontractorAccount());
+
+                    presenter.commit(bean);
                 }
 
             }
@@ -235,5 +298,41 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
     public void showShip(RecordList recordList) {
         this.recordList = recordList;
         tvSupplyShip.setText(recordList.getShipName());
+    }
+
+    @Override
+    public void showLoadding(boolean isShow) {
+        if (isShow) {
+            activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
+        } else {
+            activity.hideProgressDailog();
+        }
+    }
+
+    @Override
+    public void showError(String msg) {
+        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showResult(Boolean isSuccess) {
+        if (isSuccess) {
+            Toast.makeText(getContext(), "提交成功", Toast.LENGTH_SHORT).show();
+
+            if (IsFinish == 1) {
+                btnCommit.setVisibility(View.GONE);
+                btnReturn.setVisibility(View.VISIBLE);
+            } else {
+                btnCommit.setVisibility(View.VISIBLE);
+                btnReturn.setVisibility(View.GONE);
+            }
+        } else {
+            Toast.makeText(getContext(), "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+        }
     }
 }

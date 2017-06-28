@@ -2,9 +2,13 @@ package com.kc.shiptransport.mvp.recordedsanddetail;
 
 import android.content.Context;
 
+import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.RecordList;
+import com.kc.shiptransport.db.RecordedSandShowList;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -14,11 +18,13 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -123,7 +129,81 @@ public class RecordedSandDetailPresenter implements RecordedSandDetailContract.P
     }
 
     @Override
-    public void commit() {
+    public void commit(RecordedSandUpdataBean bean) {
+        view.showLoadding(true);
+        dataRepository
+                .InsertOverSandRecord(bean)
+                .subscribeOn(Schedulers.io())
+                .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            // 提交成功, 同步数据
+                            return dataRepository.getOverSandRecordList(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_BASE),
+                                    SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
+                        } else {
+                            return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                                @Override
+                                public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                                    e.onNext(false);
+                                    e.onComplete();
+                                }
+                            });
+                        }
 
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoadding(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoadding(false);
+                    }
+                });
+    }
+
+    @Override
+    public void getDetail(int itemID) {
+        dataRepository
+                .GetOverSandRecordBySubcontractorInterimApproachPlanID(itemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<RecordedSandShowList>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<RecordedSandShowList> recordedSandShowLists) {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

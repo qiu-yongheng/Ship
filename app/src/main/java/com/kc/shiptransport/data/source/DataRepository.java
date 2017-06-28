@@ -3,12 +3,14 @@ package com.kc.shiptransport.data.source;
 import android.content.ContentValues;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.data.bean.AcceptanceBean;
 import com.kc.shiptransport.data.bean.AppListBean;
+import com.kc.shiptransport.data.bean.AttendanceTypeBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LoginResult;
@@ -29,10 +31,12 @@ import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
+import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.CommitShip;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.RecordList;
+import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.Ship;
@@ -215,6 +219,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 根据类型获取每日计划量
+     *
      * @param type
      * @return
      */
@@ -1430,6 +1435,8 @@ public class DataRepository implements DataSouceImpl {
                 /* 1. 获取请求数据 */
                 String recordList = mRemoteDataSource.GetOverSandRecordList(account, startDay, endDay);
 
+                Log.d("==", "过砂记录任务详情: " + recordList);
+
                 /* 2. 解析数据成对象 */
                 List<RecordListBean> lists = gson.fromJson(recordList, new TypeToken<List<RecordListBean>>() {
                 }.getType());
@@ -1651,6 +1658,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 根据itemID获取扫描图片数据
+     *
      * @param weekTask
      * @return
      */
@@ -1691,6 +1699,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 压缩图片
+     *
      * @param file
      * @return
      */
@@ -1707,6 +1716,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 获取要提交图片的数据
+     *
      * @param sandSample
      * @return
      */
@@ -1807,6 +1817,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 提交图片
+     *
      * @param commitList
      * @return
      */
@@ -1816,17 +1827,10 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
                 // 发送网络请求, 提交图片
-                String result = mRemoteDataSource.InsertSandSampling(commitList.getByteData(),
-                        commitList.getFileName(),
-                        commitList.getSuffixName(),
-                        commitList.getItemID(),
-                        commitList.getSubcontractorInterimApproachPlanID(),
-                        commitList.getConstructionBoatAccount(),
-                        commitList.getSamplingNum(), commitList.getCreator());
+                String result = mRemoteDataSource.UploadFile(new String(Base64.encode(commitList.getByteData(), Base64.DEFAULT)), commitList.getSuffixName(), commitList.getFileName());
 
                 // 解析返回的数据
                 SampleCommitResult commitResult = gson.fromJson(result, SampleCommitResult.class);
-
 
 
                 e.onNext(commitResult.getMessage() == 1);
@@ -1837,6 +1841,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 根据position获取过砂记录
+     *
      * @param position
      * @return
      */
@@ -1860,6 +1865,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 获取分包商航次完善扫描件类型数据
+     *
      * @return
      */
     @Override
@@ -1873,7 +1879,8 @@ public class DataRepository implements DataSouceImpl {
                 if (TextUtils.isEmpty(result)) {
                     e.onError(new RuntimeException("服务器异常"));
                 } else {
-                    List<ScannerListBean> list = gson.fromJson(result, new TypeToken<List<ScannerListBean>>() {}.getType());
+                    List<ScannerListBean> list = gson.fromJson(result, new TypeToken<List<ScannerListBean>>() {
+                    }.getType());
                     e.onNext(list);
                 }
 
@@ -1884,15 +1891,110 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 提交过砂记录
+     *
      * @param bean
      * @return
      */
     @Override
-    public Observable<Boolean> InsertOverSandRecord(RecordedSandUpdataBean bean) {
+    public Observable<Boolean> InsertOverSandRecord(final RecordedSandUpdataBean bean) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 把对象转换成json
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
 
+                jsonObject.put("ItemID", bean.getItemID());
+                jsonObject.put("SubcontractorInterimApproachPlanID", bean.getSubcontractorInterimApproachPlanID());
+                jsonObject.put("SandHandlingShipID", bean.getSandHandlingShipID());
+                jsonObject.put("ConstructionShipID", bean.getConstructionShipID());
+                jsonObject.put("StartTime", bean.getStartTime());
+                jsonObject.put("EndTime", bean.getEndTime());
+                jsonObject.put("BeforeOverSandDraft1", bean.getBeforeOverSandDraft1());
+                jsonObject.put("BeforeOverSandDraft2", bean.getBeforeOverSandDraft2());
+                jsonObject.put("BeforeOverSandDraft3", bean.getBeforeOverSandDraft3());
+                jsonObject.put("BeforeOverSandDraft4", bean.getBeforeOverSandDraft4());
+                jsonObject.put("AfterOverSandDraft1", bean.getAfterOverSandDraft1());
+                jsonObject.put("AfterOverSandDraft2", bean.getAfterOverSandDraft2());
+                jsonObject.put("AfterOverSandDraft3", bean.getAfterOverSandDraft3());
+                jsonObject.put("AfterOverSandDraft4", bean.getAfterOverSandDraft4());
+                jsonObject.put("ActualAmountOfSand", bean.getActualAmountOfSand());
+                jsonObject.put("IsFinish", bean.getIsFinish());
+                jsonObject.put("Creator", bean.getCreator());
+
+                jsonArray.put(jsonObject);
+
+                Log.d("==", "提交过砂记录: " + jsonArray.toString());
+
+                String result = mRemoteDataSource.InsertOverSandRecord(jsonArray.toString());
+
+                CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(resultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 根据进场计划ID获取过砂记录明细（多条）
+     *
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    @Override
+    public Observable<List<RecordedSandShowList>> GetOverSandRecordBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID) {
+        return Observable.create(new ObservableOnSubscribe<List<RecordedSandShowList>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<RecordedSandShowList>> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.GetOverSandRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                // 解析数据
+                List<RecordedSandShowList> lists = gson.fromJson(result, new TypeToken<List<RecordedSandShowList>>() {
+                }.getType());
+
+                e.onNext(lists);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取考勤类型
+     *
+     * @return
+     */
+    @Override
+    public Observable<List<AttendanceType>> GetAttendanceTypeList() {
+        return Observable.create(new ObservableOnSubscribe<List<AttendanceType>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<AttendanceType>> e) throws Exception {
+                List<AttendanceType> all = DataSupport.findAll(AttendanceType.class);
+                if (all.isEmpty()) {
+                    // 发送网络请求
+                    String result = mRemoteDataSource.GetAttendanceTypeList();
+
+                    // 解析数据
+                    List<AttendanceTypeBean> list = gson.fromJson(result, new TypeToken<List<AttendanceTypeBean>>() {
+                    }.getType());
+
+                    if (!list.isEmpty()) {
+                        DataSupport.deleteAll(AttendanceType.class);
+
+                        for (AttendanceTypeBean bean : list) {
+                            AttendanceType type = new AttendanceType();
+                            type.setItemID(bean.getItemID());
+                            type.setName(bean.getName());
+                            type.save();
+                        }
+                    }
+                    e.onNext(DataSupport.findAll(AttendanceType.class));
+                } else {
+                    e.onNext(all);
+                }
+
+                e.onComplete();
             }
         });
     }

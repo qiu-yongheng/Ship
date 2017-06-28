@@ -111,13 +111,6 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                         return Observable.fromIterable(sampleCommitLists);
                     }
                 })
-//                .flatMap(new Function<SampleCommitList, ObservableSource<Boolean>>() {
-//                    @Override
-//                    public ObservableSource<Boolean> apply(@NonNull SampleCommitList sampleCommitList) throws Exception {
-//                        // 上传图片
-//                        return dataRepository.commitImage(sampleCommitList);
-//                    }
-//                })
                 .map(new Function<SampleCommitList, Boolean>() {
                     @Override
                     public Boolean apply(@NonNull SampleCommitList commitList) throws Exception {

@@ -7,8 +7,10 @@ import com.kc.shiptransport.data.bean.SampleCommitList;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.RecordList;
+import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.Ship;
@@ -349,4 +351,17 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> InsertOverSandRecord(RecordedSandUpdataBean bean);
+
+    /**
+     * 根据进场计划ID获取过砂记录明细（多条）
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    Observable<List<RecordedSandShowList>> GetOverSandRecordBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
+
+    /**
+     * 获取考勤类型
+     * @return
+     */
+    Observable<List<AttendanceType>> GetAttendanceTypeList();
 }

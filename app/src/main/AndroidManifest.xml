@@ -43,7 +43,10 @@
         <activity android:name=".mvp.sampledetail.SampleDetailActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.recordedsand.RecordedSandActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.recordedsanddetail.RecordedSandDetailActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.recordedsandshow.RecordedSandShowActivity" android:launchMode="singleTask"/>
         <activity android:name=".view.actiivty.ImageSelectActivity"/>
+        <activity android:name=".mvp.attendance.AttendanceActivity" android:launchMode="singleTask"/>
+
 
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
