@@ -7,15 +7,26 @@ package com.kc.shiptransport.data.bean;
  */
 
 public class SampleRecordListBean{
+    // 进场ID
     private int ItemID;
+
+    // 两张图片路径
     private String image_1;
     private String image_2;
+
+    //
+
+    // 取样编号
     private String sample_num;
+
+    // 是否上传的标识
     private int isUpdate;
 
+    // 图片1名字类型
     private String name_1;
     private String type_1;
 
+    // 图片2名字类型
     private String name_2;
     private String type_2;
 

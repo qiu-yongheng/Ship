@@ -37,6 +37,7 @@ public class SandSampleBean {
     private String ReceptionSandTime;
     private String PreAcceptanceTime;
     private String ShipItemNum;
+    private int SandSamplingID; // 验砂取样编号, 如果提交过数据, 就不为0
 
     public int getItemID() {
         return ItemID;
@@ -140,5 +141,13 @@ public class SandSampleBean {
 
     public void setShipItemNum(String ShipItemNum) {
         this.ShipItemNum = ShipItemNum;
+    }
+
+    public int getSandSamplingID() {
+        return SandSamplingID;
+    }
+
+    public void setSandSamplingID(int sandSamplingID) {
+        SandSamplingID = sandSamplingID;
     }
 }

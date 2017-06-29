@@ -206,7 +206,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     @Override
     public void showShipDetail(Acceptance value) {
         String shipItemNum = value.getShipItemNum();
-        capacity = value.getCapacity();
+        capacity = String.valueOf(value.getDefaultCapacity());
         tvShipName.setText(value.getShipName());
         tvShipId.setText("船次: " + (shipItemNum == null ? "" : shipItemNum));
         tvSubontractor.setText("供应商: " + value.getSubcontractorName());

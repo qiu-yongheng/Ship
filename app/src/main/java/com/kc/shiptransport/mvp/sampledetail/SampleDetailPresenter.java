@@ -3,8 +3,9 @@ package com.kc.shiptransport.mvp.sampledetail;
 import android.content.Context;
 import android.util.Log;
 
-import com.kc.shiptransport.data.bean.SampleCommitList;
+import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.source.DataRepository;
+import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 
 import java.util.List;
@@ -97,23 +98,23 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                 .getCommitImageList(sandSample) // 解析缓存的数据, 如果IsUpdate = 0, 添加到队列
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<List<SampleCommitList>>() {
+                .doOnNext(new Consumer<List<SampleImageList>>() {
                     @Override
-                    public void accept(@NonNull List<SampleCommitList> sampleCommitLists) throws Exception {
+                    public void accept(@NonNull List<SampleImageList> sampleCommitLists) throws Exception {
                         // 设置最大进度
                         view.showProgress(sampleCommitLists.size());
                     }
                 })
-                .flatMap(new Function<List<SampleCommitList>, ObservableSource<SampleCommitList>>() {
+                .flatMap(new Function<List<SampleImageList>, ObservableSource<SampleImageList>>() {
                     @Override
-                    public ObservableSource<SampleCommitList> apply(@NonNull List<SampleCommitList> sampleCommitLists) throws Exception {
+                    public ObservableSource<SampleImageList> apply(@NonNull List<SampleImageList> sampleCommitLists) throws Exception {
                         // 遍历集合
                         return Observable.fromIterable(sampleCommitLists);
                     }
                 })
-                .map(new Function<SampleCommitList, Boolean>() {
+                .map(new Function<SampleImageList, Boolean>() {
                     @Override
-                    public Boolean apply(@NonNull SampleCommitList commitList) throws Exception {
+                    public Boolean apply(@NonNull SampleImageList commitList) throws Exception {
                         // 上传图片
                         upImage(commitList);
                         return true;
@@ -128,7 +129,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
-
+                        Log.d("==", "上传图片");
                     }
 
                     @Override
@@ -141,18 +142,20 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                     public void onComplete() {
                         view.showLoading(false);
                         Log.d("==", "上传图片完成");
+                        // 上传json数据
+                        view.showImageUpdataResult();
                     }
                 });
     }
 
     /**
      * 上传图片
-     * @param sampleCommitList
+     * @param sampleImageList
      */
     @Override
-    public void upImage(SampleCommitList sampleCommitList) {
+    public void upImage(SampleImageList sampleImageList) {
         dataRepository
-                .commitImage(sampleCommitList)
+                .commitImage(sampleImageList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
@@ -178,5 +181,56 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
                     }
                 });
+    }
+
+    /**
+     * 获取要显示的数据
+     * @param position
+     */
+    @Override
+    public void getDates(int position) {
+        view.showLoading(true);
+        dataRepository
+                .getSampleTaskForPosition(position) // 根据进场ID获取数据
+                .subscribeOn(Schedulers.io())
+                .flatMap(new Function<SandSample, ObservableSource<SampleShowDatesBean>>() {
+                    @Override
+                    public ObservableSource<SampleShowDatesBean> apply(@NonNull SandSample sandSample) throws Exception {
+                        // 获取要显示的数据
+                        return dataRepository.GetSandSamplingBySubcontractorInterimApproachPlanID(sandSample.getItemID());
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SampleShowDatesBean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull SampleShowDatesBean sampleShowDatesBean) {
+                        view.showDetailList(sampleShowDatesBean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 图片提交完后, 提交json
+     * @param sampleShowDates
+     */
+    @Override
+    public void commitJson(SampleShowDatesBean sampleShowDates) {
+
     }
 }

@@ -67,7 +67,8 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
         btnShipCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.doCancle(activity.currentSelectShipType, activity.mCurrentSelectDate);
+                //presenter.doCancle(activity.currentSelectShipType, activity.mCurrentSelectDate);
+                getActivity().onBackPressed();
             }
         });
 

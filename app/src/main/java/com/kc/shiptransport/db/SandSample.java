@@ -39,6 +39,7 @@ public class SandSample extends DataSupport{
     private String ReceptionSandTime;
     private String PreAcceptanceTime;
     private String ShipItemNum;
+    private int SandSamplingID; // 验砂取样编号, 如果提交过数据, 就不为0
 
     public int getItemID() {
         return ItemID;
@@ -150,5 +151,13 @@ public class SandSample extends DataSupport{
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public int getSandSamplingID() {
+        return SandSamplingID;
+    }
+
+    public void setSandSamplingID(int sandSamplingID) {
+        SandSamplingID = sandSamplingID;
     }
 }

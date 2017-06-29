@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.data.bean.SampleRecordListBean;
+import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
@@ -27,14 +27,18 @@ import java.util.List;
 public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context context;
-    public final List<SampleRecordListBean> list;
-    private final int itemID;
+    // 全部数据
+    public SampleShowDatesBean sampleShowDates;
+    // 数据列表
+    public List<SampleShowDatesBean.SandSamplingNumRecordListBean> sandSamplingNumRecordList;
     private OnRecyclerviewItemClickListener listener;
 
-    public SampleDetailAdapter(Context context, List<SampleRecordListBean> list, int itemID) {
+    public SampleDetailAdapter(Context context, SampleShowDatesBean sampleShowDates) {
         this.context = context;
-        this.list = list;
-        this.itemID = itemID;
+        this.sampleShowDates = sampleShowDates;
+        // 取样数据
+        this.sandSamplingNumRecordList = sampleShowDates.getSandSamplingNumRecordList();
+
     }
 
     @Override
@@ -44,14 +48,16 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        // 从集合中获取图片显示, 如果没有图片, 点击后跳转到图片选择界面, 如果有图片, 跳转到预览界面
-        // 单选图片后, 保存地址到集合中, 保存到数据库, 记录position
+        // 获取取样编号数据
+        SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = sandSamplingNumRecordList.get(position);
+
+        // 获取取样编号内的图片
+        List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> imageList = numRecordListBean.getSandSamplingAttachmentRecordList();
 
         // 显示图片
-        final SampleRecordListBean sampleRecordList = list.get(position);
-        RxGalleryUtil.showImage(context, sampleRecordList.getImage_1(), null, null, ((NormalHolder) holder).mBtnImage1);
-        RxGalleryUtil.showImage(context, sampleRecordList.getImage_2(), null, null, ((NormalHolder) holder).mBtnImage2);
-        ((NormalHolder) holder).mTvsamplenum.setText(sampleRecordList.getSample_num() == null ? "" : sampleRecordList.getSample_num());
+        RxGalleryUtil.showImage(context, (imageList.get(0).getFilePath() == null ? "" : imageList.get(0).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage1);
+        RxGalleryUtil.showImage(context, (imageList.get(1).getFilePath() == null ? "" : imageList.get(1).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage2);
+        ((NormalHolder) holder).mTvsamplenum.setText((numRecordListBean.getSamplingNum() == null || numRecordListBean.getSamplingNum().equals("0")) ? "" : numRecordListBean.getSamplingNum());
 
 
         /* 点击后单选图片 */
@@ -65,7 +71,6 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     listener.onItemClick(((NormalHolder) holder).mBtnImage1, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_1);
                 }
-
             }
         });
 
@@ -102,6 +107,12 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
+    public void setDates(SampleShowDatesBean sampleShowDates) {
+        this.sampleShowDates = sampleShowDates;
+        // 取样数据
+        this.sandSamplingNumRecordList = sampleShowDates.getSandSamplingNumRecordList();
+    }
+
     class NormalHolder extends RecyclerView.ViewHolder {
 
         private final TextView mTvsamplenum;
@@ -118,7 +129,7 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return sandSamplingNumRecordList.size();
     }
 
     public void setOnItemClickListener(OnRecyclerviewItemClickListener listener) {
@@ -126,16 +137,16 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void addData(int pos) {
-        SampleRecordListBean sampleRecordList = new SampleRecordListBean();
-        sampleRecordList.setItemID(itemID);
-
-        list.add(pos, sampleRecordList);
-        notifyItemInserted(pos);
+//        SampleRecordListBean sampleRecordList = new SampleRecordListBean();
+//        sampleRecordList.setItemID(itemID);
+//
+//        list.add(pos, sampleRecordList);
+//        notifyItemInserted(pos);
     }
 
     public void delete(int pos) {
         // 从集合中删除
-        list.remove(pos);
-        notifyItemRemoved(pos);
+//        list.remove(pos);
+//        notifyItemRemoved(pos);
     }
 }

@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.sampledetail;
 
-import com.kc.shiptransport.data.bean.SampleCommitList;
+import com.kc.shiptransport.data.bean.SampleShowDatesBean;
+import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -21,13 +22,21 @@ public interface SampleDetailContract {
         void showLoading(boolean isShow);
         void showProgress(int max);
         void updateProgress();
+        // 获取数据, 显示列表
+        void showDetailList(SampleShowDatesBean bean);
+        void showImageUpdataResult();
     }
 
     interface Presenter extends BasePresenter {
+        // 根据position获取进场数据
         void getShipInfo(int position);
         void start(int position);
-        //void upImage(Byte[] ByteData, String FileName, );
+        // 单张提交图片, 成功后提交全部json
         void commit(SandSample sandSample);
-        void upImage(SampleCommitList sampleCommitList);
+        // 提交图片
+        void upImage(SampleImageList sampleCommitList);
+        // 查看图片
+        void getDates(int position);
+        void commitJson(SampleShowDatesBean sampleShowDates);
     }
 }

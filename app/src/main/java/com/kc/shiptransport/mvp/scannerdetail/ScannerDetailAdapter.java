@@ -47,7 +47,6 @@ public class ScannerDetailAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     class NormalHolder extends RecyclerView.ViewHolder {
-
         private final TextView mTvItemTitle;
         private final TextView mTvProgress;
         private final TextView mTvState;

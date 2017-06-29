@@ -20,6 +20,7 @@ public class AttendanceRecordListBean {
     private int ItemID;
     private int AttendanceTypeID;
     private String AttendanceTypeName;
+    private String AttendanceTime;
     private String Creator;
     private String SystemDate;
     private String Remark;
@@ -70,5 +71,13 @@ public class AttendanceRecordListBean {
 
     public void setRemark(String Remark) {
         this.Remark = Remark;
+    }
+
+    public String getAttendanceTime() {
+        return AttendanceTime;
+    }
+
+    public void setAttendanceTime(String attendanceTime) {
+        AttendanceTime = attendanceTime;
     }
 }

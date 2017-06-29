@@ -3,7 +3,7 @@ package com.kc.shiptransport.data.source;
 import android.content.Context;
 
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
-import com.kc.shiptransport.data.bean.SampleCommitList;
+import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
@@ -12,6 +12,7 @@ import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.RecordedSandShowList;
+import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.Ship;
@@ -325,14 +326,14 @@ public interface DataSouceImpl {
      * @param sandSample
      * @return
      */
-    Observable<List<SampleCommitList>> getCommitImageList(SandSample sandSample);
+    Observable<List<SampleImageList>> getCommitImageList(SandSample sandSample);
 
     /**
      * 提交图片
      * @param commitList
      * @return
      */
-    Observable<Boolean> commitImage(SampleCommitList commitList);
+    Observable<Boolean> commitImage(SampleImageList commitList);
 
     /**
      * 根据position获取过砂记录
@@ -370,11 +371,25 @@ public interface DataSouceImpl {
      * 提交考勤数据
      * @return
      */
-    Observable<Boolean> InsertAttendanceRecord(String ItemID, int AttendanceTypeID, String Creator, String Remark);
+    Observable<Boolean> InsertAttendanceRecord(String ItemID, int AttendanceTypeID, String Creator, String Remark, String time);
 
     /**
      * 获取考勤记录
      * @return
      */
     Observable<List<AttendanceRecordList>> GetAttendanceRecords(String time);
+
+    /**
+     * 根据进场ID获取验砂取样详细
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    Observable<SampleShowDatesBean> GetSandSamplingBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
+
+    /**
+     * 提交验砂取样数据
+     * @param bean
+     * @return
+     */
+    Observable<Boolean> InsertSandSampling(SampleShowDatesBean bean);
 }

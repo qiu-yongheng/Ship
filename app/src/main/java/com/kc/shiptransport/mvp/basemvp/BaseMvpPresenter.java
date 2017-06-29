@@ -213,6 +213,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
      */
     @Override
     public void doRefresh(final int jumpWeek, final int type, String account) {
+        this.type = type;
         view.showLoading(true);
         Observable<Boolean> observable = null;
         switch (type) {

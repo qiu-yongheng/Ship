@@ -78,6 +78,10 @@
                         android:textSize="@dimen/text_15sp"/>
 
                     <TextView
+                        android:layout_marginLeft="@dimen/cardview_margin_5dp"
+                        android:clickable="true"
+                        android:padding="@dimen/cardview_margin_5dp"
+                        android:background="@drawable/tv_bg"
                         android:id="@+id/text_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

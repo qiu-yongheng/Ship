@@ -97,7 +97,7 @@
     <string name="et_hint">请填写</string>
     <string name="setting_recorde_finish">过砂完成</string>
     <string name="text_name">姓名:</string>
-    <string name="text_time">日期:</string>
+    <string name="text_time">考勤日期:</string>
     <string name="title_attendance">考勤</string>
     <string name="et_hint_remark">添加备注</string>
     <string name="btn_quiry">考勤记录</string>

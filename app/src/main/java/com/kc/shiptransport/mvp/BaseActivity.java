@@ -109,6 +109,11 @@ public class BaseActivity extends AppCompatActivity {
     public void updataProgress() {
         progress ++;
         mProgress.setProgress(progress);
+
+        if (progress >= mProgress.getMax()) {
+            mProgress.dismiss();
+            Toast.makeText(this, "上传成功", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

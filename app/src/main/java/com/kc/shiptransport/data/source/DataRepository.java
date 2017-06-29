@@ -18,9 +18,9 @@ import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.PerfectBoatRecordBean;
 import com.kc.shiptransport.data.bean.RecordListBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
-import com.kc.shiptransport.data.bean.SampleCommitList;
 import com.kc.shiptransport.data.bean.SampleCommitResult;
-import com.kc.shiptransport.data.bean.SampleRecordListBean;
+import com.kc.shiptransport.data.bean.SampleShowDatesBean;
+import com.kc.shiptransport.data.bean.SampleUpdataBean;
 import com.kc.shiptransport.data.bean.SandSampleBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.ShipBean;
@@ -39,6 +39,7 @@ import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.RecordedSandShowList;
+import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.Ship;
@@ -1082,6 +1083,17 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 String loginInfo = mRemoteDataSource.getLoginInfo(username, password);
                 LoginResult loginResult = gson.fromJson(loginInfo, LoginResult.class);
+
+                // 初始化数据库
+                DataSupport.deleteAll(Subcontractor.class);
+
+                // 保存用户信息
+                Subcontractor subcontractor = new Subcontractor();
+                subcontractor.setSubcontractorName(loginResult.getUserName());
+                subcontractor.setSubcontractorAccount(loginResult.getUserID());
+                subcontractor.save();
+
+
                 e.onNext(loginResult.getMessage() == 1);
                 e.onComplete();
             }
@@ -1549,6 +1561,7 @@ public class DataRepository implements DataSouceImpl {
                     sandSample.setReceptionSandTime(bean.getReceptionSandTime());
                     sandSample.setPreAcceptanceTime(bean.getPreAcceptanceTime());
                     sandSample.setShipItemNum(bean.getShipItemNum());
+                    sandSample.setSandSamplingID(bean.getSandSamplingID());
                     sandSample.save();
                 }
 
@@ -1723,95 +1736,19 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<List<SampleCommitList>> getCommitImageList(final SandSample sandSample) {
-        return Observable.create(new ObservableOnSubscribe<List<SampleCommitList>>() {
+    public Observable<List<SampleImageList>> getCommitImageList(final SandSample sandSample) {
+        return Observable.create(new ObservableOnSubscribe<List<SampleImageList>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<SampleCommitList>> e) throws Exception {
+            public void subscribe(@NonNull ObservableEmitter<List<SampleImageList>> e) throws Exception {
                 // 获取保存的数据
-                String string = SharePreferenceUtil.getString(getContext(), String.valueOf(sandSample.getItemID()), "");
+                List<SampleImageList> all = DataSupport.findAll(SampleImageList.class);
 
-                List<SampleRecordListBean> list = new ArrayList<>();
-                List<SampleCommitList> commitLists = new ArrayList<>();
-                if (TextUtils.isEmpty(string)) {
-                    // 没有数据, 不提交
-                    e.onError(new RuntimeException("没有数据需要提交"));
+                if (all.isEmpty()) {
+                    e.onError(new RuntimeException("没有图片进行提交"));
                 } else {
-                    // 有缓存, 解析
-                    list = new Gson().fromJson(string, new TypeToken<List<SampleRecordListBean>>() {
-                    }.getType());
+                    e.onNext(all);
                 }
 
-                // 判断图片是否已上传, 如果没有上传, 添加到任务队列中
-                for (SampleRecordListBean bean : list) {
-                    if (bean.getIsUpdate() == 0) {
-                        // 添加到队列
-                        /** 图片1 */
-                        if (TextUtils.isEmpty(bean.getImage_1())) {
-                            //e.onError(new RuntimeException("图片未选择两张"));
-                        } else {
-
-                            SampleCommitList sampleCommitList = new SampleCommitList();
-                            // 压缩图片
-                            File file = Luban.with(getContext()).load(new File(bean.getImage_1())).get();
-                            // 转换成字节数组
-                            byte[] bytes = FileUtil.File2byte(file);
-                            sampleCommitList.setByteData(bytes);
-
-                            // 文件名
-                            sampleCommitList.setFileName(bean.getName_1());
-                            // 类型
-                            sampleCommitList.setSuffixName(bean.getType_1());
-                            // 条目ID
-                            sampleCommitList.setItemID(0);
-                            // 进场ID
-                            sampleCommitList.setSubcontractorInterimApproachPlanID(sandSample.getItemID());
-                            // 船舶账号
-                            sampleCommitList.setConstructionBoatAccount(sandSample.getShipAccount());
-                            // 取样编号
-                            sampleCommitList.setSamplingNum(bean.getSample_num());
-                            // 创建者账号
-                            sampleCommitList.setCreator(sandSample.getSubcontractorAccount());
-
-                            // 保存到上传的集合中
-                            commitLists.add(sampleCommitList);
-                        }
-
-                        /**图片2*/
-                        if (TextUtils.isEmpty(bean.getImage_2())) {
-                            //e.onError(new RuntimeException("图片未选择两张"));
-                        } else {
-                            SampleCommitList sample2 = new SampleCommitList();
-                            // 压缩图片
-                            File file2 = Luban.with(getContext()).load(new File(bean.getImage_2())).get();
-                            // 转换成字节数组
-                            byte[] bytes2 = FileUtil.File2byte(file2);
-                            sample2.setByteData(bytes2);
-
-                            // 文件名
-                            sample2.setFileName(bean.getName_2());
-                            // 类型
-                            sample2.setSuffixName(bean.getType_2());
-                            // 条目ID
-                            sample2.setItemID(0);
-                            // 进场ID
-                            sample2.setSubcontractorInterimApproachPlanID(sandSample.getItemID());
-                            // 船舶账号
-                            sample2.setConstructionBoatAccount(sandSample.getShipAccount());
-                            // 取样编号
-                            sample2.setSamplingNum(bean.getSample_num());
-                            // 创建者账号
-                            sample2.setCreator(sandSample.getSubcontractorAccount());
-
-                            // 保存到上传的集合中
-                            commitLists.add(sample2);
-                        }
-                    } else {
-                        // 图片已全部上传
-                        e.onError(new RuntimeException("图片已全部上传"));
-                    }
-                }
-
-                e.onNext(commitLists);
                 e.onComplete();
             }
         });
@@ -1824,12 +1761,15 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> commitImage(final SampleCommitList commitList) {
+    public Observable<Boolean> commitImage(final SampleImageList commitList) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                File file = new File(commitList.getFilePath());
+                byte[] bytes = FileUtil.File2byte(file);
+
                 // 发送网络请求, 提交图片
-                String result = mRemoteDataSource.UploadFile(new String(Base64.encode(commitList.getByteData(), Base64.DEFAULT)), commitList.getSuffixName(), commitList.getFileName());
+                String result = mRemoteDataSource.UploadFile(new String(Base64.encode(bytes, Base64.DEFAULT)), commitList.getSuffixName(), commitList.getFileName());
 
                 // 解析返回的数据
                 SampleCommitResult commitResult = gson.fromJson(result, SampleCommitResult.class);
@@ -2010,7 +1950,8 @@ public class DataRepository implements DataSouceImpl {
     public Observable<Boolean> InsertAttendanceRecord(final String ItemID,
                                                       final int AttendanceTypeID,
                                                       final String Creator,
-                                                      final String Remark) {
+                                                      final String Remark,
+                                                      final String time) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -2019,6 +1960,7 @@ public class DataRepository implements DataSouceImpl {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("ItemID", ItemID);
                 jsonObject.put("AttendanceTypeID", AttendanceTypeID);
+                jsonObject.put("AttendanceTime", time);
                 jsonObject.put("Creator", Creator);
                 jsonObject.put("Remark", Remark);
                 jsonArray.put(jsonObject);
@@ -2063,6 +2005,7 @@ public class DataRepository implements DataSouceImpl {
                     attendanceRecordList.setItemID(bean.getItemID());
                     attendanceRecordList.setAttendanceTypeID(bean.getAttendanceTypeID());
                     attendanceRecordList.setAttendanceTypeName(bean.getAttendanceTypeName());
+                    attendanceRecordList.setAttendanceTime(bean.getAttendanceTime());
                     attendanceRecordList.setCreator(bean.getCreator());
                     attendanceRecordList.setSystemDate(bean.getSystemDate());
                     attendanceRecordList.setRemark(bean.getRemark());
@@ -2073,6 +2016,62 @@ public class DataRepository implements DataSouceImpl {
 
                 e.onNext(all1);
                 e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 根据进场ID获取验砂取样详细
+     *
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    @Override
+    public Observable<SampleShowDatesBean> GetSandSamplingBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID) {
+        return Observable.create(new ObservableOnSubscribe<SampleShowDatesBean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<SampleShowDatesBean> e) throws Exception {
+                // 先判断本地是否有数据没有提交 (进场ID对应)
+                String data = SharePreferenceUtil.getString(getContext(), String.valueOf(SubcontractorInterimApproachPlanID), "");
+
+                if (TextUtils.isEmpty(data)) { // 如果没有本地缓存
+                    // 根据进场ID发送网络请求
+                    String result = mRemoteDataSource.GetSandSamplingBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                    // 解析数据
+                    List<SampleShowDatesBean> list = gson.fromJson(result, new TypeToken<List<SampleShowDatesBean>>() {
+                    }.getType());
+
+                    SampleShowDatesBean sampleShowDatesBean = list.get(0);
+                    // 保存当前进场ID
+                    sampleShowDatesBean.setSubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                    e.onNext(sampleShowDatesBean);
+                } else {
+                    // 本地有缓存
+                    SampleShowDatesBean sampleShowDatesBean = gson.fromJson(data, SampleShowDatesBean.class);
+
+                    e.onNext(sampleShowDatesBean);
+                }
+
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 提交验砂取样数据
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertSandSampling(final SampleShowDatesBean bean) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 创建要提交的对象
+                SampleUpdataBean sampleUpdataBean = new SampleUpdataBean();
+                sampleUpdataBean.setItemID(String.valueOf(bean.getItemID()));
             }
         });
     }

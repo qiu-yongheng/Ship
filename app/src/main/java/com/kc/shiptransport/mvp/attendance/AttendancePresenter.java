@@ -116,10 +116,10 @@ public class AttendancePresenter implements AttendanceContract.Presenter{
     }
 
     @Override
-    public void commit(int itemID, String creator, String remark) {
+    public void commit(int itemID, String creator, String remark, String time) {
         view.showLoadding(true);
         dataRepository
-                .InsertAttendanceRecord("", itemID, creator, remark)
+                .InsertAttendanceRecord("", itemID, creator, remark, time)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {

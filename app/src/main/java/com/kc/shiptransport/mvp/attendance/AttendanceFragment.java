@@ -22,6 +22,7 @@ import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.attendancerecord.AttendanceRecordActivity;
+import com.kc.shiptransport.util.CalendarUtil;
 
 import java.util.List;
 
@@ -81,7 +82,7 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
                 if (mTypeID != -1) {
                     String trim = etRemark.getText().toString().trim();
                     trim = trim.equals("添加备注") ? "" : trim;
-                    presenter.commit(mTypeID, subcontractor.getSubcontractorAccount(), trim);
+                    presenter.commit(mTypeID, subcontractor.getSubcontractorAccount(), trim, textTime.getText().toString());
                 } else {
                     Toast.makeText(getContext(), "没有选择考勤类型", Toast.LENGTH_SHORT).show();
                 }
@@ -93,6 +94,14 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
             @Override
             public void onClick(View view) {
                 AttendanceRecordActivity.startActivity(getContext());
+            }
+        });
+
+        // 修改日期
+        textTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CalendarUtil.showTimePickerDialog(getContext(), textTime);
             }
         });
     }

@@ -39,9 +39,10 @@ public class AttendanceRecordAdapter extends RecyclerView.Adapter<RecyclerView.V
         AttendanceRecordList attendanceRecordList = list.get(position);
 
         ((NormalHolder)holder).mTextCreator.setText(attendanceRecordList.getCreator());
-        ((NormalHolder)holder).mTextTime.setText(attendanceRecordList.getSystemDate());
+        ((NormalHolder)holder).mTextTime.setText(attendanceRecordList.getAttendanceTime());
         ((NormalHolder)holder).mTextType.setText(attendanceRecordList.getAttendanceTypeName());
         ((NormalHolder)holder).mTextRemark.setText(attendanceRecordList.getRemark());
+        ((NormalHolder)holder).mTextSystemTime.setText(attendanceRecordList.getSystemDate());
 
     }
 
@@ -55,6 +56,7 @@ public class AttendanceRecordAdapter extends RecyclerView.Adapter<RecyclerView.V
         private final TextView mTextTime;
         private final TextView mTextRemark;
         private final TextView mTextType;
+        private final TextView mTextSystemTime;
 
         public NormalHolder(View itemView) {
             super(itemView);
@@ -62,6 +64,7 @@ public class AttendanceRecordAdapter extends RecyclerView.Adapter<RecyclerView.V
             mTextTime = (TextView) itemView.findViewById(R.id.text_time);
             mTextType = (TextView) itemView.findViewById(R.id.text_type);
             mTextRemark = (TextView) itemView.findViewById(R.id.text_remark);
+            mTextSystemTime = (TextView) itemView.findViewById(R.id.text_system_time);
         }
     }
 

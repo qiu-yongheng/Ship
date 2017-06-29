@@ -22,6 +22,7 @@ public class AttendanceRecordList extends DataSupport{
     private int ItemID;
     private int AttendanceTypeID;
     private String AttendanceTypeName;
+    private String AttendanceTime;
     private String Creator;
     private String SystemDate;
     private String Remark;
@@ -72,5 +73,13 @@ public class AttendanceRecordList extends DataSupport{
 
     public void setRemark(String Remark) {
         this.Remark = Remark;
+    }
+
+    public String getAttendanceTime() {
+        return AttendanceTime;
+    }
+
+    public void setAttendanceTime(String attendanceTime) {
+        AttendanceTime = attendanceTime;
     }
 }

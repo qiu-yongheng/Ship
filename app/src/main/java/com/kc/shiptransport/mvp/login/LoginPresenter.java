@@ -16,8 +16,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -61,9 +61,9 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void loadData(final String username) {
         // 获取分包商
-        Observable<Boolean> subcontractor = mDataRepository
-                .getSubcontractor(username)
-                .subscribeOn(Schedulers.io());
+//        Observable<Boolean> subcontractor = mDataRepository
+//                .getSubcontractor(username)
+//                .subscribeOn(Schedulers.io());
 
         // 获取船
         Observable<Boolean> ship = mDataRepository
@@ -80,11 +80,10 @@ public class LoginPresenter implements LoginContract.Presenter {
         //                .GetConstructionBoat()
         //                .subscribeOn(Schedulers.io());
 
-
-        Observable.zip(subcontractor, ship, appList, new Function3<Boolean, Boolean, Boolean, Boolean>() {
+        Observable.zip(ship, appList, new BiFunction<Boolean, Boolean, Boolean>() {
             @Override
-            public Boolean apply(Boolean aBoolean, Boolean aBoolean2, Boolean aBoolean3) throws Exception {
-                if (aBoolean && aBoolean2 && aBoolean3) {
+            public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception {
+                if (aBoolean && aBoolean2) {
                     return true;
                 } else {
                     return false;

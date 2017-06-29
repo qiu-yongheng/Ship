@@ -28,6 +28,6 @@ public interface AttendanceContract {
         void getAttendanceTypeList();
         void getCreate();
         void getTime();
-        void commit(int itemID, String creator, String remark);
+        void commit(int itemID, String creator, String remark, String time);
     }
 }

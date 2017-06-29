@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -194,6 +195,7 @@ public class AmountFragment extends Fragment implements AmountContract.View {
 
     @Override
     public void initViews(View view) {
+        setHasOptionsMenu(true);
         SharePreferenceUtil.saveInt(getContext(), SettingUtil.WEEK_JUMP_SUPPLY, 0);
 
         // 还原当前选中的分包商账号
@@ -211,6 +213,16 @@ public class AmountFragment extends Fragment implements AmountContract.View {
 
         cbTipRed.setText(R.string.amount_red);
         cbTipBlack.setText(R.string.amount_black);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
