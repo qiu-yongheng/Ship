@@ -14,8 +14,6 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
-import org.litepal.crud.DataSupport;
-
 import java.util.List;
 
 /**
@@ -26,14 +24,12 @@ import java.util.List;
 
 public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
-    private final Integer[] icon;
-    private final String[] tag;
     private OnRecyclerviewItemClickListener listener;
+    private List<AppList> list;
 
-    public HomeAdapter(Context context, Integer[] icon, String[] tag) {
+    public HomeAdapter(Context context, List<AppList> list) {
         this.context = context;
-        this.icon = icon;
-        this.tag = tag;
+        this.list = list;
     }
 
     @Override
@@ -43,35 +39,53 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        ((ItemHolder) holder).mIvHomeItem.setImageResource(icon[position]);
-        ((ItemHolder) holder).mTvHomeItem.setText(tag[position]);
+        // 获取数据
+        final AppList appList = list.get(position);
+        ((ItemHolder) holder).mTvHomeItem.setText(appList.getAppName());
+        ((ItemHolder) holder).mIvHomeItem.setImageResource(appList.getIcon_id());
+
 
         // 未开发的功能, 图标显示灰色
-        if (position != 1) {
+        Integer appID = Integer.valueOf(appList.getAppID());
+        if (appID != 2 && appID != 18) {
             ColorMatrix cm = new ColorMatrix();
             cm.setSaturation(0); // 设置饱和度
             ColorMatrixColorFilter grayColorFilter = new ColorMatrixColorFilter(cm);
             ((ItemHolder) holder).mIvHomeItem.setColorFilter(grayColorFilter); // 如果想恢复彩色显示，设置为null即可
+
+            // 设置点击事件
+            ((ItemHolder) holder).mIvHomeItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), -1);
+                }
+            });
         } else {
             ((ItemHolder) holder).mIvHomeItem.setColorFilter(null); // 如果想恢复彩色显示，设置为null即可
+
+            // 设置点击事件
+            ((ItemHolder) holder).mIvHomeItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), Integer.valueOf(appList.getAppID()));
+                }
+            });
         }
 
         // 权限设置, 设置要显示的模块
-        List<AppList> appLists = DataSupport.where("AppID = ?", String.valueOf(position + 1)).find(AppList.class);
-        if (appLists != null && !appLists.isEmpty()) {
-            ((ItemHolder) holder).itemView.setVisibility(View.VISIBLE);
-        } else {
-            ((ItemHolder) holder).itemView.setVisibility(View.GONE);
-        }
+//        List<AppList> appLists = DataSupport.where("SortNum = ?", String.valueOf(position + 1)).find(AppList.class);
+//        if (appLists != null && !appLists.isEmpty()) {
+//            ((ItemHolder) holder).itemView.setVisibility(View.VISIBLE);
+//        } else {
+//            ((ItemHolder) holder).itemView.setVisibility(View.GONE);
+//        }
 
-        // 设置点击事件
-        ((ItemHolder) holder).mIvHomeItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onItemClick(holder.itemView, holder.getLayoutPosition());
-            }
-        });
     }
+
+    public void setDates(List<AppList> list) {
+        this.list = list;
+    }
+
 
     class ItemHolder extends RecyclerView.ViewHolder {
 
@@ -87,7 +101,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return tag.length;
+        return list.size();
     }
 
     public void setOnItemClickListener(OnRecyclerviewItemClickListener listener) {

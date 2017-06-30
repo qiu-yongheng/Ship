@@ -45,7 +45,7 @@ public class AcceptanceBean {
     private String SystemDate;
     private String Capacity;
     private String DeckGauge;
-    private Float Deduction;
+    private int Deduction;
     private String ReceptionSandTime; // 验砂时间
     private String PreAcceptanceTime; // 验收时间
     private String TheAmountOfTime; // 量方时间
@@ -245,11 +245,11 @@ public class AcceptanceBean {
         this.defaultDeckGauge = defaultDeckGauge;
     }
 
-    public Float getDeduction() {
+    public int getDeduction() {
         return Deduction;
     }
 
-    public void setDeduction(Float deduction) {
+    public void setDeduction(int deduction) {
         Deduction = deduction;
     }
 

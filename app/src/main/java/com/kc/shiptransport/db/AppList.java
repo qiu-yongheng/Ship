@@ -21,7 +21,10 @@ public class AppList extends DataSupport{
     private String AppPID;
     private String AppName;
     private String AppUrl;
-    private Double sortNum;
+    private int SortNum;
+
+    // 图标
+    private int icon_id;
 
     public String getAppID() {
         return AppID;
@@ -55,11 +58,19 @@ public class AppList extends DataSupport{
         this.AppUrl = AppUrl;
     }
 
-    public Double getSortNum() {
-        return sortNum;
+    public int getSortNum() {
+        return SortNum;
     }
 
-    public void setSortNum(Double sortNum) {
-        this.sortNum = sortNum;
+    public void setSortNum(int sortNum) {
+        this.SortNum = sortNum;
+    }
+
+    public int getIcon_id() {
+        return icon_id;
+    }
+
+    public void setIcon_id(int icon_id) {
+        this.icon_id = icon_id;
     }
 }

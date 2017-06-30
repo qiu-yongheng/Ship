@@ -148,7 +148,7 @@ public class ImageSelectActivity extends BaseActivity {
     /**
      * 初始化点击事件
      */
-    private void initListener() {
+    public void initListener() {
         btnDetermine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

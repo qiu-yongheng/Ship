@@ -87,7 +87,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         // 提交
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override

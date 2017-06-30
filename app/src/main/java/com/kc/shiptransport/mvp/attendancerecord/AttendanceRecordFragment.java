@@ -57,7 +57,7 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         mBtnQuiry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,6 +100,11 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
     @Override
     public void setPresenter(AttendanceRecordContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+
     }
 
     @Override

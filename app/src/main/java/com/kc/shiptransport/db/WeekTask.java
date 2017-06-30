@@ -20,7 +20,7 @@ public class WeekTask extends DataSupport{
     private String ShipAccount;
     private String ShipName;
     private String ShipType;
-    private double SandSupplyCount;
+    private int SandSupplyCount;
     private Float Capacity;
     private Float DeckGauge;
     private String ReceptionSandTime; // 验砂时间
@@ -113,11 +113,11 @@ public class WeekTask extends DataSupport{
         ShipType = shipType;
     }
 
-    public double getSandSupplyCount() {
+    public int getSandSupplyCount() {
         return SandSupplyCount;
     }
 
-    public void setSandSupplyCount(double sandSupplyCount) {
+    public void setSandSupplyCount(int sandSupplyCount) {
         SandSupplyCount = sandSupplyCount;
     }
 

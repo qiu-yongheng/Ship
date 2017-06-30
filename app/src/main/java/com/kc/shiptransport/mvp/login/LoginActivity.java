@@ -68,7 +68,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     /**
      * 初始化监听
      */
-    private void initListener() {
+    public void initListener() {
         /** 1. 保存密码 */
         radiobtnRememberPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -178,6 +178,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void setPresenter(LoginContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+
     }
 
     @Override

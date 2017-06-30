@@ -18,7 +18,7 @@ public class AppListBean {
     private String AppPID;
     private String AppName;
     private String AppUrl;
-    private Double sortNum;
+    private int SortNum;
 
 
     public String getAppID() {
@@ -53,11 +53,11 @@ public class AppListBean {
         this.AppUrl = AppUrl;
     }
 
-    public Double getSortNum() {
-        return sortNum;
+    public int getSortNum() {
+        return SortNum;
     }
 
-    public void setSortNum(Double sortNum) {
-        this.sortNum = sortNum;
+    public void setSortNum(int sortNum) {
+        this.SortNum = sortNum;
     }
 }

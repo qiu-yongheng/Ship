@@ -14,6 +14,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
@@ -69,14 +70,14 @@ public class PlanPresenter implements PlanContract.Presenter {
                 .getDemandDayCount(jumpWeek)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Double[]>() {
+                .subscribe(new Observer<Integer[]>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Double[] value) {
+                    public void onNext(Integer[] value) {
                         view.showDemandDayCount(value);
                     }
 
@@ -172,34 +173,35 @@ public class PlanPresenter implements PlanContract.Presenter {
     @Override
     public void getTaskVolume(final int jumpWeek) {
         // 一周计划任务量
-        Observable<Double[]> daycount = mDataRepository
+        Observable<Integer[]> daycount = mDataRepository
                 .getDayCount()
                 .subscribeOn(Schedulers.io());
 
         // 获取一周计划需求量
-        Observable<Float> taskvolume = mDataRepository
+        Observable<Integer> taskvolume = mDataRepository
                 .getTaskVolume(jumpWeek)
                 .subscribeOn(Schedulers.io());
 
-        Observable.zip(daycount, taskvolume, new BiFunction<Double[], Float, Float>() {
+
+        Observable.zip(daycount, taskvolume, new BiFunction<Integer[], Integer, Integer>() {
             @Override
-            public Float apply(Double[] doubles, Float aFloat) throws Exception {
+            public Integer apply(@NonNull Integer[] integers, @NonNull Integer integer) throws Exception {
                 int total = 0;
-                for (Double integer : doubles) {
-                    total += integer;
+                for (Integer i : integers) {
+                    total += i;
                 }
-                float v = aFloat - total;
+                int v = integer - total;
                 return v > 0 ? v : 0;
             }
         }).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Float>() {
+                .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Float value) {
+                    public void onNext(Integer value) {
                         view.showTaskVolume(value);
                     }
 
@@ -230,9 +232,9 @@ public class PlanPresenter implements PlanContract.Presenter {
      * @param integers
      */
     @Override
-    public void getTotalTaskVolume(Double[] integers) {
+    public void getTotalTaskVolume(Integer[] integers) {
         int total = 0;
-        for (Double integer : integers) {
+        for (Integer integer : integers) {
             total += integer;
         }
         view.showTotalTaskVolume(total);
@@ -293,14 +295,14 @@ public class PlanPresenter implements PlanContract.Presenter {
                 .getDayCount()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Double[]>() {
+                .subscribe(new Observer<Integer[]>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Double[] value) {
+                    public void onNext(Integer[] value) {
                         // 计算总计划量
                         view.showDayCount(value);
                         getTotalTaskVolume(value);

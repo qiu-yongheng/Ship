@@ -47,6 +47,7 @@
         <activity android:name=".view.actiivty.ImageSelectActivity"/>
         <activity android:name=".mvp.attendance.AttendanceActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.attendancerecord.AttendanceRecordActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.attendanceaudit.AttendanceAuditActivity" android:launchMode="singleTask"/>
 
 
         <activity

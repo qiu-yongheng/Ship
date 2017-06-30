@@ -54,7 +54,7 @@ public class RecordedSandShowFragment extends Fragment implements RecordedSandSh
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
 
     }
 
@@ -75,6 +75,11 @@ public class RecordedSandShowFragment extends Fragment implements RecordedSandSh
     @Override
     public void setPresenter(RecordedSandShowContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+
     }
 
     @Override

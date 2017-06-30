@@ -121,7 +121,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         // 船舶地址
         rlShipLocation.setOnClickListener(this);
         // 装船日期

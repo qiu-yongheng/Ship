@@ -111,7 +111,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         // 开始时间
         rlRecordStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,6 +253,11 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
     @Override
     public void setPresenter(RecordedSandDetailContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+
     }
 
     @Override

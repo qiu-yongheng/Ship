@@ -102,6 +102,7 @@
     <string name="et_hint_remark">添加备注</string>
     <string name="btn_quiry">考勤记录</string>
     <string name="text_date_select">日期选择:</string>
+    <string name="attendance_audit">考勤管理</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
@@ -113,7 +114,6 @@
         <item>待验砂船次</item>
         <item>验砂取样</item>
         <item>过砂记录</item>
-        <item>考勤</item>
     </array>
 
     <array name="voyage_spinner">

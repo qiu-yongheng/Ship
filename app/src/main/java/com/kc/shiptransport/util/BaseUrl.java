@@ -5,7 +5,6 @@ package com.kc.shiptransport.util;
  * @time 2017/6/11 20:59
  * @desc ${TODO}
  */
-
 public class BaseUrl {
     /**
      * 正式服

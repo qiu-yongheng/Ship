@@ -6,7 +6,9 @@
         android:id="@+id/btn_mine_exit"
         android:layout_alignParentBottom="true"
         android:text="@string/btn_exit"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_15sp"
+        android:background="?colorPrimary"
+        android:textColor="@color/text_white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </RelativeLayout>

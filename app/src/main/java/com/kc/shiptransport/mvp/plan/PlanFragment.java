@@ -123,7 +123,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         /* 提交 */
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,7 +265,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
      * @param value
      */
     @Override
-    public void showTaskVolume(Float value) {
+    public void showTaskVolume(Integer value) {
         String s = getResources().getText(R.string.task_valume).toString();
         titleTask.setText(s + value);
     }
@@ -328,7 +328,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
      * @param integers
      */
     @Override
-    public void showDayCount(Double[] integers) {
+    public void showDayCount(Integer[] integers) {
         tvTotal0.setText(String.valueOf(integers[0]));
         tvTotal1.setText(String.valueOf(integers[1]));
         tvTotal2.setText(String.valueOf(integers[2]));
@@ -363,7 +363,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
      * @param datas
      */
     @Override
-    public void showDemandDayCount(Double[] datas) {
+    public void showDemandDayCount(Integer[] datas) {
         tvTotalDemand0.setText(String.valueOf(datas[0]));
         tvTotalDemand1.setText(String.valueOf(datas[1]));
         tvTotalDemand2.setText(String.valueOf(datas[2]));

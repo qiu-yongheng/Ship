@@ -23,7 +23,7 @@ public class Acceptance extends DataSupport{
     private String SystemDate;
     private String Capacity;
     private String DeckGauge;
-    private Float Deduction;
+    private int Deduction;
     private String ReceptionSandTime;
     private String PassReceptionSandTime;
     private String TheAmountOfTime; // 量方时间
@@ -242,11 +242,11 @@ public class Acceptance extends DataSupport{
         this.defaultDeckGauge = defaultDeckGauge;
     }
 
-    public Float getDeduction() {
+    public int getDeduction() {
         return Deduction;
     }
 
-    public void setDeduction(Float deduction) {
+    public void setDeduction(int deduction) {
         Deduction = deduction;
     }
 

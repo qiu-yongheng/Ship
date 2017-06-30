@@ -33,7 +33,7 @@ public class WeekTaskBean {
     private String ShipAccount;
     private String ShipName;
     private String ShipType;
-    private double SandSupplyCount;
+    private int SandSupplyCount;
     private Float Capacity;
     private Float DeckGauge;
     private String ReceptionSandTime;
@@ -101,11 +101,11 @@ public class WeekTaskBean {
         ShipType = shipType;
     }
 
-    public double getSandSupplyCount() {
+    public int getSandSupplyCount() {
         return SandSupplyCount;
     }
 
-    public void setSandSupplyCount(double sandSupplyCount) {
+    public void setSandSupplyCount(int sandSupplyCount) {
         SandSupplyCount = sandSupplyCount;
     }
 

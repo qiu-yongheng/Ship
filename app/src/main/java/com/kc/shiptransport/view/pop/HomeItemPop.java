@@ -13,7 +13,6 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.amount.AmountActivity;
-import com.kc.shiptransport.mvp.attendance.AttendanceActivity;
 import com.kc.shiptransport.mvp.home.PopAdapter;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
 import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
@@ -93,7 +92,6 @@ public class HomeItemPop extends BasePopWindown {
                 R.mipmap.supply_sand,
                 R.mipmap.supply_sand,
                 R.mipmap.supply_sand,
-                R.mipmap.supply_sand,
                 R.mipmap.supply_sand},
                 context.getResources().getStringArray(R.array.home_item_pop));
 
@@ -139,7 +137,7 @@ public class HomeItemPop extends BasePopWindown {
                         break;
                     case 8:
                         // 考勤
-                        AttendanceActivity.startActivity(context);
+//                        AttendanceActivity.startActivity(context);
                 }
                 //onDismiss();
             }

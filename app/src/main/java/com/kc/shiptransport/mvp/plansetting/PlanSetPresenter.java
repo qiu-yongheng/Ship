@@ -120,14 +120,14 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
                 .getPlanMeasure(date)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Double>() {
+                .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(Double value) {
+                    public void onNext(Integer value) {
                         view.showPlanMeasure(value);
                     }
 

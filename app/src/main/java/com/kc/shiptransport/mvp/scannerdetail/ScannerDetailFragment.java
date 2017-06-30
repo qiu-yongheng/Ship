@@ -56,7 +56,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
 
     }
 

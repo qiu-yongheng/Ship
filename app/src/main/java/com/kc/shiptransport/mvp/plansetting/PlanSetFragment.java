@@ -93,7 +93,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         spinnerSelectDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -175,6 +175,16 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     @Override
     public void setPresenter(PlanSetContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+
+    }
+
+    @Override
+    public void showError(String msg) {
+
     }
 
     @Override

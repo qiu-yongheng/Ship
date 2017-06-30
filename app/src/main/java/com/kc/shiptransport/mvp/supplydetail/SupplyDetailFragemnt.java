@@ -119,7 +119,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         }
     }
 
-    private void initListener() {
+    public void initListener() {
         /* 提交 */
         btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -266,6 +266,11 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         } else {
             activity.hideProgressDailog();
         }
+    }
+
+    @Override
+    public void showError(String msg) {
+
     }
 
     @Override

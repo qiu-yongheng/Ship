@@ -19,22 +19,21 @@ public class TaskVolumeBean {
      * BoatD : 0.0
      * AllBoatSum : 8000.0
      */
-
-    private double ItemID;
+    private int ItemID;
     private String SubcontractorAccount;
     private String SubcontractorName;
     private String Date;
-    private double BoatA;
-    private double BoatB;
-    private double BoatC;
-    private double BoatD;
-    private double AllBoatSum;
+    private int BoatA;
+    private int BoatB;
+    private int BoatC;
+    private int BoatD;
+    private int AllBoatSum;
 
-    public double getItemID() {
+    public int getItemID() {
         return ItemID;
     }
 
-    public void setItemID(double ItemID) {
+    public void setItemID(int ItemID) {
         this.ItemID = ItemID;
     }
 
@@ -62,43 +61,43 @@ public class TaskVolumeBean {
         this.Date = Date;
     }
 
-    public double getBoatA() {
+    public int getBoatA() {
         return BoatA;
     }
 
-    public void setBoatA(double BoatA) {
+    public void setBoatA(int BoatA) {
         this.BoatA = BoatA;
     }
 
-    public double getBoatB() {
+    public int getBoatB() {
         return BoatB;
     }
 
-    public void setBoatB(double BoatB) {
+    public void setBoatB(int BoatB) {
         this.BoatB = BoatB;
     }
 
-    public double getBoatC() {
+    public int getBoatC() {
         return BoatC;
     }
 
-    public void setBoatC(double BoatC) {
+    public void setBoatC(int BoatC) {
         this.BoatC = BoatC;
     }
 
-    public double getBoatD() {
+    public int getBoatD() {
         return BoatD;
     }
 
-    public void setBoatD(double BoatD) {
+    public void setBoatD(int BoatD) {
         this.BoatD = BoatD;
     }
 
-    public double getAllBoatSum() {
+    public int getAllBoatSum() {
         return AllBoatSum;
     }
 
-    public void setAllBoatSum(double AllBoatSum) {
+    public void setAllBoatSum(int AllBoatSum) {
         this.AllBoatSum = AllBoatSum;
     }
 }

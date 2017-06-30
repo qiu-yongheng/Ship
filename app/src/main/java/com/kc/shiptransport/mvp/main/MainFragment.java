@@ -59,7 +59,7 @@ public class MainFragment extends Fragment {
         tabLayout.getTabAt(2).setIcon(R.mipmap.un_mine);
     }
 
-    private void initListener() {
+    public void initListener() {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

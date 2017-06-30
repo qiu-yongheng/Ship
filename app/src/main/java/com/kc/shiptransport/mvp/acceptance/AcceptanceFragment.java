@@ -110,7 +110,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
        /* 刷新 */
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -314,7 +314,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
      * @param integers
      */
     @Override
-    public void showDayCount(Double[] integers) {
+    public void showDayCount(Integer[] integers) {
         tvTotal0.setText(String.valueOf(integers[0]));
         tvTotal1.setText(String.valueOf(integers[1]));
         tvTotal2.setText(String.valueOf(integers[2]));
@@ -336,6 +336,11 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         } else {
             activity.hideProgressDailog();
         }
+    }
+
+    @Override
+    public void showError(String msg) {
+
     }
 
     @Override

@@ -125,7 +125,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
      */
     protected abstract int getType();
 
-    private void initListener() {
+    public void initListener() {
         /* 刷新 */
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,7 +315,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
     protected abstract void abs_onItemClick(View view, int position);
 
     @Override
-    public void showDayCount(Double[] integers) {
+    public void showDayCount(Integer[] integers) {
         tvTotal0.setText(String.valueOf(integers[0]));
         tvTotal1.setText(String.valueOf(integers[1]));
         tvTotal2.setText(String.valueOf(integers[2]));

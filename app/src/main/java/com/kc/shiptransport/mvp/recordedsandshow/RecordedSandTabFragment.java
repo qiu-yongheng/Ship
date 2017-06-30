@@ -98,7 +98,7 @@ public class RecordedSandTabFragment extends Fragment {
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

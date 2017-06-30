@@ -84,7 +84,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         // 取消
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,16 +206,20 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     @Override
     public void showShipDetail(Acceptance value) {
         String shipItemNum = value.getShipItemNum();
+        // 舱容
         capacity = String.valueOf(value.getDefaultCapacity());
+        // 船名
         tvShipName.setText(value.getShipName());
+        // 船次
         tvShipId.setText("船次: " + (shipItemNum == null ? "" : shipItemNum));
+        // 供应商
         tvSubontractor.setText("供应商: " + value.getSubcontractorName());
         tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
         tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
         tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
         tvWarehouseSpace.setText("舱容: " + (capacity == null ? "" : capacity));
 
-        etShipVolume.setText(String.valueOf(value.getDeduction() == null ? 0 : value.getDeduction()));
+        etShipVolume.setText(String.valueOf(value.getDeduction() == 0 ? 0 : value.getDeduction()));
         etDeckVolume.setText(value.getDeckGauge() == null ? "0" : value.getDeckGauge());
     }
 

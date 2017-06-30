@@ -62,7 +62,7 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         // 取消选择,
         btnShipCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +147,11 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
         } else {
             activity.hideProgressDailog();
         }
+    }
+
+    @Override
+    public void showError(String msg) {
+
     }
 
     @Override

@@ -74,7 +74,7 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         // 提交
         mBtnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +130,11 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
     @Override
     public void setPresenter(AttendanceContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+
     }
 
     @Override

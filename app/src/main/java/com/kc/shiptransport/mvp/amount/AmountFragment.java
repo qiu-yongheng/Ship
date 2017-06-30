@@ -114,7 +114,7 @@ public class AmountFragment extends Fragment implements AmountContract.View {
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         /* 刷新 */
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,7 +296,7 @@ public class AmountFragment extends Fragment implements AmountContract.View {
     }
 
     @Override
-    public void showDayCount(Double[] integers) {
+    public void showDayCount(Integer[] integers) {
         tvTotal0.setText(String.valueOf(integers[0]));
         tvTotal1.setText(String.valueOf(integers[1]));
         tvTotal2.setText(String.valueOf(integers[2]));

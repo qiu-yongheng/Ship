@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.AcceptanceBean;
 import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.AttendanceRecordListBean;
@@ -22,6 +23,7 @@ import com.kc.shiptransport.data.bean.SampleCommitResult;
 import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.bean.SampleUpdataBean;
 import com.kc.shiptransport.data.bean.SandSampleBean;
+import com.kc.shiptransport.data.bean.ScanCommitBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.ShipBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
@@ -85,13 +87,13 @@ import static org.litepal.crud.DataSupport.findAll;
 public class DataRepository implements DataSouceImpl {
     private Gson gson = new Gson();
     private RemoteDataSource mRemoteDataSource = new RemoteDataSource();
-    private double day_0 = 0;
-    private double day_1 = 0;
-    private double day_2 = 0;
-    private double day_3 = 0;
-    private double day_4 = 0;
-    private double day_5 = 0;
-    private double day_6 = 0;
+    private int day_0 = 0;
+    private int day_1 = 0;
+    private int day_2 = 0;
+    private int day_3 = 0;
+    private int day_4 = 0;
+    private int day_5 = 0;
+    private int day_6 = 0;
 
 
     @Override
@@ -178,10 +180,10 @@ public class DataRepository implements DataSouceImpl {
     }
 
     @Override
-    public Observable<Double[]> getDayCount() {
-        return Observable.create(new ObservableOnSubscribe<Double[]>() {
+    public Observable<Integer[]> getDayCount() {
+        return Observable.create(new ObservableOnSubscribe<Integer[]>() {
             @Override
-            public void subscribe(ObservableEmitter<Double[]> e) throws Exception {
+            public void subscribe(ObservableEmitter<Integer[]> e) throws Exception {
                 synchronized (DataRepository.class) {
                     reset();
                     // 从数据库获取一周任务分配数据
@@ -211,7 +213,7 @@ public class DataRepository implements DataSouceImpl {
                                 break;
                         }
                     }
-                    Double[] integers = new Double[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
+                    Integer[] integers = new Integer[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
 
                     e.onNext(integers);
                     e.onComplete();
@@ -227,10 +229,10 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Double[]> getDayCount(final int type) {
-        return Observable.create(new ObservableOnSubscribe<Double[]>() {
+    public Observable<Integer[]> getDayCount(final int type) {
+        return Observable.create(new ObservableOnSubscribe<Integer[]>() {
             @Override
-            public void subscribe(ObservableEmitter<Double[]> e) throws Exception {
+            public void subscribe(ObservableEmitter<Integer[]> e) throws Exception {
                 // 初始化每日计划量
                 reset();
 
@@ -300,7 +302,7 @@ public class DataRepository implements DataSouceImpl {
                     }
                 }
 
-                Double[] integers = new Double[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
+                Integer[] integers = new Integer[]{day_0, day_1, day_2, day_3, day_4, day_5, day_6};
 
                 e.onNext(integers);
                 e.onComplete();
@@ -783,14 +785,14 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Double> getPlanMeasure(final String date) {
-        return Observable.create(new ObservableOnSubscribe<Double>() {
+    public Observable<Integer> getPlanMeasure(final String date) {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
-            public void subscribe(ObservableEmitter<Double> e) throws Exception {
-                double d = 0;
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                int d = 0;
                 List<WeekTask> list = DataSupport.where("PlanDay = ?", date).find(WeekTask.class);
                 for (WeekTask weekTask : list) {
-                    double sandSupplyCount = weekTask.getSandSupplyCount();
+                    int sandSupplyCount = weekTask.getSandSupplyCount();
                     d += sandSupplyCount;
                 }
                 e.onNext(d);
@@ -1106,10 +1108,10 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Float> getTaskVolume(final int jumpWeek) {
-        return Observable.create(new ObservableOnSubscribe<Float>() {
+    public Observable<Integer> getTaskVolume(final int jumpWeek) {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
-            public void subscribe(ObservableEmitter<Float> e) throws Exception {
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
                 /* 获取分包商账号 */
                 String subcontractorAccount = findAll(Subcontractor.class).get(0).getSubcontractorAccount();
                 /* 开始时间 */
@@ -1122,7 +1124,7 @@ public class DataRepository implements DataSouceImpl {
                 }.getType());
                 // 初始化表
                 DataSupport.deleteAll(TaskVolume.class);
-                float f = 0;
+                int f = 0;
                 for (TaskVolumeBean bean : lists) {
                     // 保存数据到数据库
                     TaskVolume taskPlanList = new TaskVolume();
@@ -1162,6 +1164,7 @@ public class DataRepository implements DataSouceImpl {
                 // 解析数据
                 List<AppListBean> lists = gson.fromJson(appList, new TypeToken<List<AppListBean>>() {
                 }.getType());
+
                 // 保存数据到数据库
                 DataSupport.deleteAll(AppList.class);
                 for (AppListBean bean : lists) {
@@ -1171,6 +1174,84 @@ public class DataRepository implements DataSouceImpl {
                     list.setAppName(bean.getAppName());
                     list.setAppUrl(bean.getAppUrl());
                     list.setSortNum(bean.getSortNum());
+
+
+                    Integer appID = Integer.valueOf(bean.getAppID());
+                    switch (appID) {
+                        case 1:
+                            // 电子海图
+                            list.setIcon_id(R.mipmap.map);
+                            break;
+                        case 2:
+                            // 供砂管理
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 3:
+                            // 施工记录
+                            list.setIcon_id(R.mipmap.log);
+                            break;
+                        case 4:
+                            // 施工照片
+                            list.setIcon_id(R.mipmap.supply_sand);
+                            break;
+                        case 5:
+                            // 安全管理
+                            list.setIcon_id(R.mipmap.save);
+                            break;
+                        case 6:
+                            // 数据分析
+                            list.setIcon_id(R.mipmap.data);
+                            break;
+                        case 7:
+                            // 生产指令
+                            list.setIcon_id(R.mipmap.msg);
+                            break;
+                        case 8:
+                            // 航线管理
+                            list.setIcon_id(R.mipmap.ship_monitor);
+                            break;
+                        case 9:
+                            // 通讯录
+                            list.setIcon_id(R.mipmap.acceptance);
+                            break;
+                        case 10:
+                            // 分包商进场计划
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 11:
+                            // 待验收航次
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 12:
+                            // 待验砂船次
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 13:
+                            // 量方管理
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 14:
+                            // 分包商航次信息完善
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 15:
+                            // 分包商航次完善扫描件
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 16:
+                            // 验砂取样
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 17:
+                            // 过砂记录
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 18:
+                            // 考勤管理
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                    }
+
                     list.save();
                 }
 
@@ -1187,20 +1268,20 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Double[]> getDemandDayCount(final int jumpWeek) {
-        return Observable.create(new ObservableOnSubscribe<Double[]>() {
+    public Observable<Integer[]> getDemandDayCount(final int jumpWeek) {
+        return Observable.create(new ObservableOnSubscribe<Integer[]>() {
             @Override
-            public void subscribe(ObservableEmitter<Double[]> e) throws Exception {
+            public void subscribe(ObservableEmitter<Integer[]> e) throws Exception {
                 List<String> dates = CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek);
 
-                Double[] doubles = new Double[7];
+                Integer[] doubles = new Integer[7];
 
                 for (int i = 0; i < dates.size(); i++) {
                     List<TaskVolume> taskVolumes = DataSupport.where("Date like ?", dates.get(i) + "%").find(TaskVolume.class);
                     if (taskVolumes != null && !taskVolumes.isEmpty()) {
                         doubles[i] = taskVolumes.get(0).getAllBoatSum();
                     } else {
-                        doubles[i] = 0.0;
+                        doubles[i] = 0;
 
                         // 保存到数据库
                         //                        TaskVolume taskVolume = new TaskVolume();
@@ -2149,6 +2230,65 @@ public class DataRepository implements DataSouceImpl {
 
                 e.onNext(commitResultBean.getMessage() == 1);
 
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 根据AppPID获取要显示的图标
+     * @param AppPID
+     * @return
+     */
+    @Override
+    public Observable<List<AppList>> getAppList(final int AppPID) {
+        return Observable.create(new ObservableOnSubscribe<List<AppList>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<AppList>> e) throws Exception {
+                // 查询数据库数据, 并排序
+                List<AppList> appLists = DataSupport.where("AppPID = ?", String.valueOf(AppPID)).order("SortNum asc").find(AppList.class);
+
+                e.onNext(appLists);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 提交扫描件图片
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertSubcontractorPerfectBoatScannerAttachment(final ScanCommitBean bean) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 解析数据成json
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("ItemID", bean.getItemID());
+                jsonObject.put("SubcontractorInterimApproachPlanID", bean.getSubcontractorInterimApproachPlanID());
+                jsonObject.put("SubcontractorPerfectBoatScannerAttachmentTypeID", bean.getSubcontractorPerfectBoatScannerAttachmentTypeID());
+                jsonObject.put("SubcontractorAccount", bean.getSubcontractorAccount());
+                jsonObject.put("ConstructionBoatAccount", bean.getConstructionBoatAccount());
+                jsonObject.put("FileName", bean.getFileName());
+                jsonObject.put("SuffixName", bean.getSuffixName());
+                jsonObject.put("Creator", bean.getCreator());
+
+                jsonArray.put(jsonObject);
+
+                Log.d("==", "提交扫描件图片: " + jsonArray.toString());
+
+                String json = jsonArray.toString();
+
+                // 提交图片
+                String result = mRemoteDataSource.InsertSubcontractorPerfectBoatScannerAttachment(json, bean.getBase64img());
+
+                CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(resultBean.getMessage() == 1);
                 e.onComplete();
             }
         });

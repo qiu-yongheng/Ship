@@ -4,9 +4,11 @@ import android.content.Context;
 
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleShowDatesBean;
+import com.kc.shiptransport.data.bean.ScanCommitBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.PerfectBoatRecord;
@@ -70,14 +72,14 @@ public interface DataSouceImpl {
      *
      * @return
      */
-    Observable<Double[]> getDayCount();
+    Observable<Integer[]> getDayCount();
 
     /**
      * 计算每天任务总量
      *
      * @return
      */
-    Observable<Double[]> getDayCount(int type);
+    Observable<Integer[]> getDayCount(int type);
 
     /**
      * 网络请求
@@ -154,7 +156,7 @@ public interface DataSouceImpl {
      * @param date
      * @return
      */
-    Observable<Double> getPlanMeasure(String date);
+    Observable<Integer> getPlanMeasure(String date);
 
     /**
      * 分包商评价
@@ -223,7 +225,7 @@ public interface DataSouceImpl {
      * 获取分包商预计划量
      * @return
      */
-    Observable<Float> getTaskVolume(int jumpWeek);
+    Observable<Integer> getTaskVolume(int jumpWeek);
 //    Observable<TaskVolume> getTaskVolume(String account, String startDate, String endDate);
 
     /**
@@ -238,7 +240,7 @@ public interface DataSouceImpl {
      * @return
      * @param jumpWeek
      */
-    Observable<Double[]> getDemandDayCount(int jumpWeek);
+    Observable<Integer[]> getDemandDayCount(int jumpWeek);
 
     /**
      * 获取分包商名字
@@ -392,4 +394,17 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> InsertSandSampling(SampleShowDatesBean bean);
+
+    /**
+     * 根据AppPID获取要显示的图标列表
+     * @return
+     */
+    Observable<List<AppList>> getAppList(int AppPID);
+
+    /**
+     * 提交扫描件图片
+     * @param bean
+     * @return
+     */
+    Observable<Boolean> InsertSubcontractorPerfectBoatScannerAttachment(ScanCommitBean bean);
 }

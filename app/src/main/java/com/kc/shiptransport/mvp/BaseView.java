@@ -11,5 +11,11 @@ import android.view.View;
 public interface BaseView<T> {
     void initViews(View view);
 
+    void initListener();
+
     void setPresenter(T presenter);
+
+    void showLoading(boolean isShow);
+
+    void showError(String msg);
 }

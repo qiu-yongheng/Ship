@@ -106,11 +106,18 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                     @Override
                     public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
                         if (aBoolean) {
-                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_SUPPLY),
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN),
                                     SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
                             return null;
                         }
+                    }
+                })
+                .flatMap(new Function<Boolean, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
+                        // 删除未验收数据后, 进行重新排序
+                        return dataRepository.getWeekTaskSort(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN));
                     }
                 })
                 .flatMap(new Function<Boolean, Observable<Acceptance>>() { // 更新船舶详细数据, 以后进来直接读数据库

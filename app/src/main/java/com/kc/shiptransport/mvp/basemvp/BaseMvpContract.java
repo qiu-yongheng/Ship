@@ -25,7 +25,7 @@ public interface BaseMvpContract {
         // 显示选中周的任务计划
         void showWeekTask(List<String> dates);
         // 每天任务量统计
-        void showDayCount(Double[] integers);
+        void showDayCount(Integer[] integers);
         // 是否显示加载
         void showLoading(boolean active);
         // 显示失败信息

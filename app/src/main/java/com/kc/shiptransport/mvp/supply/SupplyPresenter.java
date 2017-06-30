@@ -181,14 +181,14 @@ public class SupplyPresenter implements SupplyContract.Presenter {
                 .getDayCount(SettingUtil.TYPE_SUPPLY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Double[]>() {
+                .subscribe(new Observer<Integer[]>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(Double[] value) {
+                    public void onNext(Integer[] value) {
                         // 计算总计划量
                         view.showDayCount(value);
                     }

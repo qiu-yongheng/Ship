@@ -48,7 +48,7 @@ public class MineFragment extends Fragment {
 
     }
 
-    private void initListener() {
+    public void initListener() {
         btnMineExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

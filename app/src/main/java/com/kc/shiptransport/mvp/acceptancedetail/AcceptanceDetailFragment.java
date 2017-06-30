@@ -87,7 +87,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         return view;
     }
 
-    private void initListener() {
+    public void initListener() {
         /* 点击弹出时间选择器 */
         tvAcceptanceTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,6 +242,11 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         } else {
             activity.hideProgressDailog();
         }
+    }
+
+    @Override
+    public void showError(String msg) {
+
     }
 
     @Override
