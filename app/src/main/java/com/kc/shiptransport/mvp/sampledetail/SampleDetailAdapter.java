@@ -12,10 +12,14 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.SampleShowDatesBean;
+import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,9 +58,14 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // 获取取样编号内的图片
         List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> imageList = numRecordListBean.getSandSamplingAttachmentRecordList();
 
-        // 显示图片
-        RxGalleryUtil.showImage(context, (imageList.get(0).getFilePath() == null ? "" : imageList.get(0).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage1);
-        RxGalleryUtil.showImage(context, (imageList.get(1).getFilePath() == null ? "" : imageList.get(1).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage2);
+        if (!imageList.isEmpty()) {
+            // 显示图片
+            RxGalleryUtil.showImage(context, (imageList.get(0).getFilePath() == null ? "" : imageList.get(0).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage1);
+
+            if (imageList.size() > 1) {
+                RxGalleryUtil.showImage(context, (imageList.get(1).getFilePath() == null ? "" : imageList.get(1).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage2);
+            }
+        }
         ((NormalHolder) holder).mTvsamplenum.setText((numRecordListBean.getSamplingNum() == null || numRecordListBean.getSamplingNum().equals("0")) ? "" : numRecordListBean.getSamplingNum());
 
 
@@ -136,17 +145,43 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.listener = listener;
     }
 
+    /**
+     * 添加数据
+     *
+     * @param pos
+     */
     public void addData(int pos) {
-//        SampleRecordListBean sampleRecordList = new SampleRecordListBean();
-//        sampleRecordList.setItemID(itemID);
-//
-//        list.add(pos, sampleRecordList);
-//        notifyItemInserted(pos);
+        SampleShowDatesBean.SandSamplingNumRecordListBean sandSamplingNumRecordListBean = new SampleShowDatesBean.SandSamplingNumRecordListBean();
+        sandSamplingNumRecordListBean.setSandSamplingAttachmentRecordList(new ArrayList<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean>());
+
+        sandSamplingNumRecordListBean.getSandSamplingAttachmentRecordList().add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
+        sandSamplingNumRecordListBean.getSandSamplingAttachmentRecordList().add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
+
+        sandSamplingNumRecordList.add(pos, sandSamplingNumRecordListBean);
+        notifyItemInserted(pos);
     }
 
+    /**
+     * 删除数据
+     *
+     * @param pos
+     */
     public void delete(int pos) {
         // 从集合中删除
-//        list.remove(pos);
-//        notifyItemRemoved(pos);
+        sandSamplingNumRecordList.remove(pos);
+
+        // 删除position后数据, 调整position
+        DataSupport.deleteAll(SampleImageList.class, "itemID = ? and position = ?", String.valueOf(sampleShowDates.getSubcontractorInterimApproachPlanID()), String.valueOf(pos));
+
+        // 调整剩余数据的position
+        List<SampleImageList> sampleImageLists = DataSupport.where("itemID = ? and position > ?", String.valueOf(sampleShowDates.getSubcontractorInterimApproachPlanID()), String.valueOf(pos)).find(SampleImageList.class);
+
+        // 更新position
+        for (SampleImageList list : sampleImageLists) {
+            list.setPosition(list.getPosition() - 1);
+            list.save();
+        }
+
+        notifyItemRemoved(pos);
     }
 }

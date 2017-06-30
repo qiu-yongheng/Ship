@@ -7,6 +7,9 @@ import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
+import com.kc.shiptransport.util.SharePreferenceUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -153,7 +156,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
      * @param sampleImageList
      */
     @Override
-    public void upImage(SampleImageList sampleImageList) {
+    public void upImage(final SampleImageList sampleImageList) {
         dataRepository
                 .commitImage(sampleImageList)
                 .subscribeOn(Schedulers.io())
@@ -230,7 +233,46 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
      * @param sampleShowDates
      */
     @Override
-    public void commitJson(SampleShowDatesBean sampleShowDates) {
+    public void commitJson(final SampleShowDatesBean sampleShowDates) {
+        view.showLoading(true);
+        dataRepository
+                .InsertSandSampling(sampleShowDates)
+                .subscribeOn(Schedulers.io())
+                .flatMap(new Function<Boolean, ObservableSource<SampleShowDatesBean>>() {
+                    @Override
+                    public ObservableSource<SampleShowDatesBean> apply(@NonNull Boolean aBoolean) throws Exception {
+                        // 删除缓存
+                        // 成功后, 删除缓存
+                        SharePreferenceUtil.saveString(context, String.valueOf(sampleShowDates.getSubcontractorInterimApproachPlanID()), "");
 
+                        int i = DataSupport.deleteAll(SampleImageList.class, "itemID = ?", String.valueOf(sampleShowDates.getSubcontractorInterimApproachPlanID()));
+
+                        // 重新获取数据
+                        return dataRepository.GetSandSamplingBySubcontractorInterimApproachPlanID(sampleShowDates.getSubcontractorInterimApproachPlanID());
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SampleShowDatesBean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull SampleShowDatesBean bean) {
+                        view.showDetailList(bean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showImageUpdataResult();
+                        view.showLoading(false);
+                    }
+                });
     }
 }

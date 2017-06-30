@@ -1741,7 +1741,7 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<SampleImageList>> e) throws Exception {
                 // 获取保存的数据
-                List<SampleImageList> all = DataSupport.findAll(SampleImageList.class);
+                List<SampleImageList> all = DataSupport.where("ItemID = ?", String.valueOf(sandSample.getItemID())).find(SampleImageList.class);
 
                 if (all.isEmpty()) {
                     e.onError(new RuntimeException("没有图片进行提交"));
@@ -1774,6 +1774,12 @@ public class DataRepository implements DataSouceImpl {
                 // 解析返回的数据
                 SampleCommitResult commitResult = gson.fromJson(result, SampleCommitResult.class);
 
+                // 更新图片网络路径
+                if (commitResult.getMessage() == 1) {
+                    commitList.setNetPath(commitResult.getFilePath());
+                    commitList.setItemGuid(commitResult.getItemGuid());
+                    commitList.save();
+                }
 
                 e.onNext(commitResult.getMessage() == 1);
 
@@ -2061,6 +2067,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 提交验砂取样数据
+     *
      * @param bean
      * @return
      */
@@ -2071,7 +2078,78 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
                 // 创建要提交的对象
                 SampleUpdataBean sampleUpdataBean = new SampleUpdataBean();
+                // 设置进场ID
                 sampleUpdataBean.setItemID(String.valueOf(bean.getItemID()));
+                sampleUpdataBean.setSubcontractorInterimApproachPlanID(String.valueOf(bean.getSubcontractorInterimApproachPlanID()));
+                sampleUpdataBean.setConstructionBoatAccount(bean.getConstructionBoatAccount());
+                sampleUpdataBean.setCreator(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount());
+                sampleUpdataBean.setSandSamplingDate(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"));
+
+                // 创建取样编号集合
+                sampleUpdataBean.setSandSamplingNumRecordList(new ArrayList<SampleUpdataBean.SandSamplingNumRecordListBean>());
+
+                // 遍历SampleShowDatesBean, 录入数据
+                List<SampleShowDatesBean.SandSamplingNumRecordListBean> sandSamplingNumRecordList = bean.getSandSamplingNumRecordList();
+                for (int i = 0; i < sandSamplingNumRecordList.size(); i++) {
+                    SampleUpdataBean.SandSamplingNumRecordListBean numRecordListBean = new SampleUpdataBean.SandSamplingNumRecordListBean();
+                    numRecordListBean.setItemID(String.valueOf(sandSamplingNumRecordList.get(i).getItemID()));
+                    numRecordListBean.setSamplingNum(sandSamplingNumRecordList.get(i).getSamplingNum());
+                    numRecordListBean.setSandSamplingID(String.valueOf(sandSamplingNumRecordList.get(i).getSandSamplingID()));
+
+                    // 创建图片集合
+                    numRecordListBean.setSandSamplingAttachmentRecordList(new ArrayList<SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean>());
+
+                    // 查询position对应的图片数据
+                    List<SampleImageList> image_1 = DataSupport.where("position = ? and img_x = ?", String.valueOf(i), String.valueOf(SettingUtil.HOLDER_IMAGE_1)).find(SampleImageList.class);
+                    List<SampleImageList> image_2 = DataSupport.where("position = ? and img_x = ?", String.valueOf(i), String.valueOf(SettingUtil.HOLDER_IMAGE_2)).find(SampleImageList.class);
+
+                    List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> sandSamplingAttachmentRecordList = sandSamplingNumRecordList.get(i).getSandSamplingAttachmentRecordList();
+
+                    if (!image_1.isEmpty()) {
+                        // 图片1
+                        SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean imageListBean_1 = new SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean();
+                        imageListBean_1.setSandSamplingID(String.valueOf(sandSamplingAttachmentRecordList.get(0).getSandSamplingID()));
+                        imageListBean_1.setItemID(String.valueOf(sandSamplingAttachmentRecordList.get(0).getItemID()));
+                        imageListBean_1.setFileName(image_1.get(0).getFileName());
+                        imageListBean_1.setSuffixName(image_1.get(0).getSuffixName());
+                        imageListBean_1.setSandSamplingNumID(String.valueOf(sandSamplingAttachmentRecordList.get(0).getSandSamplingNumID()));
+                        imageListBean_1.setFilePath(image_1.get(0).getNetPath());
+
+                        // 把图片保存到集合中
+                        numRecordListBean.getSandSamplingAttachmentRecordList().add(imageListBean_1);
+                    }
+
+                    if (!image_2.isEmpty()) {
+                        // 图片2
+                        SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean imageListBean_2 = new SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean();
+                        imageListBean_2.setSandSamplingID(String.valueOf(sandSamplingAttachmentRecordList.get(1).getSandSamplingID()));
+                        imageListBean_2.setItemID(String.valueOf(sandSamplingAttachmentRecordList.get(1).getItemID()));
+                        imageListBean_2.setFileName(image_2.get(0).getFileName());
+                        imageListBean_2.setSuffixName(image_2.get(0).getSuffixName());
+                        imageListBean_2.setSandSamplingNumID(String.valueOf(sandSamplingAttachmentRecordList.get(1).getSandSamplingNumID()));
+                        imageListBean_2.setFilePath(image_2.get(0).getNetPath());
+
+                        // 把图片保存到集合中
+                        numRecordListBean.getSandSamplingAttachmentRecordList().add(imageListBean_2);
+                    }
+
+                    // 把验砂取样编号数据保存到集合中
+                    sampleUpdataBean.getSandSamplingNumRecordList().add(numRecordListBean);
+                }
+
+                // 把对象解析成json数据
+                String json = gson.toJson(sampleUpdataBean);
+
+                Log.d("==", "提交图片: " + json);
+
+                // 发送网络请求
+                String result = mRemoteDataSource.InsertSandSampling(json);
+
+                CommitResultBean commitResultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(commitResultBean.getMessage() == 1);
+
+                e.onComplete();
             }
         });
     }

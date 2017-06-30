@@ -12,9 +12,15 @@ public class SampleImageList extends DataSupport{
     private int itemID;
     private int position;
     private int img_x;
+    // 本地图片路径
     private String filePath;
+    // 网络图片路径
+    private String netPath;
+    // ItemGuid
+    private String ItemGuid;
     private String suffixName;
     private String fileName;
+
 
     public int getItemID() {
         return itemID;
@@ -62,5 +68,21 @@ public class SampleImageList extends DataSupport{
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getNetPath() {
+        return netPath;
+    }
+
+    public void setNetPath(String netPath) {
+        this.netPath = netPath;
+    }
+
+    public String getItemGuid() {
+        return ItemGuid;
+    }
+
+    public void setItemGuid(String itemGuid) {
+        ItemGuid = itemGuid;
     }
 }

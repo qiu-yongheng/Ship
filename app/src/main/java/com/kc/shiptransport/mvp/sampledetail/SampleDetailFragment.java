@@ -25,6 +25,7 @@ import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
@@ -72,7 +73,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     private SampleDetailAdapter mAdapter;
     private int itemID;
     private SandSample sandSample;
-    private SampleShowDatesBean sampleShowDates;
+    //private SampleShowDatesBean sampleShowDates;
 
     @Nullable
     @Override
@@ -102,9 +103,8 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //                mAdapter.addData(mAdapter.list.size());
-                //                recyclerview.smoothScrollToPosition(mAdapter.list.size());
+                mAdapter.addData(mAdapter.sandSamplingNumRecordList.size());
+                recyclerview.smoothScrollToPosition(mAdapter.sandSamplingNumRecordList.size());
             }
         });
     }
@@ -174,8 +174,6 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
 
         // 获取要显示的数据
         presenter.getDates(activity.position);
-
-
     }
 
     /**
@@ -228,7 +226,13 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
 
     @Override
     public void updateProgress() {
-        activity.updataProgress();
+        activity.updataProgress(new OnProgressFinishListener() {
+            @Override
+            public void onFinish() {
+                // 提交json
+                presenter.commitJson(mAdapter.sampleShowDates);
+            }
+        });
     }
 
     /**
@@ -238,10 +242,10 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
      */
     @Override
     public void showDetailList(SampleShowDatesBean bean) {
-        this.sampleShowDates = bean;
+        //this.sampleShowDates = bean;
 
         // 获取取样编号的集合
-        List<SampleShowDatesBean.SandSamplingNumRecordListBean> sandSamplingNumRecordList = sampleShowDates.getSandSamplingNumRecordList();
+        List<SampleShowDatesBean.SandSamplingNumRecordListBean> sandSamplingNumRecordList = bean.getSandSamplingNumRecordList();
 
         // 判断如果取样数据小于3个, 手动添加至3个
         int size = sandSamplingNumRecordList.size();
@@ -260,7 +264,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                 numRecordListBean.getSandSamplingAttachmentRecordList().add(imageBean2);
 
                 // 保存到集合中
-                sampleShowDates.getSandSamplingNumRecordList().add(numRecordListBean);
+                bean.getSandSamplingNumRecordList().add(numRecordListBean);
             }
         } else {
             // 不做任何操作
@@ -268,7 +272,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
 
         // 设置adapter
         if (mAdapter == null) {
-            mAdapter = new SampleDetailAdapter(getContext(), sampleShowDates);
+            mAdapter = new SampleDetailAdapter(getContext(), bean);
             mAdapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, final int position, final int... type) {
@@ -276,6 +280,13 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                     SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = mAdapter.sandSamplingNumRecordList.get(position);
 
                     final List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> imageList = numRecordListBean.getSandSamplingAttachmentRecordList();
+
+                    if (imageList.isEmpty()) {
+                        imageList.add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
+                        imageList.add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
+                    } else if (imageList.size() == 1) {
+                        imageList.add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
+                    }
 
                     switch (type[0]) {
                         case SettingUtil.HOLDER_IMAGE_1:
@@ -374,25 +385,37 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                 }
 
                 @Override
-                public void onItemLongClick(View view, int position) {
-
+                public void onItemLongClick(View view, final int position) {
+                    activity.showDailog("删除", "是否删除该数据", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (mAdapter.sandSamplingNumRecordList.size() <= 3) {
+                                Toast.makeText(getContext(), "取样次数不能少于3次", Toast.LENGTH_SHORT).show();
+                            } else {
+                                mAdapter.delete(position);
+                            }
+                        }
+                    });
                 }
             });
 
             recyclerview.setAdapter(mAdapter);
 
         } else {
-            mAdapter.setDates(sampleShowDates);
+            mAdapter.setDates(bean);
             mAdapter.notifyDataSetChanged();
         }
     }
 
     /**
-     * 提交json
+     * 提交成功后, 删除缓存
      */
     @Override
     public void showImageUpdataResult() {
-        presenter.commitJson(sampleShowDates);
+        // 成功后, 删除缓存
+        SharePreferenceUtil.saveString(getContext(), String.valueOf(itemID), "");
+
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -409,8 +432,8 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
      */
     private void saveImageList() {
         // 缓存数据
-        if (sampleShowDates != null) {
-            String json = new Gson().toJson(sampleShowDates);
+        if (mAdapter != null) {
+            String json = new Gson().toJson(mAdapter.sampleShowDates);
             SharePreferenceUtil.saveString(getContext(), String.valueOf(itemID), json);
         }
     }

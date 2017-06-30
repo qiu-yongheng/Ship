@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 
 /**
  * @author 邱永恒
@@ -106,13 +107,14 @@ public class BaseActivity extends AppCompatActivity {
 //        }).start();
     }
 
-    public void updataProgress() {
+    public void updataProgress(OnProgressFinishListener listener) {
         progress ++;
         mProgress.setProgress(progress);
 
         if (progress >= mProgress.getMax()) {
             mProgress.dismiss();
             Toast.makeText(this, "上传成功", Toast.LENGTH_SHORT).show();
+            listener.onFinish();
         }
     }
 
