@@ -44,8 +44,8 @@
     <string name="btn_add_sample">添加取样</string>
     <string name="supply_red">红色字体: 已验砂</string>
     <string name="supply_black">黑色字体: 未验砂</string>
-    <string name="amount_red">红色字体: 已完善</string>
-    <string name="amount_black">黑色字体: 未完善</string>
+    <string name="amount_red">红色字体: 已量方</string>
+    <string name="amount_black">黑色字体: 未量方</string>
     <string name="voyage_red">红色字体:  已完善</string>
     <string name="voyage_black">黑色字体: 未完善</string>
     <string name="recorded_red">红色字体: 已完善</string>

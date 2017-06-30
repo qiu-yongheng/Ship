@@ -256,5 +256,6 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     public void showCommitResult(boolean active) {
         Toast.makeText(activity, "提交成功!", Toast.LENGTH_SHORT).show();
         btnCancel.setText(R.string.btn_return);
+        getActivity().onBackPressed();
     }
 }

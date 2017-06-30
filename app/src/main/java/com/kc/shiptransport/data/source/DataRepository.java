@@ -1473,12 +1473,15 @@ public class DataRepository implements DataSouceImpl {
                 List<ConstructionBoatBean> list = gson.fromJson(result, new TypeToken<List<ConstructionBoatBean>>() {
                 }.getType());
 
-                // 保存到数据库
-                for (ConstructionBoatBean boatBean : list) {
-                    ConstructionBoat boat = new ConstructionBoat();
-                    boat.setShipNum(boatBean.getShipNum());
-                    boat.setShipName(boatBean.getShipName());
-                    boat.save();
+                if (!list.isEmpty()) {
+                    DataSupport.deleteAll(ConstructionBoat.class);
+                    // 保存到数据库
+                    for (ConstructionBoatBean boatBean : list) {
+                        ConstructionBoat boat = new ConstructionBoat();
+                        boat.setShipNum(boatBean.getShipNum());
+                        boat.setShipName(boatBean.getShipName());
+                        boat.save();
+                    }
                 }
 
                 e.onNext(true);
@@ -2237,6 +2240,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 根据AppPID获取要显示的图标
+     *
      * @param AppPID
      * @return
      */
@@ -2256,6 +2260,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 提交扫描件图片
+     *
      * @param bean
      * @return
      */

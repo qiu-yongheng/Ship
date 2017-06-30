@@ -264,6 +264,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         if (active) {
             Toast.makeText(activity, "提交成功!", Toast.LENGTH_SHORT).show();
             btnAcceptanceCancel.setText(R.string.btn_return);
+            getActivity().onBackPressed();
         } else {
             Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
         }

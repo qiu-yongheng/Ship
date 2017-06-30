@@ -51,6 +51,8 @@ public class MainFragment extends Fragment {
     private void initView(View view) {
         // 绑定view
         viewpager.setAdapter(new TabAdapter(getActivity().getSupportFragmentManager(), new HomeFragment(), new UpcomingFragment(), new MineFragment()));
+        // 缓存3个标签的数据, 不重复加载数据
+        viewpager.setOffscreenPageLimit(3);
         // 绑定viewpage
         tabLayout.setupWithViewPager(viewpager);
 

@@ -332,6 +332,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
             if (IsFinish == 1) {
                 btnCommit.setVisibility(View.GONE);
                 btnReturn.setVisibility(View.VISIBLE);
+                getActivity().onBackPressed();
             } else {
                 btnCommit.setVisibility(View.VISIBLE);
                 btnReturn.setVisibility(View.GONE);

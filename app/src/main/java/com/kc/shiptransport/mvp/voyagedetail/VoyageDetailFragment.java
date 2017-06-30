@@ -402,6 +402,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     public void showCommitResult(boolean isSuccess) {
         if (isSuccess) {
             Toast.makeText(activity, "提交成功", Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
         } else {
             Toast.makeText(activity, "提交失败! 请重试", Toast.LENGTH_SHORT).show();
         }
