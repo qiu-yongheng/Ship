@@ -299,7 +299,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
                     } else {
                         WeekTask task = DataSupport.where("position = ?", String.valueOf(position)).findFirst(WeekTask.class);
                         if (task != null) {
-                            String msg = "船舶: " + task.getShipName() + "\n供沙量: " + task.getSandSupplyCount();
+                            String msg = "船舶: " + task.getShipName() + "\n供砂量: " + task.getSandSupplyCount();
                             activity.showDailog("任务", msg, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {

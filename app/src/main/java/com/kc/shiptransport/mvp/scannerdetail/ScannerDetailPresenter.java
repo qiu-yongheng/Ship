@@ -8,11 +8,14 @@ import com.kc.shiptransport.db.WeekTask;
 
 import java.util.List;
 
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -59,7 +62,7 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter{
 
                     @Override
                     public void onNext(@NonNull WeekTask weekTask) {
-                        view.showTitle(weekTask.getShipName());
+                        view.showTitle(weekTask);
                     }
 
                     @Override
@@ -78,11 +81,25 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter{
      * 获取扫描件类型
      */
     @Override
-    public void getScannerType() {
+    public void getScannerType(int position) {
         view.showLoading(true);
         dataRepository
-                .getScannerType()
+                .getWeekTaskForPosition(position)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<WeekTask>() {
+                    @Override
+                    public void accept(@NonNull WeekTask weekTask) throws Exception {
+                        view.showTitle(weekTask);
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<WeekTask, ObservableSource<List<ScannerListBean>>>() {
+                    @Override
+                    public ObservableSource<List<ScannerListBean>> apply(@NonNull WeekTask weekTask) throws Exception {
+                        return dataRepository.getScannerType(weekTask.getItemID());
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<ScannerListBean>>() {
                     @Override
@@ -111,8 +128,8 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter{
     @Override
     public void start(int position) {
         // 获取船名
-        getTitle(position);
+        //getTitle(position);
         // 获取扫描件类型
-        getScannerType();
+        getScannerType(position);
     }
 }

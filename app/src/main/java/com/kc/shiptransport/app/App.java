@@ -2,6 +2,8 @@ package com.kc.shiptransport.app;
 
 import android.app.Application;
 
+import com.umeng.analytics.MobclickAgent;
+
 import org.litepal.LitePalApplication;
 
 /**
@@ -16,7 +18,10 @@ public class App extends Application{
         super.onCreate();
         LitePalApplication.initialize(this);
 
-        //收集崩溃信息
-        //Thread.setDefaultUncaughtExceptionHandler(new LocalFileHandler(this));
+        // 集成测试
+        MobclickAgent.setDebugMode( true );
+
+        // 错误统计 (默认开启)
+        MobclickAgent.setCatchUncaughtExceptions(true);
     }
 }

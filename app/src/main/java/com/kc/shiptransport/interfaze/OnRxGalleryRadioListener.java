@@ -1,6 +1,7 @@
 package com.kc.shiptransport.interfaze;
 
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 
 /**
  * @author qiuyongheng
@@ -10,4 +11,6 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 
 public interface OnRxGalleryRadioListener {
     void onEvent(ImageMultipleResultEvent imageMultipleResultEvent);
+
+    void onEvent(ImageRadioResultEvent imageRadioResultEvent);
 }

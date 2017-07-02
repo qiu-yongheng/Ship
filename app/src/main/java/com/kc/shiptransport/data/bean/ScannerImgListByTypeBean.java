@@ -1,14 +1,15 @@
 package com.kc.shiptransport.data.bean;
 
 /**
- * @author qiuyongheng
- * @time 2017/6/27  16:17
- * @desc 扫描图片类型列表
+ * @author 邱永恒
+ * @time 2017/7/1 17:11
+ * @desc 根据类型获取图片
  */
 
-public class ScannerListBean {
+public class ScannerImgListByTypeBean {
 
     /**
+     * ItemID : 2
      * SubcontractorInterimApproachPlanID : 415
      * SubcontractorPerfectBoatScannerAttachmentTypeID : 1
      * SubcontractorPerfectBoatScannerAttachmentTypeName : 碎石粉装船记录表
@@ -16,11 +17,12 @@ public class ScannerListBean {
      * SubcontractorName : 誉丰联发
      * ConstructionBoatAccount : jx6
      * ConstructionBoatName : 吉星6
-     * AttachmentCount : 2
-     * DefalutAttachmentCount : 3
+     * FileName : 1498011307944.png
+     * FilePath : https://cchk3.kingwi.org/Files/20170630/0a33774a-bd0e-4b15-9ee0-027ed2135e5e.png
      * SystemDate : 2017-06-30 18:06:23
      */
 
+    private int ItemID;
     private int SubcontractorInterimApproachPlanID;
     private int SubcontractorPerfectBoatScannerAttachmentTypeID;
     private String SubcontractorPerfectBoatScannerAttachmentTypeName;
@@ -28,9 +30,17 @@ public class ScannerListBean {
     private String SubcontractorName;
     private String ConstructionBoatAccount;
     private String ConstructionBoatName;
-    private int AttachmentCount;
-    private int DefalutAttachmentCount;
+    private String FileName;
+    private String FilePath;
     private String SystemDate;
+
+    public int getItemID() {
+        return ItemID;
+    }
+
+    public void setItemID(int ItemID) {
+        this.ItemID = ItemID;
+    }
 
     public int getSubcontractorInterimApproachPlanID() {
         return SubcontractorInterimApproachPlanID;
@@ -88,12 +98,20 @@ public class ScannerListBean {
         this.ConstructionBoatName = ConstructionBoatName;
     }
 
-    public int getAttachmentCount() {
-        return AttachmentCount;
+    public String getFileName() {
+        return FileName;
     }
 
-    public void setAttachmentCount(int AttachmentCount) {
-        this.AttachmentCount = AttachmentCount;
+    public void setFileName(String FileName) {
+        this.FileName = FileName;
+    }
+
+    public String getFilePath() {
+        return FilePath;
+    }
+
+    public void setFilePath(String FilePath) {
+        this.FilePath = FilePath;
     }
 
     public String getSystemDate() {
@@ -102,13 +120,5 @@ public class ScannerListBean {
 
     public void setSystemDate(String SystemDate) {
         this.SystemDate = SystemDate;
-    }
-
-    public int getDefalutAttachmentCount() {
-        return DefalutAttachmentCount;
-    }
-
-    public void setDefalutAttachmentCount(int defalutAttachmentCount) {
-        DefalutAttachmentCount = defalutAttachmentCount;
     }
 }

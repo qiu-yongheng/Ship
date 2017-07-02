@@ -22,11 +22,15 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.PerfectBoatRecord;
+import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.view.actiivty.InputActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,6 +96,8 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     TextView tvMaterialOrdar;
     @BindView(R.id.btn_return)
     Button btnReturn;
+    @BindView(R.id.sp_material_from)
+    Spinner mSpMaterialFrom;
     private VoyageDetailContract.Presenter presenter;
     private VoyageDetailActivity activity;
     private String itemID;
@@ -170,10 +176,14 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         mSpMaterialOrdar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i != 0) {
-                    perfectBoatRecord.setMaterialClassification(getResources().getStringArray(R.array.voyage_spinner)[i]);
+                if (perfectBoatRecord != null) {
+                    if (i != 0) {
+                        perfectBoatRecord.setMaterialClassification(getResources().getStringArray(R.array.voyage_spinner)[i]);
+                    }
+                    perfectBoatRecord.setSp_material_position(i);
                     perfectBoatRecord.save();
                 }
+
             }
 
             @Override
@@ -225,7 +235,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 InputActivity.startActivityForResult(activity, getResources().getString(R.string.text_sample_num), mTvSampleNum.getText().toString(), 2);
                 break;
             case R.id.rl_material_from:
-                InputActivity.startActivityForResult(activity, getResources().getString(R.string.text_material_from), mTvMaterialFrom.getText().toString(), 3);
+                //InputActivity.startActivityForResult(activity, getResources().getString(R.string.text_material_from), mTvMaterialFrom.getText().toString(), 3);
                 break;
             case R.id.rl_start_date:
                 CalendarUtil.showTimePickerDialog(getContext(), mTvStartDate, new OnTimePickerSureClickListener() {
@@ -454,18 +464,17 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         String materialClassification = perfectBoatRecord.getMaterialClassification();
 
 
-
         mTvShipLocation.setText(loadingPlace == null ? "未填写" : loadingPlace);
         mTvShipDate.setText(loadingDate == null ? "未填写" : loadingDate);
         mTvSampleNum.setText(baseNumber == null ? "未填写" : baseNumber);
-        mTvMaterialFrom.setText(sourceOfSource == null ? "未填写" : sourceOfSource);
+        //mTvMaterialFrom.setText(sourceOfSource == null ? "未填写" : sourceOfSource);
         mTvStartDate.setText(startLoadingTime == null ? "未填写" : startLoadingTime);
         mTvEndDate.setText(endLoadingTime == null ? "未填写" : endLoadingTime);
         mTvComeDate.setText(arrivedAtTheDockTime == null ? "未填写" : arrivedAtTheDockTime);
         mTvExitDate.setText(leaveTheDockTime == null ? "未填写" : leaveTheDockTime);
         mTvComeAnchorDate.setText(arrivaOfAnchorageTime == null ? "未填写" : arrivaOfAnchorageTime);
         mTvCleanDate.setText(clearanceTime == null ? "未填写" : clearanceTime);
-        if (!TextUtils.isEmpty(materialClassification) && !materialClassification.equals("请选择材料分类")) {
+        if (!TextUtils.isEmpty(materialClassification) && !materialClassification.equals("请选择材料分类") && isPerfect) {
             // 有数据
             mSpMaterialOrdar.setVisibility(View.GONE);
             tvMaterialOrdar.setVisibility(View.VISIBLE);
@@ -474,6 +483,17 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             // 空
             mSpMaterialOrdar.setVisibility(View.VISIBLE);
             tvMaterialOrdar.setVisibility(View.GONE);
+            mSpMaterialOrdar.setSelection(perfectBoatRecord.getSp_material_position());
+        }
+
+        if (!TextUtils.isEmpty(sourceOfSource) && !sourceOfSource.equals("请选择料源石场") && isPerfect) {
+            mSpMaterialFrom.setVisibility(View.GONE);
+            mTvMaterialFrom.setVisibility(View.VISIBLE);
+            mTvMaterialFrom.setText(sourceOfSource);
+        } else {
+            mSpMaterialFrom.setVisibility(View.VISIBLE);
+            mTvMaterialFrom.setVisibility(View.GONE);
+            //mSpMaterialFrom.setSelection(perfectBoatRecord.getSp_stone_source_position());
         }
 
         if (isPerfect) {
@@ -488,6 +508,47 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             btnReturn.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void showStoneSource(List<StoneSource> list) {
+        final List<String> dates = new ArrayList<>();
+        dates.add("请选择料源石场");
+
+        for (StoneSource bean : list) {
+            dates.add(bean.getName());
+        }
+
+
+        // 适配器
+        ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, dates);
+        // 设置样式
+        arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // 加载适配器
+        mSpMaterialFrom.setAdapter(arr_adapter);
+
+        // 点击后, 筛选分包商的数据
+        mSpMaterialFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (perfectBoatRecord != null) {
+                    if (i != 0) {
+                        perfectBoatRecord.setSourceOfSource(dates.get(i));
+                        perfectBoatRecord.setSp_stone_source_position(i);
+                        perfectBoatRecord.save();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        if (perfectBoatRecord != null) {
+            mSpMaterialFrom.setSelection(perfectBoatRecord.getSp_stone_source_position());
+        }
     }
 
     /**

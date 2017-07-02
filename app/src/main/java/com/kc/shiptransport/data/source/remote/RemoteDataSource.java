@@ -1351,4 +1351,192 @@ public class RemoteDataSource {
         String result = object.getProperty(0).toString();
         return result;
     }
+
+    /**
+     * 1.31	 根据进场计划ID，获取包商航次完善扫描件
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    public String GetSubcontractorPerfectBoatScannerAttachmentRecordBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID) {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetSubcontractorPerfectBoatScannerAttachmentRecordBySubcontractorInterimApproachPlanID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetSubcontractorPerfectBoatScannerAttachmentRecordBySubcontractorInterimApproachPlanID";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
+
+    /**
+     * 1.32	 获取扫描件明细（具体扫描件类型对应的图片信息）
+     * @param SubcontractorInterimApproachPlanID
+     * @param SubcontractorPerfectBoatScannerAttachmentTypeID
+     * @return
+     */
+    public String GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID(int SubcontractorInterimApproachPlanID, int SubcontractorPerfectBoatScannerAttachmentTypeID) {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+        rpc.addProperty("SubcontractorPerfectBoatScannerAttachmentTypeID", SubcontractorPerfectBoatScannerAttachmentTypeID);
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
+
+    /**
+     * 1.30	 删除分包商航次完善扫描件表(图片信息)
+     * @param ItemID
+     * @return
+     */
+    public String DeleteSubcontractorPerfectBoatScannerAttachmentByItemID(int ItemID) {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "DeleteSubcontractorPerfectBoatScannerAttachmentByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/DeleteSubcontractorPerfectBoatScannerAttachmentByItemID";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
+
+    /**
+     * 1.33	 获取料源石场数据
+     * @return
+     */
+    public String GetStoneSource() {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetStoneSource";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetStoneSource";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
 }

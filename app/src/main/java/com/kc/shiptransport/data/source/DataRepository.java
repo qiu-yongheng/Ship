@@ -24,8 +24,10 @@ import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.bean.SampleUpdataBean;
 import com.kc.shiptransport.data.bean.SandSampleBean;
 import com.kc.shiptransport.data.bean.ScanCommitBean;
+import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.ShipBean;
+import com.kc.shiptransport.data.bean.StoneSourceBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
 import com.kc.shiptransport.data.bean.TaskVolumeBean;
@@ -45,6 +47,7 @@ import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.TaskVolume;
@@ -54,6 +57,7 @@ import com.kc.shiptransport.util.FileUtil;
 import com.kc.shiptransport.util.MyJSONObject;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -67,6 +71,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -1095,6 +1101,8 @@ public class DataRepository implements DataSouceImpl {
                 subcontractor.setSubcontractorAccount(loginResult.getUserID());
                 subcontractor.save();
 
+                // 统计登录
+                MobclickAgent.onProfileSignIn(username);
 
                 e.onNext(loginResult.getMessage() == 1);
                 e.onComplete();
@@ -1896,17 +1904,17 @@ public class DataRepository implements DataSouceImpl {
     }
 
     /**
-     * 获取分包商航次完善扫描件类型数据
+     * 根据进场ID, 获取分包商航次完善扫描件类型数据
      *
      * @return
      */
     @Override
-    public Observable<List<ScannerListBean>> getScannerType() {
+    public Observable<List<ScannerListBean>> getScannerType(final int subID) {
         return Observable.create(new ObservableOnSubscribe<List<ScannerListBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<ScannerListBean>> e) throws Exception {
                 // 发送网络请求
-                String result = mRemoteDataSource.GetSubcontractorPerfectBoatScannerAttachmentTypeList();
+                String result = mRemoteDataSource.GetSubcontractorPerfectBoatScannerAttachmentRecordBySubcontractorInterimApproachPlanID(subID);
                 // 解析数据
                 if (TextUtils.isEmpty(result)) {
                     e.onError(new RuntimeException("服务器异常"));
@@ -2002,29 +2010,29 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<List<AttendanceType>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<AttendanceType>> e) throws Exception {
-                List<AttendanceType> all = DataSupport.findAll(AttendanceType.class);
-                if (all.isEmpty()) {
-                    // 发送网络请求
-                    String result = mRemoteDataSource.GetAttendanceTypeList();
+                //                List<AttendanceType> all = DataSupport.findAll(AttendanceType.class);
+                //                if (all.isEmpty()) {
+                // 发送网络请求
+                String result = mRemoteDataSource.GetAttendanceTypeList();
 
-                    // 解析数据
-                    List<AttendanceTypeBean> list = gson.fromJson(result, new TypeToken<List<AttendanceTypeBean>>() {
-                    }.getType());
+                // 解析数据
+                List<AttendanceTypeBean> list = gson.fromJson(result, new TypeToken<List<AttendanceTypeBean>>() {
+                }.getType());
 
-                    if (!list.isEmpty()) {
-                        DataSupport.deleteAll(AttendanceType.class);
+                if (!list.isEmpty()) {
+                    DataSupport.deleteAll(AttendanceType.class);
 
-                        for (AttendanceTypeBean bean : list) {
-                            AttendanceType type = new AttendanceType();
-                            type.setItemID(bean.getItemID());
-                            type.setName(bean.getName());
-                            type.save();
-                        }
+                    for (AttendanceTypeBean bean : list) {
+                        AttendanceType type = new AttendanceType();
+                        type.setItemID(bean.getItemID());
+                        type.setName(bean.getName());
+                        type.save();
                     }
-                    e.onNext(DataSupport.findAll(AttendanceType.class));
-                } else {
-                    e.onNext(all);
                 }
+                e.onNext(DataSupport.findAll(AttendanceType.class));
+                //                } else {
+                //                    e.onNext(all);
+                //                }
 
                 e.onComplete();
             }
@@ -2294,6 +2302,150 @@ public class DataRepository implements DataSouceImpl {
                 CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
 
                 e.onNext(resultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 选择多张图片回调后, 把数据解析成将要提交的集合
+     *
+     * @param imageMultipleResultEvent
+     * @return
+     */
+    @Override
+    public Observable<List<ScanCommitBean>> getScanImgList(final ImageMultipleResultEvent imageMultipleResultEvent, final int subID, final int typeID, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<List<ScanCommitBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<ScanCommitBean>> e) throws Exception {
+                // 多选回调
+                List<MediaBean> result = imageMultipleResultEvent.getResult();
+                // 获取分包商账号
+                Subcontractor subcontractor = DataSupport.findAll(Subcontractor.class).get(0);
+                // 创建任务队列
+                List<ScanCommitBean> commitBeanList = new ArrayList<ScanCommitBean>();
+
+                // 保存图片数据到队列中
+                for (MediaBean bean : result) {
+                    ScanCommitBean commitBean = new ScanCommitBean();
+                    // 条目ID, 默认0
+                    commitBean.setItemID(0);
+                    // 进场ID
+                    commitBean.setSubcontractorInterimApproachPlanID(subID);
+                    // 类型ID
+                    commitBean.setSubcontractorPerfectBoatScannerAttachmentTypeID(typeID);
+                    // 分包商账号
+                    commitBean.setSubcontractorAccount(subcontractor.getSubcontractorAccount());
+                    // 船舶账号
+                    commitBean.setConstructionBoatAccount(shipAccount);
+
+                    // 图片名
+                    String title = bean.getTitle();
+
+                    // 图片类型
+                    String mimeType = bean.getMimeType();
+                    String[] split = mimeType.split("/");
+                    String suffixName = split[split.length - 1];
+
+                    commitBean.setFileName(title + "." + suffixName);
+                    commitBean.setSuffixName(suffixName);
+                    commitBean.setCreator(subcontractor.getSubcontractorAccount());
+
+                    File file = new File(bean.getOriginalPath());
+                    byte[] bytes = FileUtil.File2byte(file);
+                    commitBean.setBase64img(new String(Base64.encode(bytes, Base64.DEFAULT)));
+
+                    commitBeanList.add(commitBean);
+                }
+
+                e.onNext(commitBeanList);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 根据类型获取图片
+     * @param subID
+     * @param typeID
+     * @return
+     */
+    @Override
+    public Observable<List<ScannerImgListByTypeBean>> GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID(final int subID, final int typeID) {
+        return Observable.create(new ObservableOnSubscribe<List<ScannerImgListByTypeBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<ScannerImgListByTypeBean>> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID(subID, typeID);
+
+                // 解析数据
+                List<ScannerImgListByTypeBean> list = gson.fromJson(result, new TypeToken<List<ScannerImgListByTypeBean>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.30	 删除分包商航次完善扫描件表(图片信息)
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteSubcontractorPerfectBoatScannerAttachmentByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.DeleteSubcontractorPerfectBoatScannerAttachmentByItemID(ItemID);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.33	 获取料源石场数据
+     * @return
+     */
+    @Override
+    public Observable<List<StoneSource>> getStoneSource() {
+        return Observable.create(new ObservableOnSubscribe<List<StoneSource>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<StoneSource>> e) throws Exception {
+                // TODO 获取本地缓存, 判断是否需要网络请求
+                List<StoneSource> all = DataSupport.findAll(StoneSource.class);
+
+                // 发送网络请求
+                String result = mRemoteDataSource.GetStoneSource();
+
+                // 解析数据
+                List<StoneSourceBean> list = gson.fromJson(result, new TypeToken<List<StoneSourceBean>>() {
+                }.getType());
+
+                // 判断是否需要保存到本地
+                if (all.size() != list.size() && !list.isEmpty()) {
+                    // 数据不一致, 重新存储
+                    DataSupport.deleteAll(StoneSource.class);
+                    for (StoneSourceBean bean : list) {
+                        StoneSource stoneSource = new StoneSource();
+                        stoneSource.setItemID(bean.getItemID());
+                        stoneSource.setName(bean.getName());
+                        stoneSource.setAddress(bean.getAddress());
+                        stoneSource.setMileage(bean.getMileage());
+                        stoneSource.setSortNum(bean.getSortNum());
+                        stoneSource.save();
+                    }
+                }
+
+                List<StoneSource> sources = DataSupport.order("SortNum asc").find(StoneSource.class);
+
+                e.onNext(sources);
                 e.onComplete();
             }
         });

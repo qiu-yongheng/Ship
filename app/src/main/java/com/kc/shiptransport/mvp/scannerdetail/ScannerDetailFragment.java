@@ -16,8 +16,10 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.db.ScannerImage;
+import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.mvp.scannerimgselect.ScannerImgSelectActivity;
 
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     public ScannerImage scannerImage;
     private Unbinder unbinder;
     private ScannerDetailAdapter adapter;
+    private WeekTask weekTask;
 
     @Nullable
     @Override
@@ -66,6 +69,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
         activity = (ScannerDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
     }
 
@@ -103,11 +108,12 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     /**
      * 显示标题
      *
-     * @param title
+     * @param weekTask
      */
     @Override
-    public void showTitle(String title) {
-        activity.getSupportActionBar().setTitle(title);
+    public void showTitle(WeekTask weekTask) {
+        this.weekTask = weekTask;
+        activity.getSupportActionBar().setTitle(weekTask.getShipName());
     }
 
     @Override
@@ -137,13 +143,20 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     @Override
     public void showDatas(List<ScannerListBean> scannerImage) {
         if (adapter == null) {
-            // TODO recyclerview
-            recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
             adapter = new ScannerDetailAdapter(getContext(), scannerImage);
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
-
+                    // 跳转到图片选择界面, 传递条目ID, 进场ID
+                    ScannerListBean bean = adapter.list.get(position);
+                    ScannerImgSelectActivity.startActivity(getContext(),
+                            bean.getSubcontractorPerfectBoatScannerAttachmentTypeID(),
+                            bean.getSubcontractorInterimApproachPlanID(),
+                            bean.getSubcontractorPerfectBoatScannerAttachmentTypeName(),
+                            bean.getConstructionBoatAccount(),
+                            bean.getAttachmentCount(),
+                            bean.getDefalutAttachmentCount());
                 }
 
                 @Override
@@ -153,6 +166,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
             });
             recyclerview.setAdapter(adapter);
         } else {
+            adapter.setDates(scannerImage);
             adapter.notifyDataSetChanged();
         }
     }
@@ -161,5 +175,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     public void onResume() {
         super.onResume();
         // TODO
+        if (activity != null) {
+            presenter.getScannerType(activity.position);
+        }
     }
 }

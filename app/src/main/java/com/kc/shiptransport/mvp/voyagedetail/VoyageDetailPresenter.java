@@ -5,10 +5,13 @@ import android.content.Context;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.PerfectBoatRecord;
+import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -168,6 +171,7 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
         getSubcontractor();
         getItemIDForPosition(position);
         getVoyageDetailForItemID(position);
+        getStoneSource();
     }
 
     /**
@@ -220,6 +224,35 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
                     @Override
                     public void onComplete() {
                         view.showLoading(false);
+                    }
+                });
+    }
+
+    @Override
+    public void getStoneSource() {
+        dataRepository
+                .getStoneSource()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<StoneSource>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<StoneSource> list) {
+                        view.showStoneSource(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

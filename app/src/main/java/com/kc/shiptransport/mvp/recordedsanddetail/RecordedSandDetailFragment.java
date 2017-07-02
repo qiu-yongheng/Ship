@@ -174,11 +174,14 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
 
                     bean.setSubcontractorInterimApproachPlanID(recordList.getItemID());
 
+                    // 供砂船
                     bean.setSandHandlingShipID(recordList.getShipAccount());
+                    bean.setSandHandlingShipName(recordList.getShipName());
 
-
+                    // 受砂船
                     List<ConstructionBoat> boats = DataSupport.findAll(ConstructionBoat.class);
                     bean.setConstructionShipID(boats.get(spinner_position - 1).getShipNum());
+                    bean.setConstructionShipName(boats.get(spinner_position - 1).getShipName());
 
                     bean.setStartTime(tvStartTime.getText().toString());
 
@@ -332,11 +335,11 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
             if (IsFinish == 1) {
                 btnCommit.setVisibility(View.GONE);
                 btnReturn.setVisibility(View.VISIBLE);
-                getActivity().onBackPressed();
             } else {
                 btnCommit.setVisibility(View.VISIBLE);
                 btnReturn.setVisibility(View.GONE);
             }
+            getActivity().onBackPressed();
         } else {
             Toast.makeText(getContext(), "提交失败, 请重试", Toast.LENGTH_SHORT).show();
         }

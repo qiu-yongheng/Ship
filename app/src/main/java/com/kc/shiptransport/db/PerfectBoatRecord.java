@@ -48,6 +48,9 @@ public class PerfectBoatRecord extends DataSupport{
     private int PerfectBoatItemCount;
     private int IsPerfect;
 
+    private int sp_stone_source_position;
+    private int sp_material_position;
+
     public int getItemID() {
         return ItemID;
     }
@@ -182,5 +185,21 @@ public class PerfectBoatRecord extends DataSupport{
 
     public void setIsPerfect(int IsPerfect) {
         this.IsPerfect = IsPerfect;
+    }
+
+    public int getSp_stone_source_position() {
+        return sp_stone_source_position;
+    }
+
+    public void setSp_stone_source_position(int sp_stone_source_position) {
+        this.sp_stone_source_position = sp_stone_source_position;
+    }
+
+    public int getSp_material_position() {
+        return sp_material_position;
+    }
+
+    public void setSp_material_position(int sp_material_position) {
+        this.sp_material_position = sp_material_position;
     }
 }

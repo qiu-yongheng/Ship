@@ -25,6 +25,12 @@ public class RecordedSandUpdataBean {
     private int IsFinish;
     private String Creator;
 
+    // 供砂船名
+    private String SandHandlingShipName;
+    // 施工船名
+    private String ConstructionShipName;
+
+
     public int getItemID() {
         return ItemID;
     }
@@ -159,5 +165,21 @@ public class RecordedSandUpdataBean {
 
     public void setCreator(String creator) {
         Creator = creator;
+    }
+
+    public String getSandHandlingShipName() {
+        return SandHandlingShipName;
+    }
+
+    public void setSandHandlingShipName(String sandHandlingShipName) {
+        SandHandlingShipName = sandHandlingShipName;
+    }
+
+    public String getConstructionShipName() {
+        return ConstructionShipName;
+    }
+
+    public void setConstructionShipName(String constructionShipName) {
+        ConstructionShipName = constructionShipName;
     }
 }

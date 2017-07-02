@@ -37,7 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
-import retrofit2.http.HEAD;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 
 /**
  * @author qiuyongheng
@@ -64,7 +64,7 @@ public class ImageSelectActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_select);
+        setContentView(R.layout.fragment_image_select);
         ButterKnife.bind(this);
 
         Bundle bundle = getIntent().getExtras();
@@ -227,6 +227,11 @@ public class ImageSelectActivity extends BaseActivity {
 
                         mAdapter.notifyDataSetChanged();
                     }
+
+                    @Override
+                    public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                    }
                 });
                 switch (requestcode) {
                     case SettingUtil.ID_STOWAGE:
@@ -291,6 +296,11 @@ public class ImageSelectActivity extends BaseActivity {
 
                 saveToDB(i);
             }
+
+            @Override
+            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+            }
         });
     }
 
@@ -311,6 +321,11 @@ public class ImageSelectActivity extends BaseActivity {
 
                     // 保存数据到数据库
                     saveToDB(id);
+                }
+
+                @Override
+                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
                 }
             });
         } else {

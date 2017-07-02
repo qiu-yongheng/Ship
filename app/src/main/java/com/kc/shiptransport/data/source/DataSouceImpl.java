@@ -5,6 +5,7 @@ import android.content.Context;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.bean.ScanCommitBean;
+import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
@@ -18,12 +19,14 @@ import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 
 import java.io.File;
 import java.util.List;
 
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import io.reactivex.Observable;
 
 /**
@@ -348,7 +351,7 @@ public interface DataSouceImpl {
      * 获取分包商航次完善扫描件类型数据
      * @return
      */
-    Observable<List<ScannerListBean>> getScannerType();
+    Observable<List<ScannerListBean>> getScannerType(int subID);
 
     /**
      * 提交过砂记录
@@ -407,4 +410,31 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> InsertSubcontractorPerfectBoatScannerAttachment(ScanCommitBean bean);
+
+    /**
+     * 选择多张图片回调后, 把数据解析成将要提交的集合
+     * @return
+     */
+    Observable<List<ScanCommitBean>> getScanImgList(ImageMultipleResultEvent imageMultipleResultEvent, int subID, int typeID, String shipAccount);
+
+    /**
+     * 根据类型获取图片
+     * @param subID
+     * @param typeID
+     * @return
+     */
+    Observable<List<ScannerImgListByTypeBean>> GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID(int subID, int typeID);
+
+    /**
+     * 1.30	 删除分包商航次完善扫描件表(图片信息)
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteSubcontractorPerfectBoatScannerAttachmentByItemID(int ItemID);
+
+    /**
+     * 1.33	 获取料源石场数据
+     * @return
+     */
+    Observable<List<StoneSource>> getStoneSource();
 }

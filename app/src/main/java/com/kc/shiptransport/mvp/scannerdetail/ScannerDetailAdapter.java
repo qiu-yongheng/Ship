@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ScannerDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
-    private final List<ScannerListBean> list;
+    public List<ScannerListBean> list;
     private final LayoutInflater inflate;
     private OnRecyclerviewItemClickListener listener;
 
@@ -37,13 +37,32 @@ public class ScannerDetailAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ScannerListBean bean = list.get(position);
-        ((NormalHolder)holder).mTvItemTitle.setText(bean.getName());
-        // TODO 接口添加进度, 状态字段
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        final ScannerListBean bean = list.get(position);
+        // 设置类型名字
+        ((NormalHolder)holder).mTvItemTitle.setText(bean.getSubcontractorPerfectBoatScannerAttachmentTypeName());
+        // 设置进度
+        ((NormalHolder)holder).mTvProgress.setText("(" + bean.getAttachmentCount() + "/" + bean.getDefalutAttachmentCount() + ")");
+        // 设置状态
+        if (bean.getAttachmentCount() >= bean.getDefalutAttachmentCount()) {
+            ((NormalHolder)holder).mTvState.setText("已完成");
+            ((NormalHolder)holder).mTvState.setTextColor(context.getResources().getColor(R.color.text_red));
+        } else {
+            ((NormalHolder)holder).mTvState.setText("未完成");
+            ((NormalHolder)holder).mTvState.setTextColor(context.getResources().getColor(R.color.text_tag_gray));
+        }
 
         // TODO 设置点击事件, 根据进场ID发送网络请求获取图片
+        ((NormalHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClick(((NormalHolder)holder).itemView, holder.getLayoutPosition());
+            }
+        });
+    }
 
+    public void setDates(List<ScannerListBean> list) {
+        this.list = list;
     }
 
     class NormalHolder extends RecyclerView.ViewHolder {

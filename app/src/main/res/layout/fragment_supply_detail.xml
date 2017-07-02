@@ -169,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="累计方: "
+                android:text="合计方: "
                 android:textColor="#000"
                 android:textSize="20sp"/>
 
@@ -196,7 +196,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="验沙时间: "
+                android:text="验砂时间: "
                 android:textColor="#000"
                 android:textSize="22sp"/>
 

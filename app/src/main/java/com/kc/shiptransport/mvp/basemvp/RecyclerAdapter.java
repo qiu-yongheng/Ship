@@ -104,7 +104,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if (!weekTasks.isEmpty()) {
                     WeekTask weekTask = weekTasks.get(0);
                     ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
-                    ((NormalHolder) holder).mTvQuantum.setText("(11/" + String.valueOf(weekTask.getPerfectBoatItemCount()) + ")");
+                    ((NormalHolder) holder).mTvQuantum.setText("(" + String.valueOf(weekTask.getPerfectBoatItemCount()) + "/11)");
 
                     // 判断信息是否已完善
                     if (weekTask.getIsPerfect() == 1) {

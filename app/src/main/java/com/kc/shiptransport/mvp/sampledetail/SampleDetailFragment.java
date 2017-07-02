@@ -42,6 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.utils.ModelUtils;
 
 /**
@@ -332,6 +333,11 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
 
                                     mAdapter.notifyDataSetChanged();
                                 }
+
+                                @Override
+                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                                }
                             });
                             break;
                         case SettingUtil.HOLDER_IMAGE_2:
@@ -375,6 +381,11 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                     }
 
                                     mAdapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
                                 }
                             });
                             break;

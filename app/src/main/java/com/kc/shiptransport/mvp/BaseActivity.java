@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * @author 邱永恒
@@ -118,6 +119,14 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void hideProgress() {
+        if (mProgress != null) {
+            if (mProgress.isShowing()) {
+                mProgress.dismiss();
+            }
+        }
+    }
+
     /**
      * 改变进度对话框信息
      * @param title
@@ -207,5 +216,17 @@ public class BaseActivity extends AppCompatActivity {
         //        mDao = null;
 
         Log.d("==", "销毁");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

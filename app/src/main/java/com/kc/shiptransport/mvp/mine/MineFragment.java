@@ -13,6 +13,7 @@ import android.widget.Button;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.mvp.login.LoginActivity;
 import com.kc.shiptransport.util.SettingUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +52,10 @@ public class MineFragment extends Fragment {
         btnMineExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // 记录登出
+                MobclickAgent.onProfileSignOff();
+
 
                 SharedPreferences.Editor edit = sp.edit();
                 edit.putString(SettingUtil.DATA_USERNAME, "");
