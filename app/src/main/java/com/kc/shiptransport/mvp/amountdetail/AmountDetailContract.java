@@ -1,8 +1,11 @@
 package com.kc.shiptransport.mvp.amountdetail;
 
-import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.data.bean.AmountImgListBean;
+import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
+
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 
 /**
  * @author qiuyongheng
@@ -13,7 +16,7 @@ import com.kc.shiptransport.mvp.BaseView;
 public interface AmountDetailContract {
     interface View extends BaseView<Presenter> {
         /* 显示供沙船的详细信息 */
-        void showShipDetail(Acceptance value);
+        void showShipDetail(AmountDetail value);
         /* 显示验沙时间 */
         void showSupplyTime(String currentDate);
         /* 计算 */
@@ -23,13 +26,26 @@ public interface AmountDetailContract {
         /* 显示错误 */
         void showError(String msg);
         void showCommitResult(boolean active);
+        void showProgress(int max);
+        void updateProgress();
+        void hideProgress();
     }
 
     interface Presenter extends BasePresenter {
         void getShipDetail(int itemID);
         void getSupplyTime();
         void getTotalVolume(String ship, String deck, String capacity);
-        void commit(int itemID, String TheAmountOfTime, String Capacity, String DeckGauge, String Deduction);
+        void commit(final int itemID,
+                    final String TheAmountOfTime,
+                    final int SubcontractorInterimApproachPlanID,
+                    final String ShipAccount,
+                    final String Capacity,
+                    final String DeckGauge,
+                    final String Deduction,
+                    final String Creator);
         void start(int itemID);
+
+        void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator);
+        void commitImg(AmountImgListBean amountImgListBean);
     }
 }

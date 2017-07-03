@@ -253,7 +253,7 @@ public class AmountFragment extends Fragment implements AmountContract.View {
 
     @Override
     public void showStayInfo(String data) {
-        titleStayInfo.setText("待量方船次: " + data);
+        titleStayInfo.setText("未量方船次: " + data);
     }
 
     @Override

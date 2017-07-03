@@ -18,4 +18,8 @@
     <dimen name="margintop_8dp">8dp</dimen>
     <dimen name="paddingtop_18dp">18dp</dimen>
     <dimen name="paddingbottom_16dp">16dp</dimen>
+    <dimen name="item_height_32">32dp</dimen>
+    <dimen name="item_height_54">54dp</dimen>
+    <dimen name="btn_width_30">30dp</dimen>
+    <dimen name="btn_height_81">81dp</dimen>
 </resources>

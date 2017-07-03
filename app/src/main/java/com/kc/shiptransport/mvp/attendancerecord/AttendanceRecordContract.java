@@ -20,6 +20,6 @@ public interface AttendanceRecordContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getAttendance(String time);
+        void getAttendance(String subcontractorAccount, String time);
     }
 }

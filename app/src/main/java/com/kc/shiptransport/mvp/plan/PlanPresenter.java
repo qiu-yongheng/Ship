@@ -352,7 +352,8 @@ public class PlanPresenter implements PlanContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        view.showLoading(false);
+                        view.showError(e.getMessage());
                     }
 
                     @Override

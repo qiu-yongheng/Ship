@@ -3,8 +3,20 @@ package com.kc.shiptransport.mvp.attendanceaudit;
 import android.content.Context;
 
 import com.kc.shiptransport.data.source.DataRepository;
+import com.kc.shiptransport.db.AttendanceRecordList;
 
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author qiuyongheng
@@ -12,7 +24,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * @desc ${TODD}
  */
 
-public class AttendanceAuditPresenter implements AttendanceAuditContract.Presenter{
+public class AttendanceAuditPresenter implements AttendanceAuditContract.Presenter {
     private final Context context;
     private final AttendanceAuditContract.View view;
     private final DataRepository dataRepository;
@@ -33,6 +45,88 @@ public class AttendanceAuditPresenter implements AttendanceAuditContract.Present
 
     @Override
     public void unsubscribe() {
+        compositeDisposable.clear();
+    }
 
+    @Override
+    public void getAttendance() {
+        view.showLoading(true);
+        dataRepository
+                .GetAttendanceRecords(0, "", "", "")
+                .subscribeOn(Schedulers.io())
+                .flatMap(new Function<List<AttendanceRecordList>, ObservableSource<AttendanceRecordList>>() {
+                    @Override
+                    public ObservableSource<AttendanceRecordList> apply(@NonNull List<AttendanceRecordList> list) throws Exception {
+                        return Observable.fromIterable(list);
+                    }
+                })
+                .filter(new Predicate<AttendanceRecordList>() {
+                    @Override
+                    public boolean test(@NonNull AttendanceRecordList attendanceRecordList) throws Exception {
+                        if (attendanceRecordList.getIsCheck() == 0) {
+                            // 未审核
+                            return true;
+                        } else {
+                            // 已审核(1通过, -1未通过)
+                            return false;
+                        }
+                    }
+                })
+                .toList()
+                .toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<AttendanceRecordList>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<AttendanceRecordList> list) {
+                        view.showAttendance(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    @Override
+    public void commitAudit(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck) {
+        view.showLoading(true);
+        dataRepository
+                .InsertAttendanceCheckRecord(ItemID, AttendanceID, Creator, Remark, IsCheck)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
     }
 }

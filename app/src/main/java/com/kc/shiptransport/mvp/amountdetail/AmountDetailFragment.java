@@ -1,13 +1,17 @@
 package com.kc.shiptransport.mvp.amountdetail;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,13 +23,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnProgressFinishListener;
+import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.RxGalleryUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 
 /**
  * @author qiuyongheng
@@ -68,9 +78,12 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     @BindView(R.id.ll)
     LinearLayout ll;
     Unbinder unbinder;
+    @BindView(R.id.recyclerview)
+    RecyclerView recyclerview;
     private AmountDetailContract.Presenter presenter;
     private AmountDetailActivity activity;
-    private String capacity = "";
+    private AmountDetail value;
+    private AmountDetailAdapter adapter;
 
     @Nullable
     @Override
@@ -89,7 +102,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               activity.onBackPressed();
+                activity.onBackPressed();
             }
         });
 
@@ -97,7 +110,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // TODO
+                // TODO
                 // 量方时间
                 String theAmountTime = tvSupplyTime.getText().toString().trim();
                 // 甲板方
@@ -105,7 +118,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                 // 扣方
                 String dedu = etShipVolume.getText().toString().trim();
 
-                presenter.commit(activity.itemID, theAmountTime, capacity, deck, dedu);
+                presenter.commit(value.getItemID(), theAmountTime, activity.itemID, value.getShipAccount(), value.getCapacity(), deck, dedu, value.getCreator());
             }
         });
 
@@ -126,7 +139,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                 String ship = etShipVolume.getText().toString();
                 String deck = etDeckVolume.getText().toString();
 
-                presenter.getTotalVolume(ship, deck, capacity);
+                presenter.getTotalVolume(ship, deck, value.getCapacity());
             }
         });
 
@@ -145,7 +158,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             public void afterTextChanged(Editable editable) {
                 String ship = etShipVolume.getText().toString();
                 String deck = etDeckVolume.getText().toString();
-                presenter.getTotalVolume(ship, deck, capacity);
+                presenter.getTotalVolume(ship, deck, value.getCapacity());
             }
         });
 
@@ -180,6 +193,8 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             btnCommit.setVisibility(View.VISIBLE);
             btnCancel.setText(R.string.btn_cancle);
         }
+
+        recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 4));
     }
 
     @Override
@@ -204,23 +219,98 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     }
 
     @Override
-    public void showShipDetail(Acceptance value) {
-        String shipItemNum = value.getShipItemNum();
-        // 舱容
-        capacity = String.valueOf(value.getDefaultCapacity());
+    public void showShipDetail(final AmountDetail value) {
+        this.value = value;
+        // 进场ID
+        int itemID = value.getItemID();
+        // 量方时间
+        String theAmountOfTime = value.getTheAmountOfTime();
+        // 船账号
+        String shipAccount = value.getShipAccount();
         // 船名
-        tvShipName.setText(value.getShipName());
+        String shipName = value.getShipName();
+        // 舱容
+        String capacity = value.getCapacity();
+        // 甲板方
+        String deckGauge = value.getDeckGauge();
+        // 扣方
+        String deduction = value.getDeduction();
+        // 创建者账号
+        String creator = value.getCreator();
+        // 分包商
+        String subcontractorName = value.getSubcontractorName();
+        // 提交时间
+        String systemDate = value.getSystemDate();
         // 船次
-        tvShipId.setText("船次: " + (shipItemNum == null ? "" : shipItemNum));
-        // 供应商
-        tvSubontractor.setText("供应商: " + value.getSubcontractorName());
-        tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
-        tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
-        tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
-        tvWarehouseSpace.setText("舱容: " + (capacity == null ? "" : capacity));
+        String shipItemNum = value.getShipItemNum();
+        // 累计完成航次
+        String totalCompleteRide = value.getTotalCompleteRide();
+        // 累计完成方量
+        String totalCompleteSquare = value.getTotalCompleteSquare();
+        // 平均航次方量
+        String avgSquare = value.getAvgSquare();
 
-        etShipVolume.setText(String.valueOf(value.getDeduction() == 0 ? 0 : value.getDeduction()));
-        etDeckVolume.setText(value.getDeckGauge() == null ? "0" : value.getDeckGauge());
+
+        // 船名
+        tvShipName.setText(TextUtils.isEmpty(shipName) ? "" : shipName);
+        // 船次
+        tvShipId.setText("船次: " + (TextUtils.isEmpty(shipItemNum) ? "" : shipItemNum));
+        // 供应商
+        tvSubontractor.setText("供应商: " + (TextUtils.isEmpty(subcontractorName) ? "" : subcontractorName));
+        // 累计完成航次
+        tvTotalVoyage.setText("累计完成航次: " + (TextUtils.isEmpty(totalCompleteRide) ? "0" : totalCompleteRide) + "次");
+        // 累计完成方量
+        tvTotalValue.setText("累计完成方量: " + (TextUtils.isEmpty(totalCompleteSquare) ? "0" : totalCompleteSquare) + "㎡");
+        // 平均航次方量
+        tvAvgValue.setText("平均航次方量: " + (TextUtils.isEmpty(avgSquare) ? "0" : avgSquare) + "㎡");
+        // 舱容
+        tvWarehouseSpace.setText("舱容: " + (TextUtils.isEmpty(capacity) ? "" : capacity));
+
+
+        // 扣方
+        etShipVolume.setText(TextUtils.isEmpty(deduction) ? "" : deduction);
+        // 甲板方
+        etDeckVolume.setText(TextUtils.isEmpty(deckGauge) ? "" : deckGauge);
+        // 量方时间
+        tvSupplyTime.setText(TextUtils.isEmpty(theAmountOfTime) ? "" : theAmountOfTime);
+
+        /** 显示图片 */
+        if (adapter == null) {
+            adapter = new AmountDetailAdapter(getContext(), value.getTheAmountOfSideAttachmentList());
+            adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, int... type) {
+
+                }
+
+                @Override
+                public void onItemLongClick(View view, int position) {
+                    // 弹出图片选择器
+                    int size = value.getTheAmountOfSideAttachmentList().size();
+                    int max = 3 - size;
+                    if (max > 0) {
+                        RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
+                            @Override
+                            public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                // 把图片解析成可以上传的任务
+                                presenter.getCommitImgList(imageMultipleResultEvent, value.getItemID(), value.getCreator());
+                            }
+
+                            @Override
+                            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            recyclerview.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -257,5 +347,31 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         Toast.makeText(activity, "提交成功!", Toast.LENGTH_SHORT).show();
         btnCancel.setText(R.string.btn_return);
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public void showProgress(int max) {
+        activity.progressDialog("提交图片", max, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 取消任务
+                presenter.unsubscribe();
+            }
+        });
+    }
+
+    @Override
+    public void updateProgress() {
+        activity.updataProgress(new OnProgressFinishListener() {
+            @Override
+            public void onFinish() {
+                // TODO 全部上传成功的回调
+            }
+        });
+    }
+
+    @Override
+    public void hideProgress() {
+        activity.hideProgress();
     }
 }

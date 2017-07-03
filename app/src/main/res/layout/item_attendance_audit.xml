@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/text_name"
+            style="@style/text_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginleft_14"/>
+
+        <TextView
+            android:id="@+id/text_state"
+            style="@style/text_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/paddingbottom_16dp"
+            android:layout_toRightOf="@id/text_name"/>
+
+        <TextView
+            android:id="@+id/text_date"
+            style="@style/text_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/marginleft_14"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginleft_14"
+            android:text="@string/text_attendance_remark"/>
+
+        <TextView
+            android:id="@+id/text_remark"
+            style="@style/text_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginleft_14"/>
+    </LinearLayout>
+
+    <include layout="@layout/view_divi"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_54"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_agree"
+            android:layout_width="@dimen/btn_height_81"
+            android:layout_height="@dimen/btn_width_30"
+            android:layout_marginLeft="@dimen/marginleft_14"
+            android:background="@drawable/btn_blue_bg"
+            android:text="@string/btn_agree"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/text_15sp"/>
+
+        <Button
+            android:id="@+id/btn_no_agree"
+            android:layout_width="@dimen/btn_height_81"
+            android:layout_height="@dimen/btn_width_30"
+            android:layout_marginLeft="@dimen/paddingtop_18dp"
+            android:background="@drawable/btn_red_bg"
+            android:text="@string/btn_no_agree"
+            android:textColor="@color/red"
+            android:textSize="@dimen/text_15sp"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_remark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/et_bg"
+        android:gravity="left|top"
+        android:hint="@string/et_hint_remark"
+        android:minLines="2"
+        android:padding="5dp"/>
+
+</LinearLayout>

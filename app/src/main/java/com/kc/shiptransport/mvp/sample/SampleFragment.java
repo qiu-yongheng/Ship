@@ -80,12 +80,12 @@ public class SampleFragment extends BaseMvpFragment{
 
     @Override
     protected String abs_showTitleOtherInfo(String data) {
-        return "分包商: " + data;
+        return "当前用户: " + data;
     }
 
     @Override
     protected String abs_showStayInfo(String data) {
-        return "待完善航次: " + data;
+        return "未验砂航次: " + data;
     }
 
     @Override

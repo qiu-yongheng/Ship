@@ -12,354 +12,655 @@
         app:titleTextColor="@color/text_white"/>
 
     <ScrollView
-        android:layout_marginTop="?actionBarSize"
-        android:layout_marginBottom="?actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?actionBarSize"
+        android:layout_marginTop="?actionBarSize">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <RelativeLayout
-                android:id="@+id/rl_ship_location"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
-                <TextView
-                    android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_ship_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tv_ship_location"
-                    android:textSize="@dimen/text_normal_size"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <View
-                android:background="@color/Dividing_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/rl_ship_date"
+                android:id="@+id/rl_ship_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
-                <TextView
-                    android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_ship_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tv_ship_date"
-                    android:textSize="@dimen/text_normal_size"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <View
-                android:background="@color/Dividing_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+                android:paddingRight="@dimen/marginleft_14">
 
-            <RelativeLayout
-                android:id="@+id/rl_sample_num"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="船舶名称"
                     android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_sample_num"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tv_sample_num"
-                    android:textSize="@dimen/text_normal_size"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <View
-                android:background="@color/Dividing_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_material_from"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
-                <TextView
-                    android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_material_from"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="@dimen/text_normal_size"/>
 
                 <Spinner
-                    android:id="@+id/sp_material_from"
-                    android:textSize="@dimen/text_normal_size"
-                    android:spinnerMode="dialog"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
+                    android:id="@+id/sp_ship_name"
                     android:visibility="gone"
-                    android:id="@+id/tv_material_from"
-                    android:textSize="@dimen/text_normal_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
                     android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_ship_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <View
-                android:background="@color/Dividing_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_start_date"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
-                <TextView
-                    android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_start_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tv_start_date"
-                    android:textSize="@dimen/text_normal_size"
                     android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="@dimen/text_normal_size"/>
             </RelativeLayout>
+
             <View
-                android:background="@color/Dividing_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
 
             <RelativeLayout
-                android:id="@+id/rl_end_date"
+                android:id="@+id/rl_Captain"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
-                <TextView
-                    android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_end_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tv_end_date"
-                    android:textSize="@dimen/text_normal_size"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <View
-                android:background="@color/Dividing_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+                android:paddingRight="@dimen/marginleft_14">
 
-            <RelativeLayout
-                android:id="@+id/rl_come_date"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="船长姓名"
                     android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_come_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tv_come_date"
-                    android:textSize="@dimen/text_normal_size"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <View
-                android:background="@color/Dividing_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+                    android:textSize="@dimen/text_normal_size"/>
 
-            <RelativeLayout
-                android:id="@+id/rl_exit_date"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
-                <TextView
-                    android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_exit_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tv_exit_date"
-                    android:textSize="@dimen/text_normal_size"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <View
-                android:background="@color/Dividing_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_come_anchor_date"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
-                <TextView
-                    android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_come_anchor_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tv_come_anchor_date"
-                    android:textSize="@dimen/text_normal_size"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <View
-                android:background="@color/Dividing_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_clean_date"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
-                <TextView
-                    android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_clean_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/tv_clean_date"
-                    android:textSize="@dimen/text_normal_size"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-            <View
-                android:background="@color/Dividing_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_material_ordar"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/marginleft_14"
-                android:paddingRight="@dimen/marginleft_14"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height">
-                <TextView
-                    android:textColor="@color/text_tag_gray"
-                    android:textSize="@dimen/text_normal_size"
-                    android:text="@string/text_material_ordar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
                 <Spinner
-                    android:id="@+id/sp_material_ordar"
-                    android:textSize="@dimen/text_normal_size"
-                    android:spinnerMode="dialog"
-                    android:textColor="@color/text_gray"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
+                    android:id="@+id/sp_Captain"
                     android:visibility="gone"
-                    android:id="@+id/tv_material_ordar"
-                    android:textSize="@dimen/text_normal_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
                     android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+
+                <TextView
+                    android:id="@+id/tv_Captain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="@string/text_unfilled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
             </RelativeLayout>
+
             <View
-                android:background="@color/Dividing_line"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_CaptainPhone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="船长电话"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_CaptainPhone"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+
+                <TextView
+                    android:id="@+id/tv_CaptainPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_LoadingDate"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="装舱时间"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_LoadingDate"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_LoadingDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"
+                    android:visibility="visible"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_AIS_MMSI_Num"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AIS_MMSI_Num"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_AIS_MMSI_Num"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_AIS_MMSI_Num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_CompartmentQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="隔舱数量"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_CompartmentQuantity"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_CompartmentQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_GoodsName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="货物名称"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_GoodsName"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_GoodsName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_DeadweightTons"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="载重吨"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_DeadweightTons"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_DeadweightTons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_StoreID"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="石场名称"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_StoreID"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_StoreID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_WashStoreAddressID"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="洗石场所在地"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_WashStoreAddressID"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_WashStoreAddressID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_LeaveStoreTime"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="离开石场时间"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_LeaveStoreTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_LeaveStoreTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_ClearanceEndTime"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="清关结束时间"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_ClearanceEndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_ClearanceEndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_ArrivaOfAnchorageTime"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="到达锚地时间"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_ArrivaOfAnchorageTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_ArrivaOfAnchorageTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_MaterialClassification"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="材料分类"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_MaterialClassification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_MaterialClassification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_Receiver"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/marginleft_14"
+                android:paddingRight="@dimen/marginleft_14">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="收货方"
+                    android:textColor="@color/text_tag_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <Spinner
+                    android:id="@+id/sp_Receiver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:spinnerMode="dialog"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:id="@+id/tv_Receiver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Dividing_line"/>
 
         </LinearLayout>
     </ScrollView>
 
     <Button
         android:id="@+id/btn_commit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_alignParentBottom="true"
         android:background="@color/btn_bg_blue"
         android:text="@string/text_save_voyage"
         android:textColor="@color/text_white"
-        android:textSize="@dimen/text_18sp"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_height"
-        android:layout_alignParentBottom="true"/>
+        android:textSize="@dimen/text_18sp"/>
 
     <Button
-        android:visibility="gone"
         android:id="@+id/btn_return"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_alignParentBottom="true"
         android:background="@color/text_gray"
         android:text="@string/btn_return"
         android:textColor="@color/text_black"
         android:textSize="@dimen/text_18sp"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_height"
-        android:layout_alignParentBottom="true"/>
+        android:visibility="gone"/>
 </RelativeLayout>

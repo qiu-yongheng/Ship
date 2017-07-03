@@ -1,6 +1,6 @@
 package com.kc.shiptransport.mvp.shipselect;
 
-import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface ShipSelectContract {
     interface View extends BaseView<Presenter> {
-        void showShip(List<Ship> value);
+        void showShip(Ship value);
         void cancle();
         void commit();
         void showLoading(boolean active);

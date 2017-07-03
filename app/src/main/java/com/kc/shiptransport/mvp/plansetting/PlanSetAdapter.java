@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
@@ -29,11 +29,11 @@ import java.util.List;
 public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final int jumpWeek;
-    private List<List<Ship>> value;
+    private List<Ship> value;
     private String date;
     private OnRecyclerviewItemClickListener listener;
 
-    public PlanSetAdapter(Context context, List<List<Ship>> value, String date, int jumpWeek) {
+    public PlanSetAdapter(Context context, List<Ship> value, String date, int jumpWeek) {
         this.context = context;
         this.value = value;
         this.date = date;
@@ -47,10 +47,11 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        List<Ship> lists = value.get(position);
-        String type = lists.get(0).getShipType();
+        Ship ship = value.get(position);
+        String type = ship.getShipType();
+        String remark = ship.getRemark();
         // 设置类型
-        ((NormalHolder) holder).mTvShipTypeName.setText("类型:" + type);
+        ((NormalHolder) holder).mTvShipTypeName.setText(type + " " + remark);
 
 
         /*----------------------查询对应type的计划数据-----------------------*/
@@ -110,7 +111,7 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    public void setDates(List<List<Ship>> value, String date) {
+    public void setDates(List<Ship> value, String date) {
         this.value = value;
         this.date = date;
     }

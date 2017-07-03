@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.kc.shiptransport.data.source.DataRepository;
-import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.ship.Ship;
 
 import java.util.List;
 
@@ -55,14 +55,14 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
                 .getShipCategory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<List<Ship>>>() {
+                .subscribe(new Observer<List<Ship>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(List<List<Ship>> value) {
+                    public void onNext(List<Ship> value) {
                         // 传递当前选中日期
                         view.showShipCategory(value, date);
                     }

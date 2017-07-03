@@ -194,9 +194,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="right"
-                android:text="验砂时间: "
+                android:text="验砂通过时间: "
                 android:textColor="#000"
                 android:textSize="22sp"/>
 
@@ -215,6 +215,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -240,6 +241,11 @@
                 android:digits="1234567890."
                 android:inputType="number"/>
         </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
@@ -268,7 +274,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?colorPrimary"
-            android:text="同意"
+            android:text="提交"
             android:textColor="#fff"/>
     </LinearLayout>
 

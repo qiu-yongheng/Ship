@@ -1,7 +1,10 @@
 package com.kc.shiptransport.mvp.attendanceaudit;
 
+import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
+
+import java.util.List;
 
 /**
  * @author qiuyongheng
@@ -11,10 +14,12 @@ import com.kc.shiptransport.mvp.BaseView;
 
 public interface AttendanceAuditContract {
     interface View extends BaseView<Presenter> {
-
+        void showAttendance(List<AttendanceRecordList> list);
+        void showResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {
-
+        void getAttendance();
+        void commitAudit(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck);
     }
 }

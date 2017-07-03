@@ -18,4 +18,16 @@
         <item name="android:maxHeight">21dp</item>
     </style>
 
+    <!--标题文字-->
+    <style name="text_tag">
+        <item name="android:textSize">@dimen/text_15sp</item>
+        <item name="android:textColor">@color/text_tag_gray</item>
+    </style>
+
+    <!--描述文字-->
+    <style name="text_description">
+        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:textSize">@dimen/text_15sp</item>
+    </style>
+
 </resources>

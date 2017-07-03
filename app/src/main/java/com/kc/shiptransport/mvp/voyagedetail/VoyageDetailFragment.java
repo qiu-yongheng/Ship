@@ -36,6 +36,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.kc.shiptransport.R.id.rl;
+
 /**
  * @author qiuyongheng
  * @time 2017/6/13  17:14
@@ -43,61 +45,103 @@ import butterknife.Unbinder;
  */
 
 public class VoyageDetailFragment extends Fragment implements VoyageDetailContract.View, View.OnClickListener {
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.rl_ship_location)
-    RelativeLayout rlShipLocation;
-    @BindView(R.id.rl_ship_date)
-    RelativeLayout rlShipDate;
-    @BindView(R.id.rl_sample_num)
-    RelativeLayout rlSampleNum;
-    @BindView(R.id.rl_material_from)
-    RelativeLayout rlMaterialFrom;
-    @BindView(R.id.rl_start_date)
-    RelativeLayout rlStartDate;
-    @BindView(R.id.rl_end_date)
-    RelativeLayout rlEndDate;
-    @BindView(R.id.rl_come_date)
-    RelativeLayout rlComeDate;
-    @BindView(R.id.rl_exit_date)
-    RelativeLayout rlExitDate;
-    @BindView(R.id.rl_come_anchor_date)
-    RelativeLayout rlComeAnchorDate;
-    @BindView(R.id.rl_clean_date)
-    RelativeLayout rlCleanDate;
-    @BindView(R.id.rl_material_ordar)
-    RelativeLayout rlMaterialOrdar;
+    @BindView(R.id.sp_ship_name)
+    Spinner spShipName;
+    @BindView(R.id.tv_ship_name)
+    TextView tvShipName;
+    @BindView(R.id.rl_ship_name)
+    RelativeLayout rlShipName;
+    @BindView(R.id.sp_Captain)
+    Spinner spCaptain;
+    @BindView(R.id.tv_Captain)
+    TextView tvCaptain;
+    @BindView(R.id.rl_Captain)
+    RelativeLayout rlCaptain;
+    @BindView(R.id.sp_CaptainPhone)
+    Spinner spCaptainPhone;
+    @BindView(R.id.tv_CaptainPhone)
+    TextView tvCaptainPhone;
+    @BindView(R.id.rl_CaptainPhone)
+    RelativeLayout rlCaptainPhone;
+    @BindView(R.id.sp_LoadingDate)
+    Spinner spLoadingDate;
+    @BindView(R.id.tv_LoadingDate)
+    TextView tvLoadingDate;
+    @BindView(R.id.rl_LoadingDate)
+    RelativeLayout rlLoadingDate;
+    @BindView(R.id.sp_AIS_MMSI_Num)
+    Spinner spAISMMSINum;
+    @BindView(R.id.tv_AIS_MMSI_Num)
+    TextView tvAISMMSINum;
+    @BindView(R.id.rl_AIS_MMSI_Num)
+    RelativeLayout rlAISMMSINum;
+    @BindView(R.id.sp_CompartmentQuantity)
+    Spinner spCompartmentQuantity;
+    @BindView(R.id.tv_CompartmentQuantity)
+    TextView tvCompartmentQuantity;
+    @BindView(R.id.rl_CompartmentQuantity)
+    RelativeLayout rlCompartmentQuantity;
+    @BindView(R.id.sp_GoodsName)
+    Spinner spGoodsName;
+    @BindView(R.id.tv_GoodsName)
+    TextView tvGoodsName;
+    @BindView(R.id.rl_GoodsName)
+    RelativeLayout rlGoodsName;
+    @BindView(R.id.sp_DeadweightTons)
+    Spinner spDeadweightTons;
+    @BindView(R.id.tv_DeadweightTons)
+    TextView tvDeadweightTons;
+    @BindView(R.id.rl_DeadweightTons)
+    RelativeLayout rlDeadweightTons;
+    @BindView(R.id.sp_StoreID)
+    Spinner spStoreID;
+    @BindView(R.id.tv_StoreID)
+    TextView tvStoreID;
+    @BindView(R.id.rl_StoreID)
+    RelativeLayout rlStoreID;
+    @BindView(R.id.sp_WashStoreAddressID)
+    Spinner spWashStoreAddressID;
+    @BindView(R.id.tv_WashStoreAddressID)
+    TextView tvWashStoreAddressID;
+    @BindView(R.id.rl_WashStoreAddressID)
+    RelativeLayout rlWashStoreAddressID;
+    @BindView(R.id.sp_LeaveStoreTime)
+    Spinner spLeaveStoreTime;
+    @BindView(R.id.tv_LeaveStoreTime)
+    TextView tvLeaveStoreTime;
+    @BindView(R.id.rl_LeaveStoreTime)
+    RelativeLayout rlLeaveStoreTime;
+    @BindView(R.id.sp_ClearanceEndTime)
+    Spinner spClearanceEndTime;
+    @BindView(R.id.tv_ClearanceEndTime)
+    TextView tvClearanceEndTime;
+    @BindView(R.id.rl_ClearanceEndTime)
+    RelativeLayout rlClearanceEndTime;
+    @BindView(R.id.sp_ArrivaOfAnchorageTime)
+    Spinner spArrivaOfAnchorageTime;
+    @BindView(R.id.tv_ArrivaOfAnchorageTime)
+    TextView tvArrivaOfAnchorageTime;
+    @BindView(R.id.rl_ArrivaOfAnchorageTime)
+    RelativeLayout rlArrivaOfAnchorageTime;
+    @BindView(R.id.sp_MaterialClassification)
+    Spinner spMaterialClassification;
+    @BindView(R.id.tv_MaterialClassification)
+    TextView tvMaterialClassification;
+    @BindView(R.id.rl_MaterialClassification)
+    RelativeLayout rlMaterialClassification;
+    @BindView(R.id.sp_Receiver)
+    Spinner spReceiver;
+    @BindView(R.id.tv_Receiver)
+    TextView tvReceiver;
+    @BindView(R.id.rl_Receiver)
+    RelativeLayout rlReceiver;
     @BindView(R.id.btn_commit)
     Button btnCommit;
-    Unbinder unbinder;
-    @BindView(R.id.tv_ship_date)
-    TextView mTvShipDate;
-    @BindView(R.id.tv_ship_location)
-    TextView mTvShipLocation;
-    @BindView(R.id.tv_sample_num)
-    TextView mTvSampleNum;
-    @BindView(R.id.tv_material_from)
-    TextView mTvMaterialFrom;
-    @BindView(R.id.tv_start_date)
-    TextView mTvStartDate;
-    @BindView(R.id.tv_end_date)
-    TextView mTvEndDate;
-    @BindView(R.id.tv_come_date)
-    TextView mTvComeDate;
-    @BindView(R.id.tv_exit_date)
-    TextView mTvExitDate;
-    @BindView(R.id.tv_come_anchor_date)
-    TextView mTvComeAnchorDate;
-    @BindView(R.id.tv_clean_date)
-    TextView mTvCleanDate;
-    @BindView(R.id.sp_material_ordar)
-    Spinner mSpMaterialOrdar;
-    @BindView(R.id.tv_material_ordar)
-    TextView tvMaterialOrdar;
     @BindView(R.id.btn_return)
     Button btnReturn;
-    @BindView(R.id.sp_material_from)
-    Spinner mSpMaterialFrom;
     private VoyageDetailContract.Presenter presenter;
     private VoyageDetailActivity activity;
     private String itemID;
@@ -114,6 +158,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     private String arrivaOfAnchorageTime;
     private String clearanceTime;
     private PerfectBoatRecord perfectBoatRecord;
+    private Unbinder unbinder;
 
     @Nullable
     @Override
@@ -128,28 +173,21 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     }
 
     public void initListener() {
-        // 船舶地址
-        rlShipLocation.setOnClickListener(this);
-        // 装船日期
-        rlShipDate.setOnClickListener(this);
-        // 基样编号
-        rlSampleNum.setOnClickListener(this);
-        // 材料来源地
-        rlMaterialFrom.setOnClickListener(this);
-        // 开始装船时间
-        rlStartDate.setOnClickListener(this);
-        // 结束装船事件
-        rlEndDate.setOnClickListener(this);
-        // 抵达码头时间
-        rlComeDate.setOnClickListener(this);
-        // 离开码头时间
-        rlExitDate.setOnClickListener(this);
-        // 到达锚地时间
-        rlComeAnchorDate.setOnClickListener(this);
-        // 清关时间
-        rlCleanDate.setOnClickListener(this);
-        // 材料分类
-        rlMaterialOrdar.setOnClickListener(this);
+        rlShipName.setOnClickListener(this);
+        rlCaptain.setOnClickListener(this);
+        rlCaptainPhone.setOnClickListener(this);
+        rlLoadingDate.setOnClickListener(this);
+        rlAISMMSINum.setOnClickListener(this);
+        rlCompartmentQuantity.setOnClickListener(this);
+        rlGoodsName.setOnClickListener(this);
+        rlDeadweightTons.setOnClickListener(this);
+        rlStoreID.setOnClickListener(this);
+        rlWashStoreAddressID.setOnClickListener(this);
+        rlLeaveStoreTime.setOnClickListener(this);
+        rlClearanceEndTime.setOnClickListener(this);
+        rlArrivaOfAnchorageTime.setOnClickListener(this);
+        rlMaterialClassification.setOnClickListener(this);
+        rlReceiver.setOnClickListener(this);
 
         // 提交
         btnCommit.setOnClickListener(this);
@@ -163,23 +201,26 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+        /** 材料分类 */
         // 适配器
         ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.voyage_spinner));
         // 设置样式
         arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // 加载适配器
-        mSpMaterialOrdar.setAdapter(arr_adapter);
+        spMaterialClassification.setAdapter(arr_adapter);
         // 根据上一个界面传过来的position设置当前显示的item
         //        mSpMaterialOrdar.setSelection(0);
 
-        // 点击后, 筛选分包商的数据
-        mSpMaterialOrdar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // 点击后, 筛选材料分类
+        spMaterialClassification.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (perfectBoatRecord != null) {
                     if (i != 0) {
+                        // 保存材料分类
                         perfectBoatRecord.setMaterialClassification(getResources().getStringArray(R.array.voyage_spinner)[i]);
                     }
+                    // 保存材料分类position
                     perfectBoatRecord.setSp_material_position(i);
                     perfectBoatRecord.save();
                 }
@@ -191,6 +232,18 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
 
             }
         });
+
+        /** 料源石场 */
+        spStoreID.setVisibility(View.VISIBLE);
+        tvStoreID.setVisibility(View.GONE);
+
+        /** 洗石场 */
+        spWashStoreAddressID.setVisibility(View.VISIBLE);
+        tvWashStoreAddressID.setVisibility(View.GONE);
+
+        /** 材料分类 */
+        spMaterialClassification.setVisibility(View.VISIBLE);
+        tvMaterialClassification.setVisibility(View.GONE);
 
     }
 
@@ -218,6 +271,57 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rl_ship_name:
+                //
+                break;
+            case R.id.rl_Captain:
+                break;
+            case R.id.rl_CaptainPhone:
+                break;
+            case R.id.rl_LoadingDate:
+                break;
+            case R.id.rl_AIS_MMSI_Num:
+                break;
+            case R.id.rl_CompartmentQuantity:
+                break;
+            case R.id.rl_GoodsName:
+                break;
+            case R.id.rl_DeadweightTons:
+                break;
+            case R.id.rl_StoreID:
+                break;
+            case R.id.rl_WashStoreAddressID:
+                break;
+            case R.id.rl_LeaveStoreTime:
+                break;
+            case R.id.rl_ClearanceEndTime:
+                break;
+            case R.id.rl_ArrivaOfAnchorageTime:
+                break;
+            case R.id.rl_MaterialClassification:
+                break;
+            case R.id.rl_Receiver:
+                break;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         switch (view.getId()) {
             case R.id.rl_ship_location:
                 InputActivity.startActivityForResult(activity, getResources().getString(R.string.text_ship_location), mTvShipLocation.getText().toString(), 0);

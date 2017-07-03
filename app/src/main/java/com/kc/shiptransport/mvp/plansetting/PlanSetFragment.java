@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.shipselect.ShipSelectActivity;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -207,19 +207,18 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     /**
      * 获取数据, 显示船舶分类
      * 从数据库获取所有数据
-     *
-     * @param value
+     *  @param value
      * @param date
      */
     @Override
-    public void showShipCategory(final List<List<Ship>> value, String date) {
+    public void showShipCategory(final List<Ship> value, String date) {
         if (adapter == null) {
             adapter = new PlanSetAdapter(activity, value, date, jumpWeek);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
                     // 传递类型
-                    navigationToShipSelectActivity(value.get(position).get(0).getShipType());
+                    navigationToShipSelectActivity(value.get(position).getShipType());
                 }
 
                 @Override

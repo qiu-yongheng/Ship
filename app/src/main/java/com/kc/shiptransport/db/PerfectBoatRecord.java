@@ -9,70 +9,77 @@ import org.litepal.crud.DataSupport;
  */
 
 public class PerfectBoatRecord extends DataSupport{
-
     /**
-     * ItemID : 2
+     * ItemID :
      * SubcontractorInterimApproachPlanID : 415
-     * LoadingPlace : abc
-     * LoadingDate : 2017-06-08 00:00:00
-     * BaseNumber : xx
-     * SourceOfSource : xxx
-     * StartLoadingTime : 2017-06-08 00:00:00
-     * EndLoadingTime : 2017-06-10 00:00:00
-     * ArrivedAtTheDockTime : 2017-06-08 19:00:00
-     * LeaveTheDockTime : 2017-06-08 19:30:00
-     * ArrivaOfAnchorageTime : 2017-06-08 19:30:00
-     * ClearanceTime : 2017-06-08 19:30:00
-     * MaterialClassification : xxx
+     * Captain : 陈1
+     * CaptainPhone : 15914331849
+     * LoadingDate : 2017-06-08 19:30
+     * AIS_MMSI_Num : 123
+     * CompartmentQuantity : 3
+     * GoodsName : abc
+     * DeadweightTons : 100
+     * StoreID : 1
+     * WashStoreAddressID : 1
+     * LeaveStoreTime : 2017-06-08 19:30
+     * ClearanceEndTime : 2017-06-08 19:30
+     * ArrivaOfAnchorageTime : 2017-06-08 19:30
+     * MaterialClassification : 细砂（0~3mm）
+     * Receiver : xxx
      * Creator : yflf
-     * SystemDate : 2017-06-19T17:58:34.513
-     * PerfectBoatItemCount : 11
-     * IsPerfect : 1
      */
 
-    private int ItemID;
-    private int SubcontractorInterimApproachPlanID;
-    private String LoadingPlace;
+    private String ItemID;
+    private String SubcontractorInterimApproachPlanID;
+    private String Captain;
+    private String CaptainPhone;
     private String LoadingDate;
-    private String BaseNumber;
-    private String SourceOfSource;
-    private String StartLoadingTime;
-    private String EndLoadingTime;
-    private String ArrivedAtTheDockTime;
-    private String LeaveTheDockTime;
+    private String AIS_MMSI_Num;
+    private String CompartmentQuantity;
+    private String GoodsName;
+    private String DeadweightTons;
+    private String StoreID;
+    private String WashStoreAddressID;
+    private String LeaveStoreTime;
+    private String ClearanceEndTime;
     private String ArrivaOfAnchorageTime;
-    private String ClearanceTime;
     private String MaterialClassification;
+    private String Receiver;
     private String Creator;
-    private String SystemDate;
-    private int PerfectBoatItemCount;
-    private int IsPerfect;
 
-    private int sp_stone_source_position;
-    private int sp_material_position;
+    private int sp_stone_source_position; // 料源石场
+    private int sp_material_position; // 材料分类
 
-    public int getItemID() {
+    public String getItemID() {
         return ItemID;
     }
 
-    public void setItemID(int ItemID) {
+    public void setItemID(String ItemID) {
         this.ItemID = ItemID;
     }
 
-    public int getSubcontractorInterimApproachPlanID() {
+    public String getSubcontractorInterimApproachPlanID() {
         return SubcontractorInterimApproachPlanID;
     }
 
-    public void setSubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID) {
+    public void setSubcontractorInterimApproachPlanID(String SubcontractorInterimApproachPlanID) {
         this.SubcontractorInterimApproachPlanID = SubcontractorInterimApproachPlanID;
     }
 
-    public String getLoadingPlace() {
-        return LoadingPlace;
+    public String getCaptain() {
+        return Captain;
     }
 
-    public void setLoadingPlace(String LoadingPlace) {
-        this.LoadingPlace = LoadingPlace;
+    public void setCaptain(String Captain) {
+        this.Captain = Captain;
+    }
+
+    public String getCaptainPhone() {
+        return CaptainPhone;
+    }
+
+    public void setCaptainPhone(String CaptainPhone) {
+        this.CaptainPhone = CaptainPhone;
     }
 
     public String getLoadingDate() {
@@ -83,52 +90,68 @@ public class PerfectBoatRecord extends DataSupport{
         this.LoadingDate = LoadingDate;
     }
 
-    public String getBaseNumber() {
-        return BaseNumber;
+    public String getAIS_MMSI_Num() {
+        return AIS_MMSI_Num;
     }
 
-    public void setBaseNumber(String BaseNumber) {
-        this.BaseNumber = BaseNumber;
+    public void setAIS_MMSI_Num(String AIS_MMSI_Num) {
+        this.AIS_MMSI_Num = AIS_MMSI_Num;
     }
 
-    public String getSourceOfSource() {
-        return SourceOfSource;
+    public String getCompartmentQuantity() {
+        return CompartmentQuantity;
     }
 
-    public void setSourceOfSource(String SourceOfSource) {
-        this.SourceOfSource = SourceOfSource;
+    public void setCompartmentQuantity(String CompartmentQuantity) {
+        this.CompartmentQuantity = CompartmentQuantity;
     }
 
-    public String getStartLoadingTime() {
-        return StartLoadingTime;
+    public String getGoodsName() {
+        return GoodsName;
     }
 
-    public void setStartLoadingTime(String StartLoadingTime) {
-        this.StartLoadingTime = StartLoadingTime;
+    public void setGoodsName(String GoodsName) {
+        this.GoodsName = GoodsName;
     }
 
-    public String getEndLoadingTime() {
-        return EndLoadingTime;
+    public String getDeadweightTons() {
+        return DeadweightTons;
     }
 
-    public void setEndLoadingTime(String EndLoadingTime) {
-        this.EndLoadingTime = EndLoadingTime;
+    public void setDeadweightTons(String DeadweightTons) {
+        this.DeadweightTons = DeadweightTons;
     }
 
-    public String getArrivedAtTheDockTime() {
-        return ArrivedAtTheDockTime;
+    public String getStoreID() {
+        return StoreID;
     }
 
-    public void setArrivedAtTheDockTime(String ArrivedAtTheDockTime) {
-        this.ArrivedAtTheDockTime = ArrivedAtTheDockTime;
+    public void setStoreID(String StoreID) {
+        this.StoreID = StoreID;
     }
 
-    public String getLeaveTheDockTime() {
-        return LeaveTheDockTime;
+    public String getWashStoreAddressID() {
+        return WashStoreAddressID;
     }
 
-    public void setLeaveTheDockTime(String LeaveTheDockTime) {
-        this.LeaveTheDockTime = LeaveTheDockTime;
+    public void setWashStoreAddressID(String WashStoreAddressID) {
+        this.WashStoreAddressID = WashStoreAddressID;
+    }
+
+    public String getLeaveStoreTime() {
+        return LeaveStoreTime;
+    }
+
+    public void setLeaveStoreTime(String LeaveStoreTime) {
+        this.LeaveStoreTime = LeaveStoreTime;
+    }
+
+    public String getClearanceEndTime() {
+        return ClearanceEndTime;
+    }
+
+    public void setClearanceEndTime(String ClearanceEndTime) {
+        this.ClearanceEndTime = ClearanceEndTime;
     }
 
     public String getArrivaOfAnchorageTime() {
@@ -139,14 +162,6 @@ public class PerfectBoatRecord extends DataSupport{
         this.ArrivaOfAnchorageTime = ArrivaOfAnchorageTime;
     }
 
-    public String getClearanceTime() {
-        return ClearanceTime;
-    }
-
-    public void setClearanceTime(String ClearanceTime) {
-        this.ClearanceTime = ClearanceTime;
-    }
-
     public String getMaterialClassification() {
         return MaterialClassification;
     }
@@ -155,36 +170,20 @@ public class PerfectBoatRecord extends DataSupport{
         this.MaterialClassification = MaterialClassification;
     }
 
+    public String getReceiver() {
+        return Receiver;
+    }
+
+    public void setReceiver(String Receiver) {
+        this.Receiver = Receiver;
+    }
+
     public String getCreator() {
         return Creator;
     }
 
     public void setCreator(String Creator) {
         this.Creator = Creator;
-    }
-
-    public String getSystemDate() {
-        return SystemDate;
-    }
-
-    public void setSystemDate(String SystemDate) {
-        this.SystemDate = SystemDate;
-    }
-
-    public int getPerfectBoatItemCount() {
-        return PerfectBoatItemCount;
-    }
-
-    public void setPerfectBoatItemCount(int PerfectBoatItemCount) {
-        this.PerfectBoatItemCount = PerfectBoatItemCount;
-    }
-
-    public int getIsPerfect() {
-        return IsPerfect;
-    }
-
-    public void setIsPerfect(int IsPerfect) {
-        this.IsPerfect = IsPerfect;
     }
 
     public int getSp_stone_source_position() {

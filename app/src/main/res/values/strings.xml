@@ -57,8 +57,8 @@
     <string name="dialog_delete">删除</string>
     <string name="dialog_sample_delete_msg">是否删除取样记录</string>
     <string name="title_sample">验砂取样</string>
-    <string name="sample_red">红色字体: 已完善</string>
-    <string name="sample_black">黑色字体: 未完善</string>
+    <string name="sample_red">红色字体: 已验砂</string>
+    <string name="sample_black">黑色字体: 未验砂</string>
     <string name="title_scanner">分包商航次扫描件</string>
     <string name="scanner_red">红色字体: 已完善</string>
     <string name="scanner_black">黑色字体: 未完善</string>
@@ -103,6 +103,9 @@
     <string name="btn_quiry">考勤记录</string>
     <string name="text_date_select">日期选择:</string>
     <string name="attendance_audit">考勤管理</string>
+    <string name="btn_agree">审核通过</string>
+    <string name="btn_no_agree">不通过</string>
+    <string name="text_attendance_remark">考勤备注:</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

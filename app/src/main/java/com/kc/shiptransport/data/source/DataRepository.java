@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.AcceptanceBean;
+import com.kc.shiptransport.data.bean.AmountImgListBean;
 import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.AttendanceRecordListBean;
 import com.kc.shiptransport.data.bean.AttendanceTypeBean;
@@ -46,12 +47,14 @@ import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
-import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.ship.Ship;
+import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.FileUtil;
 import com.kc.shiptransport.util.MyJSONObject;
@@ -130,19 +133,19 @@ public class DataRepository implements DataSouceImpl {
         }.getType());
         if (list != null && !list.isEmpty()) {
             DataSupport.deleteAll(Ship.class);
-            for (ShipBean listBean : list) {
-                Ship ship = new Ship();
-                ship.setItemID(listBean.getItemID());
-                ship.setShipID(listBean.getShipID());
-                ship.setShipAccount(listBean.getShipAccount());
-                ship.setShipName(listBean.getShipName());
-                ship.setShipType(listBean.getShipType());
-                ship.setMaxSandSupplyCount(listBean.getMaxSandSupplyCount());
-                ship.setCapacity(listBean.getCapacity());
-                ship.setDeckGauge(listBean.getDeckGauge());
-                ship.setSelected("0");
-                ship.save();
-            }
+//            for (ShipBean listBean : list) {
+//                Ship ship = new Ship();
+//                ship.setItemID(listBean.getItemID());
+//                ship.setShipID(listBean.getShipID());
+//                ship.setShipAccount(listBean.getShipAccount());
+//                ship.setShipName(listBean.getShipName());
+//                ship.setShipType(listBean.getShipType());
+//                ship.setMaxSandSupplyCount(listBean.getMaxSandSupplyCount());
+//                ship.setCapacity(listBean.getCapacity());
+//                ship.setDeckGauge(listBean.getDeckGauge());
+//                ship.setSelected("0");
+//                ship.save();
+//            }
         }
     }
 
@@ -408,20 +411,20 @@ public class DataRepository implements DataSouceImpl {
 
                 // 重置ship的选择状态
                 ContentValues v = new ContentValues();
-                v.put("Selected", "0");
-                DataSupport.updateAll(Ship.class, v);
+                v.put("isSelected", 0);
+                DataSupport.updateAll(ShipList.class, v);
 
-                Log.d("==", "重置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+                Log.d("==", "重置后, 选择数量: " + DataSupport.where("isSelected = ?", "1").find(ShipList.class).size());
 
 
                 // 根据计划, 设置ship select = 1
                 ContentValues values = new ContentValues();
-                values.put("Selected", "1");
+                values.put("isSelected", 1);
                 for (WeekTask weekTask : weekLists) {
-                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
+                    DataSupport.updateAll(ShipList.class, values, "ShipAccount = ?", weekTask.getShipAccount());
                 }
 
-                Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+                Log.d("==", "设置后, 选择数量: " + DataSupport.where("isSelected = ?", "1").find(ShipList.class).size());
                 Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
 
 
@@ -519,20 +522,20 @@ public class DataRepository implements DataSouceImpl {
 
                 // 重置ship的选择状态
                 ContentValues v = new ContentValues();
-                v.put("Selected", "0");
-                DataSupport.updateAll(Ship.class, v);
+                v.put("isSelected", 0);
+                DataSupport.updateAll(ShipList.class, v);
 
-                Log.d("==", "重置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+                Log.d("==", "重置后, 选择数量: " + DataSupport.where("isSelected = ?", "1").find(ShipList.class).size());
 
 
                 // 根据计划, 设置ship select = 1
                 ContentValues values = new ContentValues();
-                values.put("Selected", "1");
+                values.put("isSelected", 1);
                 for (WeekTask weekTask : weekLists) {
-                    DataSupport.updateAll(Ship.class, values, "ShipAccount = ?", weekTask.getShipAccount());
+                    DataSupport.updateAll(ShipList.class, values, "ShipAccount = ?", weekTask.getShipAccount());
                 }
 
-                Log.d("==", "设置后, 选择数量: " + DataSupport.where("Selected = ?", "1").find(Ship.class).size());
+                Log.d("==", "设置后, 选择数量: " + DataSupport.where("isSelected = ?", "1").find(ShipList.class).size());
                 Log.d("==", "----PlanPresenter: 从数据库获取数据, 重置ship的选择状态----");
 
 
@@ -543,26 +546,20 @@ public class DataRepository implements DataSouceImpl {
         });
     }
 
+    /**
+     * 查询船舶数据
+     * @return
+     */
     @Override
-    public Observable<List<List<Ship>>> getShipCategory() {
-        return Observable.create(new ObservableOnSubscribe<List<List<Ship>>>() {
+    public Observable<List<Ship>> getShipCategory() {
+        return Observable.create(new ObservableOnSubscribe<List<Ship>>() {
             @Override
-            public void subscribe(ObservableEmitter<List<List<Ship>>> e) throws Exception {
-                List<List<Ship>> lists = new ArrayList<>();
-                List<Ship> all = DataSupport.order("ShipType asc").find(Ship.class);
-                // 根据type进行分类
-                Set set = new HashSet();
-                for (Ship ship : all) {
-                    String type = ship.getShipType();
-                    if (set.contains(type)) {
+            public void subscribe(ObservableEmitter<List<Ship>> e) throws Exception {
+                // 激进查询
+                List<Ship> all = DataSupport.order("ShipType asc").find(Ship.class, true);
 
-                    } else {
-                        set.add(type);
-                        lists.add(DataSupport.where("ShipType = ?", type).find(Ship.class));
-                    }
-                }
-
-                e.onNext(lists);
+                e.onNext(all);
+                e.onComplete();
             }
         });
     }
@@ -858,12 +855,13 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<List<Ship>> getShipByType(final String type) {
-        return Observable.create(new ObservableOnSubscribe<List<Ship>>() {
+    public Observable<Ship> getShipByType(final String type) {
+        return Observable.create(new ObservableOnSubscribe<Ship>() {
             @Override
-            public void subscribe(ObservableEmitter<List<Ship>> e) throws Exception {
-                List<Ship> list = DataSupport.where("ShipType = ?", type).find(Ship.class);
-                e.onNext(list);
+            public void subscribe(ObservableEmitter<Ship> e) throws Exception {
+                List<Ship> list = DataSupport.where("ShipType = ?", type).find(Ship.class, true);
+                e.onNext(list.get(0));
+                e.onComplete();
             }
         });
     }
@@ -884,15 +882,15 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 /* 1. 设置指定type类型的船, select = 0 */
                 ContentValues values = new ContentValues();
-                values.put("Selected", "0");
-                DataSupport.updateAll(Ship.class, values, "ShipType = ?", type);
+                values.put("isSelected", 0);
+                DataSupport.updateAll(ShipList.class, values, "ShipType = ?", type);
 
                 /* 2. 根据当前日期, type查询计划数据, 全部设置为select = 1 */
                 List<WeekTask> weekTasks = DataSupport.where("PlanDay = ? and ShipType = ?", date, type).find(WeekTask.class);
                 ContentValues v = new ContentValues();
-                v.put("Selected", "1");
+                v.put("isSelected", 1);
                 for (WeekTask weekTask : weekTasks) {
-                    DataSupport.updateAll(Ship.class, v, "ShipAccount = ?", weekTask.getShipAccount());
+                    DataSupport.updateAll(ShipList.class, v, "ShipAccount = ?", weekTask.getShipAccount());
                 }
 
                 e.onNext(true);
@@ -930,7 +928,7 @@ public class DataRepository implements DataSouceImpl {
                     // 判断该任务对应的ship是否选中
                     for (WeekTask weekTask : weekTasks) {
 
-                        if (!DataSupport.where("Selected = ? and ShipAccount = ?", "0", weekTask.getShipAccount()).find(Ship.class).isEmpty()) {
+                        if (!DataSupport.where("isSelected = ? and ShipAccount = ?", "0", weekTask.getShipAccount()).find(ShipList.class).isEmpty()) {
                             // 被取消的任务
                             removeItemIDS.add(weekTask.getItemID());
                         }
@@ -1054,22 +1052,24 @@ public class DataRepository implements DataSouceImpl {
                 // 2. 获取数据, 缓存到数据库
                 String shipInfo = mRemoteDataSource.getShipInfo(username);
                 Log.d("ship", shipInfo);
-                List<ShipBean> list = gson.fromJson(shipInfo, new TypeToken<List<ShipBean>>() {
+                List<Ship> list = gson.fromJson(shipInfo, new TypeToken<List<Ship>>() {
                 }.getType());
-                if (list != null && !list.isEmpty()) {
-                    DataSupport.deleteAll(Ship.class);
-                    for (ShipBean listBean : list) {
-                        Ship ship = new Ship();
-                        ship.setItemID(listBean.getItemID());
-                        ship.setShipID(listBean.getShipID());
-                        ship.setShipAccount(listBean.getShipAccount());
-                        ship.setShipName(listBean.getShipName());
-                        ship.setShipType(listBean.getShipType());
-                        ship.setMaxSandSupplyCount(listBean.getMaxSandSupplyCount());
-                        ship.setSelected("0");
-                        ship.save();
+
+                // 初始化数据库
+                DataSupport.deleteAll(Ship.class);
+                DataSupport.deleteAll(ShipList.class);
+
+                // 保存数据
+                for (Ship ship : list) {
+                    ship.save();
+                    List<ShipList> shipList = ship.getShipList();
+                    for (ShipList bean : shipList) {
+                        bean.setShip(ship);
+                        bean.save();
                     }
                 }
+
+                // 激进查询, 不能设置id (应该是gson解析成对象时, 默认给id设值, 如果是手动添加数据到数据库, 可以设置id)
 
                 e.onNext(true);
                 e.onComplete();
@@ -1341,11 +1341,38 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> UpdateTheAmountOfSideData(final int itemID, final String TheAmountOfTime, final String Capacity, final String DeckGauge, final String Deduction) {
+    public Observable<Boolean> UpdateTheAmountOfSideData(final int itemID,
+                                                         final String TheAmountOfTime,
+                                                         final int SubcontractorInterimApproachPlanID,
+                                                         final String ShipAccount,
+                                                         final String Capacity,
+                                                         final String DeckGauge,
+                                                         final String Deduction,
+                                                         final String Creator) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
-                String result = mRemoteDataSource.UpdateTheAmountOfSideData(itemID, TheAmountOfTime, Capacity, DeckGauge, Deduction);
+
+                // 把数据解析成json
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ItemID", itemID);
+                jsonObject.put("TheAmountOfTime", TheAmountOfTime);
+                jsonObject.put("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+                jsonObject.put("ShipAccount", ShipAccount);
+                jsonObject.put("Capacity", Capacity);
+                jsonObject.put("DeckGauge", DeckGauge);
+                jsonObject.put("Deduction", Deduction);
+                jsonObject.put("Creator", Creator);
+
+                jsonArray.put(jsonObject);
+
+
+                String json = jsonArray.toString();
+                Log.d("==", "量方: " + json);
+
+
+                String result = mRemoteDataSource.UpdateTheAmountOfSideData(json);
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
                 e.onNext(Integer.valueOf(bean.getMessage()) == 1);
                 e.onComplete();
@@ -1723,6 +1750,9 @@ public class DataRepository implements DataSouceImpl {
                     perfectBoatRecord.setCreator(weekTask.getSubcontractorAccount()); // 登录账号
                     perfectBoatRecord.save();
                     e.onNext(perfectBoatRecord);
+                } else if (!perfectBoatRecords.isEmpty() && !isNetwork) {
+                    // 有缓存, 没有提交过数据
+                    e.onNext(perfectBoatRecords.get(0));
                 } else if (perfectBoatRecords.isEmpty() && isNetwork) {
                     // 没有缓存, 且已经提交过数据
 
@@ -2078,17 +2108,15 @@ public class DataRepository implements DataSouceImpl {
     /**
      * 获取考勤记录
      *
-     * @param time
      * @return
      */
     @Override
-    public Observable<List<AttendanceRecordList>> GetAttendanceRecords(final String time) {
+    public Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate) {
         return Observable.create(new ObservableOnSubscribe<List<AttendanceRecordList>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<AttendanceRecordList>> e) throws Exception {
-                List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
                 // 发送网络请求
-                String result = mRemoteDataSource.GetAttendanceRecords(0, all.get(0).getSubcontractorAccount(), time, time);
+                String result = mRemoteDataSource.GetAttendanceRecords(itemID, account, startDate, endDate);
 
                 // 解析数据
                 List<AttendanceRecordListBean> list = gson.fromJson(result, new TypeToken<List<AttendanceRecordListBean>>() {
@@ -2103,10 +2131,13 @@ public class DataRepository implements DataSouceImpl {
                     attendanceRecordList.setItemID(bean.getItemID());
                     attendanceRecordList.setAttendanceTypeID(bean.getAttendanceTypeID());
                     attendanceRecordList.setAttendanceTypeName(bean.getAttendanceTypeName());
-                    attendanceRecordList.setAttendanceTime(bean.getAttendanceTime());
                     attendanceRecordList.setCreator(bean.getCreator());
                     attendanceRecordList.setSystemDate(bean.getSystemDate());
                     attendanceRecordList.setRemark(bean.getRemark());
+                    attendanceRecordList.setAttendanceTime(bean.getAttendanceTime());
+                    attendanceRecordList.setIsCheck(bean.getIsCheck());
+                    attendanceRecordList.setRemarkForCheck(bean.getRemarkForCheck());
+                    attendanceRecordList.setSystemDateForCheck(bean.getSystemDateForCheck());
                     attendanceRecordList.save();
                 }
 
@@ -2446,6 +2477,145 @@ public class DataRepository implements DataSouceImpl {
                 List<StoneSource> sources = DataSupport.order("SortNum asc").find(StoneSource.class);
 
                 e.onNext(sources);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.35 获取量方信息数据
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    @Override
+    public Observable<AmountDetail> GetTheAmountOfSideRecordBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID) {
+        return Observable.create(new ObservableOnSubscribe<AmountDetail>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<AmountDetail> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.GetTheAmountOfSideRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                // 解析数据
+                List<AmountDetail> list = gson.fromJson(result, new TypeToken<List<AmountDetail>>() {}.getType());
+
+                e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.27 提交考勤审核数据
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertAttendanceCheckRecord(final int ItemID, final int AttendanceID, final String Creator, final String Remark, final int IsCheck) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 把数据解析成json
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ItemID", ItemID);
+                jsonObject.put("AttendanceID", AttendanceID);
+                jsonObject.put("Creator", Creator);
+                jsonObject.put("Remark", Remark);
+                jsonObject.put("IsCheck", IsCheck);
+
+                jsonArray.put(jsonObject);
+
+                String json = jsonArray.toString();
+
+                Log.d("==", "考勤审核: " + json);
+
+                // 发送网络请求
+                String result = mRemoteDataSource.InsertAttendanceCheckRecord(json);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.36 提交量方图片数据
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertTheAmountOfSideAttachment(final String json, final String ByteDataStr) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.InsertTheAmountOfSideAttachment(json, ByteDataStr);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 创建量方图片提交任务
+     * @param imageMultipleResultEvent
+     * @param itemID
+     * @param creator
+     * @return
+     */
+    @Override
+    public Observable<List<AmountImgListBean>> getAmountImgList(final ImageMultipleResultEvent imageMultipleResultEvent, final int itemID, final String creator) {
+        return Observable.create(new ObservableOnSubscribe<List<AmountImgListBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<AmountImgListBean>> e) throws Exception {
+                // 解析数据
+                List<AmountImgListBean> lists = new ArrayList<>();
+
+
+                List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
+                for (MediaBean bean : mediaBeanList) {
+                    // 创建对象
+                    AmountImgListBean amountImgListBean = new AmountImgListBean();
+
+
+                    // 图片名
+                    String title = bean.getTitle();
+                    // 图片类型
+                    String mimeType = bean.getMimeType();
+                    String[] split = mimeType.split("/");
+                    String suffixName = split[split.length - 1];
+                    String filename = title + "." + suffixName;
+                    // 解析图片
+                    File file = new File(bean.getOriginalPath());
+                    byte[] bytes = FileUtil.File2byte(file);
+                    String ByteDataStr = new String(Base64.encode(bytes, Base64.DEFAULT));
+
+
+
+                    // 解析成json
+                    JSONArray jsonArray = new JSONArray();
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("SubcontractorInterimApproachPlanID", itemID);
+                    jsonObject.put("FileName", filename);
+                    jsonObject.put("SuffixName", suffixName);
+                    jsonObject.put("Creator", creator);
+                    jsonArray.put(jsonObject);
+                    String json = jsonArray.toString();
+
+
+                    // 保存数据
+                    amountImgListBean.setJson(json);
+                    amountImgListBean.setByteDataStr(ByteDataStr);
+
+                    lists.add(amountImgListBean);
+                }
+
+                e.onNext(lists);
                 e.onComplete();
             }
         });

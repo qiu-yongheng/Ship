@@ -2,6 +2,7 @@ package com.kc.shiptransport.data.source;
 
 import android.content.Context;
 
+import com.kc.shiptransport.data.bean.AmountImgListBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.bean.ScanCommitBean;
@@ -18,7 +19,8 @@ import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
-import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
@@ -108,7 +110,7 @@ public interface DataSouceImpl {
      *
      * @return
      */
-    Observable<List<List<Ship>>> getShipCategory();
+    Observable<List<Ship>> getShipCategory();
 
     /**
      * 根据itemID获取验收明细
@@ -180,7 +182,7 @@ public interface DataSouceImpl {
      * @param type
      * @return
      */
-    Observable<List<Ship>> getShipByType(String type);
+    Observable<Ship> getShipByType(String type);
 
     /**
      * 取消修改
@@ -255,7 +257,14 @@ public interface DataSouceImpl {
      * 更新量方数据
      * @return
      */
-    Observable<Boolean> UpdateTheAmountOfSideData(int itemID, String TheAmountOfTime, String Capacity, String DeckGauge, String Deduction);
+    Observable<Boolean> UpdateTheAmountOfSideData(int itemID,
+                                                  String TheAmountOfTime,
+                                                  int SubcontractorInterimApproachPlanID,
+                                                  String ShipAccount,
+                                                  String Capacity,
+                                                  String DeckGauge,
+                                                  String Deduction,
+                                                  String Creator);
 
     /**
      * 信息完善
@@ -382,7 +391,7 @@ public interface DataSouceImpl {
      * 获取考勤记录
      * @return
      */
-    Observable<List<AttendanceRecordList>> GetAttendanceRecords(String time);
+    Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate);
 
     /**
      * 根据进场ID获取验砂取样详细
@@ -437,4 +446,34 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<StoneSource>> getStoneSource();
+
+    /**
+     * 1.35 获取量方信息数据
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    Observable<AmountDetail> GetTheAmountOfSideRecordBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
+
+    /**
+     * 1.27 提交考勤审核数据
+     * @return
+     */
+    Observable<Boolean> InsertAttendanceCheckRecord(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck);
+
+    /**
+     * 1.36 提交量方图片数据
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    Observable<Boolean> InsertTheAmountOfSideAttachment(String json, String ByteDataStr);
+
+    /**
+     *
+     * @param imageMultipleResultEvent
+     * @param itemID
+     * @param creator
+     * @return
+     */
+    Observable<List<AmountImgListBean>> getAmountImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator);
 }

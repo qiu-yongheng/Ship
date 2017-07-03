@@ -1,8 +1,9 @@
 <litepal>
     <dbname value="ship_db" />
-    <version value="27"/>
+    <version value="31"/>
     <list>
-        <mapping class="com.kc.shiptransport.db.Ship"/>
+        <mapping class="com.kc.shiptransport.db.ship.Ship"/>
+        <mapping class="com.kc.shiptransport.db.ship.ShipList"/>
         <mapping class="com.kc.shiptransport.db.Subcontractor"/>
         <mapping class="com.kc.shiptransport.db.WeekTask"/>
         <mapping class="com.kc.shiptransport.db.CommitShip"/>
@@ -21,5 +22,6 @@
         <mapping class="com.kc.shiptransport.db.AttendanceRecordList"/>
         <mapping class="com.kc.shiptransport.db.SampleImageList"/>
         <mapping class="com.kc.shiptransport.db.StoneSource"/>
+        <mapping class="com.kc.shiptransport.db.amount.AmountDetail"/>
     </list>
 </litepal>

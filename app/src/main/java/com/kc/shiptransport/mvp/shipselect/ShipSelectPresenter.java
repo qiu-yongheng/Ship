@@ -6,12 +6,10 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
-import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.db.ship.Ship;
 
 import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -68,14 +66,14 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
                 .getShipByType(type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Ship>>() {
+                .subscribe(new Observer<Ship>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(List<Ship> value) {
+                    public void onNext(Ship value) {
                         view.showShip(value);
                     }
 

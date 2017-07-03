@@ -11,7 +11,15 @@
     <color name="text_gray_bg">#EEEEEB</color>
     <color name="text_gray">#b4b4b4</color>
     <color name="text_tag_gray">#515151</color>
-    <color name="Dividing_line">#EDEEEB</color>
     <color name="btn_bg_blue">#3db0e9</color>
     <color name="et_bg">#f3f3f3</color>
+
+    <!--颜色规范-->
+    <color name="red">#E86256</color>
+    <color name="blue">#3CAFEB</color>
+    <color name="gray">#B3B3B3</color>
+    <color name="black">#525252</color>
+    <color name="Dividing_line">#EEEDEB</color>
+    <color name="bg">#EEEDEB</color>
+    
 </resources>

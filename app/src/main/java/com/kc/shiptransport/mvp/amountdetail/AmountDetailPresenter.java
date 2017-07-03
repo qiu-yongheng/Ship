@@ -3,17 +3,25 @@ package com.kc.shiptransport.mvp.amountdetail;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.kc.shiptransport.data.bean.AmountImgListBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 
+import java.util.List;
+
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -51,17 +59,17 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
     public void getShipDetail(int itemID) {
         view.showLoading(true);
         dataRepository
-                .getAcceptanceByItemID(itemID, true)
+                .GetTheAmountOfSideRecordBySubcontractorInterimApproachPlanID(itemID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Acceptance>() {
+                .subscribe(new Observer<AmountDetail>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(Acceptance value) {
+                    public void onNext(AmountDetail value) {
                         view.showShipDetail(value);
                     }
 
@@ -96,10 +104,17 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
     }
 
     @Override
-    public void commit(final int itemID, String TheAmountOfTime, String Capacity, String DeckGauge, String Deduction) {
+    public void commit(final int itemID,
+                       final String TheAmountOfTime,
+                       final int SubcontractorInterimApproachPlanID,
+                       final String ShipAccount,
+                       final String Capacity,
+                       final String DeckGauge,
+                       final String Deduction,
+                       final String Creator) {
         view.showLoading(true);
         dataRepository
-                .UpdateTheAmountOfSideData(itemID, TheAmountOfTime, Capacity, DeckGauge, Deduction)
+                .UpdateTheAmountOfSideData(itemID, TheAmountOfTime, SubcontractorInterimApproachPlanID, ShipAccount, Capacity, DeckGauge, Deduction, Creator)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<Boolean, Observable<Boolean>>() {
@@ -155,5 +170,91 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
     public void start(int itemID) {
         getShipDetail(itemID);
         getSupplyTime();
+    }
+
+    @Override
+    public void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator) {
+        dataRepository
+                .getAmountImgList(imageMultipleResultEvent, itemID, creator)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<List<AmountImgListBean>>() {
+                    @Override
+                    public void accept(@NonNull List<AmountImgListBean> amountImgListBeen) throws Exception {
+                        // 设置最大进度
+                        view.showProgress(amountImgListBeen.size());
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<List<AmountImgListBean>, ObservableSource<AmountImgListBean>>() {
+                    @Override
+                    public ObservableSource<AmountImgListBean> apply(@NonNull List<AmountImgListBean> amountImgListBeen) throws Exception {
+                        return Observable.fromIterable(amountImgListBeen);
+                    }
+                })
+                .map(new Function<AmountImgListBean, Boolean>() {
+                    @Override
+                    public Boolean apply(@NonNull AmountImgListBean amountImgListBean) throws Exception {
+                        commitImg(amountImgListBean);
+                        return true;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.hideProgress();
+                    }
+                });
+
+    }
+
+    @Override
+    public void commitImg(AmountImgListBean amountImgListBean) {
+        dataRepository
+                .InsertTheAmountOfSideAttachment(amountImgListBean.getJson(), amountImgListBean.getByteDataStr())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        if (aBoolean) {
+                            view.updateProgress();
+                        } else {
+                            // 提交失败, 保存
+                            view.showError("图片提交失败, 请重试");
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

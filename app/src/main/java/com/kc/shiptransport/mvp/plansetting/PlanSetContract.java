@@ -1,6 +1,6 @@
 package com.kc.shiptransport.mvp.plansetting;
 
-import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public interface PlanSetContract {
     interface View extends BaseView<Presenter> {
         // 显示船舶类型
-        void showShipCategory(List<List<Ship>> value, String list);
+        void showShipCategory(List<Ship> value, String list);
         // 显示船舶数量
         void showShipcount(int num);
         // 显示计划量

@@ -17,12 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Ship;
+import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -114,7 +112,7 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
     }
 
     @Override
-    public void showShip(List<Ship> value) {
+    public void showShip(Ship value) {
         if (adapter == null) {
             // 传递船分类数据, 当前选择日期
             adapter = new ShipSelectAdapter(getActivity(), value, activity.mCurrentSelectDate);

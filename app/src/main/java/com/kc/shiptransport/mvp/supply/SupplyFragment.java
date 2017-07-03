@@ -242,7 +242,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
      */
     @Override
     public void showSupplyMan(String supplyMan) {
-        toolbarOtherInfo.setText("验砂人: " + supplyMan);
+        toolbarOtherInfo.setText("当前用户: " + supplyMan);
     }
 
     /**
@@ -260,7 +260,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
      */
     @Override
     public void showStaySupplyShip(String num) {
-        titleStayInfo.setText("待验砂船次:" + num);
+        titleStayInfo.setText("未验砂航次:" + num);
     }
 
     /**

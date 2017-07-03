@@ -11,21 +11,37 @@ import org.litepal.crud.DataSupport;
 public class AttendanceRecordList extends DataSupport{
 
     /**
-     * ItemID : 3
+     * ItemID : 1009
      * AttendanceTypeID : 2
      * AttendanceTypeName : 晚班
      * Creator : yflf
-     * SystemDate : 2017-06-25T12:58:29.547
+     * SystemDate : 2017-06-29 14:15:40
      * Remark : xxx
+     * AttendanceTime : 2017-06-29 11:57:00
+     * IsCheck : 0
+     * RemarkForCheck : null
+     * SystemDateForCheck : null
      */
 
     private int ItemID;
     private int AttendanceTypeID;
     private String AttendanceTypeName;
-    private String AttendanceTime;
     private String Creator;
+    private String CreatorName;
     private String SystemDate;
     private String Remark;
+    private String AttendanceTime;
+    private int IsCheck;
+    private String RemarkForCheck;
+    private String SystemDateForCheck;
+
+    public String getCreatorName() {
+        return CreatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        CreatorName = creatorName;
+    }
 
     public int getItemID() {
         return ItemID;
@@ -79,7 +95,31 @@ public class AttendanceRecordList extends DataSupport{
         return AttendanceTime;
     }
 
-    public void setAttendanceTime(String attendanceTime) {
-        AttendanceTime = attendanceTime;
+    public void setAttendanceTime(String AttendanceTime) {
+        this.AttendanceTime = AttendanceTime;
+    }
+
+    public int getIsCheck() {
+        return IsCheck;
+    }
+
+    public void setIsCheck(int IsCheck) {
+        this.IsCheck = IsCheck;
+    }
+
+    public String getRemarkForCheck() {
+        return RemarkForCheck;
+    }
+
+    public void setRemarkForCheck(String RemarkForCheck) {
+        this.RemarkForCheck = RemarkForCheck;
+    }
+
+    public String getSystemDateForCheck() {
+        return SystemDateForCheck;
+    }
+
+    public void setSystemDateForCheck(String SystemDateForCheck) {
+        this.SystemDateForCheck = SystemDateForCheck;
     }
 }

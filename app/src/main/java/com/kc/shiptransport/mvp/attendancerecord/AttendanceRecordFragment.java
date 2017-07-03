@@ -17,8 +17,11 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.AttendanceRecordList;
+import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -44,6 +47,7 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
     private AttendanceRecordActivity activity;
     private AttendanceRecordContract.Presenter presenter;
     private AttendanceRecordAdapter adapter;
+    private List<Subcontractor> all;
 
     @Nullable
     @Override
@@ -52,8 +56,8 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
         ButterKnife.bind(this, view);
         initViews(view);
         initListener();
-
-        presenter.getAttendance(CalendarUtil.getCurrentDate("yyyy-MM-dd"));
+        all = DataSupport.findAll(Subcontractor.class);
+        presenter.getAttendance(all.get(0).getSubcontractorAccount(), CalendarUtil.getCurrentDate("yyyy-MM-dd"));
         return view;
     }
 
@@ -62,7 +66,8 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
             @Override
             public void onClick(View view) {
                 String time = mTextAttendanceTime.getText().toString();
-                presenter.getAttendance(time);
+
+                presenter.getAttendance(all.get(0).getSubcontractorAccount(), time);
             }
         });
 

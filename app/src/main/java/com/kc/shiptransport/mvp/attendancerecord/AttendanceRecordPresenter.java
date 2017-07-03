@@ -47,10 +47,10 @@ public class AttendanceRecordPresenter implements AttendanceRecordContract.Prese
     }
 
     @Override
-    public void getAttendance(String time) {
+    public void getAttendance(String subcontractorAccount, String time) {
         view.showLoadding(true);
         dataRepository
-                .GetAttendanceRecords(time)
+                .GetAttendanceRecords(0, subcontractorAccount, time, time)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<AttendanceRecordList>>() {

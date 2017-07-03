@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
@@ -73,9 +75,12 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     AppCompatButton btnAcceptanceCommit;
     @BindView(R.id.ll)
     LinearLayout ll;
+    @BindView(R.id.recyclerview)
+    RecyclerView recyclerview;
     private Unbinder unbinder;
     private SupplyDetailContract.Presenter presenter;
     private SupplyDetailActivity activity;
+    private SupplyDetailAdapter adapter;
 
     @Nullable
     @Override
@@ -117,6 +122,8 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
             btnAcceptanceCancel.setText(R.string.btn_cancle);
         }
+
+        recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 4));
     }
 
     public void initListener() {
@@ -242,6 +249,28 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         etShipVolume.setText(value.getCapacity());
         String batch = value.getBatch();
         etBatch.setText(batch == null ? "" : batch);
+
+
+
+        // 显示图片列表
+//        if (adapter == null) {
+//            adapter = new SupplyDetailAdapter();
+//            adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+//                @Override
+//                public void onItemClick(View view, int position, int... type) {
+//
+//                }
+//
+//                @Override
+//                public void onItemLongClick(View view, int position) {
+//
+//                }
+//            });
+//
+//            recyclerview.setAdapter(adapter);
+//        } else {
+//            adapter.notifyDataSetChanged();
+//        }
     }
 
     @Override

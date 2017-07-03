@@ -69,7 +69,7 @@ public class VoyageFragment extends BaseMvpFragment {
 
     @Override
     protected String abs_showStayInfo(String data) {
-        return "待完善船次: " + data;
+        return "未完善船次: " + data;
     }
 
     @Override

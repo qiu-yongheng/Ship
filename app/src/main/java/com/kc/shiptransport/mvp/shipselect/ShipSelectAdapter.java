@@ -13,8 +13,9 @@ import android.widget.CompoundButton;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.CommitShip;
-import com.kc.shiptransport.db.Ship;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.ship.Ship;
+import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
 import org.litepal.crud.DataSupport;
@@ -29,13 +30,15 @@ import java.util.List;
 
 public class ShipSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
-    private final List<Ship> list;
+    private final List<ShipList> list;
     private final String currentSelectDate;
+    private final String type;
     private OnRecyclerviewItemClickListener listener;
 
-    public ShipSelectAdapter(Context context, List<Ship> list, String currentSelectDate) {
+    public ShipSelectAdapter(Context context, Ship list, String currentSelectDate) {
         this.context = context;
-        this.list = list;
+        this.list = list.getShipList();
+        this.type = list.getShipType();
         this.currentSelectDate = currentSelectDate;
     }
 
@@ -48,17 +51,17 @@ public class ShipSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         holder.setIsRecyclable(false);
         // 传过来的船舶数据都是已经分好类的, 但是没有按照时间分类
-        final Ship ship = list.get(position);
-        final String shipID = ship.getShipID();
+        final ShipList shipList = list.get(position);
+        final String shipID = shipList.getShipID();
 
 
         /* 1. 设置数据 */
-        ((NormalHolder) holder).mTvShipSelectName.setText(ship.getShipName());
-        ((NormalHolder) holder).mTvShipSelectNom.setText(ship.getMaxSandSupplyCount());
+        ((NormalHolder) holder).mTvShipSelectName.setText(shipList.getShipName());
+        ((NormalHolder) holder).mTvShipSelectNom.setText(shipList.getMaxSandSupplyCount());
 
         /* 2. 选择状态回显(select = 1, 日期相同) */
-        if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", ship.getShipAccount(), currentSelectDate).find(CommitShip.class).isEmpty()  // 判断提交缓存中是否有该ship
-                || !DataSupport.where("ShipAccount = ? and PlanDay = ?", ship.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {  // 判断任务计划中是否有该ship
+        if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", shipList.getShipAccount(), currentSelectDate).find(CommitShip.class).isEmpty()  // 判断提交缓存中是否有该ship
+                || !DataSupport.where("ShipAccount = ? and PlanDay = ?", shipList.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {  // 判断任务计划中是否有该ship
             ((NormalHolder) holder).mCbShipSelect.setChecked(true);
         } else {
             ((NormalHolder) holder).mCbShipSelect.setChecked(false);
@@ -71,30 +74,31 @@ public class ShipSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     /* 如果任务计划中已经有该船, 设置选中 */
-                    if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", ship.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {
+                    if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", shipList.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {
                         ContentValues values = new ContentValues();
-                        values.put("Selected", "1");
-                        DataSupport.updateAll(Ship.class, values, "ShipID = ?", shipID);
+                        values.put("isSelected", 1);
+                        DataSupport.updateAll(ShipList.class, values, "ShipID = ?", shipID);
                     } else {
+
                         /* 保存计划到提交缓存中 */
                         CommitShip commitShip = new CommitShip();
                         commitShip.setItemID("");
-                        commitShip.setShipAccount(ship.getShipAccount());
-                        commitShip.setMaxSandSupplyCount(ship.getMaxSandSupplyCount());
+                        commitShip.setShipAccount(shipList.getShipAccount());
+                        commitShip.setMaxSandSupplyCount(shipList.getMaxSandSupplyCount());
                         commitShip.setPlanDay(currentSelectDate);
-                        commitShip.setShipType(ship.getShipType());
+                        commitShip.setShipType(type);
                         commitShip.save();
                         Log.d("==", "选择长度: " + DataSupport.where("PlanDay = ?", currentSelectDate).find(CommitShip.class).size());
                     }
                 } else {
                     /* 如果任务计划中有该船, 设置不选中 TODO 如果取消选中后, 退出怎么办? */
-                    if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", ship.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {
+                    if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", shipList.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {
                         ContentValues values = new ContentValues();
-                        values.put("Selected", "0");
-                        DataSupport.updateAll(Ship.class, values, "ShipID = ?", shipID);
+                        values.put("isSelected", 0);
+                        DataSupport.updateAll(ShipList.class, values, "ShipID = ?", shipID);
                     } else {
                         /* 从提交缓存中删除 */
-                        DataSupport.deleteAll(CommitShip.class, "ShipAccount = ?", ship.getShipAccount());
+                        DataSupport.deleteAll(CommitShip.class, "ShipAccount = ?", shipList.getShipAccount());
                         Log.d("==", "选择长度: " + DataSupport.where("PlanDay = ?", currentSelectDate).find(CommitShip.class).size());
                     }
                 }
