@@ -10,10 +10,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.AcceptanceBean;
-import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.AttendanceRecordListBean;
 import com.kc.shiptransport.data.bean.AttendanceTypeBean;
+import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LoginResult;
@@ -31,7 +31,7 @@ import com.kc.shiptransport.data.bean.StoneSourceBean;
 import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
 import com.kc.shiptransport.data.bean.TaskVolumeBean;
-import com.kc.shiptransport.data.bean.VoyageInfoBean;
+import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.WeekTaskBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
@@ -58,7 +58,6 @@ import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.FileUtil;
-import com.kc.shiptransport.util.MyJSONObject;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -1337,9 +1336,9 @@ public class DataRepository implements DataSouceImpl {
      * @param itemID
      * @param TheAmountOfTime
      * @param subcontractorAccount
-     *@param Capacity
+     * @param Capacity
      * @param DeckGauge
-     * @param Deduction    @return
+     * @param Deduction            @return
      */
     @Override
     public Observable<Boolean> UpdateTheAmountOfSideData(final int itemID,
@@ -1390,32 +1389,32 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> InsertPerfectBoatRecord(final VoyageInfoBean bean) {
+    public Observable<Boolean> InsertPerfectBoatRecord(final VoyageDetailBean bean) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
-                //JSONArray jsonArray = new JSONArray();
-                MyJSONObject jsonObject = new MyJSONObject();
-                jsonObject.put(bean.key_ItemID, bean.getItemID());
-                jsonObject.put(bean.key_SubcontractorInterimApproachPlanID, bean.getSubcontractorInterimApproachPlanID());
-                jsonObject.put(bean.key_LoadingPlace, bean.getLoadingPlace());
-                jsonObject.put(bean.key_LoadingDate, bean.getLoadingDate());
-                jsonObject.put(bean.key_BaseNumber, bean.getBaseNumber());
-                jsonObject.put(bean.key_SourceOfSource, bean.getSourceOfSource());
-                jsonObject.put(bean.key_StartLoadingTime, bean.getStartLoadingTime());
-                jsonObject.put(bean.key_EndLoadingTime, bean.getEndLoadingTime());
-                jsonObject.put(bean.key_ArrivedAtTheDockTime, bean.getArrivedAtTheDockTime());
-                jsonObject.put(bean.key_LeaveTheDockTime, bean.getLeaveTheDockTime());
-                jsonObject.put(bean.key_ArrivaOfAnchorageTime, bean.getArrivaOfAnchorageTime());
-                jsonObject.put(bean.key_ClearanceTime, bean.getClearanceTime());
-                jsonObject.put(bean.key_MaterialClassification, bean.getMaterialClassification());
-                jsonObject.put(bean.key_Creator, bean.getCreator());
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ItemID", "");
+                jsonObject.put("SubcontractorInterimApproachPlanID", bean.getItemID());
 
-                //jsonArray.put(object);
+                List<VoyageDetailBean.ColumnsBean> columns = bean.getColumns();
 
+                for (VoyageDetailBean.ColumnsBean columnsBean : columns) {
+                    if (columnsBean.getControlType().equals("select")) {
+                        jsonObject.put(columnsBean.getColumnName(), columnsBean.getData());
+                    } else {
+                        jsonObject.put(columnsBean.getColumnName(), columnsBean.getValue());
+                    }
+                }
 
-                // 解析成json
-                String json = "[" + jsonObject.toString() + "]";
+                jsonObject.put("Receiver", bean.getSubcontractorAccount());
+                jsonObject.put("Creator", findAll(Subcontractor.class).get(0).getSubcontractorAccount());
+
+                jsonArray.put(jsonObject);
+
+                String json = jsonArray.toString();
+
                 Log.d("==", "信息完善请求json: " + json);
 
 
@@ -2578,7 +2577,6 @@ public class DataRepository implements DataSouceImpl {
                     String json = jsonArray.toString();
 
 
-
                     // 保存数据
                     amountImgListBean.setJson(json);
                     amountImgListBean.setByteDataStr(ByteDataStr);
@@ -2617,6 +2615,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.37 删除量方图片数据
+     *
      * @param ItemID
      * @return
      */
@@ -2638,6 +2637,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.37提交验砂图片数据
+     *
      * @param json
      * @param ByteDataStr
      * @return
@@ -2660,6 +2660,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.39 删除验砂图片数据
+     *
      * @param ItemID
      * @return
      */
@@ -2681,6 +2682,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.40 根据进场计划ID获取验砂数据
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -2692,6 +2694,49 @@ public class DataRepository implements DataSouceImpl {
                 String result = mRemoteDataSource.GetReceptionSandBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
 
                 List<SupplyDetail> list = gson.fromJson(result, new TypeToken<List<SupplyDetail>>() {
+                }.getType());
+
+                e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 删除过砂取样
+     *
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteSandSamplingNumRecordByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteSandSamplingNumRecordByItemID(ItemID);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.17获取对应的航次完善信息明细
+     *
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    @Override
+    public Observable<VoyageDetailBean> GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID) {
+        return Observable.create(new ObservableOnSubscribe<VoyageDetailBean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<VoyageDetailBean> e) throws Exception {
+                String result = mRemoteDataSource.GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                List<VoyageDetailBean> list = gson.fromJson(result, new TypeToken<List<VoyageDetailBean>>() {
                 }.getType());
 
                 e.onNext(list.get(0));

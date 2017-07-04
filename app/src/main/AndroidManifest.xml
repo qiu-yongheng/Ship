@@ -59,6 +59,7 @@
         <activity android:name=".mvp.scannerimgselect.ScannerImgSelectActivity" android:launchMode="singleTask"/>
         <activity android:name=".view.actiivty.ImageActivity" android:launchMode="singleTask"/>
         <activity android:name=".view.actiivty.DatesListActivity"/>
+        <activity android:name=".mvp.voyagedetail.VoyageListActivity"/>
 
 
         <activity

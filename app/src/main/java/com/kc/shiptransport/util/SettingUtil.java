@@ -108,4 +108,9 @@ public class SettingUtil {
     public static final int ITEM_DELETE = 1122;
 
     /*-----------------------------------------------扫描件类型--------------------------------------------------*/
+
+    // 信息完善item类型
+    public static final int TYPE_TEXT = 200;
+    public static final int TYPE_DATA = 201;
+    public static final int TYPE_ARRAY = 202;
 }

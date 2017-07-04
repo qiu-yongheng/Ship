@@ -480,6 +480,15 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void showDeleteResult(boolean isSuccess) {
+        if (isSuccess) {
+            Toast.makeText(getContext(), "删除成功", Toast.LENGTH_SHORT).show();
+        } else {
+
+        }
+    }
+
     /**
      * 当界面不显示时, 缓存数据到sp中
      */

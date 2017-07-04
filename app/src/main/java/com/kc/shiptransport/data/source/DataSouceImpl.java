@@ -8,6 +8,7 @@ import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.bean.ScanCommitBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
+import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
@@ -18,11 +19,11 @@ import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
-import com.kc.shiptransport.db.amount.AmountDetail;
-import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
@@ -127,7 +128,6 @@ public interface DataSouceImpl {
      *
      * @param itemID
      * @param ReceptionSandTime
-     * @param Batch
      * @return
      */
     Observable<Integer> updateForReceptionSandTime(int itemID, String ReceptionSandTime);
@@ -271,8 +271,9 @@ public interface DataSouceImpl {
     /**
      * 信息完善
      * @return
+     * @param bean
      */
-    Observable<Boolean> InsertPerfectBoatRecord(VoyageInfoBean bean);
+    Observable<Boolean> InsertPerfectBoatRecord(VoyageDetailBean bean);
 
     /**
      * 根据position获取对应的计划
@@ -513,4 +514,18 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<SupplyDetail> GetReceptionSandBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
+
+    /**
+     * 删除过砂取样
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteSandSamplingNumRecordByItemID(int ItemID);
+
+    /**
+     * 1.17获取对应的航次完善信息明细
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    Observable<VoyageDetailBean> GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
 }

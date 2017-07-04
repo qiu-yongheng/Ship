@@ -275,4 +275,34 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                     }
                 });
     }
+
+    @Override
+    public void deleteItem(int ItemID) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteSandSamplingNumRecordByItemID(ItemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showDeleteResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
 }
