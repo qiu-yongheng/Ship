@@ -31,6 +31,7 @@ import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
+import com.kc.shiptransport.view.actiivty.DatesListActivity;
 import com.kc.shiptransport.view.actiivty.InputActivity;
 
 import org.litepal.crud.DataSupport;
@@ -69,6 +70,10 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     @BindView(R.id.btn_add)
     Button btnAdd;
     Unbinder unbinder;
+    @BindView(R.id.text_batch)
+    TextView textBatch;
+    @BindView(R.id.rl_bacth)
+    RelativeLayout rlBacth;
     private SampleDetailContract.Presenter presenter;
     private SampleDetailActivity activity;
     private SampleDetailAdapter mAdapter;
@@ -108,7 +113,15 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                 recyclerview.smoothScrollToPosition(mAdapter.sandSamplingNumRecordList.size());
             }
         });
+
+        rlBacth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputActivity.startActivityForResult(getActivity(), getResources().getString(R.string.hint_fill), "", 100);
+            }
+        });
     }
+
 
     @Override
     public void initViews(View view) {
@@ -187,11 +200,41 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String str = data.getStringExtra(InputActivity.TAG);
-        if (!TextUtils.isEmpty(str)) {
-            SampleShowDatesBean.SandSamplingNumRecordListBean bean = mAdapter.sandSamplingNumRecordList.get(requestCode);
-            bean.setSamplingNum(str);
-            mAdapter.notifyDataSetChanged();
+
+        if (requestCode == 100) {
+            // 设置batch
+            String bacth = data.getStringExtra(InputActivity.TAG);
+
+            if (!TextUtils.isEmpty(bacth)) {
+                textBatch.setText(bacth);
+                List<SampleShowDatesBean.SandSamplingNumRecordListBean> sandSamplingNumRecordList = mAdapter.sandSamplingNumRecordList;
+                // 保存数据
+                mAdapter.sampleShowDates.setBatch(bacth);
+
+                // 更新取样编号
+                for (int i = 0; i < sandSamplingNumRecordList.size(); i++) {
+                    // 数字转字符
+                    char asdf = (char) (i + 65);
+                    SampleShowDatesBean.SandSamplingNumRecordListBean bean = sandSamplingNumRecordList.get(i);
+                    bean.setSamplingNum(bacth + asdf);
+                }
+
+                mAdapter.notifyDataSetChanged();
+            }
+        } else {
+            // 获取position对应的数据
+            if (data != null) {
+                SampleShowDatesBean.SandSamplingNumRecordListBean listBean = mAdapter.sandSamplingNumRecordList.get(requestCode);
+                Bundle bundle = data.getExtras();
+                String shipNum = bundle.getString(DatesListActivity.NUM);
+                String shipName = bundle.getString(DatesListActivity.NAME);
+
+                listBean.setConstructionBoatAccount(shipNum);
+                listBean.setConstructionBoatAccountName(shipName);
+
+                mAdapter.notifyDataSetChanged();
+            }
+
         }
     }
 
@@ -231,7 +274,9 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
             @Override
             public void onFinish() {
                 // 提交json
-                presenter.commitJson(mAdapter.sampleShowDates);
+                String string = SharePreferenceUtil.getString(getContext(), String.valueOf(itemID), "");
+                SampleShowDatesBean showDatesBean = new Gson().fromJson(string, SampleShowDatesBean.class);
+                presenter.commitJson(showDatesBean);
             }
         });
     }
@@ -244,6 +289,9 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     @Override
     public void showDetailList(SampleShowDatesBean bean) {
         //this.sampleShowDates = bean;
+
+        // 回显数据
+        textBatch.setText(bean.getBatch());
 
         // 获取取样编号的集合
         List<SampleShowDatesBean.SandSamplingNumRecordListBean> sandSamplingNumRecordList = bean.getSandSamplingNumRecordList();
@@ -278,7 +326,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                 @Override
                 public void onItemClick(View view, final int position, final int... type) {
                     // 获取position对应数据
-                    SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = mAdapter.sandSamplingNumRecordList.get(position);
+                    final SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = mAdapter.sandSamplingNumRecordList.get(position);
 
                     final List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> imageList = numRecordListBean.getSandSamplingAttachmentRecordList();
 
@@ -323,11 +371,13 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                         list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
                                         list.setFileName(title + "." + suffixName);
                                         list.setSuffixName(suffixName);
+                                        list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
                                         list.save();
                                     } else {
                                         // 有缓存数据, 修改
                                         SampleImageList list = sampleImageLists.get(0);
                                         list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+                                        list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
                                         list.save();
                                     }
 
@@ -372,11 +422,13 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                         list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
                                         list.setFileName(title + "." + suffixName);
                                         list.setSuffixName(suffixName);
+                                        list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
                                         list.save();
                                     } else {
                                         // 有缓存数据, 修改
                                         SampleImageList list = sampleImageLists.get(0);
                                         list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+                                        list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
                                         list.save();
                                     }
 
@@ -389,8 +441,9 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                                 }
                             });
                             break;
-                        case SettingUtil.HOLDER_NUM:
-                            InputActivity.startActivityForResult(getActivity(), getResources().getString(R.string.title_sample), "", position);
+                        case SettingUtil.HOLDER_CONS_SHIP:
+                            // 跳转到施工船舶选择界面
+                            DatesListActivity.startActivityForResult(getActivity(), position);
                             break;
                     }
                 }
@@ -419,12 +472,10 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     }
 
     /**
-     * 提交成功后, 删除缓存
+     * 提交成功后
      */
     @Override
     public void showImageUpdataResult() {
-        // 成功后, 删除缓存
-        SharePreferenceUtil.saveString(getContext(), String.valueOf(itemID), "");
 
         mAdapter.notifyDataSetChanged();
     }

@@ -23,8 +23,17 @@ public class SampleUpdataBean {
     private String SubcontractorInterimApproachPlanID;
     private String ConstructionBoatAccount;
     private String Creator;
+    private String Batch;
     private String SandSamplingDate;
     private List<SandSamplingNumRecordListBean> SandSamplingNumRecordList;
+
+    public String getBatch() {
+        return Batch;
+    }
+
+    public void setBatch(String batch) {
+        Batch = batch;
+    }
 
     public String getItemID() {
         return ItemID;
@@ -85,7 +94,16 @@ public class SampleUpdataBean {
         private String ItemID;
         private String SandSamplingID;
         private String SamplingNum;
+        private String ConstructionBoatAccount;
         private List<SandSamplingAttachmentRecordListBean> SandSamplingAttachmentRecordList;
+
+        public String getConstructionBoatAccount() {
+            return ConstructionBoatAccount;
+        }
+
+        public void setConstructionBoatAccount(String constructionBoatAccount) {
+            ConstructionBoatAccount = constructionBoatAccount;
+        }
 
         public String getItemID() {
             return ItemID;
@@ -135,6 +153,15 @@ public class SampleUpdataBean {
             private String FileName;
             private String FilePath;
             private String SuffixName;
+            private String ConstructionBoatAccount;
+
+            public String getConstructionBoatAccount() {
+                return ConstructionBoatAccount;
+            }
+
+            public void setConstructionBoatAccount(String constructionBoatAccount) {
+                ConstructionBoatAccount = constructionBoatAccount;
+            }
 
             public String getItemID() {
                 return ItemID;

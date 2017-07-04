@@ -2,7 +2,7 @@ package com.kc.shiptransport.data.source;
 
 import android.content.Context;
 
-import com.kc.shiptransport.data.bean.AmountImgListBean;
+import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.bean.ScanCommitBean;
@@ -13,7 +13,6 @@ import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.db.AttendanceType;
-import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.SampleImageList;
@@ -24,6 +23,9 @@ import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.supply.SupplyDetail;
+import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
+import com.kc.shiptransport.db.voyage.WashStoneSource;
 
 import java.io.File;
 import java.util.List;
@@ -128,7 +130,7 @@ public interface DataSouceImpl {
      * @param Batch
      * @return
      */
-    Observable<Integer> updateForReceptionSandTime(int itemID, String ReceptionSandTime, String Batch);
+    Observable<Integer> updateForReceptionSandTime(int itemID, String ReceptionSandTime);
 
 //    /**
 //     * 提交验收审核结果
@@ -259,7 +261,7 @@ public interface DataSouceImpl {
      */
     Observable<Boolean> UpdateTheAmountOfSideData(int itemID,
                                                   String TheAmountOfTime,
-                                                  int SubcontractorInterimApproachPlanID,
+                                                  String subcontractorAccount, int SubcontractorInterimApproachPlanID,
                                                   String ShipAccount,
                                                   String Capacity,
                                                   String DeckGauge,
@@ -319,7 +321,7 @@ public interface DataSouceImpl {
      * @param weekTask
      * @return
      */
-    Observable<PerfectBoatRecord> getPerfectBoatRecordByItemID(WeekTask weekTask, boolean isNetwork);
+    Observable<PerfectBoatRecordInfo> getPerfectBoatRecordByItemID(WeekTask weekTask, boolean isNetwork);
 
     /**
      * 根据itemID获取扫描图片数据
@@ -469,11 +471,46 @@ public interface DataSouceImpl {
     Observable<Boolean> InsertTheAmountOfSideAttachment(String json, String ByteDataStr);
 
     /**
-     *
+     * 创建量方图片任务
      * @param imageMultipleResultEvent
      * @param itemID
      * @param creator
      * @return
      */
-    Observable<List<AmountImgListBean>> getAmountImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator);
+    Observable<List<CommitImgListBean>> getAmountImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator);
+
+    /**
+     * 1.34 获取洗石场所在地数据
+     * @return
+     */
+    Observable<List<WashStoneSource>> GetWashStoreAddressOptions();
+
+    /**
+     * 1.37 删除量方图片数据
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteTheAmountOfSideAttachmentByItemID(int ItemID);
+
+    /**
+     * 1.37提交验砂图片数据
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    Observable<Boolean> InsertReceptionSandAttachment(String json, String ByteDataStr);
+
+    /**
+     * 1.39 删除验砂图片数据
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteReceptionSandAttachmentByItemID(int ItemID);
+
+    /**
+     * 1.40 根据进场计划ID获取验砂数据
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    Observable<SupplyDetail> GetReceptionSandBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
 }

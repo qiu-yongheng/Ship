@@ -43,25 +43,53 @@
             android:textSize="@dimen/text_13sp"/>
     </RelativeLayout>
 
+
+    <RelativeLayout
+        android:id="@+id/rl_bacth"
+        android:layout_marginTop="1dp"
+        android:background="@color/text_white"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/rl"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_batch"
+            android:layout_marginLeft="@dimen/marginleft_14"
+            android:textColor="@color/text_tag_gray"
+            android:textSize="@dimen/text_13sp"/>
+
+        <TextView
+            android:id="@+id/text_batch"
+            android:text="@string/hint_fill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/marginleft_14"
+            android:textColor="@color/text_gray"
+            android:textSize="@dimen/text_13sp"/>
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/btn_height"
-        android:layout_below="@id/rl"/>
+        android:layout_below="@id/rl_bacth"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/btn_height"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
-
         <Button
-            android:id="@+id/btn_commit"
+            android:id="@+id/btn_add"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btn_commit"
+            android:text="@string/btn_add_sample"
             android:background="?colorPrimary"
             android:textColor="@color/text_white"
             android:textSize="@dimen/text_18sp"/>
@@ -71,11 +99,11 @@
             android:layout_height="match_parent"/>
 
         <Button
-            android:id="@+id/btn_add"
+            android:id="@+id/btn_commit"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btn_add_sample"
+            android:text="@string/btn_commit"
             android:background="?colorPrimary"
             android:textColor="@color/text_white"
             android:textSize="@dimen/text_18sp"/>

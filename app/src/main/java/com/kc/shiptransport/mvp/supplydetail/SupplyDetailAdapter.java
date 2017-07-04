@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
+import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
@@ -34,10 +34,10 @@ public class SupplyDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * item类型: footer，加载更多
      */
     private static final int TYPE_ADD = 1;
-    public List<ScannerImgListByTypeBean> list;
+    public List<SupplyDetail.ReceptionSandAttachmentListBean> list;
     private OnRecyclerviewItemClickListener listener;
 
-    public SupplyDetailAdapter(Context context, List<ScannerImgListByTypeBean> list) {
+    public SupplyDetailAdapter(Context context, List<SupplyDetail.ReceptionSandAttachmentListBean> list) {
         this.context = context;
         this.list = list;
         this.inflater = LayoutInflater.from(context);
@@ -58,8 +58,8 @@ public class SupplyDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof NormalHolder) {
             // 获取图片地址, 显示
-            ScannerImgListByTypeBean scannerImgListByTypeBean = list.get(position);
-            RxGalleryUtil.showImage(context, scannerImgListByTypeBean.getFilePath(), null, null, ((NormalHolder) holder).mIvNormal);
+            SupplyDetail.ReceptionSandAttachmentListBean bean = list.get(position);
+            RxGalleryUtil.showImage(context, bean.getFilePath(), null, null, ((NormalHolder) holder).mIvNormal);
 
             // 点击图片, 预览图片
             ((NormalHolder) holder).mIvNormal.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +89,7 @@ public class SupplyDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public void setDates(List<ScannerImgListByTypeBean> list) {
+    public void setDates(List<SupplyDetail.ReceptionSandAttachmentListBean> list) {
         this.list = list;
     }
 

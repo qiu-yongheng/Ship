@@ -20,6 +20,8 @@ public class SampleImageList extends DataSupport{
     private String ItemGuid;
     private String suffixName;
     private String fileName;
+    // 施工船舶
+    private String ConstructionBoatAccount;
 
 
     public int getItemID() {
@@ -84,5 +86,13 @@ public class SampleImageList extends DataSupport{
 
     public void setItemGuid(String itemGuid) {
         ItemGuid = itemGuid;
+    }
+
+    public String getConstructionBoatAccount() {
+        return ConstructionBoatAccount;
+    }
+
+    public void setConstructionBoatAccount(String constructionBoatAccount) {
+        ConstructionBoatAccount = constructionBoatAccount;
     }
 }

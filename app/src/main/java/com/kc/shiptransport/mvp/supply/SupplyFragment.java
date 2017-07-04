@@ -355,6 +355,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
      */
     @Override
     public void showSpinner(final List<SubcontractorList> value) {
+        // TODO 这里会报空指针
         mTitleSpinner.setVisibility(View.VISIBLE);
         List<String> datas = new ArrayList<>();
         datas.add("所有分包商");

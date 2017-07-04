@@ -106,6 +106,8 @@
     <string name="btn_agree">审核通过</string>
     <string name="btn_no_agree">不通过</string>
     <string name="text_attendance_remark">考勤备注:</string>
+    <string name="item_cons_ship">施工船舶:</string>
+    <string name="hint_click">点击选择</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

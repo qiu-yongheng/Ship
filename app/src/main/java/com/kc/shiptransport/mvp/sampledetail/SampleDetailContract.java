@@ -25,6 +25,7 @@ public interface SampleDetailContract {
         // 获取数据, 显示列表
         void showDetailList(SampleShowDatesBean bean);
         void showImageUpdataResult();
+
     }
 
     interface Presenter extends BasePresenter {

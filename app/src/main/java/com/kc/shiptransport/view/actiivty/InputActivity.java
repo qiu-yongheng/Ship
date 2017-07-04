@@ -35,7 +35,6 @@ public class InputActivity extends BaseActivity {
     @BindView(R.id.btn_determine)
     Button btnDetermine;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

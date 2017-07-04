@@ -3,7 +3,7 @@ package com.kc.shiptransport.mvp.amountdetail;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.kc.shiptransport.data.bean.AmountImgListBean;
+import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.amount.AmountDetail;
@@ -106,6 +106,7 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
     @Override
     public void commit(final int itemID,
                        final String TheAmountOfTime,
+                       final String subcontractorAccount,
                        final int SubcontractorInterimApproachPlanID,
                        final String ShipAccount,
                        final String Capacity,
@@ -114,7 +115,7 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                        final String Creator) {
         view.showLoading(true);
         dataRepository
-                .UpdateTheAmountOfSideData(itemID, TheAmountOfTime, SubcontractorInterimApproachPlanID, ShipAccount, Capacity, DeckGauge, Deduction, Creator)
+                .UpdateTheAmountOfSideData(itemID, TheAmountOfTime, subcontractorAccount, SubcontractorInterimApproachPlanID, ShipAccount, Capacity, DeckGauge, Deduction, Creator)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<Boolean, Observable<Boolean>>() {
@@ -172,29 +173,37 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
         getSupplyTime();
     }
 
+    /**
+     * 提交图片
+     * @param imageMultipleResultEvent
+     * @param itemID
+     * @param creator
+     */
     @Override
     public void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator) {
         dataRepository
                 .getAmountImgList(imageMultipleResultEvent, itemID, creator)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<List<AmountImgListBean>>() {
+                .doOnNext(new Consumer<List<CommitImgListBean>>() {
                     @Override
-                    public void accept(@NonNull List<AmountImgListBean> amountImgListBeen) throws Exception {
+                    public void accept(@NonNull List<CommitImgListBean> amountImgListBeen) throws Exception {
                         // 设置最大进度
                         view.showProgress(amountImgListBeen.size());
                     }
                 })
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<List<AmountImgListBean>, ObservableSource<AmountImgListBean>>() {
+                .flatMap(new Function<List<CommitImgListBean>, ObservableSource<CommitImgListBean>>() {
                     @Override
-                    public ObservableSource<AmountImgListBean> apply(@NonNull List<AmountImgListBean> amountImgListBeen) throws Exception {
+                    public ObservableSource<CommitImgListBean> apply(@NonNull List<CommitImgListBean> amountImgListBeen) throws Exception {
+                        // 遍历
                         return Observable.fromIterable(amountImgListBeen);
                     }
                 })
-                .map(new Function<AmountImgListBean, Boolean>() {
+                .map(new Function<CommitImgListBean, Boolean>() {
                     @Override
-                    public Boolean apply(@NonNull AmountImgListBean amountImgListBean) throws Exception {
+                    public Boolean apply(@NonNull CommitImgListBean amountImgListBean) throws Exception {
+                        // 提交单张图片
                         commitImg(amountImgListBean);
                         return true;
                     }
@@ -218,14 +227,18 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
 
                     @Override
                     public void onComplete() {
-                        view.hideProgress();
+
                     }
                 });
 
     }
 
+    /**
+     * 提交单张图片
+     * @param amountImgListBean
+     */
     @Override
-    public void commitImg(AmountImgListBean amountImgListBean) {
+    public void commitImg(CommitImgListBean amountImgListBean) {
         dataRepository
                 .InsertTheAmountOfSideAttachment(amountImgListBean.getJson(), amountImgListBean.getByteDataStr())
                 .subscribeOn(Schedulers.io())
@@ -254,6 +267,41 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                     @Override
                     public void onComplete() {
 
+                    }
+                });
+    }
+
+    /**
+     * 删除图片
+     * @param ItemID
+     */
+    @Override
+    public void deleteImgForItemID(int ItemID) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteTheAmountOfSideAttachmentByItemID(ItemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showDeleteResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError("删除失败, 请重试");
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
                     }
                 });
     }

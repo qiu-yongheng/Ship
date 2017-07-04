@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,7 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // 获取取样编号数据
         SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = sandSamplingNumRecordList.get(position);
 
+
         // 获取取样编号内的图片
         List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> imageList = numRecordListBean.getSandSamplingAttachmentRecordList();
 
@@ -66,8 +68,12 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 RxGalleryUtil.showImage(context, (imageList.get(1).getFilePath() == null ? "" : imageList.get(1).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage2);
             }
         }
+
+        // 设置取样编号
         ((NormalHolder) holder).mTvsamplenum.setText((numRecordListBean.getSamplingNum() == null || numRecordListBean.getSamplingNum().equals("0")) ? "" : numRecordListBean.getSamplingNum());
 
+        // 设置施工船舶
+        ((NormalHolder) holder).mTvConsShip.setText(numRecordListBean.getConstructionBoatAccountName());
 
         /* 点击后单选图片 */
         ((NormalHolder) holder).mBtnImage1.setOnClickListener(new View.OnClickListener() {
@@ -98,11 +104,11 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
-        /* 点击编辑验砂取样码 */
-        ((NormalHolder) holder).mTvsamplenum.setOnClickListener(new View.OnClickListener() {
+        /* 点击跳转到施工船舶选择界面 */
+        ((NormalHolder) holder).mRlConsShip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onItemClick(((NormalHolder) holder).mTvsamplenum, holder.getLayoutPosition(), SettingUtil.HOLDER_NUM);
+                listener.onItemClick(((NormalHolder) holder).mTvsamplenum, holder.getLayoutPosition(), SettingUtil.HOLDER_CONS_SHIP);
             }
         });
 
@@ -127,12 +133,16 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private final TextView mTvsamplenum;
         private final ImageButton mBtnImage1;
         private final ImageButton mBtnImage2;
+        private final RelativeLayout mRlConsShip;
+        private final TextView mTvConsShip;
 
         public NormalHolder(View itemView) {
             super(itemView);
             mTvsamplenum = (TextView) itemView.findViewById(R.id.tv_sample_num);
             mBtnImage1 = (ImageButton) itemView.findViewById(R.id.btn_image_1);
             mBtnImage2 = (ImageButton) itemView.findViewById(R.id.btn_image_2);
+            mRlConsShip = (RelativeLayout) itemView.findViewById(R.id.rl_cons_ship);
+            mTvConsShip = (TextView) itemView.findViewById(R.id.tv_cons_ship);
         }
     }
 

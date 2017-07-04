@@ -2,6 +2,7 @@ package com.kc.shiptransport.mvp.supplydetail;
 
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -24,15 +26,27 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnProgressFinishListener;
+import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.view.actiivty.ImageActivity;
+
+import org.litepal.crud.DataSupport;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 
 /**
  * @author qiuyongheng
@@ -131,12 +145,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String batch = etBatch.getText().toString().trim();
-                if (batch.equals("")) {
-                    Toast.makeText(activity, "BATCH不能为空", Toast.LENGTH_SHORT).show();
-                } else {
-                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), batch);
-                }
+                presenter.commit(activity.itemID, tvSupplyTime.getText().toString());
             }
         });
 
@@ -237,40 +246,84 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
      * @param value
      */
     @Override
-    public void showShipDetail(Acceptance value) {
+    public void showShipDetail(final SupplyDetail value) {
+
+        int itemID = value.getItemID();
+        String shipAccount = value.getShipAccount();
+        String shipName = value.getShipName();
+        String subcontractorAccount = value.getSubcontractorAccount();
+        String subcontractorName = value.getSubcontractorName();
         String shipItemNum = value.getShipItemNum();
-        tvShipName.setText(value.getShipName());
-        tvShipId.setText("船次: " + (shipItemNum == null ? "" : shipItemNum));
-        tvSubontractor.setText("供应商: " + value.getSubcontractorName());
-        tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
-        tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
-        tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
-
-        etShipVolume.setText(value.getCapacity());
-        String batch = value.getBatch();
-        etBatch.setText(batch == null ? "" : batch);
+        String receptionSandTime = value.getReceptionSandTime();
+        String systemDate = value.getSystemDate();
+        String totalCompleteRide = value.getTotalCompleteRide();
+        String totalCompleteSquare = value.getTotalCompleteSquare();
+        String avgSquare = value.getAvgSquare();
 
 
+        tvShipName.setText(TextUtils.isEmpty(shipName) ? "" : shipName);
+
+        tvShipId.setText("船次: " + (TextUtils.isEmpty(shipItemNum) ? "" : shipItemNum));
+        tvSubontractor.setText("供应商: " + (TextUtils.isEmpty(subcontractorName) ? "" : subcontractorName));
+        tvTotalVoyage.setText("累计完成航次: " + (TextUtils.isEmpty(totalCompleteRide) ? "0" : totalCompleteRide) + "次");
+        tvTotalValue.setText("累计完成方量: " + (TextUtils.isEmpty(totalCompleteSquare) ? "0" : totalCompleteSquare) + "㎡");
+        tvAvgValue.setText("平均航次方量: " + (TextUtils.isEmpty(avgSquare) ? "0" : avgSquare) + "㎡");
+
+        // 时间
+        tvSupplyTime.setText(TextUtils.isEmpty(receptionSandTime) ? "" : receptionSandTime);
+
+
+        List<SupplyDetail.ReceptionSandAttachmentListBean> list = value.getReceptionSandAttachmentList();
+        if (list == null) {
+            list = new ArrayList<>();
+        }
 
         // 显示图片列表
-//        if (adapter == null) {
-//            adapter = new SupplyDetailAdapter();
-//            adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
-//                @Override
-//                public void onItemClick(View view, int position, int... type) {
-//
-//                }
-//
-//                @Override
-//                public void onItemLongClick(View view, int position) {
-//
-//                }
-//            });
-//
-//            recyclerview.setAdapter(adapter);
-//        } else {
-//            adapter.notifyDataSetChanged();
-//        }
+        if (adapter == null) {
+            adapter = new SupplyDetailAdapter(getContext(), list);
+            adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, int... type) {
+                    SupplyDetail.ReceptionSandAttachmentListBean bean = adapter.list.get(position);
+                    if (type[0] == 0) {
+                        // 预览
+                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+                    } else {
+                        // 删除
+                        presenter.deleteImgForItemID(bean.getItemID());
+                    }
+                }
+
+                @Override
+                public void onItemLongClick(View view, int position) {
+                    // 弹出图片选择器
+                    int size = adapter.list.size();
+                    int max = 3 - size;
+                    if (max > 0) {
+                        RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
+                            @Override
+                            public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                // 把图片解析成可以上传的任务, 上传
+                                List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                                presenter.getCommitImgList(imageMultipleResultEvent, value.getItemID(), all.get(0).getSubcontractorAccount());
+                            }
+
+                            @Override
+                            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            recyclerview.setAdapter(adapter);
+        } else {
+            adapter.setDates(list);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -299,7 +352,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
 
     @Override
     public void showError(String msg) {
-
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -320,6 +373,43 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             getActivity().onBackPressed();
         } else {
             Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showProgress(int max) {
+        activity.progressDialog("提交图片", max, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                presenter.unsubscribe();
+            }
+        });
+    }
+
+    @Override
+    public void updateProgress() {
+        activity.updataProgress(new OnProgressFinishListener() {
+            @Override
+            public void onFinish() {
+                // 上传完成的回调
+                showError("上传完成");
+                presenter.getShipDetail(activity.itemID);
+            }
+        });
+    }
+
+    @Override
+    public void hideProgress() {
+        activity.hideProgress();
+    }
+
+    @Override
+    public void showDeleteResult(boolean isSuccess) {
+        if (isSuccess) {
+            showError("删除成功");
+            presenter.getShipDetail(activity.itemID);
+        } else {
+            showError("删除失败, 请重试");
         }
     }
 

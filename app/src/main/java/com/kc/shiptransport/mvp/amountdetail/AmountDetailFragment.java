@@ -30,6 +30,10 @@ import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.view.actiivty.ImageActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -118,7 +122,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                 // 扣方
                 String dedu = etShipVolume.getText().toString().trim();
 
-                presenter.commit(value.getItemID(), theAmountTime, activity.itemID, value.getShipAccount(), value.getCapacity(), deck, dedu, value.getCreator());
+                presenter.commit(value.getItemID(), theAmountTime, value.getSubcontractorAccount(), activity.itemID, value.getShipAccount(), value.getCapacity(), deck, dedu, value.getCreator());
             }
         });
 
@@ -221,6 +225,14 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     @Override
     public void showShipDetail(final AmountDetail value) {
         this.value = value;
+        List<AmountDetail.TheAmountOfSideAttachmentListBean> list = value.getTheAmountOfSideAttachmentList();
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+
+
+
         // 进场ID
         int itemID = value.getItemID();
         // 量方时间
@@ -276,23 +288,31 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
 
         /** 显示图片 */
         if (adapter == null) {
-            adapter = new AmountDetailAdapter(getContext(), value.getTheAmountOfSideAttachmentList());
+
+            adapter = new AmountDetailAdapter(getContext(), list);
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
-
+                    AmountDetail.TheAmountOfSideAttachmentListBean bean = adapter.list.get(position);
+                    if (type[0] == 0) {
+                        // 预览
+                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+                    } else {
+                        // 删除
+                        presenter.deleteImgForItemID(bean.getItemID());
+                    }
                 }
 
                 @Override
                 public void onItemLongClick(View view, int position) {
                     // 弹出图片选择器
-                    int size = value.getTheAmountOfSideAttachmentList().size();
+                    int size = adapter.list.size();
                     int max = 3 - size;
                     if (max > 0) {
                         RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
                             @Override
                             public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-                                // 把图片解析成可以上传的任务
+                                // 把图片解析成可以上传的任务, 上传
                                 presenter.getCommitImgList(imageMultipleResultEvent, value.getItemID(), value.getCreator());
                             }
 
@@ -309,6 +329,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
 
             recyclerview.setAdapter(adapter);
         } else {
+            adapter.setDates(list);
             adapter.notifyDataSetChanged();
         }
     }
@@ -366,6 +387,10 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             @Override
             public void onFinish() {
                 // TODO 全部上传成功的回调
+                Toast.makeText(getContext(), "上传成功", Toast.LENGTH_SHORT).show();
+                // 同步数据
+                presenter.getShipDetail(activity.itemID);
+                hideProgress();
             }
         });
     }
@@ -373,5 +398,15 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     @Override
     public void hideProgress() {
         activity.hideProgress();
+    }
+
+    @Override
+    public void showDeleteResult(boolean isSuccess) {
+        if (isSuccess) {
+            showError("删除成功");
+            presenter.getShipDetail(activity.itemID);
+        } else {
+            showError("删除失败, 请重试");
+        }
     }
 }

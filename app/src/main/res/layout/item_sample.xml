@@ -33,7 +33,41 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
-            android:hint="@string/hint_fill"
+            android:paddingLeft="@dimen/marginleft_14"
+            android:paddingRight="@dimen/marginleft_14"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="@dimen/text_15sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/Dividing_line"/>
+   
+
+    <RelativeLayout
+        android:id="@+id/rl_cons_ship"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:background="@color/text_white"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/marginleft_14"
+            android:text="@string/item_cons_ship"
+            android:textColor="@color/text_tag_gray"
+            android:textSize="@dimen/text_15sp"/>
+
+        <TextView
+            android:text="@string/hint_click"
+            android:id="@+id/tv_cons_ship"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
             android:paddingLeft="@dimen/marginleft_14"
             android:paddingRight="@dimen/marginleft_14"
             android:textColorHint="@color/colorPrimary"

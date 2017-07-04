@@ -1,4 +1,4 @@
-package com.kc.shiptransport.db.amount;
+package com.kc.shiptransport.db.supply;
 
 import org.litepal.crud.DataSupport;
 
@@ -6,12 +6,11 @@ import java.util.List;
 
 /**
  * @author qiuyongheng
- * @time 2017/7/3  15:10
- * @desc 量方详情
+ * @time 2017/7/4  13:54
+ * @desc 验砂
  */
 
-public class AmountDetail extends DataSupport{
-
+public class SupplyDetail extends DataSupport{
     /**
      * ItemID : 415
      * ShipAccount : yhzh3393
@@ -19,16 +18,12 @@ public class AmountDetail extends DataSupport{
      * SubcontractorAccount : xgyj
      * SubcontractorName : 香港怡景
      * ShipItemNum : 2017060801
-     * TheAmountOfTime : 2017-07-01 00:00:00
-     * Capacity : 1400
-     * DeckGauge : 1600
-     * Deduction : 100
-     * Creator : yflf
-     * SystemDate : 2017-07-03 15:48:23
+     * ReceptionSandTime : 2017-06-02 00:00:00
+     * SystemDate : 2017/5/26 0:00:00
      * TotalCompleteRide : 2
      * TotalCompleteSquare : 3200
      * AvgSquare : 1600
-     * TheAmountOfSideAttachmentList : [{"ItemID":"","FileName":"","FilePath":""}]
+     * ReceptionSandAttachmentList : [{"ItemID":1,"FileName":"abc.png","FilePath":"https://cchk3.kingwi.org/Files/20170704/b0d42941-cee8-4a0c-afb9-0c1917f051d4.png"}]
      */
 
     private int ItemID;
@@ -37,16 +32,12 @@ public class AmountDetail extends DataSupport{
     private String SubcontractorAccount;
     private String SubcontractorName;
     private String ShipItemNum;
-    private String TheAmountOfTime;
-    private String Capacity;
-    private String DeckGauge;
-    private String Deduction;
-    private String Creator;
+    private String ReceptionSandTime;
     private String SystemDate;
     private String TotalCompleteRide;
     private String TotalCompleteSquare;
     private String AvgSquare;
-    private List<TheAmountOfSideAttachmentListBean> TheAmountOfSideAttachmentList;
+    private List<ReceptionSandAttachmentListBean> ReceptionSandAttachmentList;
 
     public int getItemID() {
         return ItemID;
@@ -96,44 +87,12 @@ public class AmountDetail extends DataSupport{
         this.ShipItemNum = ShipItemNum;
     }
 
-    public String getTheAmountOfTime() {
-        return TheAmountOfTime;
+    public String getReceptionSandTime() {
+        return ReceptionSandTime;
     }
 
-    public void setTheAmountOfTime(String TheAmountOfTime) {
-        this.TheAmountOfTime = TheAmountOfTime;
-    }
-
-    public String getCapacity() {
-        return Capacity;
-    }
-
-    public void setCapacity(String Capacity) {
-        this.Capacity = Capacity;
-    }
-
-    public String getDeckGauge() {
-        return DeckGauge;
-    }
-
-    public void setDeckGauge(String DeckGauge) {
-        this.DeckGauge = DeckGauge;
-    }
-
-    public String getDeduction() {
-        return Deduction;
-    }
-
-    public void setDeduction(String Deduction) {
-        this.Deduction = Deduction;
-    }
-
-    public String getCreator() {
-        return Creator;
-    }
-
-    public void setCreator(String Creator) {
-        this.Creator = Creator;
+    public void setReceptionSandTime(String ReceptionSandTime) {
+        this.ReceptionSandTime = ReceptionSandTime;
     }
 
     public String getSystemDate() {
@@ -168,19 +127,19 @@ public class AmountDetail extends DataSupport{
         this.AvgSquare = AvgSquare;
     }
 
-    public List<TheAmountOfSideAttachmentListBean> getTheAmountOfSideAttachmentList() {
-        return TheAmountOfSideAttachmentList;
+    public List<ReceptionSandAttachmentListBean> getReceptionSandAttachmentList() {
+        return ReceptionSandAttachmentList;
     }
 
-    public void setTheAmountOfSideAttachmentList(List<TheAmountOfSideAttachmentListBean> TheAmountOfSideAttachmentList) {
-        this.TheAmountOfSideAttachmentList = TheAmountOfSideAttachmentList;
+    public void setReceptionSandAttachmentList(List<ReceptionSandAttachmentListBean> ReceptionSandAttachmentList) {
+        this.ReceptionSandAttachmentList = ReceptionSandAttachmentList;
     }
 
-    public static class TheAmountOfSideAttachmentListBean {
+    public static class ReceptionSandAttachmentListBean {
         /**
-         * ItemID :
-         * FileName :
-         * FilePath :
+         * ItemID : 1
+         * FileName : abc.png
+         * FilePath : https://cchk3.kingwi.org/Files/20170704/b0d42941-cee8-4a0c-afb9-0c1917f051d4.png
          */
 
         private int ItemID;

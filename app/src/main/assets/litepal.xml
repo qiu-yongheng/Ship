@@ -14,7 +14,6 @@
         <mapping class="com.kc.shiptransport.db.ConstructionBoat"/>
         <mapping class="com.kc.shiptransport.db.RecordList"/>
         <mapping class="com.kc.shiptransport.db.SandSample"/>
-        <mapping class="com.kc.shiptransport.db.PerfectBoatRecord"/>
         <mapping class="com.kc.shiptransport.db.ScannerImage"/>
         <mapping class="com.kc.shiptransport.db.ScannerList"/>
         <mapping class="com.kc.shiptransport.db.RecordedSandShowList"/>
@@ -23,5 +22,7 @@
         <mapping class="com.kc.shiptransport.db.SampleImageList"/>
         <mapping class="com.kc.shiptransport.db.StoneSource"/>
         <mapping class="com.kc.shiptransport.db.amount.AmountDetail"/>
+        <mapping class="com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo"/>
+        <mapping class="com.kc.shiptransport.db.supply.SupplyDetail"/>
     </list>
 </litepal>

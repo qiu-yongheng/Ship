@@ -10,14 +10,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.AcceptanceBean;
-import com.kc.shiptransport.data.bean.AmountImgListBean;
+import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.AttendanceRecordListBean;
 import com.kc.shiptransport.data.bean.AttendanceTypeBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LoginResult;
-import com.kc.shiptransport.data.bean.PerfectBoatRecordBean;
 import com.kc.shiptransport.data.bean.RecordListBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleCommitResult;
@@ -41,7 +40,6 @@ import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.CommitShip;
 import com.kc.shiptransport.db.ConstructionBoat;
-import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.SampleImageList;
@@ -55,6 +53,9 @@ import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
+import com.kc.shiptransport.db.supply.SupplyDetail;
+import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
+import com.kc.shiptransport.db.voyage.WashStoneSource;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.FileUtil;
 import com.kc.shiptransport.util.MyJSONObject;
@@ -133,19 +134,19 @@ public class DataRepository implements DataSouceImpl {
         }.getType());
         if (list != null && !list.isEmpty()) {
             DataSupport.deleteAll(Ship.class);
-//            for (ShipBean listBean : list) {
-//                Ship ship = new Ship();
-//                ship.setItemID(listBean.getItemID());
-//                ship.setShipID(listBean.getShipID());
-//                ship.setShipAccount(listBean.getShipAccount());
-//                ship.setShipName(listBean.getShipName());
-//                ship.setShipType(listBean.getShipType());
-//                ship.setMaxSandSupplyCount(listBean.getMaxSandSupplyCount());
-//                ship.setCapacity(listBean.getCapacity());
-//                ship.setDeckGauge(listBean.getDeckGauge());
-//                ship.setSelected("0");
-//                ship.save();
-//            }
+            //            for (ShipBean listBean : list) {
+            //                Ship ship = new Ship();
+            //                ship.setItemID(listBean.getItemID());
+            //                ship.setShipID(listBean.getShipID());
+            //                ship.setShipAccount(listBean.getShipAccount());
+            //                ship.setShipName(listBean.getShipName());
+            //                ship.setShipType(listBean.getShipType());
+            //                ship.setMaxSandSupplyCount(listBean.getMaxSandSupplyCount());
+            //                ship.setCapacity(listBean.getCapacity());
+            //                ship.setDeckGauge(listBean.getDeckGauge());
+            //                ship.setSelected("0");
+            //                ship.save();
+            //            }
         }
     }
 
@@ -548,6 +549,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 查询船舶数据
+     *
      * @return
      */
     @Override
@@ -582,7 +584,7 @@ public class DataRepository implements DataSouceImpl {
 
                 } else {
                     // 1. 发送网络请求
-                    String data = mRemoteDataSource.getAcceptanceByItemID(itemID);
+                    String data = mRemoteDataSource.GetReceptionSandBySubcontractorInterimApproachPlanID(itemID);
                     Log.d("==", data);
 
                     // 2. 解析成对象
@@ -659,16 +661,15 @@ public class DataRepository implements DataSouceImpl {
      *
      * @param itemID
      * @param ReceptionSandTime
-     * @param Batch
      * @return
      */
     @Override
-    public Observable<Integer> updateForReceptionSandTime(final int itemID, final String ReceptionSandTime, final String Batch) {
+    public Observable<Integer> updateForReceptionSandTime(final int itemID, final String ReceptionSandTime) {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
                 Log.d("==", "第一");
-                String result = mRemoteDataSource.UpdateForReceptionSandTime(itemID, ReceptionSandTime, Batch);
+                String result = mRemoteDataSource.UpdateForReceptionSandTime(itemID, ReceptionSandTime);
                 Log.d("==", result);
 
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
@@ -1335,14 +1336,15 @@ public class DataRepository implements DataSouceImpl {
      *
      * @param itemID
      * @param TheAmountOfTime
-     * @param Capacity
+     * @param subcontractorAccount
+     *@param Capacity
      * @param DeckGauge
-     * @param Deduction
-     * @return
+     * @param Deduction    @return
      */
     @Override
     public Observable<Boolean> UpdateTheAmountOfSideData(final int itemID,
                                                          final String TheAmountOfTime,
+                                                         final String subcontractorAccount,
                                                          final int SubcontractorInterimApproachPlanID,
                                                          final String ShipAccount,
                                                          final String Capacity,
@@ -1358,6 +1360,7 @@ public class DataRepository implements DataSouceImpl {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("ItemID", itemID);
                 jsonObject.put("TheAmountOfTime", TheAmountOfTime);
+                jsonObject.put("SubcontractorAccount", subcontractorAccount);
                 jsonObject.put("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
                 jsonObject.put("ShipAccount", ShipAccount);
                 jsonObject.put("Capacity", Capacity);
@@ -1728,66 +1731,20 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<PerfectBoatRecord> getPerfectBoatRecordByItemID(final WeekTask weekTask, final boolean isNetwork) {
-        return Observable.create(new ObservableOnSubscribe<PerfectBoatRecord>() {
+    public Observable<PerfectBoatRecordInfo> getPerfectBoatRecordByItemID(final WeekTask weekTask, final boolean isNetwork) {
+        return Observable.create(new ObservableOnSubscribe<PerfectBoatRecordInfo>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<PerfectBoatRecord> e) throws Exception {
-                /** 判断本地是否有缓存 */
-                List<PerfectBoatRecord> perfectBoatRecords = DataSupport.where("SubcontractorInterimApproachPlanID = ?", String.valueOf(weekTask.getItemID())).find(PerfectBoatRecord.class);
-                if (!perfectBoatRecords.isEmpty() && isNetwork) {
-                    // 有缓存, 且已经提交过数据
+            public void subscribe(@NonNull ObservableEmitter<PerfectBoatRecordInfo> e) throws Exception {
 
-                    // 更新本地数据完善标识
-                    perfectBoatRecords.get(0).setIsPerfect(weekTask.getIsPerfect());
-                    // 更新条目ID
-                    perfectBoatRecords.get(0).setItemID(weekTask.getPerfectBoatRecordID());
-                    perfectBoatRecords.get(0).save();
-                    e.onNext(perfectBoatRecords.get(0));
-                } else if (perfectBoatRecords.isEmpty() && !isNetwork) {
-                    // 没有缓存, 没有提交过数据
-                    PerfectBoatRecord perfectBoatRecord = new PerfectBoatRecord();
-                    perfectBoatRecord.setSubcontractorInterimApproachPlanID(weekTask.getItemID()); // 进场ID
-                    perfectBoatRecord.setCreator(weekTask.getSubcontractorAccount()); // 登录账号
-                    perfectBoatRecord.save();
-                    e.onNext(perfectBoatRecord);
-                } else if (!perfectBoatRecords.isEmpty() && !isNetwork) {
-                    // 有缓存, 没有提交过数据
-                    e.onNext(perfectBoatRecords.get(0));
-                } else if (perfectBoatRecords.isEmpty() && isNetwork) {
-                    // 没有缓存, 且已经提交过数据
+                // 1. 发送网络请求
+                String result = mRemoteDataSource.GetPerfectBoatRecordByItemID(String.valueOf(weekTask.getPerfectBoatRecordID()));
+                // 2. 解析数据
+                List<PerfectBoatRecordInfo> lists = gson.fromJson(result, new TypeToken<List<PerfectBoatRecordInfo>>() {
+                }.getType());
 
-                    // 1. 发送网络请求
-                    String result = mRemoteDataSource.GetPerfectBoatRecordByItemID(String.valueOf(weekTask.getPerfectBoatRecordID()));
-                    // 2. 解析数据
-                    List<PerfectBoatRecordBean> lists = gson.fromJson(result, new TypeToken<List<PerfectBoatRecordBean>>() {
-                    }.getType());
-                    PerfectBoatRecordBean bean = lists.get(0);
-                    // 3. 删除数据库中SubcontractorInterimApproachPlanID对应的数据
-                    DataSupport.deleteAll(PerfectBoatRecord.class, "ItemID = ?", String.valueOf(bean.getItemID()));
-                    // 4. 保存数据到数据库
-                    PerfectBoatRecord perfectBoatRecord = new PerfectBoatRecord();
-                    perfectBoatRecord.setItemID(bean.getItemID());
-                    perfectBoatRecord.setSubcontractorInterimApproachPlanID(bean.getSubcontractorInterimApproachPlanID());
-                    perfectBoatRecord.setLoadingPlace(bean.getLoadingPlace());
-                    perfectBoatRecord.setLoadingDate(bean.getLoadingDate());
-                    perfectBoatRecord.setBaseNumber(bean.getBaseNumber());
-                    perfectBoatRecord.setSourceOfSource(bean.getSourceOfSource());
-                    perfectBoatRecord.setStartLoadingTime(bean.getStartLoadingTime());
-                    perfectBoatRecord.setEndLoadingTime(bean.getEndLoadingTime());
-                    perfectBoatRecord.setArrivedAtTheDockTime(bean.getArrivedAtTheDockTime());
-                    perfectBoatRecord.setLeaveTheDockTime(bean.getLeaveTheDockTime());
-                    perfectBoatRecord.setArrivaOfAnchorageTime(bean.getArrivaOfAnchorageTime());
-                    perfectBoatRecord.setClearanceTime(bean.getClearanceTime());
-                    perfectBoatRecord.setMaterialClassification(bean.getMaterialClassification());
-                    perfectBoatRecord.setCreator(bean.getCreator());
-                    perfectBoatRecord.setSystemDate(bean.getSystemDate());
-                    perfectBoatRecord.setPerfectBoatItemCount(bean.getPerfectBoatItemCount());
-                    perfectBoatRecord.setIsPerfect(bean.getIsPerfect());
-                    perfectBoatRecord.save();
-
-                    e.onNext(perfectBoatRecord);
-                }
-
+                deleteAll(PerfectBoatRecordInfo.class);
+                PerfectBoatRecordInfo bean = lists.get(0);
+                bean.save();
                 e.onComplete();
             }
         });
@@ -2206,6 +2163,7 @@ public class DataRepository implements DataSouceImpl {
                 sampleUpdataBean.setSubcontractorInterimApproachPlanID(String.valueOf(bean.getSubcontractorInterimApproachPlanID()));
                 sampleUpdataBean.setConstructionBoatAccount(bean.getConstructionBoatAccount());
                 sampleUpdataBean.setCreator(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount());
+                sampleUpdataBean.setBatch(bean.getBatch());
                 sampleUpdataBean.setSandSamplingDate(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"));
 
                 // 创建取样编号集合
@@ -2214,10 +2172,12 @@ public class DataRepository implements DataSouceImpl {
                 // 遍历SampleShowDatesBean, 录入数据
                 List<SampleShowDatesBean.SandSamplingNumRecordListBean> sandSamplingNumRecordList = bean.getSandSamplingNumRecordList();
                 for (int i = 0; i < sandSamplingNumRecordList.size(); i++) {
+
                     SampleUpdataBean.SandSamplingNumRecordListBean numRecordListBean = new SampleUpdataBean.SandSamplingNumRecordListBean();
                     numRecordListBean.setItemID(String.valueOf(sandSamplingNumRecordList.get(i).getItemID()));
-                    numRecordListBean.setSamplingNum(sandSamplingNumRecordList.get(i).getSamplingNum());
                     numRecordListBean.setSandSamplingID(String.valueOf(sandSamplingNumRecordList.get(i).getSandSamplingID()));
+                    numRecordListBean.setSamplingNum(sandSamplingNumRecordList.get(i).getSamplingNum());
+                    numRecordListBean.setConstructionBoatAccount(sandSamplingNumRecordList.get(i).getConstructionBoatAccount());
 
                     // 创建图片集合
                     numRecordListBean.setSandSamplingAttachmentRecordList(new ArrayList<SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean>());
@@ -2237,6 +2197,7 @@ public class DataRepository implements DataSouceImpl {
                         imageListBean_1.setSuffixName(image_1.get(0).getSuffixName());
                         imageListBean_1.setSandSamplingNumID(String.valueOf(sandSamplingAttachmentRecordList.get(0).getSandSamplingNumID()));
                         imageListBean_1.setFilePath(image_1.get(0).getNetPath());
+                        imageListBean_1.setConstructionBoatAccount(image_1.get(0).getConstructionBoatAccount());
 
                         // 把图片保存到集合中
                         numRecordListBean.getSandSamplingAttachmentRecordList().add(imageListBean_1);
@@ -2251,6 +2212,7 @@ public class DataRepository implements DataSouceImpl {
                         imageListBean_2.setSuffixName(image_2.get(0).getSuffixName());
                         imageListBean_2.setSandSamplingNumID(String.valueOf(sandSamplingAttachmentRecordList.get(1).getSandSamplingNumID()));
                         imageListBean_2.setFilePath(image_2.get(0).getNetPath());
+                        imageListBean_2.setConstructionBoatAccount(image_2.get(0).getConstructionBoatAccount());
 
                         // 把图片保存到集合中
                         numRecordListBean.getSandSamplingAttachmentRecordList().add(imageListBean_2);
@@ -2397,6 +2359,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 根据类型获取图片
+     *
      * @param subID
      * @param typeID
      * @return
@@ -2421,6 +2384,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.30	 删除分包商航次完善扫描件表(图片信息)
+     *
      * @param ItemID
      * @return
      */
@@ -2442,6 +2406,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.33	 获取料源石场数据
+     *
      * @return
      */
     @Override
@@ -2484,6 +2449,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.35 获取量方信息数据
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -2496,7 +2462,8 @@ public class DataRepository implements DataSouceImpl {
                 String result = mRemoteDataSource.GetTheAmountOfSideRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
 
                 // 解析数据
-                List<AmountDetail> list = gson.fromJson(result, new TypeToken<List<AmountDetail>>() {}.getType());
+                List<AmountDetail> list = gson.fromJson(result, new TypeToken<List<AmountDetail>>() {
+                }.getType());
 
                 e.onNext(list.get(0));
                 e.onComplete();
@@ -2506,6 +2473,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.27 提交考勤审核数据
+     *
      * @return
      */
     @Override
@@ -2541,6 +2509,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.36 提交量方图片数据
+     *
      * @param json
      * @param ByteDataStr
      * @return
@@ -2563,24 +2532,26 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 创建量方图片提交任务
+     *
      * @param imageMultipleResultEvent
      * @param itemID
      * @param creator
      * @return
      */
     @Override
-    public Observable<List<AmountImgListBean>> getAmountImgList(final ImageMultipleResultEvent imageMultipleResultEvent, final int itemID, final String creator) {
-        return Observable.create(new ObservableOnSubscribe<List<AmountImgListBean>>() {
+    public Observable<List<CommitImgListBean>> getAmountImgList(final ImageMultipleResultEvent imageMultipleResultEvent, final int itemID, final String creator) {
+        return Observable.create(new ObservableOnSubscribe<List<CommitImgListBean>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<AmountImgListBean>> e) throws Exception {
-                // 解析数据
-                List<AmountImgListBean> lists = new ArrayList<>();
-
-
+            public void subscribe(@NonNull ObservableEmitter<List<CommitImgListBean>> e) throws Exception {
+                // 创建集合保存数据
+                List<CommitImgListBean> lists = new ArrayList<>();
+                // 获取选中图片
                 List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
+
+
                 for (MediaBean bean : mediaBeanList) {
                     // 创建对象
-                    AmountImgListBean amountImgListBean = new AmountImgListBean();
+                    CommitImgListBean amountImgListBean = new CommitImgListBean();
 
 
                     // 图片名
@@ -2596,7 +2567,6 @@ public class DataRepository implements DataSouceImpl {
                     String ByteDataStr = new String(Base64.encode(bytes, Base64.DEFAULT));
 
 
-
                     // 解析成json
                     JSONArray jsonArray = new JSONArray();
                     JSONObject jsonObject = new JSONObject();
@@ -2606,6 +2576,7 @@ public class DataRepository implements DataSouceImpl {
                     jsonObject.put("Creator", creator);
                     jsonArray.put(jsonObject);
                     String json = jsonArray.toString();
+
 
 
                     // 保存数据
@@ -2620,6 +2591,115 @@ public class DataRepository implements DataSouceImpl {
             }
         });
     }
+
+    /**
+     * 1.34 获取洗石场所在地数据
+     *
+     * @return
+     */
+    @Override
+    public Observable<List<WashStoneSource>> GetWashStoreAddressOptions() {
+        return Observable.create(new ObservableOnSubscribe<List<WashStoneSource>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<WashStoneSource>> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.GetWashStoreAddressOptions();
+
+                // 解析数据
+                List<WashStoneSource> list = gson.fromJson(result, new TypeToken<List<WashStoneSource>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.37 删除量方图片数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteTheAmountOfSideAttachmentByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.DeleteTheAmountOfSideAttachmentByItemID(ItemID);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.37提交验砂图片数据
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertReceptionSandAttachment(final String json, final String ByteDataStr) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.InsertReceptionSandAttachment(json, ByteDataStr);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.39 删除验砂图片数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteReceptionSandAttachmentByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.DeleteReceptionSandAttachmentByItemID(ItemID);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.40 根据进场计划ID获取验砂数据
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    @Override
+    public Observable<SupplyDetail> GetReceptionSandBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID) {
+        return Observable.create(new ObservableOnSubscribe<SupplyDetail>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<SupplyDetail> e) throws Exception {
+                String result = mRemoteDataSource.GetReceptionSandBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                List<SupplyDetail> list = gson.fromJson(result, new TypeToken<List<SupplyDetail>>() {
+                }.getType());
+
+                e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
 
     /**
      *

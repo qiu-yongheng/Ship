@@ -3,10 +3,10 @@ package com.kc.shiptransport.data.bean;
 /**
  * @author qiuyongheng
  * @time 2017/7/3  20:18
- * @desc 量方图片
+ * @desc 提交图片bean
  */
 
-public class AmountImgListBean {
+public class CommitImgListBean {
     private String json;
     private String ByteDataStr;
 

@@ -42,7 +42,7 @@ public class SettingUtil {
     /* sample */
     public static final int HOLDER_IMAGE_1 = 101;
     public static final int HOLDER_IMAGE_2 = 102;
-    public static final int HOLDER_NUM = 103;
+    public static final int HOLDER_CONS_SHIP = 103;
 
     /*---------------------------------------------------holder控件类型---------------------------------------------------*/
 

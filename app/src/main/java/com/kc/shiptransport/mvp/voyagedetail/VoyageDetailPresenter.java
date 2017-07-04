@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.data.source.DataRepository;
-import com.kc.shiptransport.db.PerfectBoatRecord;
 import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.voyage.WashStoneSource;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 
@@ -21,7 +21,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -69,7 +68,7 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
 
                     @Override
                     public void onNext(WeekTask value) {
-                        view.showItemID(String.valueOf(value.getItemID()));
+                        view.showItemID(value);
                     }
 
                     @Override
@@ -168,10 +167,16 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
 
     @Override
     public void start(int position) {
+        // 获取当前登录账户
         getSubcontractor();
+        // 获取进场数据
         getItemIDForPosition(position);
+        // 获取完善数据
         getVoyageDetailForItemID(position);
+        // 获取石场
         getStoneSource();
+        // 获取洗石场
+        getWashStoreSource();
     }
 
     /**
@@ -179,54 +184,55 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
      */
     @Override
     public void getVoyageDetailForItemID(int position) {
-        view.showLoading(true);
-        dataRepository
-                .getWeekTaskForPosition(position) // 获取position对应的计划数据
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<WeekTask>() {
-                    @Override
-                    public void accept(@NonNull WeekTask weekTask) throws Exception {
-                        view.showShipName(weekTask.getShipName());
-                    }
-                })
-                .observeOn(Schedulers.io())
-                .flatMap(new Function<WeekTask, Observable<PerfectBoatRecord>>() { // 获取完善信息
-                    @Override
-                    public Observable<PerfectBoatRecord> apply(@NonNull WeekTask weekTask) throws Exception {
-                        if (weekTask.getPerfectBoatRecordID() != 0) {
-                            // 已经提交过数据, 如果本地没有缓存, 发送网络请求
-                            return dataRepository.getPerfectBoatRecordByItemID(weekTask, true);
-                        } else {
-                            // 没有提交过数据, 在数据库创建新的一条数据
-                            return dataRepository.getPerfectBoatRecordByItemID(weekTask, false);
-                        }
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<PerfectBoatRecord>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull PerfectBoatRecord perfectBoatRecord) {
-                        view.showDatas(perfectBoatRecord, perfectBoatRecord.getIsPerfect() == 1);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        view.showLoading(false);
-                        view.showError("数据获取失败");
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        view.showLoading(false);
-                    }
-                });
+//        view.showLoading(true);
+//        dataRepository
+//                .getWeekTaskForPosition(position) // 获取position对应的计划数据
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .doOnNext(new Consumer<WeekTask>() {
+//                    @Override
+//                    public void accept(@NonNull WeekTask weekTask) throws Exception {
+//                        view.showShipName(weekTask.getShipName());
+//                    }
+//                })
+//                .observeOn(Schedulers.io())
+//                .flatMap(new Function<WeekTask, Observable<PerfectBoatRecordCommit>>() { // 获取完善信息
+//                    @Override
+//                    public Observable<PerfectBoatRecordCommit> apply(@NonNull WeekTask weekTask) throws Exception {
+//                        if (weekTask.getPerfectBoatRecordID() != 0) {
+//                            // 已经提交过数据, 如果本地没有缓存, 发送网络请求
+//                            return dataRepository.getPerfectBoatRecordByItemID(weekTask, true);
+//                        } else {
+//                            // 没有提交过数据, 在数据库创建新的一条数据
+//                            return dataRepository.getPerfectBoatRecordByItemID(weekTask, false);
+//                        }
+//                    }
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<PerfectBoatRecordCommit>() {
+//                    @Override
+//                    public void onSubscribe(@NonNull Disposable d) {
+//                        compositeDisposable.add(d);
+//                    }
+//
+//                    @Override
+//                    public void onNext(@NonNull PerfectBoatRecordCommit perfectBoatRecord) {
+//                        //view.showDatas(perfectBoatRecord, perfectBoatRecord.getIsPerfect() == 1);
+//                    }
+//
+//                    @Override
+//                    public void onError(@NonNull Throwable e) {
+//                        view.showLoading(false);
+//                        view.showError("数据获取失败");
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        view.showLoading(false);
+//                    }
+//                });
     }
+
 
     @Override
     public void getStoneSource() {
@@ -243,6 +249,38 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
                     @Override
                     public void onNext(@NonNull List<StoneSource> list) {
                         view.showStoneSource(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    /**
+     * 获取洗石场数据
+     */
+    @Override
+    public void getWashStoreSource() {
+        dataRepository
+                .GetWashStoreAddressOptions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<WashStoneSource>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<WashStoneSource> washStoneSources) {
+                        view.showWashStoneSource(washStoneSources);
                     }
 
                     @Override

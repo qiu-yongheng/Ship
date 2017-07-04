@@ -39,6 +39,7 @@
                 android:textSize="18sp"/>
 
             <TextView
+                android:layout_marginLeft="10dp"
                 android:id="@+id/tv_ship_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -228,6 +229,7 @@
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
+                android:layout_marginTop="10dp"
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
