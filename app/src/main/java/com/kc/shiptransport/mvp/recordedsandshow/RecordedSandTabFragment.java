@@ -108,8 +108,8 @@ public class RecordedSandTabFragment extends Fragment {
     }
 
     private void initView(RecordedSandShowList list) {
-        tvSupplyShip.setText(list.getSandHandlingShipID());
-        tvConsShip.setText(list.getConstructionShipID());
+        tvSupplyShip.setText(list.getSandHandlingShipName());
+        tvConsShip.setText(list.getConstructionShipName());
         tvStartTime.setText(list.getStartTime());
         tvEndTime.setText(list.getEndTime());
         etBefore1.setText(String.valueOf(list.getBeforeOverSandDraft1()));

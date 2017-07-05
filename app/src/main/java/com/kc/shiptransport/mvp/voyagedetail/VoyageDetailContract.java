@@ -13,6 +13,7 @@ import com.kc.shiptransport.mvp.BaseView;
 public interface VoyageDetailContract {
     interface View extends BaseView<Presenter> {
         void showVoyageDates(VoyageDetailBean bean);
+        void showCommitResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {

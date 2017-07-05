@@ -25,6 +25,7 @@ public class VoyageDetailBean {
      */
 
     private String ItemID;
+    private int SubcontractorInterimApproachPlanID;
     private String ShipAccount;
     private String ShipName;
     private String SubcontractorAccount;
@@ -36,6 +37,15 @@ public class VoyageDetailBean {
     private String PerfectBoatItemCount;
     private String IsPerfect;
     private List<ColumnsBean> Columns;
+
+
+    public int getSubcontractorInterimApproachPlanID() {
+        return SubcontractorInterimApproachPlanID;
+    }
+
+    public void setSubcontractorInterimApproachPlanID(int subcontractorInterimApproachPlanID) {
+        SubcontractorInterimApproachPlanID = subcontractorInterimApproachPlanID;
+    }
 
     public String getItemID() {
         return ItemID;
@@ -147,7 +157,7 @@ public class VoyageDetailBean {
         private String value;
         private String ControlType;
         private List<ArrBean> arr;
-        private String data;
+        private String data = "";
 
         public String getData() {
             return data;

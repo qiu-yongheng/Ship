@@ -32,6 +32,15 @@ public class WeekTask extends DataSupport{
     private int IsPerfect; // 信息是否完善, 1完善, 0未完善
     private int PerfectBoatItemCount; // 已填写字段数量
     private int PerfectBoatRecordID; // 完善船次条目编号
+    private int IsTheAmountOfTime; // 1 已量方 0 量方
+
+    public int getIsTheAmountOfTime() {
+        return IsTheAmountOfTime;
+    }
+
+    public void setIsTheAmountOfTime(int isTheAmountOfTime) {
+        IsTheAmountOfTime = isTheAmountOfTime;
+    }
 
     public int getId() {
         return id;

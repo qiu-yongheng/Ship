@@ -97,7 +97,7 @@ public class RecordedSandFragment extends BaseMvpFragment {
 
     @Override
     protected String abs_showStayInfo(String data) {
-        return "待完善航次: " + data;
+        return "未过砂航次: " + data;
     }
 
     /**

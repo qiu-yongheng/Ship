@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
+                android:layout_height="match_parent">
 
 
     <android.support.v7.widget.Toolbar
-        app:titleTextColor="@color/textcolorPrimary"
         android:id="@+id/toolbar_supply_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorPrimary"/>
+        android:background="?colorPrimary"
+        app:titleTextColor="@color/textcolorPrimary"/>
 
     <LinearLayout
         android:id="@+id/ll_supply_detail"
@@ -23,10 +23,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
+            android:orientation="horizontal"
             android:paddingBottom="10dp"
-            android:orientation="horizontal">
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/tv_ship_name"
@@ -93,10 +93,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
+            android:orientation="horizontal"
             android:paddingBottom="10dp"
-            android:orientation="horizontal">
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/tv_ship_max_draft"
@@ -134,12 +134,13 @@
             android:textSize="22sp"/>
 
         <TextView
-            android:layout_marginTop="2dp"
+
             android:id="@+id/tv_acceptance_time"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginTop="2dp"
             android:background="@drawable/tv_bg"
             android:clickable="true"
             android:padding="10dp"
@@ -157,12 +158,12 @@
 
 
         <LinearLayout
-            android:layout_marginTop="2dp"
-            android:paddingLeft="20dp"
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -171,22 +172,23 @@
                 android:text="材料完整性:"
                 android:textColor="#000"
                 android:textSize="18sp"/>
+
             <RatingBar
                 android:id="@+id/rb_complete"
-                android:numStars="5"
-                android:stepSize="1"
                 style="@style/MyRatingBar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="1"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="2dp"
-            android:paddingLeft="20dp"
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -195,13 +197,14 @@
                 android:text="材料及时性:"
                 android:textColor="#000"
                 android:textSize="18sp"/>
+
             <RatingBar
                 android:id="@+id/rb_timely"
-                android:numStars="5"
-                android:stepSize="1"
                 style="@style/MyRatingBar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="1"/>
         </LinearLayout>
 
 
@@ -230,7 +233,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?colorPrimary"
-            android:text="同意"
+            android:text="提交"
             android:textColor="#fff"/>
     </LinearLayout>
 

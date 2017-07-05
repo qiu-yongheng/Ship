@@ -94,6 +94,37 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
     }
 
     @Override
+    public void getShipDetailList(int itemID) {
+        view.showLoading(true);
+        dataRepository
+                .GetReceptionSandBySubcontractorInterimApproachPlanID(itemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SupplyDetail>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(SupplyDetail value) {
+                        view.showImgList(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        view.showLoading(false);
+                        view.showError();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    @Override
     public void getSupplyTime() {
         view.showSupplyTime(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"));
     }

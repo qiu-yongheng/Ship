@@ -26,6 +26,7 @@ public interface SampleDetailContract {
         void showDetailList(SampleShowDatesBean bean);
         void showImageUpdataResult();
         void showDeleteResult(boolean isSuccess);
+        void showCommitReturn();
     }
 
     interface Presenter extends BasePresenter {

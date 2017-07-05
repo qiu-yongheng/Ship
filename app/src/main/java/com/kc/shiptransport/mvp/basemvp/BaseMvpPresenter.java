@@ -217,10 +217,8 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
         view.showLoading(true);
         Observable<Boolean> observable = null;
         switch (type) {
-            case SettingUtil.TYPE_ACCEPT: // 验收
             case SettingUtil.TYPE_SUPPLY: // 验砂
             case SettingUtil.TYPE_AMOUNT: // 量方
-            case SettingUtil.TYPE_SCANNER: // 扫描件
                 observable = dataRepository
                         .doRefresh(jumpWeek)
                         .subscribeOn(Schedulers.io())
@@ -231,6 +229,12 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
                                 return dataRepository.getWeekTaskSort(jumpWeek);
                             }
                         });
+                break;
+            case SettingUtil.TYPE_ACCEPT: // 验收 (目前没有用到)
+            case SettingUtil.TYPE_SCANNER: // 扫描件
+                observable = dataRepository
+                        .doRefresh(jumpWeek)
+                        .subscribeOn(Schedulers.io());
                 break;
 
             case SettingUtil.TYPE_RECORDEDSAND: // 过砂记录
@@ -348,10 +352,12 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
      */
     @Override
     public void start(int jumpWeek, int type, String account) {
-        this.jumpWeek = jumpWeek;
-        this.type = type;
-        this.account = account;
-        getTime(jumpWeek);
-        doRefresh(jumpWeek, type, account);
+        synchronized (BaseMvpPresenter.class) {
+            this.jumpWeek = jumpWeek;
+            this.type = type;
+            this.account = account;
+            getTime(jumpWeek);
+            doRefresh(jumpWeek, type, account);
+        }
     }
 }

@@ -105,7 +105,7 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
 
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
-
+                        view.showCommitResult(aBoolean);
                     }
 
                     @Override

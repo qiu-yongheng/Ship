@@ -35,6 +35,6 @@ public class RecordedTabAdapter extends FragmentPagerAdapter{
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "受砂船:" + (lists.get(position).getConstructionShipID());
+        return "施工船:" + (lists.get(position).getConstructionShipName());
     }
 }

@@ -570,15 +570,15 @@ public class RemoteDataSource {
      * @param json
      * @return
      */
-    public String UpdateTheAmountOfSideData(String json) {
+    public String InsertTheAmountOfSideRecord(String json) {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
-        String methodName = "UpdateTheAmountOfSideData";
+        String methodName = "InsertTheAmountOfSideRecord";
         // EndPoint
         String endPoint = EndPoint;
         // SOAP Action
-        String soapAction = "http://tempuri.org/UpdateTheAmountOfSideData";
+        String soapAction = "http://tempuri.org/InsertTheAmountOfSideRecord";
 
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);

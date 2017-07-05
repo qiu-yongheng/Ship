@@ -144,7 +144,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                     switch (type[0]) {
                         case SettingUtil.TYPE_TEXT:
                             // 文本
-                            InputActivity.startActivityForResult(getActivity(), columnsBean.getLabel(), columnsBean.getValue(), position);
+                            InputActivity.startActivityForResult(getActivity(), columnsBean.getLabel(), columnsBean.getValue(), SettingUtil.TYPE_TEXT, position);
                             break;
                         case SettingUtil.TYPE_DATA:
                             // 时间
@@ -162,6 +162,14 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                             String arr = new Gson().toJson(columnsBean.getArr());
                             VoyageListActivity.startActivityForResult(getActivity(), arr, position);
                             break;
+                        case SettingUtil.TYPE_READ_ONLY:
+                            // 只读
+                            Toast.makeText(getContext(), "不可更改", Toast.LENGTH_SHORT).show();
+                            break;
+                        case SettingUtil.TYPE_NUMBER:
+                            // 只能输入数字
+                            InputActivity.startActivityForResult(getActivity(), columnsBean.getLabel(), columnsBean.getValue(), SettingUtil.TYPE_NUMBER, position);
+                            break;
                     }
                 }
 
@@ -175,6 +183,16 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         } else {
             adapter.setDates(bean);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void showCommitResult(boolean isSuccess) {
+        if (isSuccess) {
+            Toast.makeText(getContext(), "提交成功", Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
+        } else {
+            Toast.makeText(getContext(), "提交失败, 请重试", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -197,7 +215,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                     String name = bundle.getString(VoyageListActivity.NAME);
 
                     // 保存数据
-                    columnsBean.setValue(name);
+                    columnsBean.setValue(name + ";" + itemID);
                     columnsBean.setData(itemID);
                     break;
             }

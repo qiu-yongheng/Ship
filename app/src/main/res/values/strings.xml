@@ -48,8 +48,8 @@
     <string name="amount_black">黑色字体: 未量方</string>
     <string name="voyage_red">红色字体:  已完善</string>
     <string name="voyage_black">黑色字体: 未完善</string>
-    <string name="recorded_red">红色字体: 已完善</string>
-    <string name="recorded_black">黑色字体: 未完善</string>
+    <string name="recorded_red">红色字体: 已过砂</string>
+    <string name="recorded_black">黑色字体: 未过砂</string>
     <string name="recorded_title">过砂记录</string>
     <string name="dialog_loading">加载中</string>
     <string name="sampledetail_title">取样记录</string>
@@ -59,7 +59,7 @@
     <string name="title_sample">验砂取样</string>
     <string name="sample_red">红色字体: 已验砂</string>
     <string name="sample_black">黑色字体: 未验砂</string>
-    <string name="title_scanner">分包商航次扫描件</string>
+    <string name="title_scanner">分包商填写进场材料</string>
     <string name="scanner_red">红色字体: 已完善</string>
     <string name="scanner_black">黑色字体: 未完善</string>
     <string name="scanner_stowage">装舱现场照片</string>
@@ -89,7 +89,7 @@
     <string name="title_scanner_contrast">航线对比图</string>
     <string name="title_scanner_customs_bill">海关单</string>
     <string name="text_supply_ship">供砂船:</string>
-    <string name="text_receive_ship">受砂船:</string>
+    <string name="text_receive_ship">施工船:</string>
     <string name="text_start_time">开始时间:</string>
     <string name="text_end_time">结束时间:</string>
     <string name="text_record_before">过砂前吃水</string>
@@ -108,6 +108,7 @@
     <string name="text_attendance_remark">考勤备注:</string>
     <string name="item_cons_ship">施工船舶:</string>
     <string name="hint_click">点击选择</string>
+    <string name="text_amount_photo">量方照片:</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

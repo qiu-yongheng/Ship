@@ -40,6 +40,15 @@ public class SandSample extends DataSupport{
     private String PreAcceptanceTime;
     private String ShipItemNum;
     private int SandSamplingID; // 验砂取样编号, 如果提交过数据, 就不为0
+    private int IsSandSampling; // 1代表已取样，0代表未取样（有三个取样编号，则代表已经取样）
+
+    public int getIsSandSampling() {
+        return IsSandSampling;
+    }
+
+    public void setIsSandSampling(int isSandSampling) {
+        IsSandSampling = isSandSampling;
+    }
 
     public int getItemID() {
         return ItemID;

@@ -113,4 +113,6 @@ public class SettingUtil {
     public static final int TYPE_TEXT = 200;
     public static final int TYPE_DATA = 201;
     public static final int TYPE_ARRAY = 202;
+    public static final int TYPE_READ_ONLY = 203;
+    public static final int TYPE_NUMBER = 204;
 }

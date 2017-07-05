@@ -5,10 +5,40 @@ import org.litepal.crud.DataSupport;
 /**
  * @author qiuyongheng
  * @time 2017/6/2  11:01
- * @desc ${TODD}
+ * @desc 1.6返回供砂明细,根据ItemID获取对应的数据接口
  */
 
 public class Acceptance extends DataSupport{
+
+    /**
+     * ItemID : 3561
+     * SubmitDate : 2017-07-04
+     * SubcontractorAccount : csfbs
+     * SubcontractorName : 测试分包商
+     * PlanDay : 2017-07-05
+     * ShipAccount : bsj618
+     * ShipName : 博石机618
+     * ShipType : B类
+     * DeadweightTon : 0
+     * MaxTakeInWater : null
+     * SandSupplyCount : 0
+     * SystemDate : 2017-07-04T17:37:15.387
+     * ReceptionSandTime : null
+     * PreAcceptanceTime : 2017-07-05 08:59:00
+     * MaterialIntegrity : 3
+     * MaterialTimeliness : 5
+     * CurrentTide : 0
+     * ShipItemNum : 2017070501
+     * DefaultCapacity : 1600
+     * DefaultDeckGauge : 1400
+     * batch : null
+     * TotalCompleteRide : 1
+     * TotalCompleteSquare : 1300
+     * AvgSquare : 1300
+     * IsReceptionSandTime : 0
+     * IsSandSampling : 0
+     */
+
     private int ItemID;
     private String SubmitDate;
     private String SubcontractorAccount;
@@ -21,26 +51,20 @@ public class Acceptance extends DataSupport{
     private String MaxTakeInWater;
     private String SandSupplyCount;
     private String SystemDate;
-    private String Capacity;
-    private String DeckGauge;
-    private int Deduction;
     private String ReceptionSandTime;
-    private String PassReceptionSandTime;
-    private String TheAmountOfTime; // 量方时间
-    private Float MaterialIntegrity; // 材料完整性
-    private Float MaterialTimeliness; // 材料及时性
+    private String PreAcceptanceTime;
+    private Float MaterialIntegrity;
+    private Float MaterialTimeliness;
+    private String CurrentTide;
+    private String ShipItemNum;
+    private String DefaultCapacity;
+    private String DefaultDeckGauge;
+    private String batch;
     private int TotalCompleteRide;
     private String TotalCompleteSquare;
     private String AvgSquare;
-    private String CurrentTide;
-    private String ShipItemNum;
-    private Float DefaultCapacity; // 默认舱容
-    private Float defaultDeckGauge; // 默认甲板方
-    private String batch; //batch
-
-    private String isSupply; // "1" : 已提交 "0" : 未提交
-    private String isAcceptance; // "1" : 已提交 "0" : 未提交
-
+    private int IsReceptionSandTime;
+    private int IsSandSampling;
 
     public int getItemID() {
         return ItemID;
@@ -138,22 +162,6 @@ public class Acceptance extends DataSupport{
         this.SystemDate = SystemDate;
     }
 
-    public String getCapacity() {
-        return Capacity;
-    }
-
-    public void setCapacity(String Capacity) {
-        this.Capacity = Capacity;
-    }
-
-    public String getDeckGauge() {
-        return DeckGauge;
-    }
-
-    public void setDeckGauge(String DeckGauge) {
-        this.DeckGauge = DeckGauge;
-    }
-
     public String getReceptionSandTime() {
         return ReceptionSandTime;
     }
@@ -162,12 +170,68 @@ public class Acceptance extends DataSupport{
         this.ReceptionSandTime = ReceptionSandTime;
     }
 
-    public String getPassReceptionSandTime() {
-        return PassReceptionSandTime;
+    public String getPreAcceptanceTime() {
+        return PreAcceptanceTime;
     }
 
-    public void setPassReceptionSandTime(String PassReceptionSandTime) {
-        this.PassReceptionSandTime = PassReceptionSandTime;
+    public void setPreAcceptanceTime(String PreAcceptanceTime) {
+        this.PreAcceptanceTime = PreAcceptanceTime;
+    }
+
+    public Float getMaterialIntegrity() {
+        return MaterialIntegrity;
+    }
+
+    public void setMaterialIntegrity(Float MaterialIntegrity) {
+        this.MaterialIntegrity = MaterialIntegrity;
+    }
+
+    public Float getMaterialTimeliness() {
+        return MaterialTimeliness;
+    }
+
+    public void setMaterialTimeliness(Float MaterialTimeliness) {
+        this.MaterialTimeliness = MaterialTimeliness;
+    }
+
+    public String getCurrentTide() {
+        return CurrentTide;
+    }
+
+    public void setCurrentTide(String CurrentTide) {
+        this.CurrentTide = CurrentTide;
+    }
+
+    public String getShipItemNum() {
+        return ShipItemNum;
+    }
+
+    public void setShipItemNum(String ShipItemNum) {
+        this.ShipItemNum = ShipItemNum;
+    }
+
+    public String getDefaultCapacity() {
+        return DefaultCapacity;
+    }
+
+    public void setDefaultCapacity(String DefaultCapacity) {
+        this.DefaultCapacity = DefaultCapacity;
+    }
+
+    public String getDefaultDeckGauge() {
+        return DefaultDeckGauge;
+    }
+
+    public void setDefaultDeckGauge(String DefaultDeckGauge) {
+        this.DefaultDeckGauge = DefaultDeckGauge;
+    }
+
+    public String getBatch() {
+        return batch;
+    }
+
+    public void setBatch(String batch) {
+        this.batch = batch;
     }
 
     public int getTotalCompleteRide() {
@@ -194,91 +258,19 @@ public class Acceptance extends DataSupport{
         this.AvgSquare = AvgSquare;
     }
 
-    public String getCurrentTide() {
-        return CurrentTide;
+    public int getIsReceptionSandTime() {
+        return IsReceptionSandTime;
     }
 
-    public void setCurrentTide(String CurrentTide) {
-        this.CurrentTide = CurrentTide;
+    public void setIsReceptionSandTime(int IsReceptionSandTime) {
+        this.IsReceptionSandTime = IsReceptionSandTime;
     }
 
-    public String getIsSupply() {
-        return isSupply;
+    public int getIsSandSampling() {
+        return IsSandSampling;
     }
 
-    public void setIsSupply(String isSupply) {
-        this.isSupply = isSupply;
-    }
-
-    public String getIsAcceptance() {
-        return isAcceptance;
-    }
-
-    public void setIsAcceptance(String isAcceptance) {
-        this.isAcceptance = isAcceptance;
-    }
-
-    public String getShipItemNum() {
-        return ShipItemNum;
-    }
-
-    public void setShipItemNum(String shipItemNum) {
-        ShipItemNum = shipItemNum;
-    }
-
-    public Float getDefaultCapacity() {
-        return DefaultCapacity;
-    }
-
-    public void setDefaultCapacity(Float defaultCapacity) {
-        DefaultCapacity = defaultCapacity;
-    }
-
-    public Float getDefaultDeckGauge() {
-        return defaultDeckGauge;
-    }
-
-    public void setDefaultDeckGauge(Float defaultDeckGauge) {
-        this.defaultDeckGauge = defaultDeckGauge;
-    }
-
-    public int getDeduction() {
-        return Deduction;
-    }
-
-    public void setDeduction(int deduction) {
-        Deduction = deduction;
-    }
-
-    public String getTheAmountOfTime() {
-        return TheAmountOfTime;
-    }
-
-    public void setTheAmountOfTime(String theAmountOfTime) {
-        TheAmountOfTime = theAmountOfTime;
-    }
-
-    public Float getMaterialIntegrity() {
-        return MaterialIntegrity;
-    }
-
-    public void setMaterialIntegrity(Float materialIntegrity) {
-        MaterialIntegrity = materialIntegrity;
-    }
-
-    public Float getMaterialTimeliness() {
-        return MaterialTimeliness;
-    }
-
-    public void setMaterialTimeliness(Float materialTimeliness) {
-        MaterialTimeliness = materialTimeliness;
-    }
-
-    public String getBatch() {
-        return batch;
-    }
-
-    public void setBatch(String batch) {
-        this.batch = batch;
+    public void setIsSandSampling(int IsSandSampling) {
+        this.IsSandSampling = IsSandSampling;
     }
 }

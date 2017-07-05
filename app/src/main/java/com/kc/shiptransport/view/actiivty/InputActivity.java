@@ -10,9 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.mvp.BaseActivity;
+import com.kc.shiptransport.util.SettingUtil;
+
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +29,7 @@ import butterknife.ButterKnife;
  */
 
 public class InputActivity extends BaseActivity {
+    private static final String TYPE = "TYPE";
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.et_input)
@@ -34,6 +40,9 @@ public class InputActivity extends BaseActivity {
     public static final int REQUEST = 1;
     @BindView(R.id.btn_determine)
     Button btnDetermine;
+    @BindView(R.id.text_title)
+    TextView textTitle;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +53,17 @@ public class InputActivity extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         String title = bundle.getString(TITLE);
         String hint = bundle.getString(HINT);
+        type = bundle.getInt(TYPE);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(title);
+        textTitle.setText(title);
 
         if (!getResources().getString(R.string.text_unfilled).equals(hint)) {
             mEtInput.setText(hint);
         }
 
+        // 确定按钮的点击事件
         btnDetermine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,9 +86,37 @@ public class InputActivity extends BaseActivity {
     private void result() {
         String trim = mEtInput.getText().toString().trim();
         Intent intent = new Intent();
-        intent.putExtra(TAG, trim);
-        setResult(0, intent);
-        finish();
+
+
+        switch (type) {
+            case SettingUtil.TYPE_TEXT:
+                /** 文字 */
+                intent.putExtra(TAG, trim);
+                setResult(0, intent);
+                finish();
+                break;
+            case SettingUtil.TYPE_NUMBER:
+                /** 数字 */
+                if (isNumeric(trim)) {
+                    intent.putExtra(TAG, trim);
+                    setResult(0, intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "请填写数字", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
+    /**
+     * 判断字符串是否数字
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isNumeric(String str) {
+        Pattern pattern = Pattern.compile("[0-9]*");
+        return pattern.matcher(str).matches();
     }
 
     @Override
@@ -86,11 +125,12 @@ public class InputActivity extends BaseActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivityForResult(Activity activity, String title, String hint, int requestCode) {
+    public static void startActivityForResult(Activity activity, String title, String hint, int type, int requestCode) {
         Intent intent = new Intent(activity, InputActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(TITLE, title);
         bundle.putString(HINT, hint);
+        bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
         activity.startActivityForResult(intent, requestCode, bundle);
     }

@@ -145,7 +145,11 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.commit(activity.itemID, tvSupplyTime.getText().toString());
+                if (!TextUtils.isEmpty(tvSupplyTime.getText().toString())) {
+                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString());
+                } else {
+                    Toast.makeText(getContext(), "请选择时间", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -393,7 +397,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             public void onFinish() {
                 // 上传完成的回调
                 showError("上传完成");
-                presenter.getShipDetail(activity.itemID);
+                presenter.getShipDetailList(activity.itemID);
             }
         });
     }
@@ -407,9 +411,22 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     public void showDeleteResult(boolean isSuccess) {
         if (isSuccess) {
             showError("删除成功");
-            presenter.getShipDetail(activity.itemID);
+            presenter.getShipDetailList(activity.itemID);
         } else {
             showError("删除失败, 请重试");
+        }
+    }
+
+    @Override
+    public void showImgList(SupplyDetail value) {
+        List<SupplyDetail.ReceptionSandAttachmentListBean> list = value.getReceptionSandAttachmentList();
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        if (adapter != null) {
+            adapter.setDates(list);
+            adapter.notifyDataSetChanged();
         }
     }
 

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -74,6 +75,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     private int rbcomplete = 0;
     private int rbtimely = 0;
     private String shipItemNum;
+    private Acceptance value;
 
     @Nullable
     @Override
@@ -112,7 +114,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                 if (time.equals("") || rbcomplete == 0 || rbtimely == 0) {
                     Toast.makeText(activity, "验收时间或评价不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, shipItemNum);
+                    presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, shipItemNum, value);
                 }
             }
         });
@@ -204,6 +206,10 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
      */
     @Override
     public void showShipDetail(Acceptance value) {
+        this.value = value;
+
+        String preAcceptanceTime = value.getPreAcceptanceTime();
+        tvAcceptanceTime.setText(TextUtils.isEmpty(preAcceptanceTime) ? "" : preAcceptanceTime);
         shipItemNum = value.getShipItemNum();
         tvShipName.setText(value.getShipName());
         tvShipId.setText("船次: " + (shipItemNum == null ? "" : shipItemNum));

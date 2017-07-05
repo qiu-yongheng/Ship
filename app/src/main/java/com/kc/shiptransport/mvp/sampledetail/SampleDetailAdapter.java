@@ -162,6 +162,11 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     public void addData(int pos) {
         SampleShowDatesBean.SandSamplingNumRecordListBean sandSamplingNumRecordListBean = new SampleShowDatesBean.SandSamplingNumRecordListBean();
+
+        // 取样编号自增
+        String batch = sampleShowDates.getBatch();
+        sandSamplingNumRecordListBean.setSamplingNum(batch + String.valueOf((char) (pos + 65)));
+
         sandSamplingNumRecordListBean.setSandSamplingAttachmentRecordList(new ArrayList<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean>());
 
         sandSamplingNumRecordListBean.getSandSamplingAttachmentRecordList().add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());

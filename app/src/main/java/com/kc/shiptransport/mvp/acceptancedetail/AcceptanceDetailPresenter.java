@@ -94,12 +94,14 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
      * @param rbcomplete 材料完整性
      * @param rbtimely 材料及时性
      * @param shipnum 船次编号
+     * @param value
      */
     @Override
-    public void commit(final int SubcontractorInterimApproachPlanID, String time, final int itemID, final int rbcomplete, final int rbtimely, final String shipnum) {
+    public void commit(final int SubcontractorInterimApproachPlanID,
+                       String time, final int itemID, final int rbcomplete, final int rbtimely, final String shipnum, Acceptance value) {
         view.showLoading(true);
         dataRepository
-                .InsertPreAcceptanceEvaluation(itemID, rbcomplete, rbtimely, time, shipnum, SubcontractorInterimApproachPlanID)
+                .InsertPreAcceptanceEvaluation(itemID, rbcomplete, rbtimely, time, shipnum, SubcontractorInterimApproachPlanID, value)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<Integer, Observable<Boolean>>() { // 同步
@@ -107,7 +109,7 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                     public Observable<Boolean> apply(Integer integer) throws Exception {
                         // 更新当前选中的分包商计划
                         if (integer == success) {
-                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_ACCEPTANCE),
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN),
                                     SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
                             return null;

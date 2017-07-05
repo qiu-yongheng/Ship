@@ -36,10 +36,15 @@ public interface SupplyDetailContract {
         void hideProgress();
 
         void showDeleteResult(boolean isSuccess);
+
+        void showImgList(SupplyDetail value);
     }
 
     interface Presenter extends BasePresenter {
         void getShipDetail(int itemID);
+
+        void getShipDetailList(int itemID);
+
         void getSupplyTime();
         void getTotalVolume(String ship, String deck);
         void commit(int itemID, String ReceptionSandTime);

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
@@ -31,6 +32,8 @@ import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +125,19 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                 // 扣方
                 String dedu = etShipVolume.getText().toString().trim();
 
-                presenter.commit(value.getItemID(), theAmountTime, value.getSubcontractorAccount(), activity.itemID, value.getShipAccount(), value.getCapacity(), deck, dedu, value.getCreator());
+                // creator
+                List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+
+                if (!TextUtils.isEmpty(theAmountTime) &&
+                        !TextUtils.isEmpty(deck) &&
+                        !deck.equals("0") &&
+                        !TextUtils.isEmpty(dedu) &&
+                        !dedu.equals("0")) {
+                    presenter.commit(value.getItemID(), theAmountTime, value.getSubcontractorAccount(), activity.itemID, value.getShipAccount(), value.getCapacity(), deck, dedu, all.get(0).getSubcontractorAccount());
+                } else {
+                    Toast.makeText(getContext(), "还有数据未填写", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -231,8 +246,6 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         }
 
 
-
-
         // 进场ID
         int itemID = value.getItemID();
         // 量方时间
@@ -313,7 +326,8 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                             @Override
                             public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
                                 // 把图片解析成可以上传的任务, 上传
-                                presenter.getCommitImgList(imageMultipleResultEvent, value.getItemID(), value.getCreator());
+                                List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                                presenter.getCommitImgList(imageMultipleResultEvent, activity.itemID, all.get(0).getSubcontractorAccount());
                             }
 
                             @Override
@@ -389,7 +403,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                 // TODO 全部上传成功的回调
                 Toast.makeText(getContext(), "上传成功", Toast.LENGTH_SHORT).show();
                 // 同步数据
-                presenter.getShipDetail(activity.itemID);
+                presenter.getShipDetailList(activity.itemID);
                 hideProgress();
             }
         });
@@ -404,9 +418,28 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     public void showDeleteResult(boolean isSuccess) {
         if (isSuccess) {
             showError("删除成功");
-            presenter.getShipDetail(activity.itemID);
+            presenter.getShipDetailList(activity.itemID);
         } else {
             showError("删除失败, 请重试");
+        }
+    }
+
+    /**
+     * 只刷新图片列表
+     *
+     * @param value
+     */
+    @Override
+    public void showImgList(AmountDetail value) {
+        this.value = value;
+        List<AmountDetail.TheAmountOfSideAttachmentListBean> list = value.getTheAmountOfSideAttachmentList();
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        if (adapter != null) {
+            adapter.setDates(list);
+            adapter.notifyDataSetChanged();
         }
     }
 }

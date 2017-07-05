@@ -9,7 +9,6 @@ import com.kc.shiptransport.data.bean.ScanCommitBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
-import com.kc.shiptransport.data.bean.VoyageInfoBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.AttendanceRecordList;
@@ -174,9 +173,10 @@ public interface DataSouceImpl {
      * @param currentDate                        时间
      * @param shipNum                            船次编号
      * @param subcontractorInterimApproachPlanID 任务ID
+     * @param value
      * @return
      */
-    Observable<Integer> InsertPreAcceptanceEvaluation(int itemID, int rbcomplete, int rbtimely, String currentDate, String shipNum, int subcontractorInterimApproachPlanID);
+    Observable<Integer> InsertPreAcceptanceEvaluation(int itemID, int rbcomplete, int rbtimely, String currentDate, String shipNum, int subcontractorInterimApproachPlanID, Acceptance value);
 
     /**
      * 根据类型获取船舶列表
@@ -259,7 +259,7 @@ public interface DataSouceImpl {
      * 更新量方数据
      * @return
      */
-    Observable<Boolean> UpdateTheAmountOfSideData(int itemID,
+    Observable<Boolean> InsertTheAmountOfSideRecord(int itemID,
                                                   String TheAmountOfTime,
                                                   String subcontractorAccount, int SubcontractorInterimApproachPlanID,
                                                   String ShipAccount,

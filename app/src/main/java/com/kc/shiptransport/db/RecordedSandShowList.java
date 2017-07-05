@@ -27,6 +27,24 @@ public class RecordedSandShowList extends DataSupport{
     private int IsFinish;
     private String Creator;
     private String SystemDate;
+    private String SandHandlingShipName;
+    private String ConstructionShipName;
+
+    public String getSandHandlingShipName() {
+        return SandHandlingShipName;
+    }
+
+    public void setSandHandlingShipName(String sandHandlingShipName) {
+        SandHandlingShipName = sandHandlingShipName;
+    }
+
+    public String getConstructionShipName() {
+        return ConstructionShipName;
+    }
+
+    public void setConstructionShipName(String constructionShipName) {
+        ConstructionShipName = constructionShipName;
+    }
 
     public int getItemID() {
         return ItemID;

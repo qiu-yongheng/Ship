@@ -51,8 +51,17 @@ public class VoyageDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         // 显示标签名
         ((NormalHolder) holder).mTvTag.setText(columnsBean.getLabel());
-        // 显示字段参数
-        ((NormalHolder) holder).mTvValue.setText(TextUtils.isEmpty(columnsBean.getValue()) ? "" : columnsBean.getValue());
+
+
+        if (type.equals("select")) {
+            String value = TextUtils.isEmpty(columnsBean.getValue()) ? "" : columnsBean.getValue();
+            String[] split = value.split(";");
+            ((NormalHolder) holder).mTvValue.setText(split[0]);
+        } else {
+            // 显示字段参数
+            ((NormalHolder) holder).mTvValue.setText(TextUtils.isEmpty(columnsBean.getValue()) ? "" : columnsBean.getValue());
+        }
+
 
         // 设置点击事件
         ((NormalHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +76,12 @@ public class VoyageDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else if ("select".equals(type)) {
                     /** 下拉框 */
                     listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_ARRAY);
+                } else if ("ReadOnly".equals(type)) {
+                    /** 只读 */
+                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_READ_ONLY);
+                } else if ("number".equals(type)) {
+                    /** 只能输入数字 */
+                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_NUMBER);
                 }
             }
         });

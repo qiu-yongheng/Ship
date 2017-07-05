@@ -121,7 +121,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                 @Override
                 public void onItemLongClick(View view, int position) {
                     // 弹出图片选择器, 设置多选图片张数
-                    int maxSize = activity.mDefaulAttachmentCount - activity.mAttachmentCount;
+                    int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
                     if (maxSize > 0) {
                         RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
                             @Override

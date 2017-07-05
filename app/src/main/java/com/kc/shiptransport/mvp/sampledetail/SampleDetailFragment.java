@@ -109,6 +109,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 添加数据, 取样编号自增
                 mAdapter.addData(mAdapter.sandSamplingNumRecordList.size());
                 recyclerview.smoothScrollToPosition(mAdapter.sandSamplingNumRecordList.size());
             }
@@ -117,9 +118,10 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         rlBacth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InputActivity.startActivityForResult(getActivity(), getResources().getString(R.string.hint_fill), "", 100);
+                InputActivity.startActivityForResult(getActivity(), getResources().getString(R.string.hint_fill), "", SettingUtil.TYPE_TEXT, 100);
             }
         });
+
     }
 
 
@@ -450,12 +452,17 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
 
                 @Override
                 public void onItemLongClick(View view, final int position) {
+
+
                     activity.showDailog("删除", "是否删除该数据", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = mAdapter.sandSamplingNumRecordList.get(position);
                             if (mAdapter.sandSamplingNumRecordList.size() <= 3) {
                                 Toast.makeText(getContext(), "取样次数不能少于3次", Toast.LENGTH_SHORT).show();
                             } else {
+                                // 发送网络请求, 删除item
+                                presenter.deleteItem(numRecordListBean.getItemID());
                                 mAdapter.delete(position);
                             }
                         }
@@ -489,6 +496,11 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         }
     }
 
+    @Override
+    public void showCommitReturn() {
+        getActivity().onBackPressed();
+    }
+
     /**
      * 当界面不显示时, 缓存数据到sp中
      */
@@ -507,5 +519,10 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
             String json = new Gson().toJson(mAdapter.sampleShowDates);
             SharePreferenceUtil.saveString(getContext(), String.valueOf(itemID), json);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

@@ -39,10 +39,15 @@ public interface AmountDetailContract {
         void hideProgress();
 
         void showDeleteResult(boolean isSuccess);
+
+        void showImgList(AmountDetail value);
     }
 
     interface Presenter extends BasePresenter {
         void getShipDetail(int itemID);
+
+        // 获取数据, 只刷新列表
+        void getShipDetailList(int itemID);
 
         void getSupplyTime();
 

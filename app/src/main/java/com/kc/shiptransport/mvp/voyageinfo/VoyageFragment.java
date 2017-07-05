@@ -76,4 +76,12 @@ public class VoyageFragment extends BaseMvpFragment {
     protected void abs_onItemClick(View view, int position) {
         VoyageDetailActivity.startActivity(getActivity(), position);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            presenter.start(jumpWeek, TYPE, subcontractorAccount);
+        }
+    }
 }

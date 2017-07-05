@@ -92,4 +92,13 @@ public class SampleFragment extends BaseMvpFragment{
     protected void abs_onItemClick(View view, int position) {
         SampleDetailActivity.startActivity(getActivity(), position);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            presenter.getTime(jumpWeek);
+            presenter.getSubcontractorList();
+        }
+    }
 }
