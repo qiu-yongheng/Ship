@@ -268,9 +268,9 @@ public class AmountFragment extends Fragment implements AmountContract.View {
                     // 如果item有数据, 设置点击事件
                     if (weekTasks != null && !weekTasks.isEmpty()) {
                         // 判断是否验收
-                        String passReceptionSandTime = weekTasks.get(0).getTheAmountOfTime();
+                        int isTheAmountOfTime = weekTasks.get(0).getIsTheAmountOfTime();
 
-                        if (passReceptionSandTime != null && !passReceptionSandTime.isEmpty()) {
+                        if (isTheAmountOfTime == 1) {
                             // 已验收
                             AmountDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), true);
                         } else {

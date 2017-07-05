@@ -272,6 +272,36 @@ public class DataRepository implements DataSouceImpl {
                         }
                     }
 
+                } else if (type == SettingUtil.TYPE_SAMPLE) {
+                    /** 验砂取样 */
+                    List<SandSample> sampleList = DataSupport.findAll(SandSample.class);
+
+                    for (SandSample sample : sampleList) {
+                        switch (Integer.valueOf(sample.getPosition()) % 7) {
+                            case 0:
+                                day_0 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 1:
+                                day_1 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 2:
+                                day_2 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 3:
+                                day_3 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 4:
+                                day_4 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 5:
+                                day_5 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 6:
+                                day_6 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                        }
+                    }
+
                 } else {
                     List<WeekTask> weekLists;
                     if (type == SettingUtil.TYPE_SUPPLY || type == SettingUtil.TYPE_AMOUNT) { // 验砂 或 量方
@@ -625,14 +655,20 @@ public class DataRepository implements DataSouceImpl {
 
                 /** 根据类型计算没有做相关处理的船次 */
                 if (type == SettingUtil.TYPE_RECORDEDSAND) { // 过砂记录
-                    // 过砂记录, IsFinish = 0的个数
+                    /**过砂记录, IsFinish = 0的个数 */
                     num = DataSupport.where("IsFinish = ?", "0").count(RecordList.class);
-
                 } else if (type == SettingUtil.TYPE_VOYAGEINFO) { // 航次信息完善
-                    // 航次信息完善, IsPerfect = 0的个数
+                    /** 航次信息完善, IsPerfect = 0的个数 */
                     num = DataSupport.where("IsPerfect = ?", "0").count(WeekTask.class);
                 } else if (type == SettingUtil.TYPE_SAMPLE) { // 验砂取样
-                    num = DataSupport.where("IsSandSampling = ?", "0").count(RecordList.class);
+                    /** 验砂取样 */
+                    num = DataSupport.where("IsSandSampling = ?", "0").count(SandSample.class);
+                } else if (type == SettingUtil.TYPE_SUPPLY) { // 验砂
+                    /** 验砂 */
+                    num = DataSupport.where("IsReceptionSandTime = ?", "0").count(WeekTask.class);
+                }else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
+                    /** 量方 */
+                    num = DataSupport.where("IsTheAmountOfTime = ?", "0").count(WeekTask.class);
                 } else {
                     // 1. 获取一周任务
                     List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
@@ -647,19 +683,21 @@ public class DataRepository implements DataSouceImpl {
                                 if (time == null || time.equals("")) {
                                     num++;
                                 }
-                            } else if (type == SettingUtil.TYPE_SUPPLY) { // 验砂
-                                time = weektask.getPreAcceptanceTime();
-                                time2 = weektask.getReceptionSandTime();
-                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
-                                    num++;
-                                }
-                            } else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
-                                time = weektask.getPreAcceptanceTime();
-                                time2 = weektask.getTheAmountOfTime();
-                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
-                                    num++;
-                                }
                             }
+//                            else if (type == SettingUtil.TYPE_SUPPLY) { // 验砂
+//                                time = weektask.getPreAcceptanceTime();
+//                                time2 = weektask.getReceptionSandTime();
+//                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
+//                                    num++;
+//                                }
+//                            }
+//                            else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
+//                                time = weektask.getPreAcceptanceTime();
+//                                time2 = weektask.getTheAmountOfTime();
+//                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
+//                                    num++;
+//                                }
+//                            }
                         }
                     }
                 }
@@ -702,7 +740,7 @@ public class DataRepository implements DataSouceImpl {
                 int d = 0;
                 List<WeekTask> list = DataSupport.where("PlanDay = ?", date).find(WeekTask.class);
                 for (WeekTask weekTask : list) {
-                    int sandSupplyCount = weekTask.getSandSupplyCount();
+                    int sandSupplyCount = Integer.valueOf(weekTask.getSandSupplyCount());
                     d += sandSupplyCount;
                 }
                 e.onNext(d);
@@ -1453,7 +1491,7 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 // 1. 删除未验收的数据
-                DataSupport.deleteAll(WeekTask.class, "PreAcceptanceTime IS NULL");
+                int i = DataSupport.deleteAll(WeekTask.class, "PreAcceptanceTime IS NULL");
 
                 dataSort(jumpWeek);
 

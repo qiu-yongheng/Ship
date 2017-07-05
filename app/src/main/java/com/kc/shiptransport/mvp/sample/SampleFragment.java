@@ -85,7 +85,7 @@ public class SampleFragment extends BaseMvpFragment{
 
     @Override
     protected String abs_showStayInfo(String data) {
-        return "未验砂航次: " + data;
+        return "未取样航次: " + data;
     }
 
     @Override

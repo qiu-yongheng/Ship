@@ -260,9 +260,9 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
                     @Override
                     public void onNext(@NonNull SampleShowDatesBean bean) {
-                        view.showDetailList(bean);
+                        //view.showDetailList(bean);
                         // 返回
-                        //view.showCommitReturn();
+                        view.showCommitReturn();
                     }
 
                     @Override

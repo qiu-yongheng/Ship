@@ -13,6 +13,28 @@ public class WeekTask extends DataSupport{
     private String position;
     private String selected;
 
+
+    /**
+     * ItemID : 1152
+     * SubcontractorAccount : csfbs
+     * SubcontractorName : 测试分包商
+     * PlanDay : 2017-07-03
+     * ShipAccount : tl368
+     * ShipName : 天力368
+     * ShipType : B类
+     * SandSupplyCount : 2500
+     * ReceptionSandTime : 2017-07-05T19:57:00
+     * PreAcceptanceTime : 2017-07-05 19:54:00
+     * SandSubcontractorPreAcceptanceEvaluationID : 30
+     * DefaultCapacity : 1688
+     * defaultDeckGauge : 793.43
+     * IsPerfect : 1
+     * IsReceptionSandTime : 1
+     * PerfectBoatItemCount : 14
+     * PerfectBoatRecordID : 11
+     * IsTheAmountOfTime : 0
+     */
+
     private int ItemID;
     private String SubcontractorAccount;
     private String SubcontractorName;
@@ -20,26 +42,168 @@ public class WeekTask extends DataSupport{
     private String ShipAccount;
     private String ShipName;
     private String ShipType;
-    private int SandSupplyCount;
-    private Float Capacity;
-    private Float DeckGauge;
-    private String ReceptionSandTime; // 验砂时间
-    private String PreAcceptanceTime; // 验收时间
-    private String TheAmountOfTime; // 量方时间
+    private String SandSupplyCount;
+    /** 验砂时间 */
+    private String ReceptionSandTime;
+    /** 验收时间 */
+    private String PreAcceptanceTime;
+    /** 分包商预验收评价ID */
     private int SandSubcontractorPreAcceptanceEvaluationID;
-    private Float DefaultCapacity;
-    private Float defaultDeckGauge;
-    private int IsPerfect; // 信息是否完善, 1完善, 0未完善
-    private int PerfectBoatItemCount; // 已填写字段数量
-    private int PerfectBoatRecordID; // 完善船次条目编号
-    private int IsTheAmountOfTime; // 1 已量方 0 量方
+    private String DefaultCapacity;
+    private String defaultDeckGauge;
+    /** 信息是否完善, 1完善, 0未完善 */
+    private int IsPerfect;
+    /** 1代表已验砂，0代表未验砂 */
+    private int IsReceptionSandTime;
+    /** 已填写字段数量 */
+    private int PerfectBoatItemCount;
+    /** 完善船次条目编号 */
+    private int PerfectBoatRecordID;
+    /** 1 已量方 0 未量方 */
+    private int IsTheAmountOfTime;
+
+    public int getItemID() {
+        return ItemID;
+    }
+
+    public void setItemID(int ItemID) {
+        this.ItemID = ItemID;
+    }
+
+    public String getSubcontractorAccount() {
+        return SubcontractorAccount;
+    }
+
+    public void setSubcontractorAccount(String SubcontractorAccount) {
+        this.SubcontractorAccount = SubcontractorAccount;
+    }
+
+    public String getSubcontractorName() {
+        return SubcontractorName;
+    }
+
+    public void setSubcontractorName(String SubcontractorName) {
+        this.SubcontractorName = SubcontractorName;
+    }
+
+    public String getPlanDay() {
+        return PlanDay;
+    }
+
+    public void setPlanDay(String PlanDay) {
+        this.PlanDay = PlanDay;
+    }
+
+    public String getShipAccount() {
+        return ShipAccount;
+    }
+
+    public void setShipAccount(String ShipAccount) {
+        this.ShipAccount = ShipAccount;
+    }
+
+    public String getShipName() {
+        return ShipName;
+    }
+
+    public void setShipName(String ShipName) {
+        this.ShipName = ShipName;
+    }
+
+    public String getShipType() {
+        return ShipType;
+    }
+
+    public void setShipType(String ShipType) {
+        this.ShipType = ShipType;
+    }
+
+    public String getSandSupplyCount() {
+        return SandSupplyCount;
+    }
+
+    public void setSandSupplyCount(String SandSupplyCount) {
+        this.SandSupplyCount = SandSupplyCount;
+    }
+
+    public String getReceptionSandTime() {
+        return ReceptionSandTime;
+    }
+
+    public void setReceptionSandTime(String ReceptionSandTime) {
+        this.ReceptionSandTime = ReceptionSandTime;
+    }
+
+    public String getPreAcceptanceTime() {
+        return PreAcceptanceTime;
+    }
+
+    public void setPreAcceptanceTime(String PreAcceptanceTime) {
+        this.PreAcceptanceTime = PreAcceptanceTime;
+    }
+
+    public int getSandSubcontractorPreAcceptanceEvaluationID() {
+        return SandSubcontractorPreAcceptanceEvaluationID;
+    }
+
+    public void setSandSubcontractorPreAcceptanceEvaluationID(int SandSubcontractorPreAcceptanceEvaluationID) {
+        this.SandSubcontractorPreAcceptanceEvaluationID = SandSubcontractorPreAcceptanceEvaluationID;
+    }
+
+    public String getDefaultCapacity() {
+        return DefaultCapacity;
+    }
+
+    public void setDefaultCapacity(String DefaultCapacity) {
+        this.DefaultCapacity = DefaultCapacity;
+    }
+
+    public String getDefaultDeckGauge() {
+        return defaultDeckGauge;
+    }
+
+    public void setDefaultDeckGauge(String defaultDeckGauge) {
+        this.defaultDeckGauge = defaultDeckGauge;
+    }
+
+    public int getIsPerfect() {
+        return IsPerfect;
+    }
+
+    public void setIsPerfect(int IsPerfect) {
+        this.IsPerfect = IsPerfect;
+    }
+
+    public int getIsReceptionSandTime() {
+        return IsReceptionSandTime;
+    }
+
+    public void setIsReceptionSandTime(int IsReceptionSandTime) {
+        this.IsReceptionSandTime = IsReceptionSandTime;
+    }
+
+    public int getPerfectBoatItemCount() {
+        return PerfectBoatItemCount;
+    }
+
+    public void setPerfectBoatItemCount(int PerfectBoatItemCount) {
+        this.PerfectBoatItemCount = PerfectBoatItemCount;
+    }
+
+    public int getPerfectBoatRecordID() {
+        return PerfectBoatRecordID;
+    }
+
+    public void setPerfectBoatRecordID(int PerfectBoatRecordID) {
+        this.PerfectBoatRecordID = PerfectBoatRecordID;
+    }
 
     public int getIsTheAmountOfTime() {
         return IsTheAmountOfTime;
     }
 
-    public void setIsTheAmountOfTime(int isTheAmountOfTime) {
-        IsTheAmountOfTime = isTheAmountOfTime;
+    public void setIsTheAmountOfTime(int IsTheAmountOfTime) {
+        this.IsTheAmountOfTime = IsTheAmountOfTime;
     }
 
     public int getId() {
@@ -64,157 +228,5 @@ public class WeekTask extends DataSupport{
 
     public void setSelected(String selected) {
         this.selected = selected;
-    }
-
-    public int getItemID() {
-        return ItemID;
-    }
-
-    public void setItemID(int itemID) {
-        ItemID = itemID;
-    }
-
-    public String getSubcontractorAccount() {
-        return SubcontractorAccount;
-    }
-
-    public void setSubcontractorAccount(String subcontractorAccount) {
-        SubcontractorAccount = subcontractorAccount;
-    }
-
-    public String getSubcontractorName() {
-        return SubcontractorName;
-    }
-
-    public void setSubcontractorName(String subcontractorName) {
-        SubcontractorName = subcontractorName;
-    }
-
-    public String getPlanDay() {
-        return PlanDay;
-    }
-
-    public void setPlanDay(String planDay) {
-        PlanDay = planDay;
-    }
-
-    public String getShipAccount() {
-        return ShipAccount;
-    }
-
-    public void setShipAccount(String shipAccount) {
-        ShipAccount = shipAccount;
-    }
-
-    public String getShipName() {
-        return ShipName;
-    }
-
-    public void setShipName(String shipName) {
-        ShipName = shipName;
-    }
-
-    public String getShipType() {
-        return ShipType;
-    }
-
-    public void setShipType(String shipType) {
-        ShipType = shipType;
-    }
-
-    public int getSandSupplyCount() {
-        return SandSupplyCount;
-    }
-
-    public void setSandSupplyCount(int sandSupplyCount) {
-        SandSupplyCount = sandSupplyCount;
-    }
-
-    public Float getCapacity() {
-        return Capacity;
-    }
-
-    public void setCapacity(Float capacity) {
-        Capacity = capacity;
-    }
-
-    public Float getDeckGauge() {
-        return DeckGauge;
-    }
-
-    public void setDeckGauge(Float deckGauge) {
-        DeckGauge = deckGauge;
-    }
-
-    public String getReceptionSandTime() {
-        return ReceptionSandTime;
-    }
-
-    public void setReceptionSandTime(String receptionSandTime) {
-        ReceptionSandTime = receptionSandTime;
-    }
-
-    public String getPreAcceptanceTime() {
-        return PreAcceptanceTime;
-    }
-
-    public void setPreAcceptanceTime(String preAcceptanceTime) {
-        PreAcceptanceTime = preAcceptanceTime;
-    }
-
-    public int getSandSubcontractorPreAcceptanceEvaluationID() {
-        return SandSubcontractorPreAcceptanceEvaluationID;
-    }
-
-    public void setSandSubcontractorPreAcceptanceEvaluationID(int sandSubcontractorPreAcceptanceEvaluationID) {
-        SandSubcontractorPreAcceptanceEvaluationID = sandSubcontractorPreAcceptanceEvaluationID;
-    }
-
-    public Float getDefaultCapacity() {
-        return DefaultCapacity;
-    }
-
-    public void setDefaultCapacity(Float defaultCapacity) {
-        DefaultCapacity = defaultCapacity;
-    }
-
-    public Float getDefaultDeckGauge() {
-        return defaultDeckGauge;
-    }
-
-    public void setDefaultDeckGauge(Float defaultDeckGauge) {
-        this.defaultDeckGauge = defaultDeckGauge;
-    }
-
-    public String getTheAmountOfTime() {
-        return TheAmountOfTime;
-    }
-
-    public void setTheAmountOfTime(String theAmountOfTime) {
-        TheAmountOfTime = theAmountOfTime;
-    }
-
-    public int getIsPerfect() {
-        return IsPerfect;
-    }
-
-    public void setIsPerfect(int isPerfect) {
-        IsPerfect = isPerfect;
-    }
-
-    public int getPerfectBoatItemCount() {
-        return PerfectBoatItemCount;
-    }
-
-    public void setPerfectBoatItemCount(int perfectBoatItemCount) {
-        PerfectBoatItemCount = perfectBoatItemCount;
-    }
-
-    public int getPerfectBoatRecordID() {
-        return PerfectBoatRecordID;
-    }
-
-    public void setPerfectBoatRecordID(int perfectBoatRecordID) {
-        PerfectBoatRecordID = perfectBoatRecordID;
     }
 }
