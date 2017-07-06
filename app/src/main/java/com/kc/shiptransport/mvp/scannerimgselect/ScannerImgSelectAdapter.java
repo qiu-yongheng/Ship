@@ -23,7 +23,7 @@ import java.util.List;
  * @desc ${TODO}
  */
 
-public class ScannerImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ScannerImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final LayoutInflater inflater;
     /**
@@ -65,7 +65,9 @@ public class ScannerImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.V
             ((NormalHolder) holder).mIvNormal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), 0);
+                    if (listener != null) {
+                        listener.onItemClick(holder.itemView, holder.getLayoutPosition(), 0);
+                    }
                 }
             });
 
@@ -73,7 +75,9 @@ public class ScannerImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.V
             ((NormalHolder) holder).mIvDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.ITEM_DELETE);
+                    if (listener != null) {
+                        listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.ITEM_DELETE);
+                    }
                 }
             });
 
@@ -83,7 +87,9 @@ public class ScannerImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override
                 public void onClick(View view) {
                     // 弹出图片选择器
-                    listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
+                    if (listener != null) {
+                        listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
+                    }
                 }
             });
         }

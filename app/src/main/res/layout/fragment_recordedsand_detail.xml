@@ -6,13 +6,15 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true">
 
-    <include layout="@layout/view_toolbar"/>
+    <include layout="@layout/view_toolbar"
+             android:id="@+id/include"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/btn_height"
-        android:layout_marginTop="?actionBarSize">
+        android:layout_below="@+id/include"
+        android:layout_toRightOf="@+id/btn_return"
+        android:layout_toEndOf="@+id/btn_return">
 
         <LinearLayout
             android:id="@+id/ll"

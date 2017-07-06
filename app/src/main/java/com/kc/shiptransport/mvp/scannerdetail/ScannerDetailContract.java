@@ -24,7 +24,7 @@ public interface ScannerDetailContract {
     interface Presenter extends BasePresenter {
         void getTitle(int position);
         // 获取扫描件类型
-        void getScannerType(int position);
-        void start(int position);
+        void getScannerType(int position, int type);
+        void start(int position, int type);
     }
 }

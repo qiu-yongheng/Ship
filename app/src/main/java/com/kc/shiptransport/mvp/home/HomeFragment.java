@@ -17,7 +17,7 @@ import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
-import com.kc.shiptransport.mvp.attendance.AttendanceActivity;
+import com.kc.shiptransport.mvp.constructionlog.ConstructionLogActivity;
 import com.kc.shiptransport.mvp.homedetail.HomeDetailActivity;
 import com.kc.shiptransport.mvp.main.MainActivity;
 
@@ -121,7 +121,8 @@ public class HomeFragment extends Fragment {
                             HomeDetailActivity.startActiviyt(getContext(), type[0]);
                             break;
                         case 3:
-                            // 施工记录
+                            // 施工日志
+                            ConstructionLogActivity.startActivity(getContext());
                             break;
                         case 4:
                             // 施工照片
@@ -140,7 +141,7 @@ public class HomeFragment extends Fragment {
                             break;
                         case 18:
                             // 考勤管理
-                            AttendanceActivity.startActivity(getContext());
+                            HomeDetailActivity.startActiviyt(getContext(), type[0]);
                             break;
                     }
                 }

@@ -2,6 +2,7 @@ package com.kc.shiptransport.mvp.acceptancedetail;
 
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,8 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.mvp.scannerdetail.ScannerDetailActivity;
+import com.kc.shiptransport.mvp.voyagedetail.VoyageDetailActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -70,6 +73,12 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     RatingBar rbComplete;
     @BindView(R.id.rb_timely)
     RatingBar rbTimely;
+    @BindView(R.id.ll_commit_data)
+    LinearLayout llCommitData;
+    @BindView(R.id.tv_info)
+    TextView tvInfo;
+    @BindView(R.id.tv_scan)
+    TextView tvScan;
     private AcceptanceDetailContract.Presenter presenter;
     private AcceptanceDetailActivity activity;
     private int rbcomplete = 0;
@@ -155,6 +164,24 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                 rbtimely = (int) v;
             }
         });
+
+        /* 基础信息查看 */
+        tvInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 跳转到航次信息完善界面
+                VoyageDetailActivity.startActivity(getActivity(), activity.itemID, 1);
+            }
+        });
+
+        /* 扫描件查看 */
+        tvScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 跳转到扫描件界面
+                ScannerDetailActivity.startActivity(getActivity(), activity.itemID, 1);
+            }
+        });
     }
 
     @Override
@@ -173,15 +200,24 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
             btnAcceptanceCancel.setText(R.string.btn_return);
 
             // 设置只能用来看
-//            rbComplete.setIsIndicator(true);
-//            rbTimely.setIsIndicator(true);
+            //            rbComplete.setIsIndicator(true);
+            //            rbTimely.setIsIndicator(true);
         } else {
             // 未验收
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
 
-//            rbComplete.setRating(2);
-//            rbComplete.setIsIndicator(false);
+            //            rbComplete.setRating(2);
+            //            rbComplete.setIsIndicator(false);
         }
+
+
+        // 给文字设置下划线
+        tvInfo.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//下划线
+        tvInfo.setText(R.string.text_info);
+
+        tvScan.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//下划线
+        tvScan.setText(R.string.text_scan);
+
     }
 
     @Override

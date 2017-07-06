@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.AppListBean;
-import com.kc.shiptransport.data.bean.AttendanceRecordListBean;
 import com.kc.shiptransport.data.bean.AttendanceTypeBean;
 import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
@@ -48,9 +47,12 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.down.StopList;
+import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.db.supply.SupplyDetail;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -1049,6 +1051,13 @@ public class DataRepository implements DataSouceImpl {
                 subcontractor.setSubcontractorAccount(loginResult.getUserID());
                 subcontractor.save();
 
+                DataSupport.deleteAll(User.class);
+                // 保存
+                User user = new User();
+                user.setUserID(loginResult.getUserID());
+                user.setUserName(loginResult.getUserName());
+                user.save();
+
                 // 统计登录
                 MobclickAgent.onProfileSignIn(username);
 
@@ -1204,6 +1213,14 @@ public class DataRepository implements DataSouceImpl {
                             break;
                         case 18:
                             // 考勤管理
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 19:
+                            // 考勤打卡
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 20:
+                            // 考勤审核
                             list.setIcon_id(R.mipmap.plan);
                             break;
                     }
@@ -1997,7 +2014,7 @@ public class DataRepository implements DataSouceImpl {
     }
 
     /**
-     * 获取考勤记录
+     * 1.26 获取考勤记录
      *
      * @return
      */
@@ -2010,31 +2027,16 @@ public class DataRepository implements DataSouceImpl {
                 String result = mRemoteDataSource.GetAttendanceRecords(itemID, account, startDate, endDate);
 
                 // 解析数据
-                List<AttendanceRecordListBean> list = gson.fromJson(result, new TypeToken<List<AttendanceRecordListBean>>() {
+                List<AttendanceRecordList> list = gson.fromJson(result, new TypeToken<List<AttendanceRecordList>>() {
                 }.getType());
 
                 // 初始化数据库
                 DataSupport.deleteAll(AttendanceRecordList.class);
 
                 // 保存数据
-                for (AttendanceRecordListBean bean : list) {
-                    AttendanceRecordList attendanceRecordList = new AttendanceRecordList();
-                    attendanceRecordList.setItemID(bean.getItemID());
-                    attendanceRecordList.setAttendanceTypeID(bean.getAttendanceTypeID());
-                    attendanceRecordList.setAttendanceTypeName(bean.getAttendanceTypeName());
-                    attendanceRecordList.setCreator(bean.getCreator());
-                    attendanceRecordList.setSystemDate(bean.getSystemDate());
-                    attendanceRecordList.setRemark(bean.getRemark());
-                    attendanceRecordList.setAttendanceTime(bean.getAttendanceTime());
-                    attendanceRecordList.setIsCheck(bean.getIsCheck());
-                    attendanceRecordList.setRemarkForCheck(bean.getRemarkForCheck());
-                    attendanceRecordList.setSystemDateForCheck(bean.getSystemDateForCheck());
-                    attendanceRecordList.save();
-                }
+                DataSupport.saveAll(list);
 
-                List<AttendanceRecordList> all1 = DataSupport.findAll(AttendanceRecordList.class);
-
-                e.onNext(all1);
+                e.onNext(list);
                 e.onComplete();
             }
         });
@@ -2418,8 +2420,8 @@ public class DataRepository implements DataSouceImpl {
                 // 把数据解析成json
                 JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("ItemID", ItemID);
-                jsonObject.put("AttendanceID", AttendanceID);
+                jsonObject.put("ItemID", "");
+                jsonObject.put("AttendanceID", ItemID);
                 jsonObject.put("Creator", Creator);
                 jsonObject.put("Remark", Remark);
                 jsonObject.put("IsCheck", IsCheck);
@@ -2675,6 +2677,84 @@ public class DataRepository implements DataSouceImpl {
                 }.getType());
 
                 e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.42 获取停工因素选项数据
+     * @return
+     */
+    @Override
+    public Observable<List<StopOption>> GetStopOptions() {
+        return Observable.create(new ObservableOnSubscribe<List<StopOption>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<StopOption>> e) throws Exception {
+                String result = mRemoteDataSource.GetStopOptions();
+
+                List<StopList> lists = gson.fromJson(result, new TypeToken<List<StopList>>() {
+                }.getType());
+
+                // 初始化DB
+                DataSupport.deleteAll(StopOption.class);
+
+                for (StopList list : lists) {
+                    List<StopList.OptionListBean> optionList = list.getOptionList();
+                    // 获取类型
+                    String type = list.getOptionType();
+                    StopOption stopOption1 = new StopOption();
+                    stopOption1.setOptionType(type);
+                    stopOption1.save();
+
+                    for (StopList.OptionListBean bean : optionList) {
+                        StopOption stopOption = new StopOption();
+                        stopOption.setOptionType(type);
+                        stopOption.setItemID(bean.getItemID());
+                        stopOption.setName(bean.getName());
+                        stopOption.save();
+                    }
+
+                }
+
+                // 查询数据 (排序)
+                List<StopOption> all = DataSupport.order("OptionType asc").find(StopOption.class);
+
+
+
+                e.onNext(all);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.43 提交施工日志（停工）数据
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertConstructionBoatStopDaily(final int ItemID, final String ShipAccount, final String StartTime, final String EndTime, final String Creator, final int StopTypeID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ItemID", ItemID);
+                jsonObject.put("ShipAccount", ShipAccount);
+                jsonObject.put("StartTime", StartTime);
+                jsonObject.put("EndTime", EndTime);
+                jsonObject.put("Creator", Creator);
+                jsonObject.put("StopTypeID", StopTypeID);
+
+                jsonArray.put(jsonObject);
+
+                String json = jsonArray.toString();
+
+                String result = mRemoteDataSource.InsertConstructionBoatStopDaily(json);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
                 e.onComplete();
             }
         });

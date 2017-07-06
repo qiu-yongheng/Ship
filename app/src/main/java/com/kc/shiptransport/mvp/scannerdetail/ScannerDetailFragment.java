@@ -55,7 +55,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
         initViews(view);
         initListener();
         // TODO 回显数据(从网络获取)
-        presenter.start(activity.position);
+        presenter.start(activity.position, activity.type);
         return view;
     }
 
@@ -156,7 +156,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
                             bean.getSubcontractorPerfectBoatScannerAttachmentTypeName(),
                             bean.getConstructionBoatAccount(),
                             bean.getAttachmentCount(),
-                            bean.getDefalutAttachmentCount());
+                            bean.getDefalutAttachmentCount(),
+                            activity.type);
                 }
 
                 @Override
@@ -175,8 +176,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     public void onResume() {
         super.onResume();
         // TODO
-        if (activity != null) {
-            presenter.getScannerType(activity.position);
+        if (adapter != null) {
+            presenter.getScannerType(activity.position, activity.type);
         }
     }
 }

@@ -17,7 +17,7 @@ public interface VoyageDetailContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getVoyageDates(int position);
+        void getVoyageDates(int position, int type);
         void commit(VoyageDetailBean bean);
     }
 }

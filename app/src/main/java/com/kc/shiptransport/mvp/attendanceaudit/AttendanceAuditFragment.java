@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -65,6 +66,16 @@ public class AttendanceAuditFragment extends Fragment implements AttendanceAudit
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void initListener() {
 
     }
@@ -110,11 +121,11 @@ public class AttendanceAuditFragment extends Fragment implements AttendanceAudit
                     switch (type[0]) {
                         case 1:
                             // TODO 审核通过
-                            presenter.commitAudit(recordList.getItemID(), recordList.getAttendanceTypeID(), recordList.getCreator(), recordList.getRemarkForCheck(), 1);
+                            presenter.commitAudit(recordList.getItemID(), recordList.getAttendanceTypeID(), recordList.getCreator(), recordList.getRemarkForCheck(), 1, position);
                             break;
                         case -1:
                             // TODO 审核不通过
-                            presenter.commitAudit(recordList.getItemID(), recordList.getAttendanceTypeID(), recordList.getCreator(), recordList.getRemarkForCheck(), -1);
+                            presenter.commitAudit(recordList.getItemID(), recordList.getAttendanceTypeID(), recordList.getCreator(), recordList.getRemarkForCheck(), -1, position);
                             break;
                     }
                 }
@@ -132,9 +143,11 @@ public class AttendanceAuditFragment extends Fragment implements AttendanceAudit
     }
 
     @Override
-    public void showResult(boolean isSuccess) {
+    public void showResult(boolean isSuccess, int position) {
         if (isSuccess) {
             Toast.makeText(getContext(), "提交成功", Toast.LENGTH_SHORT).show();
+            // 删除position对应的数据
+            adapter.delete(position);
         } else {
             Toast.makeText(getContext(), "提交失败", Toast.LENGTH_SHORT).show();
         }

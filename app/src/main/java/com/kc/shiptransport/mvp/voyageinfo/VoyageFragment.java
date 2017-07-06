@@ -74,7 +74,8 @@ public class VoyageFragment extends BaseMvpFragment {
 
     @Override
     protected void abs_onItemClick(View view, int position) {
-        VoyageDetailActivity.startActivity(getActivity(), position);
+        // type = 0, 发送的是position
+        VoyageDetailActivity.startActivity(getActivity(), position, 0);
     }
 
     @Override

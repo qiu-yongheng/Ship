@@ -74,6 +74,6 @@ public class ScannerFragment extends BaseMvpFragment {
 
     @Override
     protected void abs_onItemClick(View view, int position) {
-        ScannerDetailActivity.startActivity(getActivity(), position);
+        ScannerDetailActivity.startActivity(getActivity(), position, 0);
     }
 }

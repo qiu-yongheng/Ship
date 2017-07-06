@@ -19,8 +19,10 @@ import com.kc.shiptransport.mvp.BaseActivity;
 public class ScannerDetailActivity extends BaseActivity{
 
     private static final String POSITION = "ScannerDetailActivity_position";
+    private static final String TYPE = "TYPE";
     private ScannerDetailFragment fragment;
     public int position;
+    public int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class ScannerDetailActivity extends BaseActivity{
 
         Bundle bundle = getIntent().getExtras();
         position = bundle.getInt(POSITION);
+        type = bundle.getInt(TYPE);
 
         if (savedInstanceState != null) {
             fragment = (ScannerDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ScannerDetailFragment");
@@ -55,10 +58,11 @@ public class ScannerDetailActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Activity activity, int position) {
+    public static void startActivity(Activity activity, int position, int type) {
         Intent intent = new Intent(activity, ScannerDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(POSITION, position);
+        bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
         activity.startActivity(intent, bundle);
     }

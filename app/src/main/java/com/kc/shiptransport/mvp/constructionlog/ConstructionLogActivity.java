@@ -1,4 +1,4 @@
-package com.kc.shiptransport.mvp.attendanceaudit;
+package com.kc.shiptransport.mvp.constructionlog;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,24 +12,23 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 /**
  * @author qiuyongheng
- * @time 2017/6/30  16:14
+ * @time 2017/7/6  15:41
  * @desc ${TODD}
  */
 
-public class AttendanceAuditActivity extends BaseActivity{
+public class ConstructionLogActivity extends BaseActivity{
 
-    private AttendanceAuditFragment fragment;
+    private ConstructionLogFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_plan);
 
         if (savedInstanceState != null) {
-            fragment = (AttendanceAuditFragment) getSupportFragmentManager().getFragment(savedInstanceState, "AttendanceAuditFragment");
+            fragment = (ConstructionLogFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ConstructionLogFragment");
         } else {
-            fragment = new AttendanceAuditFragment();
+            fragment = new ConstructionLogFragment();
         }
 
         if (!fragment.isAdded()) {
@@ -39,21 +38,20 @@ public class AttendanceAuditActivity extends BaseActivity{
                     .commit();
         }
 
-        new AttendanceAuditPresenter(this, fragment, new DataRepository());
+        new ConstructionLogPresenter(this, fragment, new DataRepository());
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (fragment.isAdded()) {
-            getSupportFragmentManager().putFragment(outState, "AttendanceAuditFragment", fragment);
+            getSupportFragmentManager().putFragment(outState, "ConstructionLogFragment", fragment);
         }
     }
 
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, AttendanceAuditActivity.class);
+        Intent intent = new Intent(context, ConstructionLogActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);

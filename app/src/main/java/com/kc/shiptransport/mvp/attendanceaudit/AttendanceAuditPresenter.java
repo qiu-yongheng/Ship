@@ -48,6 +48,9 @@ public class AttendanceAuditPresenter implements AttendanceAuditContract.Present
         compositeDisposable.clear();
     }
 
+    /**
+     * 获取考勤列表
+     */
     @Override
     public void getAttendance() {
         view.showLoading(true);
@@ -99,8 +102,16 @@ public class AttendanceAuditPresenter implements AttendanceAuditContract.Present
                 });
     }
 
+    /**
+     * 提交考勤结果
+     * @param ItemID
+     * @param AttendanceID
+     * @param Creator
+     * @param Remark
+     * @param IsCheck
+     */
     @Override
-    public void commitAudit(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck) {
+    public void commitAudit(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck, final int position) {
         view.showLoading(true);
         dataRepository
                 .InsertAttendanceCheckRecord(ItemID, AttendanceID, Creator, Remark, IsCheck)
@@ -114,7 +125,7 @@ public class AttendanceAuditPresenter implements AttendanceAuditContract.Present
 
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
-                        view.showResult(aBoolean);
+                        view.showResult(aBoolean, position);
                     }
 
                     @Override

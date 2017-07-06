@@ -103,49 +103,78 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
 
     @Override
     public void showImgList(List<ScannerImgListByTypeBean> scannerImgListByTypeBeen) {
-        if (adapter == null) {
-            adapter = new ScannerImgSelectAdapter(getContext(), scannerImgListByTypeBeen);
-            adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position, int... type) {
-                    ScannerImgListByTypeBean scannerImgListByTypeBean = adapter.list.get(position);
-                    if (type[0] == 0) {
-                        // 显示图片
-                        ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
-                    } else {
-                        // 删除图片
-                        presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+        if (activity.p_type == 0) {
+            // 可以修改图片
+            if (adapter == null) {
+                adapter = new ScannerImgSelectAdapter(getContext(), scannerImgListByTypeBeen);
+                adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position, int... type) {
+                        ScannerImgListByTypeBean scannerImgListByTypeBean = adapter.list.get(position);
+                        if (type[0] == 0) {
+                            // 显示图片
+                            ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
+                        } else {
+                            // 删除图片
+                            presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                        }
                     }
-                }
 
-                @Override
-                public void onItemLongClick(View view, int position) {
-                    // 弹出图片选择器, 设置多选图片张数
-                    int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
-                    if (maxSize > 0) {
-                        RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
-                            @Override
-                            public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-                                // 提交图片
-                                presenter.commit(imageMultipleResultEvent, activity.mSubID, activity.mTypeID, activity.mShipAccount);
-                            }
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+                        // 弹出图片选择器, 设置多选图片张数
+                        int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
+                        if (maxSize > 0) {
+                            RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
+                                @Override
+                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                    // 提交图片
+                                    presenter.commit(imageMultipleResultEvent, activity.mSubID, activity.mTypeID, activity.mShipAccount);
+                                }
 
-                            @Override
-                            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
-                                // 单选回调
-                            }
-                        });
-                    } else {
-                        Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+                                    // 单选回调
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
+                });
 
-            mRecyclerview.setAdapter(adapter);
-        } else {
-            adapter.setDates(scannerImgListByTypeBeen);
-            adapter.notifyDataSetChanged();
+                mRecyclerview.setAdapter(adapter);
+            } else {
+                adapter.setDates(scannerImgListByTypeBeen);
+                adapter.notifyDataSetChanged();
+            }
+
+        } else if (activity.p_type == 1) {
+            if (adapter == null) {
+                adapter = new ScannerImgSelectAdapter(getContext(), scannerImgListByTypeBeen);
+                adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position, int... type) {
+                        ScannerImgListByTypeBean scannerImgListByTypeBean = adapter.list.get(position);
+                        if (type[0] == 0) {
+                            // 显示图片
+                            ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
+                        }
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+
+                    }
+                });
+                mRecyclerview.setAdapter(adapter);
+            } else {
+                adapter.setDates(scannerImgListByTypeBeen);
+                adapter.notifyDataSetChanged();
+            }
         }
+
+
     }
 
     /**

@@ -58,8 +58,9 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
+
         // TODO 获取要显示的列表
-        presenter.getVoyageDates(activity.mPosition);
+        presenter.getVoyageDates(activity.mPosition, activity.type);
         return view;
     }
 
@@ -72,6 +73,16 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         activity.getSupportActionBar().setTitle(R.string.title_voyage);
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        // 根据type, 初始化不同的控件
+        if (activity.type == 0) {
+            // 提交数据
+            btnCommit.setVisibility(View.VISIBLE);
+        } else if (activity.type == 1) {
+            // 查看数据, 不可修改
+            btnCommit.setVisibility(View.GONE);
+        }
     }
 
     @Override

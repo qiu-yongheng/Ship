@@ -18,9 +18,11 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class VoyageDetailActivity extends BaseActivity{
 
+    private static final String TYPE = "TYPE";
     private VoyageDetailFragment fragment;
-    private final String TAG_POSITION = "VoyageDetailActivity_position";
+    private static final String TAG_POSITION = "VoyageDetailActivity_position";
     public int mPosition;
+    public int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,7 @@ public class VoyageDetailActivity extends BaseActivity{
         // 获取position
         Bundle extras = getIntent().getExtras();
         mPosition = extras.getInt(TAG_POSITION);
+        type = extras.getInt(TYPE);
 
         if (savedInstanceState != null) {
             fragment = (VoyageDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "VoyageDetailFragment");
@@ -56,13 +59,15 @@ public class VoyageDetailActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Activity activity, int position) {
+    public static void startActivity(Activity activity, int position, int type) {
         Intent intent = new Intent(activity, VoyageDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("VoyageDetailActivity_position", position);
+        bundle.putInt(TAG_POSITION, position);
+        bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
         activity.startActivity(intent, bundle);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

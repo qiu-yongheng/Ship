@@ -49,7 +49,9 @@ public class AttendanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    // 把之前选中的position传递出去,
                     listener.onItemClick(holder.itemView, holder.getLayoutPosition(), checkedIndex);
+                    // 保存当前选中的checkbox
                     checkedIndex = holder.getLayoutPosition();
                 } else {
 

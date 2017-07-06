@@ -30,4 +30,10 @@
         <item name="android:textSize">@dimen/text_15sp</item>
     </style>
 
+    <!--施工日志-->
+    <style name="text_40">
+        <item name="android:textColor">@color/text_tag_gray</item>
+        <item name="android:textSize">@dimen/text_20sp</item>
+    </style>
+
 </resources>

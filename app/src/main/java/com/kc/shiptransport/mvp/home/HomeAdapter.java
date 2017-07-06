@@ -47,7 +47,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         // 未开发的功能, 图标显示灰色
         Integer appID = Integer.valueOf(appList.getAppID());
-        if (appID != 2 && appID != 18) {
+        if (appID != 2 && appID != 18 && appID != 3) {
             ColorMatrix cm = new ColorMatrix();
             cm.setSaturation(0); // 设置饱和度
             ColorMatrixColorFilter grayColorFilter = new ColorMatrixColorFilter(cm);
@@ -71,15 +71,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 }
             });
         }
-
-        // 权限设置, 设置要显示的模块
-//        List<AppList> appLists = DataSupport.where("SortNum = ?", String.valueOf(position + 1)).find(AppList.class);
-//        if (appLists != null && !appLists.isEmpty()) {
-//            ((ItemHolder) holder).itemView.setVisibility(View.VISIBLE);
-//        } else {
-//            ((ItemHolder) holder).itemView.setVisibility(View.GONE);
-//        }
-
     }
 
     public void setDates(List<AppList> list) {

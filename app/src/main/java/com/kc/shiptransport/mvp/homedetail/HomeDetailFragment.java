@@ -15,6 +15,8 @@ import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.amount.AmountActivity;
+import com.kc.shiptransport.mvp.attendance.AttendanceActivity;
+import com.kc.shiptransport.mvp.attendanceaudit.AttendanceAuditActivity;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
 import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
 import com.kc.shiptransport.mvp.sample.SampleActivity;
@@ -48,7 +50,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
         initViews(view);
         initListener();
 
-        // 获取列表数据
+        /** 获取列表数据 根据不同的APPPID, 显示二级界面 */
         presenter.getAppList(activity.mAppPID);
         return view;
     }
@@ -80,6 +82,10 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * 显示二级界面 , 根据appid设置点击事件
+     * @param lists
+     */
     @Override
     public void showAppList(List<AppList> lists) {
         if (adapter == null) {
@@ -88,7 +94,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                 @Override
                 public void onItemClick(View view, int position, int... type) {
                     switch (type[0]) {
-                        /** AppPID = 2 */
+                        /** AppPID = 2 供砂管理 */
                         case 10:
                             // 分包商进场计划
                             PlanActivity.navigateToPlanActivity(getContext());
@@ -121,10 +127,18 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             // 过砂记录
                             RecordedSandActivity.startActivity(getContext());
                             break;
+
+                        /** AppPID = 18 考勤管理 */
+                        case 19:
+                            // 考勤打卡
+                            AttendanceActivity.startActivity(getContext());
+                            break;
+                        case 20:
+                            // 考勤审核
+                            AttendanceAuditActivity.startActivity(getContext());
+                            break;
                     }
                 }
-
-
 
                 @Override
                 public void onItemLongClick(View view, int position) {

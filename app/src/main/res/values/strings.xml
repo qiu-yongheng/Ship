@@ -94,7 +94,7 @@
     <string name="text_end_time">结束时间:</string>
     <string name="text_record_before">过砂前吃水</string>
     <string name="text_record_after">过砂后吃水</string>
-    <string name="et_hint">请填写</string>
+    <string name="et_hint">0</string>
     <string name="setting_recorde_finish">过砂完成</string>
     <string name="text_name">姓名:</string>
     <string name="text_time">考勤日期:</string>
@@ -109,6 +109,12 @@
     <string name="item_cons_ship">施工船舶:</string>
     <string name="hint_click">点击选择</string>
     <string name="text_amount_photo">量方照片:</string>
+    <string name="text_info">基础信息查看</string>
+    <string name="text_scan">扫描件查看</string>
+    <string name="text_stop">停工</string>
+    <string name="text_throw_sand">抛砂</string>
+    <string name="title_construction">施工日志</string>
+    <string name="btn_down">停工</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

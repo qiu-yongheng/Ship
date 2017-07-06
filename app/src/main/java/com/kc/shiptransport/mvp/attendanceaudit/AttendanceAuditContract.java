@@ -15,11 +15,11 @@ import java.util.List;
 public interface AttendanceAuditContract {
     interface View extends BaseView<Presenter> {
         void showAttendance(List<AttendanceRecordList> list);
-        void showResult(boolean isSuccess);
+        void showResult(boolean isSuccess, int position);
     }
 
     interface Presenter extends BasePresenter {
         void getAttendance();
-        void commitAudit(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck);
+        void commitAudit(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck, int position);
     }
 }

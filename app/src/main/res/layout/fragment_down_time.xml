@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/btn_height"
+        android:orientation="vertical">
+
+
+        <include layout="@layout/view_title"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:layout_marginLeft="@dimen/margin_32"
+            android:layout_marginRight="@dimen/margin_32"
+            android:layout_marginTop="@dimen/margin_35"
+            android:background="@color/et_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="开始 : "/>
+
+            <TextView
+                android:id="@+id/text_start_time"
+                style="@style/text_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:layout_marginLeft="@dimen/margin_32"
+            android:layout_marginRight="@dimen/margin_32"
+            android:layout_marginTop="@dimen/marginleft_20"
+            android:background="@color/et_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="结束 : "/>
+
+            <TextView
+                android:id="@+id/text_end_time"
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="请选择时间"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="46dp"
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_down_time"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_alignParentBottom="true"
+        android:background="?colorPrimary"
+        android:text="@string/btn_down"
+        android:textColor="@color/text_white"/>
+
+</RelativeLayout>

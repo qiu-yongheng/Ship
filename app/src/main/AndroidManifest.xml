@@ -60,6 +60,8 @@
         <activity android:name=".view.actiivty.ImageActivity" android:launchMode="singleTask"/>
         <activity android:name=".view.actiivty.DatesListActivity"/>
         <activity android:name=".mvp.voyagedetail.VoyageListActivity"/>
+        <activity android:name=".mvp.constructionlog.ConstructionLogActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.downtime.DowntimeActivity" android:launchMode="singleTask"/>
 
 
         <activity

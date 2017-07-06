@@ -9,6 +9,7 @@
     <dimen name="item_margin">8dp</dimen>
     <dimen name="item_head_height">40dp</dimen>
     <dimen name="text_15sp">15sp</dimen>
+    <dimen name="text_20sp">20sp</dimen>
     <dimen name="item_sample_image_height">80dp</dimen>
     <dimen name="image_size">60dp</dimen>
     <dimen name="marginleft_20">20dp</dimen>
@@ -22,4 +23,8 @@
     <dimen name="item_height_54">54dp</dimen>
     <dimen name="btn_width_30">30dp</dimen>
     <dimen name="btn_height_81">81dp</dimen>
+    <dimen name="marginleft_75">75dp</dimen>
+    <dimen name="marginleft_44">44dp</dimen>
+    <dimen name="margin_35">35dp</dimen>
+    <dimen name="margin_32">32dp</dimen>
 </resources>

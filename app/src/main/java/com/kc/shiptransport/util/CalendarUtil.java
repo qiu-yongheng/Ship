@@ -344,4 +344,29 @@ public class CalendarUtil {
 
         datePickerDialog.show();
     }
+
+    /**
+     * 弹出时间选择器
+     * DateFormat.is24HourFormat(context) 判断
+     * @param context
+     * @param view
+     */
+    public static void showPickerDialog(final Context context, final TextView view, final String format, final OnTimePickerSureClickListener listener) {
+        final Calendar now = Calendar.getInstance();
+
+        // 显示时间选择器
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                now.set(Calendar.HOUR_OF_DAY, hour);
+                now.set(Calendar.MINUTE, minute);
+                SimpleDateFormat df = new SimpleDateFormat(format);
+                String format = df.format(now.getTime());
+                view.setText(format);
+                listener.onSure(format);
+            }
+        }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+
+        timePickerDialog.show();
+    }
 }

@@ -24,6 +24,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
     private static final String SHIPACCOUNT = "SHIPACCOUNT";
     private static final String ATTACHMENTCOUNT = "ATTACHMENTCOUNT";
     private static final String DEFALUTATTACHMENTCOUNT = "DEFALUTATTACHMENTCOUNT";
+    private static final String P_TYPE = "P_TYPE";
 
     private ScannerImgSelectFragment fragment;
     public int mTypeID;
@@ -32,6 +33,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
     public String mShipAccount;
     public int mAttachmentCount;
     public int mDefaulAttachmentCount;
+    public int p_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
         mShipAccount = bundle.getString(SHIPACCOUNT);
         mAttachmentCount = bundle.getInt(ATTACHMENTCOUNT);
         mDefaulAttachmentCount = bundle.getInt(DEFALUTATTACHMENTCOUNT);
+        p_type = bundle.getInt(P_TYPE);
 
 
         if (savedInstanceState != null) {
@@ -72,7 +75,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, int typeID, int subID, String title, String shipAccount, int AttachmentCount, int DefalutAttachmentCount) {
+    public static void startActivity(Context context, int typeID, int subID, String title, String shipAccount, int AttachmentCount, int DefalutAttachmentCount, int p_type) {
         Intent intent = new Intent(context, ScannerImgSelectActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(TYPEID, typeID);
@@ -81,6 +84,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
         bundle.putString(SHIPACCOUNT, shipAccount);
         bundle.putInt(ATTACHMENTCOUNT, AttachmentCount);
         bundle.putInt(DEFALUTATTACHMENTCOUNT, DefalutAttachmentCount);
+        bundle.putInt(P_TYPE, p_type);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

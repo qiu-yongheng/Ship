@@ -2,7 +2,9 @@ package com.kc.shiptransport.mvp.attendanceaudit;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,21 +43,44 @@ public class AttendanceAuditAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        AttendanceRecordList attendanceRecordList = list.get(position);
+        final AttendanceRecordList attendanceRecordList = list.get(position);
         String creatorName = attendanceRecordList.getCreatorName();
         String attendanceTypeName = attendanceRecordList.getAttendanceTypeName();
         String attendanceTime = attendanceRecordList.getAttendanceTime();
         String remark = attendanceRecordList.getRemark();
 
+        // 设置数据
         ((NormalHolder)holder).mTextName.setText(TextUtils.isEmpty(creatorName) ? "" : creatorName);
         ((NormalHolder)holder).mTextState.setText(TextUtils.isEmpty(attendanceTypeName) ? "" : attendanceTypeName);
         ((NormalHolder)holder).mTextDate.setText(TextUtils.isEmpty(attendanceTime) ? "" : attendanceTime);
         ((NormalHolder)holder).mTextRemark.setText(TextUtils.isEmpty(remark) ? "" : remark);
 
-        String audit_remark = ((NormalHolder) holder).mEtRemark.getText().toString().trim();
-        audit_remark = (TextUtils.isEmpty(audit_remark) || "添加备注".equals(audit_remark)) ? "" : audit_remark;
+        // 保存备注信息
+//        String audit_remark = ((NormalHolder) holder).mEtRemark.getText().toString().trim();
+//        audit_remark = (TextUtils.isEmpty(audit_remark) || "添加备注".equals(audit_remark)) ? "" : audit_remark;
+//
+        attendanceRecordList.setRemarkForCheck("");
 
-        attendanceRecordList.setRemarkForCheck(audit_remark);
+        // 监听EditText
+        ((NormalHolder) holder).mEtRemark.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String data = editable.toString();
+                data = (TextUtils.isEmpty(data) || "添加备注".equals(data)) ? "" : data;
+
+                attendanceRecordList.setRemarkForCheck(data);
+            }
+        });
 
         // 点击事件
         ((NormalHolder)holder).mBtnAgree.setOnClickListener(new View.OnClickListener() {
@@ -107,5 +132,17 @@ public class AttendanceAuditAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void setOnRecyclerViewItemClickListener(OnRecyclerviewItemClickListener listener) {
         this.listener = listener;
+    }
+
+    /**
+     * 删除数据
+     *
+     * @param pos
+     */
+    public void delete(int pos) {
+        // 从集合中删除
+        list.remove(pos);
+
+        notifyItemRemoved(pos);
     }
 }

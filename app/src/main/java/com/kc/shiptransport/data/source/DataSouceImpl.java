@@ -22,6 +22,7 @@ import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
@@ -528,4 +529,16 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<VoyageDetailBean> GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
+
+    /**
+     * 1.42 获取停工因素选项数据
+     * @return
+     */
+    Observable<List<StopOption>> GetStopOptions();
+
+    /**
+     * 1.43 提交施工日志（停工）数据
+     * @return
+     */
+    Observable<Boolean> InsertConstructionBoatStopDaily(int ItemID, String ShipAccount, String StartTime, String EndTime, String Creator, int StopTypeID);
 }

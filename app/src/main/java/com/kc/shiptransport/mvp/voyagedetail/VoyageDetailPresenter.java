@@ -6,6 +6,7 @@ import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.WeekTask;
 
+import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -50,40 +51,57 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
      * @param position
      */
     @Override
-    public void getVoyageDates(int position) {
+    public void getVoyageDates(int position, int type) {
         view.showLoading(true);
-        dataRepository
-                .getWeekTaskForPosition(position)
-                .subscribeOn(Schedulers.io())
-                .flatMap(new Function<WeekTask, ObservableSource<VoyageDetailBean>>() {
-                    @Override
-                    public ObservableSource<VoyageDetailBean> apply(@NonNull WeekTask weekTask) throws Exception {
-                        return dataRepository.GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(weekTask.getItemID());
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<VoyageDetailBean>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        compositeDisposable.add(d);
-                    }
+        Observable<VoyageDetailBean> observable = null;
+        if (type == 0) {
+            // 发送的是position
+            observable = dataRepository
+                    .getWeekTaskForPosition(position)
+                    .subscribeOn(Schedulers.io())
+                    .flatMap(new Function<WeekTask, ObservableSource<VoyageDetailBean>>() {
+                        @Override
+                        public ObservableSource<VoyageDetailBean> apply(@NonNull WeekTask weekTask) throws Exception {
+                            // 根据itemID获取信息完善数据
+                            return dataRepository.GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(weekTask.getItemID());
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread());
+        } else if (type == 1) {
+            // 发送的是itemID
+            observable = dataRepository
+                    .GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(position)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
+        }
 
-                    @Override
-                    public void onNext(@NonNull VoyageDetailBean bean) {
-                        view.showVoyageDates(bean);
-                    }
+        if (observable != null) {
+            observable
+                    .subscribe(new Observer<VoyageDetailBean>() {
+                        @Override
+                        public void onSubscribe(@NonNull Disposable d) {
+                            compositeDisposable.add(d);
+                        }
 
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        view.showLoading(false);
-                        view.showError(e.getMessage());
-                    }
+                        @Override
+                        public void onNext(@NonNull VoyageDetailBean bean) {
+                            view.showVoyageDates(bean);
+                        }
 
-                    @Override
-                    public void onComplete() {
-                        view.showLoading(false);
-                    }
-                });
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            view.showLoading(false);
+                            view.showError(e.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            view.showLoading(false);
+                        }
+                    });
+        } else {
+            view.showError("获取数据失败!");
+        }
     }
 
     /**
