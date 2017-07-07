@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
@@ -63,9 +65,11 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
+        List<User> all = DataSupport.findAll(User.class);
 
         // 获取数据
         presenter.getStopOptions();
+        presenter.getStartDate(CalendarUtil.getCurrentDate("yyyy-MM-dd"), all.get(0).getUserID());
         return view;
     }
 
@@ -85,22 +89,24 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         btnDownTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 开始时间
                 String startTime = textStartTime.getText().toString();
+                // 结束时间
                 String endTime = textEndTime.getText().toString();
                 List<User> users = DataSupport.findAll(User.class);
 
-                if (stopType != -1) {
+                if (stopType != -1 && !TextUtils.isEmpty(endTime) && !endTime.equals("请选择时间")) {
                     presenter.stop(0, users.get(0).getUserID(), startTime, endTime, users.get(0).getUserID(), stopType);
                 } else {
-                    Toast.makeText(getContext(), "停工因素未选择", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "停工因素或结束时间未选择", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        textEndTime.setOnClickListener(new View.OnClickListener() {
+        ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showPickerDialog(getContext(), textEndTime, "HH:mm", new OnTimePickerSureClickListener() {
+                CalendarUtil.showPickerDialog(getContext(), textEndTime, "yyyy-MM-dd HH:mm", new OnTimePickerSureClickListener() {
                     @Override
                     public void onSure(String str) {
 
@@ -169,8 +175,14 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     public void showStopResult(boolean isSuccess) {
         if (isSuccess) {
             Toast.makeText(getContext(), "停工成功", Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
         } else {
             Toast.makeText(getContext(), "停工失败, 请重试", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void showStartDate(LogCurrentDateBean bean) {
+        textStartTime.setText(bean.getStartTime());
     }
 }

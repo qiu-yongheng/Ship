@@ -3,6 +3,8 @@ package com.kc.shiptransport.data.source;
 import android.content.Context;
 
 import com.kc.shiptransport.data.bean.CommitImgListBean;
+import com.kc.shiptransport.data.bean.LogCurrentDateBean;
+import com.kc.shiptransport.data.bean.PartitionSBBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.bean.ScanCommitBean;
@@ -23,6 +25,7 @@ import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.down.StopOption;
+import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
@@ -462,7 +465,7 @@ public interface DataSouceImpl {
      * 1.27 提交考勤审核数据
      * @return
      */
-    Observable<Boolean> InsertAttendanceCheckRecord(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck);
+    Observable<Boolean> InsertAttendanceCheckRecord(List<AttendanceRecordList> list);
 
     /**
      * 1.36 提交量方图片数据
@@ -541,4 +544,26 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> InsertConstructionBoatStopDaily(int ItemID, String ShipAccount, String StartTime, String EndTime, String Creator, int StopTypeID);
+
+    /**
+     * 1.45 获取当天施工日志（开始时间默认值）
+     * @param CurrentDate
+     * @param CurrentBoatAccount
+     * @return
+     */
+    Observable<LogCurrentDateBean> GetConstructionBoatDefaultStartTime(String CurrentDate, String CurrentBoatAccount);
+
+    /**
+     * 根据账号, 获取抛沙分区
+     * @param userAccount
+     * @return
+     */
+    Observable<List<PartitionNum>> getPartitionNum(String userAccount);
+
+    /**
+     * 获取抛砂分区数据
+     * @param account
+     * @return
+     */
+    Observable<PartitionSBBean> getPartitionSBBean(String account);
 }

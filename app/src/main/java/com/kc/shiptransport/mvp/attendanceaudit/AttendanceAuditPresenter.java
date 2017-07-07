@@ -86,7 +86,11 @@ public class AttendanceAuditPresenter implements AttendanceAuditContract.Present
 
                     @Override
                     public void onNext(@NonNull List<AttendanceRecordList> list) {
-                        view.showAttendance(list);
+                        if (list.isEmpty()) {
+                            view.showError("没有考勤数据需要审核");
+                        } else {
+                            view.showAttendance(list);
+                        }
                     }
 
                     @Override
@@ -104,17 +108,12 @@ public class AttendanceAuditPresenter implements AttendanceAuditContract.Present
 
     /**
      * 提交考勤结果
-     * @param ItemID
-     * @param AttendanceID
-     * @param Creator
-     * @param Remark
-     * @param IsCheck
      */
     @Override
-    public void commitAudit(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck, final int position) {
+    public void commitAudit(List<AttendanceRecordList> list, final int position, final int type) {
         view.showLoading(true);
         dataRepository
-                .InsertAttendanceCheckRecord(ItemID, AttendanceID, Creator, Remark, IsCheck)
+                .InsertAttendanceCheckRecord(list)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
@@ -125,7 +124,13 @@ public class AttendanceAuditPresenter implements AttendanceAuditContract.Present
 
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
-                        view.showResult(aBoolean, position);
+                        if (type == 1) {
+                            // 批量提交
+                            view.showMutiResult(aBoolean);
+                        } else {
+                            // 单次提交
+                            view.showResult(aBoolean, position);
+                        }
                     }
 
                     @Override

@@ -1,12 +1,10 @@
-package com.kc.shiptransport.mvp.downtime;
+package com.kc.shiptransport.mvp.threadsand;
 
 import android.content.Context;
 
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
+import com.kc.shiptransport.data.bean.PartitionSBBean;
 import com.kc.shiptransport.data.source.DataRepository;
-import com.kc.shiptransport.db.down.StopOption;
-
-import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -17,21 +15,21 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author qiuyongheng
- * @time 2017/7/6  17:19
+ * @time 2017/7/7  8:50
  * @desc ${TODD}
  */
 
-public class DowntimePresenter implements DowntimeContract.Presenter{
+public class ThreadSandPresenter implements ThreadSandContract.Presenter{
     private final Context context;
-    private final DowntimeContract.View view;
+    private final ThreadSandContract.View view;
     private final DataRepository dataRepository;
     private final CompositeDisposable compositeDisposable;
 
-    public DowntimePresenter(Context context, DowntimeContract.View view, DataRepository dataRepository) {
+    public ThreadSandPresenter(Context context, ThreadSandContract.View view, DataRepository dataRepository) {
         this.context = context;
         this.view = view;
-        this.dataRepository = dataRepository;
         view.setPresenter(this);
+        this.dataRepository = dataRepository;
         compositeDisposable = new CompositeDisposable();
     }
 
@@ -46,37 +44,8 @@ public class DowntimePresenter implements DowntimeContract.Presenter{
     }
 
     @Override
-    public void getStopOptions() {
+    public void getDates(String CurrentDate, String CurrentBoatAccount) {
         view.showLoading(true);
-        dataRepository
-                .GetStopOptions()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<StopOption>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull List<StopOption> stopOptions) {
-                        view.showGetStopOptions(stopOptions);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        view.showLoading(false);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        view.showLoading(false);
-                    }
-                });
-    }
-
-    @Override
-    public void getStartDate(String CurrentDate, String CurrentBoatAccount) {
         dataRepository
                 .GetConstructionBoatDefaultStartTime(CurrentDate, CurrentBoatAccount)
                 .subscribeOn(Schedulers.io())
@@ -94,42 +63,42 @@ public class DowntimePresenter implements DowntimeContract.Presenter{
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        view.showError(e.getMessage());
+                        view.showLoading(false);
+                        view.showError(e.toString());
                     }
 
                     @Override
                     public void onComplete() {
-
+                        view.showLoading(false);
                     }
                 });
     }
 
     @Override
-    public void stop(int itemID, String userID, String startTime, String endTime, String id, int type) {
-        view.showLoading(true);
+    public void getPartition(String userID) {
         dataRepository
-                .InsertConstructionBoatStopDaily(itemID, userID, startTime, endTime, id, type)
+                .getPartitionSBBean(userID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Boolean>() {
+                .subscribe(new Observer<PartitionSBBean>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(@NonNull Boolean aBoolean) {
-                        view.showStopResult(aBoolean);
+                    public void onNext(@NonNull PartitionSBBean partitionSBBean) {
+                        view.showPartition(partitionSBBean);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        view.showLoading(false);
+
                     }
 
                     @Override
                     public void onComplete() {
-                        view.showLoading(false);
+
                     }
                 });
     }

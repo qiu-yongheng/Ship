@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.downtime;
 
+import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -16,10 +17,12 @@ public interface DowntimeContract {
     interface View extends BaseView<Presenter> {
         void showGetStopOptions(List<StopOption> stopOptions);
         void showStopResult(boolean isSuccess);
+        void showStartDate(LogCurrentDateBean bean);
     }
 
     interface Presenter extends BasePresenter {
         void getStopOptions();
+        void getStartDate(String CurrentDate, String CurrentBoatAccount);
         void stop(int itemID, String userID, String startTime, String endTime, String id, int type);
     }
 }

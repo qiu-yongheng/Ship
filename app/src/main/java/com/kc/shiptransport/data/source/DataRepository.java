@@ -10,11 +10,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.AppListBean;
+import com.kc.shiptransport.data.bean.AttendanceAuditCommitBean;
 import com.kc.shiptransport.data.bean.AttendanceTypeBean;
 import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.ConstructionBoatBean;
+import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.LoginResult;
+import com.kc.shiptransport.data.bean.PartitionSBBean;
 import com.kc.shiptransport.data.bean.RecordListBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleCommitResult;
@@ -49,6 +52,7 @@ import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.down.StopList;
 import com.kc.shiptransport.db.down.StopOption;
+import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.db.supply.SupplyDetail;
@@ -2413,22 +2417,26 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> InsertAttendanceCheckRecord(final int ItemID, final int AttendanceID, final String Creator, final String Remark, final int IsCheck) {
+    public Observable<Boolean> InsertAttendanceCheckRecord(final List<AttendanceRecordList> list) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                /** 解析数据 */
+                AttendanceAuditCommitBean commitBean = new AttendanceAuditCommitBean();
+                commitBean.setCreator(list.get(0).getCreator());
+                commitBean.setIsCheck(String.valueOf(list.get(0).getIsCheck()));
+
+                commitBean.setAttendanceCheckList(new ArrayList<AttendanceAuditCommitBean.AttendanceCheckListBean>());
+                for (AttendanceRecordList bean : list) {
+                    AttendanceAuditCommitBean.AttendanceCheckListBean listBean = new AttendanceAuditCommitBean.AttendanceCheckListBean();
+                    listBean.setItemID(String.valueOf(0));
+                    listBean.setAttendanceID(String.valueOf(bean.getItemID()));
+                    listBean.setRemark(bean.getRemark());
+                    commitBean.getAttendanceCheckList().add(listBean);
+                }
+
                 // 把数据解析成json
-                JSONArray jsonArray = new JSONArray();
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("ItemID", "");
-                jsonObject.put("AttendanceID", ItemID);
-                jsonObject.put("Creator", Creator);
-                jsonObject.put("Remark", Remark);
-                jsonObject.put("IsCheck", IsCheck);
-
-                jsonArray.put(jsonObject);
-
-                String json = jsonArray.toString();
+                String json = gson.toJson(commitBean);
 
                 Log.d("==", "考勤审核: " + json);
 
@@ -2755,6 +2763,94 @@ public class DataRepository implements DataSouceImpl {
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
 
                 e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.45 获取当天施工日志（开始时间默认值）
+     * @param CurrentDate
+     * @param CurrentBoatAccount
+     * @return
+     */
+    @Override
+    public Observable<LogCurrentDateBean> GetConstructionBoatDefaultStartTime(final String CurrentDate, final String CurrentBoatAccount) {
+        return Observable.create(new ObservableOnSubscribe<LogCurrentDateBean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<LogCurrentDateBean> e) throws Exception {
+                String result = mRemoteDataSource.GetConstructionBoatDefaultStartTime(CurrentDate, CurrentBoatAccount);
+
+                List<LogCurrentDateBean> list = gson.fromJson(result, new TypeToken<List<LogCurrentDateBean>>() {
+                }.getType());
+
+                if (list == null || list.isEmpty()) {
+                    e.onError(new RuntimeException("获取数据失败"));
+                } else {
+                    e.onNext(list.get(0));
+                }
+
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 根据账号, 获取抛沙分区
+     * @param userAccount
+     * @return
+     */
+    @Override
+    public Observable<List<PartitionNum>> getPartitionNum(final String userAccount) {
+        return Observable.create(new ObservableOnSubscribe<List<PartitionNum>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<PartitionNum>> e) throws Exception {
+                List<PartitionNum> numList = DataSupport.where("userAccount = ?", userAccount).find(PartitionNum.class);
+
+                if (numList.isEmpty()) {
+                    // 如果没有数据, 新增一条
+                    PartitionNum num = new PartitionNum();
+                    num.setUserAccount(userAccount);
+                    numList.add(num);
+
+                    DataSupport.saveAll(numList);
+
+                    e.onNext(numList);
+                } else {
+                    // 有数据, 返回
+                    e.onNext(numList);
+                }
+
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取抛砂分区数据
+     * @param account
+     * @return
+     */
+    @Override
+    public Observable<PartitionSBBean> getPartitionSBBean(final String account) {
+        return Observable.create(new ObservableOnSubscribe<PartitionSBBean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<PartitionSBBean> e) throws Exception {
+                List<PartitionNum> numList = DataSupport.where("userAccount = ?", account).find(PartitionNum.class);
+
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < numList.size(); i++) {
+                    sb.append(numList.get(i).getNum());
+                    if (i != (numList.size()-1)) {
+                        sb.append(";");
+                    }
+                }
+
+                PartitionSBBean sbBean = new PartitionSBBean();
+                sbBean.setPartition(sb.toString());
+                sbBean.setSize(numList.size());
+
+                e.onNext(sbBean);
                 e.onComplete();
             }
         });

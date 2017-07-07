@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.kc.shiptransport"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -66,4 +66,8 @@ dependencies {
     compile 'com.bm.photoview:library:1.4.1'
     // 友盟统计
     compile 'com.umeng.analytics:analytics:latest.integration'
+
+    //汉字转拼音，通讯录 https://github.com/promeG/TinyPinyin
+    compile 'com.github.promeg:tinypinyin:2.0.3' // TinyPinyin核心包，约80KB
+    compile 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3' // 可选，适用于Android的中国地区词典
 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.mvp.downtime.DowntimeActivity;
+import com.kc.shiptransport.mvp.threadsand.ThreadSandActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 
 import org.litepal.crud.DataSupport;
@@ -83,7 +84,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
         rlThrowSand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ThreadSandActivity.startActivity(getContext());
             }
         });
     }

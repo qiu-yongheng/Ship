@@ -115,6 +115,12 @@
     <string name="text_throw_sand">抛砂</string>
     <string name="title_construction">施工日志</string>
     <string name="btn_down">停工</string>
+    <string name="tv_hint">请选择</string>
+    <string name="title_thread_sand">抛砂记录</string>
+    <string name="btn_add">新增分区</string>
+    <string name="title_partition">施工分区</string>
+    <string name="attendance_select_all">全部选中</string>
+    <string name="attendance_unselect_all">取消全部选中</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

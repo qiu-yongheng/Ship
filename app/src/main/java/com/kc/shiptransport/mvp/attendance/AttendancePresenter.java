@@ -112,7 +112,7 @@ public class AttendancePresenter implements AttendanceContract.Presenter{
 
     @Override
     public void getTime() {
-        view.showTime(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"));
+        view.showTime(CalendarUtil.getCurrentDate("yyyy-MM-dd"));
     }
 
     @Override

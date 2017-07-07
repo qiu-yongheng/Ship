@@ -101,7 +101,7 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
         textTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showTimePickerDialog(getContext(), textTime);
+                CalendarUtil.showDatePickerDialog(getContext(), textTime);
             }
         });
     }

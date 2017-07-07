@@ -16,10 +16,11 @@ public interface AttendanceAuditContract {
     interface View extends BaseView<Presenter> {
         void showAttendance(List<AttendanceRecordList> list);
         void showResult(boolean isSuccess, int position);
+        void showMutiResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {
         void getAttendance();
-        void commitAudit(int ItemID, int AttendanceID, String Creator, String Remark, int IsCheck, int position);
+        void commitAudit(List<AttendanceRecordList> list, int position, int type);
     }
 }

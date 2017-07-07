@@ -8,7 +8,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,6 +22,8 @@ import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
 import java.util.List;
 
+import static org.litepal.LitePalApplication.getContext;
+
 /**
  * @author 邱永恒
  * @time 2017/6/28 23:34
@@ -26,6 +32,8 @@ import java.util.List;
 
 public class AttendanceAuditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
+    private final Animation showAnim;
+    private final Animation hideAnim;
     public List<AttendanceRecordList> list;
     private final LayoutInflater inflate;
     private OnRecyclerviewItemClickListener listener;
@@ -34,6 +42,10 @@ public class AttendanceAuditAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.context = context;
         this.list = list;
         this.inflate = LayoutInflater.from(context);
+
+        /** 初始化动画 */
+        showAnim = AnimationUtils.loadAnimation(getContext(), R.anim.view_show);
+        hideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.view_hide);
     }
 
     @Override
@@ -43,6 +55,7 @@ public class AttendanceAuditAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         final AttendanceRecordList attendanceRecordList = list.get(position);
         String creatorName = attendanceRecordList.getCreatorName();
         String attendanceTypeName = attendanceRecordList.getAttendanceTypeName();
@@ -56,10 +69,38 @@ public class AttendanceAuditAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         ((NormalHolder)holder).mTextRemark.setText(TextUtils.isEmpty(remark) ? "" : remark);
 
         // 保存备注信息
-//        String audit_remark = ((NormalHolder) holder).mEtRemark.getText().toString().trim();
-//        audit_remark = (TextUtils.isEmpty(audit_remark) || "添加备注".equals(audit_remark)) ? "" : audit_remark;
-//
         attendanceRecordList.setRemarkForCheck("");
+
+        /** 根据isSelect, 判断是否需要显示同意与不同意按钮 */
+        if (attendanceRecordList.getIsSelect() == 1) {
+            // 选中
+            ((NormalHolder)holder).mCbSelect.setChecked(true);
+//            ((NormalHolder)holder).mBtnAgree.setVisibility(View.GONE);
+//            ((NormalHolder)holder).mBtnNoAgree.setVisibility(View.GONE);
+        } else {
+            // 未选中
+            ((NormalHolder)holder).mCbSelect.setChecked(false);
+//            ((NormalHolder)holder).mBtnAgree.setVisibility(View.VISIBLE);
+//            ((NormalHolder)holder).mBtnNoAgree.setVisibility(View.VISIBLE);
+        }
+
+        /** 监听checkbar */
+        ((NormalHolder)holder).mCbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    attendanceRecordList.setIsSelect(1);
+                } else {
+                    attendanceRecordList.setIsSelect(0);
+                }
+
+                attendanceRecordList.save();
+
+                listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
+            }
+        });
+
+
 
         // 监听EditText
         ((NormalHolder) holder).mEtRemark.addTextChangedListener(new TextWatcher() {
@@ -112,6 +153,7 @@ public class AttendanceAuditAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         private final Button mBtnNoAgree;
         private final EditText mEtRemark;
         private final TextView mTextRemark;
+        private final CheckBox mCbSelect;
 
         public NormalHolder(View itemView) {
             super(itemView);
@@ -122,6 +164,7 @@ public class AttendanceAuditAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mBtnAgree = (Button) itemView.findViewById(R.id.btn_agree);
             mBtnNoAgree = (Button) itemView.findViewById(R.id.btn_no_agree);
             mEtRemark = (EditText) itemView.findViewById(R.id.et_remark);
+            mCbSelect = (CheckBox) itemView.findViewById(R.id.cb_select);
         }
     }
 
@@ -143,6 +186,7 @@ public class AttendanceAuditAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         // 从集合中删除
         list.remove(pos);
 
-        notifyItemRemoved(pos);
+        //notifyItemRemoved(pos);
+        notifyDataSetChanged();
     }
 }

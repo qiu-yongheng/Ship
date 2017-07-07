@@ -62,6 +62,8 @@
         <activity android:name=".mvp.voyagedetail.VoyageListActivity"/>
         <activity android:name=".mvp.constructionlog.ConstructionLogActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.downtime.DowntimeActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.threadsand.ThreadSandActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.partition.PartitionActivity" android:launchMode="singleTask"/>
 
 
         <activity

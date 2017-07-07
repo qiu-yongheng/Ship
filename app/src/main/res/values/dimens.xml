@@ -27,4 +27,9 @@
     <dimen name="marginleft_44">44dp</dimen>
     <dimen name="margin_35">35dp</dimen>
     <dimen name="margin_32">32dp</dimen>
+    <dimen name="marginleft_28">28dp</dimen>
+    <dimen name="tv_height">32dp</dimen>
+    <dimen name="margin_12">12dp</dimen>
+    <dimen name="margin_17">17dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
 </resources>

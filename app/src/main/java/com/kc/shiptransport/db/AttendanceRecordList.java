@@ -8,7 +8,7 @@ import org.litepal.crud.DataSupport;
  * @desc 考勤记录
  */
 
-public class AttendanceRecordList extends DataSupport{
+public class AttendanceRecordList extends DataSupport {
 
     /**
      * ItemID : 1009
@@ -34,6 +34,19 @@ public class AttendanceRecordList extends DataSupport{
     private int IsCheck;
     private String RemarkForCheck;
     private String SystemDateForCheck;
+
+    /**
+     * 标记是否选中, 选中, 不显示审核通过与不通过的按钮
+     */
+    private int isSelect = 0;
+
+    public int getIsSelect() {
+        return isSelect;
+    }
+
+    public void setIsSelect(int isSelect) {
+        this.isSelect = isSelect;
+    }
 
     public String getCreatorName() {
         return CreatorName;
