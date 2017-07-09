@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.partition.PartitionActivity;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -24,6 +27,7 @@ import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -97,18 +101,18 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
     @Override
     public void initListener() {
-//        /** 开始时间 */
-//        tvStartTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                CalendarUtil.showPickerDialog(getContext(), tvStartTime, "HH:mm", new OnTimePickerSureClickListener() {
-//                    @Override
-//                    public void onSure(String str) {
-//
-//                    }
-//                });
-//            }
-//        });
+        //        /** 开始时间 */
+        //        tvStartTime.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View view) {
+        //                CalendarUtil.showPickerDialog(getContext(), tvStartTime, "HH:mm", new OnTimePickerSureClickListener() {
+        //                    @Override
+        //                    public void onSure(String str) {
+        //
+        //                    }
+        //                });
+        //            }
+        //        });
         /** 结束时间 */
         tvEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +130,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         tvConstructionStratification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (popupWindow ==null || popupWindow.isShowing()) {
+                if (popupWindow != null && popupWindow.isShowing()) {
                     return;
                 }
 
@@ -137,7 +141,34 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                         .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
                             @Override
                             public void getChildView(View view, int layoutResId) {
+                                // 初始化控件
+                                RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycle_view);
 
+                                recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                final List<String> arr = new ArrayList<String>();
+
+                                for (int i = 0; i < 9; i++) {
+                                    arr.add(String.valueOf(i + 1));
+                                }
+
+                                ThreadSandAdapter adapter = new ThreadSandAdapter(getContext(), arr);
+                                adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position, int... type) {
+                                        tvConstructionStratification.setText(arr.get(position));
+                                        if (popupWindow != null) {
+                                            popupWindow.dismiss();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onItemLongClick(View view, int position) {
+
+                                    }
+                                });
+
+                                recycle_view.setAdapter(adapter);
                             }
                         })
                         .setOutsideTouchable(true)
