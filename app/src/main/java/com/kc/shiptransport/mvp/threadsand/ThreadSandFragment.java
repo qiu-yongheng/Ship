@@ -73,6 +73,8 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     private ThreadSandActivity activity;
     private ThreadSandContract.Presenter presenter;
     private CommonPopupWindow popupWindow;
+    private int measuredWidth;
+    private int measuredHeight;
 
     @Nullable
     @Override
@@ -126,6 +128,18 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             }
         });
         /** 施工分层 */
+        tvConstructionStratification.post(new Runnable() {
+            @Override
+            public void run() {
+                measuredWidth = tvConstructionStratification.getMeasuredWidth();
+                measuredHeight = tvConstructionStratification.getMeasuredHeight();
+
+                int width = tvConstructionStratification.getWidth();
+                int height = tvConstructionStratification.getHeight();
+            }
+        });
+
+
         // 单选
         tvConstructionStratification.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +150,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
                 popupWindow = new CommonPopupWindow.Builder(getContext())
                         .setView(R.layout.popup_down)
-                        .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .setWidthAndHeight(measuredWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
                         .setAnimationStyle(R.style.AnimDown)
                         .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
                             @Override
