@@ -124,6 +124,8 @@
     <string name="btn_down_log">停工日志</string>
     <string name="btn_scanner_all">搜索所有</string>
     <string name="title_down_log">停工日志</string>
+    <string name="btn_thread_sand_log">抛砂日志</string>
+    <string name="title_thread_sand_log">抛砂日志</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

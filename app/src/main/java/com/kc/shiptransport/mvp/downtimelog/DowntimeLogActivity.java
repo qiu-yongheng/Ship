@@ -16,12 +16,17 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class DowntimeLogActivity extends BaseActivity{
 
+    private static final String TYPE = "TYPE";
     private DowntimeLogFragment fragment;
+    public int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
+
+        Bundle bundle = getIntent().getExtras();
+        type = bundle.getInt(TYPE);
 
         if (savedInstanceState != null) {
             fragment = (DowntimeLogFragment) getSupportFragmentManager().getFragment(savedInstanceState, "DowntimeLogFragment");
@@ -47,9 +52,10 @@ public class DowntimeLogActivity extends BaseActivity{
         }
     }
 
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, int type) {
         Intent intent = new Intent(context, DowntimeLogActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

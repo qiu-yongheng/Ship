@@ -27,6 +27,7 @@ import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.partition.PartitionActivity;
+import com.kc.shiptransport.mvp.threadsandlog.ThreadSandLogActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
@@ -80,6 +81,8 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     @BindView(R.id.btn_commit)
     Button btnCommit;
     Unbinder unbinder;
+    @BindView(R.id.btn_thread_sand_log)
+    Button mBtnThreadSandLog;
     private ThreadSandActivity activity;
     private ThreadSandContract.Presenter presenter;
     private CommonPopupWindow popupWindow;
@@ -124,6 +127,15 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
     @Override
     public void initListener() {
+        /** 抛砂日志 */
+        mBtnThreadSandLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ThreadSandLogActivity.startActivity(getContext());
+            }
+        });
+
+
         /** 结束时间 */
         tvEndTime.setOnClickListener(new View.OnClickListener() {
             @Override

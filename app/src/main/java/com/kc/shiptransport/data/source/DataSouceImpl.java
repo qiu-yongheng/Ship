@@ -12,6 +12,7 @@ import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
+import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.AttendanceRecordList;
@@ -592,4 +593,17 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<DownLogBean>> GetConstructionBoatStopDaily(int ItemID, String ShipAccount, String StartTime, String EndTime, String StopTypeID, String Creator);
+
+    /**
+     * 1.48	 获取施工日志（抛砂）数据
+     * @param ItemID
+     * @param ShipAccount
+     * @param StartTime
+     * @param EndTime
+     * @param Creator
+     * @return
+     */
+    Observable<List<ThreadSandLogBean>> GetConstructionBoatThrowingSandList(int ItemID, String ShipAccount, String StartTime, String EndTime, String Creator);
+
+
 }

@@ -19,12 +19,14 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
+import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 
 import org.litepal.crud.DataSupport;
@@ -65,6 +67,10 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
     Button btnScannerAll;
     @BindView(R.id.btn_reset)
     Button btnReset;
+    @BindView(R.id.tv_title)
+    TextView mTvTitle;
+    @BindView(R.id.tv_divi)
+    TextView mTvDivi;
     private DowntimeLogContract.Presenter presenter;
     private DowntimeLogActivity activity;
     private boolean show = true;
@@ -78,6 +84,8 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
     private ConstructionBoatAdapter boatAdapter;
     private String shipNum = "";
     private DowntimeLogAdapter logAdapter;
+    private int mType;
+    private ThreadLogAdapter threadAdapter;
 
     @Nullable
     @Override
@@ -86,6 +94,9 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
+
+        /** 获取类型 */
+        mType = activity.type;
 
         // TODO
         return view;
@@ -100,6 +111,22 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
         /** 初始化动画 */
         showAnim = AnimationUtils.loadAnimation(getContext(), R.anim.view_show);
         hideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.view_hide);
+
+        /** 设置标题 */
+        switch (mType) {
+            case SettingUtil.TYPE_STOP:
+                /** 停工 */
+                mTvTitle.setText(R.string.title_down_log);
+                break;
+            case SettingUtil.TYPE_THREAD:
+                /** 抛砂 */
+                mTvTitle.setText(R.string.title_thread_sand_log);
+
+                // 隐藏停工因素
+                tvTypeId.setVisibility(View.GONE);
+                mTvDivi.setVisibility(View.GONE);
+                break;
+        }
     }
 
     @Override
@@ -113,7 +140,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
 
                 List<User> all = DataSupport.findAll(User.class);
 
-                presenter.scanner(0, shipNum, startTime, endTime, String.valueOf(typeID == 0 ? "" : typeID), all.get(0).getUserID());
+                presenter.scanner(0, shipNum, startTime, endTime, String.valueOf(typeID == 0 ? "" : typeID), all.get(0).getUserID(), mType);
             }
         });
 
@@ -121,7 +148,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
         btnScannerAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.scanner(0, "", "", "", "", "");
+                presenter.scanner(0, "", "", "", "", "", mType);
                 Toast.makeText(getContext(), "搜索所有", Toast.LENGTH_SHORT).show();
             }
         });
@@ -316,6 +343,10 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
         unbinder.unbind();
     }
 
+    /**
+     * 停工日志
+     * @param list
+     */
     @Override
     public void showLog(List<DownLogBean> list) {
         if (logAdapter == null) {
@@ -336,6 +367,21 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
         } else {
             logAdapter.setDates(list);
             logAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 抛砂日志
+     * @param list
+     */
+    @Override
+    public void showThreadLog(List<ThreadSandLogBean> list) {
+        if (threadAdapter == null) {
+            threadAdapter = new ThreadLogAdapter(getContext(), list);
+            recyclerview.setAdapter(threadAdapter);
+        } else {
+            threadAdapter.setDates(list);
+            threadAdapter.notifyDataSetChanged();
         }
     }
 }

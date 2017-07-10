@@ -10,10 +10,10 @@
 
         <TextView
             style="@style/text_title_w"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/title_down_log"/>
+            android:gravity="center"/>
 
         <Button
             android:id="@+id/btn_scanner_all"
@@ -29,8 +29,10 @@
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <include layout="@layout/view_divi"/>
 
@@ -107,6 +109,7 @@
                     android:hint="请选择停工原因"/>
 
                 <TextView
+                    android:id="@+id/tv_divi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_10"

@@ -32,6 +32,7 @@ import com.kc.shiptransport.data.bean.SubmitBean;
 import com.kc.shiptransport.data.bean.TaskVolumeBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
+import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
@@ -2914,6 +2915,31 @@ public class DataRepository implements DataSouceImpl {
                 String result = mRemoteDataSource.GetConstructionBoatStopDaily(ItemID, ShipAccount, StartTime, EndTime, StopTypeID, Creator);
 
                 List<DownLogBean> list = gson.fromJson(result, new TypeToken<List<DownLogBean>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.48	 获取施工日志（抛砂）数据
+     * @param ItemID
+     * @param ShipAccount
+     * @param StartTime
+     * @param EndTime
+     * @param Creator
+     * @return
+     */
+    @Override
+    public Observable<List<ThreadSandLogBean>> GetConstructionBoatThrowingSandList(final int ItemID, final String ShipAccount, final String StartTime, final String EndTime, final String Creator) {
+        return Observable.create(new ObservableOnSubscribe<List<ThreadSandLogBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<ThreadSandLogBean>> e) throws Exception {
+                String result = mRemoteDataSource.GetConstructionBoatThrowingSandList(ItemID, ShipAccount, StartTime, EndTime, Creator);
+
+                List<ThreadSandLogBean> list = gson.fromJson(result, new TypeToken<List<ThreadSandLogBean>>() {
                 }.getType());
 
                 e.onNext(list);

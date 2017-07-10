@@ -81,6 +81,11 @@ public class SettingUtil {
     public static final int TYPE_SAMPLE = 6;
     /* 分包商航次信息扫描件 */
     public static final int TYPE_SCANNER = 7;
+    /* 停工 */
+    public static final int TYPE_STOP = 8;
+    /* 抛砂 */
+    public static final int TYPE_THREAD = 9;
+
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 
     /*-----------------------------------------------扫描件类型--------------------------------------------------*/

@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.downtimelog;
 
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
+import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -15,9 +16,10 @@ import java.util.List;
 public interface DowntimeLogContract {
     interface View extends BaseView<Presenter> {
         void showLog(List<DownLogBean> list);
+        void showThreadLog(List<ThreadSandLogBean> list);
     }
 
     interface Presenter extends BasePresenter {
-        void scanner(int ItemID, String ShipAccount, String StartTime, String EndTime, String StopTypeID, String Creator);
+        void scanner(int ItemID, String ShipAccount, String StartTime, String EndTime, String StopTypeID, String Creator, int type);
     }
 }
