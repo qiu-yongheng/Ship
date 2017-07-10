@@ -38,6 +38,9 @@ public class SettingUtil {
     /* 通用 */
     public static final String WEEK_JUMP_BASE = "jump_week_base";
 
+    /* 施工日志选择船舶position */
+    public static final String LOG_SHIP_POSITION = "LOG_SHIP_POSITION";
+
     /*---------------------------------------------------holder控件类型---------------------------------------------------*/
     /* sample */
     public static final int HOLDER_IMAGE_1 = 101;

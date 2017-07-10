@@ -88,6 +88,7 @@ public class AttendanceAuditPresenter implements AttendanceAuditContract.Present
                     public void onNext(@NonNull List<AttendanceRecordList> list) {
                         if (list.isEmpty()) {
                             view.showError("没有考勤数据需要审核");
+                            view.showAttendance(list);
                         } else {
                             view.showAttendance(list);
                         }

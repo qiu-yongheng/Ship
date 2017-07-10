@@ -25,12 +25,13 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_marginLeft="20dp"
                     style="@style/text_40"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="船名 : "/>
 
-                <TextView
+                <Spinner
                     android:id="@+id/text_ship_name"
                     style="@style/text_40"
                     android:layout_width="wrap_content"
@@ -71,9 +72,9 @@
 
             <RelativeLayout
                 android:id="@+id/rl_stop"
-                android:layout_marginLeft="@dimen/marginleft_75"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_75"
                 android:layout_weight="1">
 
                 <ImageView
@@ -93,10 +94,10 @@
 
             <RelativeLayout
                 android:id="@+id/rl_throw_sand"
-                android:layout_marginLeft="@dimen/marginleft_44"
-                android:layout_marginRight="@dimen/marginleft_75"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_44"
+                android:layout_marginRight="@dimen/marginleft_75"
                 android:layout_weight="1">
 
                 <ImageView

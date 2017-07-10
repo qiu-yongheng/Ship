@@ -4,8 +4,10 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,22 +19,30 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
+import com.kc.shiptransport.db.ConstructionBoat;
+import com.kc.shiptransport.db.partition.PartitionNum;
+import com.kc.shiptransport.db.threadsand.Layered;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.partition.PartitionActivity;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
 
 /**
  * @author qiuyongheng
@@ -75,6 +85,10 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     private CommonPopupWindow popupWindow;
     private int measuredWidth;
     private int measuredHeight;
+    private final String HINT = "请选择";
+    private ThreadSandAdapter adapter;
+    private int layoutID;
+    private ConstructionBoat boat;
 
     @Nullable
     @Override
@@ -84,12 +98,19 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         initViews(view);
         initListener();
 
-        List<User> all = DataSupport.findAll(User.class);
+        // 设置当前施工船舶
+        List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+        int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+        boat = all.get(position - 1);
+
+
         // 获取开始时间
-        presenter.getDates(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"), all.get(0).getUserID());
+        presenter.getDates(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"), boat.getShipNum());
 
         // 获取施工分区
-        presenter.getPartition(all.get(0).getUserID());
+        presenter.getPartition(boat.getShipNum());
+
+        //
         return view;
     }
 
@@ -103,18 +124,6 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
     @Override
     public void initListener() {
-        //        /** 开始时间 */
-        //        tvStartTime.setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View view) {
-        //                CalendarUtil.showPickerDialog(getContext(), tvStartTime, "HH:mm", new OnTimePickerSureClickListener() {
-        //                    @Override
-        //                    public void onSure(String str) {
-        //
-        //                    }
-        //                });
-        //            }
-        //        });
         /** 结束时间 */
         tvEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,9 +142,6 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             public void run() {
                 measuredWidth = tvConstructionStratification.getMeasuredWidth();
                 measuredHeight = tvConstructionStratification.getMeasuredHeight();
-
-                int width = tvConstructionStratification.getWidth();
-                int height = tvConstructionStratification.getHeight();
             }
         });
 
@@ -158,19 +164,17 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                                 // 初始化控件
                                 RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycle_view);
 
-                                recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
+                                recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-                                final List<String> arr = new ArrayList<String>();
+                                // 获取数据
+                                final List<Layered> arr = DataSupport.order("SortNum asc").find(Layered.class);
 
-                                for (int i = 0; i < 9; i++) {
-                                    arr.add(String.valueOf(i + 1));
-                                }
-
-                                ThreadSandAdapter adapter = new ThreadSandAdapter(getContext(), arr);
+                                adapter = new ThreadSandAdapter(getContext(), arr);
                                 adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                                     @Override
                                     public void onItemClick(View view, int position, int... type) {
-                                        tvConstructionStratification.setText(arr.get(position));
+                                        layoutID = arr.get(position).getItemID();
+                                        tvConstructionStratification.setText(arr.get(position).getLayerName());
                                         if (popupWindow != null) {
                                             popupWindow.dismiss();
                                         }
@@ -197,6 +201,83 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             @Override
             public void onClick(View view) {
                 PartitionActivity.startActivity(getContext());
+            }
+        });
+
+        /** 提交 */
+        btnCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (boat == null) {
+                    List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+                    int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+                    boat = all.get(position - 1);
+                }
+
+
+                // 账号
+                List<User> all = DataSupport.findAll(User.class);
+                // 施工分区
+                List<PartitionNum> numList = DataSupport.findAll(PartitionNum.class);
+                // 开始时间
+                String startTime = tvStartTime.getText().toString();
+                // 结束时间
+                String endTime = tvEndTime.getText().toString();
+                // 供砂航次
+                String sandVoyage = etSandVoyage.getText().toString();
+                // 施工分层
+                String stratification = tvConstructionStratification.getText().toString();
+                // 工程量
+                String quantity = etEngineeringQuantity.getText().toString();
+                // 备注
+                String remark = etRemark.getText().toString();
+                remark = remark.equals("添加备注") ? "" : remark;
+
+
+                if (!endTime.equals(HINT) &&
+                        !TextUtils.isEmpty(endTime) &&
+                        !stratification.equals(HINT) &&
+                        !TextUtils.isEmpty(stratification) &&
+                        !sandVoyage.equals(HINT) &&
+                        !TextUtils.isEmpty(sandVoyage) &&
+                        !numList.isEmpty() &&
+                        !TextUtils.isEmpty(quantity)) {
+
+                    try {
+
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("ItemID", 0);
+                        jsonObject.put("ShipAccount", boat.getShipNum());
+                        jsonObject.put("Layered", layoutID);
+                        jsonObject.put("ShipItemNum", sandVoyage);
+                        jsonObject.put("StartTime", startTime);
+                        jsonObject.put("EndTime", endTime);
+                        jsonObject.put("Quantity", quantity);
+                        jsonObject.put("Creator", all.get(0).getUserID());
+                        jsonObject.put("Remark", remark);
+
+                        JSONArray jsonArray = new JSONArray();
+                        for (PartitionNum bean : numList) {
+                            JSONObject object = new JSONObject();
+                            object.put("ItemID", 0);
+                            object.put("PartitionName", bean.getNum());
+                            jsonArray.put(object);
+                        }
+                        jsonObject.put("ThrowingSandPartitionList", jsonArray);
+
+                        String json = jsonObject.toString();
+
+                        Log.d("==", "抛砂提交: " + json);
+
+                        presenter.commit(json);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "还有数据未填写", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -237,11 +318,47 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         tvStartTime.setText(bean.getStartTime());
         // 施工船舶
         //tvShipName.setText(bean.getShipName());
+
+
+        // 详细信息
+        List<User> users = DataSupport.findAll(User.class);
+        // 记录人
+        tvRecord.setText(users.get(0).getUserName());
+        // 施工船舶
+        tvShipName.setText(bean.getShipName());
+        // 船舶类型
+        tvShipType.setText(bean.getShipType());
+        // 潮水
+        tvTideWather.setText(bean.getCurrentTide());
+        // 船次
+        etSandVoyage.setText(bean.getShipItemNum());
     }
 
     @Override
     public void showPartition(PartitionSBBean bean) {
         tvConstructionDevision.setText(bean.getPartition());
         tvDevisionNum.setText(String.valueOf(bean.getSize()));
+    }
+
+    @Override
+    public void showCommitResult(boolean isSuccess) {
+        if (isSuccess) {
+            Toast.makeText(getContext(), "提交成功", Toast.LENGTH_SHORT).show();
+            // 删除
+            DataSupport.deleteAll(PartitionNum.class);
+
+            getActivity().onBackPressed();
+        } else {
+            Toast.makeText(getContext(), "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            // 获取施工分区
+            presenter.getPartition(boat.getShipNum());
+        }
     }
 }

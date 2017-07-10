@@ -308,6 +308,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
      */
     @Override
     public void getSubcontractorList() {
+        view.showLoading(true);
         Observable.create(new ObservableOnSubscribe<List<SubcontractorList>>() {
             @Override
             public void subscribe(ObservableEmitter<List<SubcontractorList>> e) throws Exception {
@@ -333,12 +334,13 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        view.showLoading(false);
+                        view.showError("获取数据失败");
                     }
 
                     @Override
                     public void onComplete() {
-
+                        view.showLoading(false);
                     }
                 });
     }

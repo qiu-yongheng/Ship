@@ -15,10 +15,12 @@ public interface ThreadSandContract {
     interface View extends BaseView<Presenter> {
         void showStartDate(LogCurrentDateBean bean);
         void showPartition(PartitionSBBean bean);
+        void showCommitResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {
         void getDates(String CurrentDate, String CurrentBoatAccount);
         void getPartition(String userID);
+        void commit(String json);
     }
 }

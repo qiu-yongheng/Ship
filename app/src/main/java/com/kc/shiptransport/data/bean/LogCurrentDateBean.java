@@ -19,6 +19,33 @@ public class LogCurrentDateBean {
     private String ShipName;
     private String StartTime;
     private Object EndTime;
+    private String ShipType;
+    private String CurrentTide; // 潮水
+    private String ShipItemNum; // 船次
+
+    public String getShipItemNum() {
+        return ShipItemNum;
+    }
+
+    public void setShipItemNum(String shipItemNum) {
+        ShipItemNum = shipItemNum;
+    }
+
+    public String getShipType() {
+        return ShipType;
+    }
+
+    public void setShipType(String shpiType) {
+        ShipType = shpiType;
+    }
+
+    public String getCurrentTide() {
+        return CurrentTide;
+    }
+
+    public void setCurrentTide(String currentTide) {
+        CurrentTide = currentTide;
+    }
 
     public String getShipAccount() {
         return ShipAccount;

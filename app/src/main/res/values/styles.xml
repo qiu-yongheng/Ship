@@ -30,6 +30,12 @@
         <item name="android:textSize">@dimen/text_15sp</item>
     </style>
 
+    <!--标题文字-->
+    <style name="text_title_w">
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:textSize">@dimen/text_15sp</item>
+    </style>
+
     <!--施工日志-->
     <style name="text_40">
         <item name="android:textColor">@color/text_tag_gray</item>
@@ -40,6 +46,12 @@
     <style name="AnimDown" parent="@android:style/Animation">
         <item name="android:windowEnterAnimation">@anim/push_scale_in</item>
         <item name="android:windowExitAnimation">@anim/push_scale_out</item>
+    </style>
+
+    <!--popunwindow anim-->
+    <style name="AnimUp" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/up_scale_in</item>
+        <item name="android:windowExitAnimation">@anim/up_scale_out</item>
     </style>
 
 </resources>

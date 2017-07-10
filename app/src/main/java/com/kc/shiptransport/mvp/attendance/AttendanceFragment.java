@@ -203,6 +203,7 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
     public void showResult(boolean isSuccess) {
         if (isSuccess) {
             Toast.makeText(getContext(), "提交成功", Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
         } else {
             Toast.makeText(getContext(), "提交失败, 请重试", Toast.LENGTH_SHORT).show();
         }

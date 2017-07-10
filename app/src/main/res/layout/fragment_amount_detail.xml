@@ -36,7 +36,7 @@
                 android:singleLine="true"
                 android:text="天力8899"
                 android:textColor="#fff"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/text_15sp"/>
 
             <TextView
                 android:layout_marginLeft="10dp"
@@ -47,7 +47,7 @@
                 android:singleLine="true"
                 android:text="船次: 20170601"
                 android:textColor="#fff"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/text_15sp"/>
         </LinearLayout>
 
         <TextView
@@ -58,7 +58,7 @@
             android:layout_marginTop="0dp"
             android:text="供应商: XXX"
             android:textColor="#fff"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_15sp"/>
 
         <TextView
             android:id="@+id/tv_total_voyage"
@@ -68,7 +68,7 @@
             android:layout_marginTop="2dp"
             android:text="累计完成航次: 0次"
             android:textColor="#fff"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_15sp"/>
 
         <TextView
             android:id="@+id/tv_total_value"
@@ -78,7 +78,7 @@
             android:layout_marginTop="2dp"
             android:text="累计完成方量: 0㎡"
             android:textColor="#fff"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_15sp"/>
 
         <TextView
             android:id="@+id/tv_avg_value"
@@ -88,7 +88,7 @@
             android:layout_marginTop="2dp"
             android:text="平均航次方量: 0㎡"
             android:textColor="#fff"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_15sp"/>
 
         <TextView
             android:id="@+id/tv_warehouse_space"
@@ -98,7 +98,7 @@
             android:layout_marginTop="2dp"
             android:text="@string/text_warehouse_space"
             android:textColor="#fff"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_15sp"/>
     </LinearLayout>
 
 
@@ -117,6 +117,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -125,15 +126,15 @@
                 android:paddingTop="5dp">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="right"
                     android:text="@string/text_detain_spance"
                     android:textColor="#000"
-                    android:textSize="20sp"/>
+                    android:textSize="@dimen/text_15sp"/>
 
                 <EditText
+                    android:textSize="@dimen/text_15sp"
                     android:id="@+id/et_ship_volume"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -143,6 +144,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -151,15 +153,15 @@
                 android:paddingTop="5dp">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="right"
-                    android:text="甲板方: "
+                    android:text="甲  板  方: "
                     android:textColor="#000"
-                    android:textSize="20sp"/>
+                    android:textSize="@dimen/text_15sp"/>
 
                 <EditText
+                    android:textSize="@dimen/text_15sp"
                     android:id="@+id/et_deck_volume"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -169,6 +171,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -177,13 +180,12 @@
                 android:paddingTop="5dp">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="right"
-                    android:text="合计方: "
+                    android:text="合  计  方: "
                     android:textColor="#000"
-                    android:textSize="20sp"/>
+                    android:textSize="@dimen/text_15sp"/>
 
                 <TextView
                     android:id="@+id/tv_total_volume"
@@ -192,10 +194,11 @@
                     android:layout_weight="2"
                     android:gravity="center"
                     android:textColor="#000"
-                    android:textSize="22sp"/>
+                    android:textSize="@dimen/text_15sp"/>
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -205,13 +208,12 @@
 
                 <TextView
                     android:id="@+id/textView"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="right"
                     android:text="@string/text_amount_time"
                     android:textColor="#000"
-                    android:textSize="22sp"/>
+                    android:textSize="@dimen/text_15sp"/>
 
                 <TextView
                     android:id="@+id/tv_supply_time"
@@ -224,10 +226,11 @@
                     android:padding="5dp"
                     android:text="gaga"
                     android:textColor="#000"
-                    android:textSize="22sp"/>
+                    android:textSize="@dimen/text_15sp"/>
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -236,13 +239,12 @@
                 android:paddingTop="5dp">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="right"
                     android:text="@string/text_amount_photo"
                     android:textColor="#000"
-                    android:textSize="22sp"/>
+                    android:textSize="@dimen/text_15sp"/>
 
                 <TextView
                     android:visibility="invisible"
@@ -255,12 +257,12 @@
                     android:padding="5dp"
                     android:text="gaga"
                     android:textColor="#000"
-                    android:textSize="22sp"/>
+                    android:textSize="@dimen/text_15sp"/>
             </LinearLayout>
 
 
             <android.support.v7.widget.RecyclerView
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_marginTop="10dp"
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"

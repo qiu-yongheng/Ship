@@ -124,8 +124,10 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * @param pos
      */
     public void add (int pos) {
+        // 创建一个新的数据, 保存用户名
         PartitionNum num = new PartitionNum();
         num.setUserAccount(list.get(0).getUserAccount());
+
         List<PartitionNum> all = DataSupport.findAll(PartitionNum.class);
 
         if (all.isEmpty()) {
@@ -134,11 +136,14 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // 获取最后一个
             PartitionNum partitionNum = all.get(all.size() - 1);
             String s = partitionNum.getNum();
-            StringBuffer sb = new StringBuffer(s);
 
-            sb.deleteCharAt(sb.length() - 1);
+            if (!TextUtils.isEmpty(s)) {
+                StringBuffer sb = new StringBuffer(s);
 
-            num.setNum(sb.toString());
+                sb.deleteCharAt(sb.length() - 1);
+
+                num.setNum(sb.toString());
+            }
             list.add(pos, num);
         }
 

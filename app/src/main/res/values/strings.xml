@@ -37,7 +37,7 @@
     <string name="text_material_ordar">材料分类</string>
     <string name="title_voyage">船次记录表</string>
     <string name="text_warehouse_space">舱容:</string>
-    <string name="text_detain_spance">扣方:</string>
+    <string name="text_detain_spance">"扣        方:"</string>
     <string name="text_amount_time">量方时间:</string>
     <string name="title_amount_detail">量方管理</string>
     <string name="text_batch">BATCH:</string>
@@ -121,6 +121,9 @@
     <string name="title_partition">施工分区</string>
     <string name="attendance_select_all">全部选中</string>
     <string name="attendance_unselect_all">取消全部选中</string>
+    <string name="btn_down_log">停工日志</string>
+    <string name="btn_scanner_all">搜索所有</string>
+    <string name="title_down_log">停工日志</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

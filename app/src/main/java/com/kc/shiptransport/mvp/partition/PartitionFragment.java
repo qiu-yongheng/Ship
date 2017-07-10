@@ -15,10 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.partition.PartitionNum;
-import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -45,6 +47,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     private PartitionActivity activity;
     private PartitionAdapter adapter;
     private PartitionContract.Presenter presenter;
+    private ConstructionBoat boat;
 
     @Nullable
     @Override
@@ -54,8 +57,12 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         initViews(view);
         initListener();
 
-        List<User> all = DataSupport.findAll(User.class);
-        presenter.getList(all.get(0).getUserID());
+        // 设置当前施工船舶
+        List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+        int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+        boat = all.get(position - 1);
+
+        presenter.getList(boat.getShipNum());
         return view;
     }
 

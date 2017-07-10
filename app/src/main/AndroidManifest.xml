@@ -64,6 +64,7 @@
         <activity android:name=".mvp.downtime.DowntimeActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.threadsand.ThreadSandActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.partition.PartitionActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.downtimelog.DowntimeLogActivity" android:launchMode="singleTask"/>
 
 
         <activity

@@ -14,7 +14,6 @@ import com.kc.shiptransport.data.bean.AttendanceAuditCommitBean;
 import com.kc.shiptransport.data.bean.AttendanceTypeBean;
 import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
-import com.kc.shiptransport.data.bean.ConstructionBoatBean;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.LoginResult;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
@@ -32,6 +31,7 @@ import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
 import com.kc.shiptransport.data.bean.TaskVolumeBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
+import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
@@ -56,6 +56,7 @@ import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.db.supply.SupplyDetail;
+import com.kc.shiptransport.db.threadsand.Layered;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
@@ -1480,18 +1481,13 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 String result = mRemoteDataSource.GetConstructionBoat();
-                List<ConstructionBoatBean> list = gson.fromJson(result, new TypeToken<List<ConstructionBoatBean>>() {
+                List<ConstructionBoat> list = gson.fromJson(result, new TypeToken<List<ConstructionBoat>>() {
                 }.getType());
 
                 if (!list.isEmpty()) {
                     DataSupport.deleteAll(ConstructionBoat.class);
                     // 保存到数据库
-                    for (ConstructionBoatBean boatBean : list) {
-                        ConstructionBoat boat = new ConstructionBoat();
-                        boat.setShipNum(boatBean.getShipNum());
-                        boat.setShipName(boatBean.getShipName());
-                        boat.save();
-                    }
+                    DataSupport.saveAll(list);
                 }
 
                 e.onNext(true);
@@ -2851,6 +2847,76 @@ public class DataRepository implements DataSouceImpl {
                 sbBean.setSize(numList.size());
 
                 e.onNext(sbBean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.46 提交施工日志（抛砂）数据
+     * @param json
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertConstructionBoatThrowingSandRecord(final String json) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.InsertConstructionBoatThrowingSandRecord(json);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取抛砂分层
+     * @return
+     */
+    @Override
+    public Observable<Boolean> GetConstructionLayerOptions() {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.GetConstructionLayerOptions();
+
+                List<Layered> list = gson.fromJson(result, new TypeToken<List<Layered>>() {
+                }.getType());
+
+                DataSupport.deleteAll(Layered.class);
+
+                DataSupport.saveAll(list);
+
+                e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.44 获取施工日志（停工）数据
+     * @param ItemID
+     * @param ShipAccount
+     * @param StartTime
+     * @param EndTime
+     * @param StopTypeID
+     * @param Creator
+     * @return
+     */
+    @Override
+    public Observable<List<DownLogBean>> GetConstructionBoatStopDaily(final int ItemID, final String ShipAccount, final String StartTime, final String EndTime, final String StopTypeID, final String Creator) {
+        return Observable.create(new ObservableOnSubscribe<List<DownLogBean>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<DownLogBean>> e) throws Exception {
+                String result = mRemoteDataSource.GetConstructionBoatStopDaily(ItemID, ShipAccount, StartTime, EndTime, StopTypeID, Creator);
+
+                List<DownLogBean> list = gson.fromJson(result, new TypeToken<List<DownLogBean>>() {
+                }.getType());
+
+                e.onNext(list);
                 e.onComplete();
             }
         });

@@ -238,6 +238,7 @@ public class AmountPresenter implements AmountContract.Presenter{
 
     @Override
     public void getSubcontractor() {
+        view.showLoading(true);
         Observable.create(new ObservableOnSubscribe<List<SubcontractorList>>() {
             @Override
             public void subscribe(ObservableEmitter<List<SubcontractorList>> e) throws Exception {
@@ -253,7 +254,7 @@ public class AmountPresenter implements AmountContract.Presenter{
                 .subscribe(new Observer<List<SubcontractorList>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        compositeDisposable.add(d);
                     }
 
                     @Override
@@ -263,12 +264,13 @@ public class AmountPresenter implements AmountContract.Presenter{
 
                     @Override
                     public void onError(Throwable e) {
-
+                        view.showLoading(false);
+                        view.showError("获取数据失败");
                     }
 
                     @Override
                     public void onComplete() {
-
+                        view.showLoading(false);
                     }
                 });
     }

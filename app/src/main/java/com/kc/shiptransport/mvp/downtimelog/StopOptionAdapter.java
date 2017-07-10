@@ -1,4 +1,4 @@
-package com.kc.shiptransport.mvp.threadsand;
+package com.kc.shiptransport.mvp.downtimelog;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.threadsand.Layered;
+import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
 import java.util.List;
@@ -19,13 +19,13 @@ import java.util.List;
  * @desc ${TODO}
  */
 
-public class ThreadSandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class StopOptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
-    public List<Layered> list;
+    public List<StopOption> list;
     private final LayoutInflater inflate;
     private OnRecyclerviewItemClickListener listener;
 
-    public ThreadSandAdapter(Context context, List<Layered> list) {
+    public StopOptionAdapter(Context context, List<StopOption> list) {
         this.context = context;
         this.list = list;
         this.inflate = LayoutInflater.from(context);
@@ -38,9 +38,9 @@ public class ThreadSandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        Layered layered = list.get(position);
+        StopOption stopOption = list.get(position);
 
-        ((NormalHolder)holder).mTv.setText(layered.getLayerName());
+        ((NormalHolder)holder).mTv.setText(stopOption.getName());
 
         ((NormalHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +50,7 @@ public class ThreadSandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
     }
 
-    public void setDates(List<Layered> list) {
+    public void setDates(List<StopOption> list) {
         this.list = list;
     }
 

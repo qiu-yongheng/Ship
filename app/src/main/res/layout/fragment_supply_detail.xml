@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
+                android:layout_height="match_parent">
 
 
     <android.support.v7.widget.Toolbar
-        app:titleTextColor="@color/textcolorPrimary"
         android:id="@+id/toolbar_supply_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorPrimary"/>
+        android:background="?colorPrimary"
+        app:titleTextColor="@color/textcolorPrimary"/>
 
     <LinearLayout
         android:id="@+id/ll_supply_detail"
@@ -23,10 +23,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
+            android:orientation="horizontal"
             android:paddingBottom="10dp"
-            android:orientation="horizontal">
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/tv_ship_name"
@@ -36,18 +36,18 @@
                 android:singleLine="true"
                 android:text="天力8899"
                 android:textColor="#fff"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/text_15sp"/>
 
             <TextView
-                android:layout_marginLeft="10dp"
                 android:id="@+id/tv_ship_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="2"
                 android:singleLine="true"
                 android:text="船次: 20170601"
                 android:textColor="#fff"
-                android:textSize="18sp"/>
+                android:textSize="@dimen/text_15sp"/>
         </LinearLayout>
 
         <TextView
@@ -58,7 +58,7 @@
             android:layout_marginTop="0dp"
             android:text="供应商: XXX"
             android:textColor="#fff"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_15sp"/>
 
         <TextView
             android:id="@+id/tv_total_voyage"
@@ -68,7 +68,7 @@
             android:layout_marginTop="2dp"
             android:text="累计完成航次: 0次"
             android:textColor="#fff"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_15sp"/>
 
         <TextView
             android:id="@+id/tv_total_value"
@@ -78,7 +78,7 @@
             android:layout_marginTop="2dp"
             android:text="累计完成方量: 0㎡"
             android:textColor="#fff"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_15sp"/>
 
         <TextView
             android:id="@+id/tv_avg_value"
@@ -89,25 +89,25 @@
             android:layout_marginTop="2dp"
             android:text="平均航次方量: 0㎡"
             android:textColor="#fff"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/text_15sp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@+id/ll_supply_detail"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ll_supply_detail"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
             android:paddingRight="20dp"
-            android:paddingTop="5dp">
+            android:paddingTop="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="0dp"
@@ -116,26 +116,27 @@
                 android:gravity="right"
                 android:text="舱容: "
                 android:textColor="#000"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/text_15sp"/>
 
             <EditText
                 android:id="@+id/et_ship_volume"
-                android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:digits="1234567890."
-                android:inputType="number"/>
+                android:gravity="center"
+                android:inputType="number"
+                android:textSize="@dimen/text_15sp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
             android:paddingRight="20dp"
-            android:paddingTop="5dp">
+            android:paddingTop="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="0dp"
@@ -144,26 +145,27 @@
                 android:gravity="right"
                 android:text="甲板方: "
                 android:textColor="#000"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/text_15sp"/>
 
             <EditText
                 android:id="@+id/et_deck_volume"
-                android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:digits="1234567890."
-                android:inputType="number"/>
+                android:gravity="center"
+                android:inputType="number"
+                android:textSize="@dimen/text_15sp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
             android:paddingRight="20dp"
-            android:paddingTop="5dp">
+            android:paddingTop="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="0dp"
@@ -172,16 +174,16 @@
                 android:gravity="right"
                 android:text="合计方: "
                 android:textColor="#000"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/text_15sp"/>
 
             <TextView
                 android:id="@+id/tv_total_volume"
                 android:layout_width="0dp"
-                android:textColor="#000"
-                android:textSize="22sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="@dimen/text_15sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -193,12 +195,12 @@
             android:paddingTop="5dp">
 
             <TextView
-                android:layout_marginLeft="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:text="验砂通过时间: "
                 android:textColor="#000"
-                android:textSize="22sp"/>
+                android:textSize="@dimen/text_15sp"/>
 
             <TextView
                 android:id="@+id/tv_supply_time"
@@ -211,17 +213,17 @@
                 android:padding="5dp"
                 android:text="gaga"
                 android:textColor="#000"
-                android:textSize="22sp"/>
+                android:textSize="@dimen/text_15sp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
             android:paddingRight="20dp"
-            android:paddingTop="5dp">
+            android:paddingTop="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="0dp"
@@ -230,15 +232,16 @@
                 android:gravity="right"
                 android:text="@string/text_batch"
                 android:textColor="#000"
-                android:textSize="20sp"/>
+                android:textSize="@dimen/text_15sp"/>
 
             <EditText
                 android:id="@+id/et_batch"
-                android:gravity="center"
                 android:layout_width="0dp"
+                android:textSize="@dimen/text_15sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:digits="1234567890."
+                android:gravity="center"
                 android:inputType="number"/>
         </LinearLayout>
 
@@ -251,15 +254,15 @@
             android:paddingTop="5dp">
 
             <TextView
-                android:layout_marginLeft="20dp"
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:text="满载照片:"
                 android:textColor="#000"
-                android:textSize="22sp"/>
+                android:textSize="@dimen/text_15sp"/>
 
             <TextView
-                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -269,17 +272,17 @@
                 android:padding="5dp"
                 android:text="gaga"
                 android:textColor="#000"
-                android:textSize="22sp"/>
+                android:textSize="@dimen/text_15sp"
+                android:visibility="invisible"/>
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:layout_marginLeft="20dp"
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10"/>
 
     </LinearLayout>
-
 
 
     <LinearLayout

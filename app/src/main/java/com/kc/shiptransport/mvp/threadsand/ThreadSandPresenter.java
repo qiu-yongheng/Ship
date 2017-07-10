@@ -6,11 +6,13 @@ import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
 import com.kc.shiptransport.data.source.DataRepository;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -43,13 +45,30 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
         compositeDisposable.clear();
     }
 
+    /**
+     * 获取显示数据, 分区
+     * @param CurrentDate
+     * @param CurrentBoatAccount
+     */
     @Override
     public void getDates(String CurrentDate, String CurrentBoatAccount) {
         view.showLoading(true);
-        dataRepository
+        // 抛砂分区
+        Observable<Boolean> observable = dataRepository
+                .GetConstructionLayerOptions()
+                .subscribeOn(Schedulers.io());
+
+        // 回显数据
+        Observable<LogCurrentDateBean> log = dataRepository
                 .GetConstructionBoatDefaultStartTime(CurrentDate, CurrentBoatAccount)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+
+        Observable.zip(observable, log, new BiFunction<Boolean, LogCurrentDateBean, LogCurrentDateBean>() {
+            @Override
+            public LogCurrentDateBean apply(@NonNull Boolean aBoolean, @NonNull LogCurrentDateBean bean) throws Exception {
+                return bean;
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<LogCurrentDateBean>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
@@ -74,6 +93,10 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                 });
     }
 
+    /**
+     * 获取施工分区
+     * @param userID
+     */
     @Override
     public void getPartition(String userID) {
         dataRepository
@@ -99,6 +122,37 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                     @Override
                     public void onComplete() {
 
+                    }
+                });
+    }
+
+    @Override
+    public void commit(String json) {
+        view.showLoading(true);
+        dataRepository
+                .InsertConstructionBoatThrowingSandRecord(json)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showCommitResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
                     }
                 });
     }

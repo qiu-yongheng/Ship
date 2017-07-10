@@ -17,12 +17,16 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
+import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
+import com.kc.shiptransport.mvp.downtimelog.DowntimeLogActivity;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -53,10 +57,13 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     RecyclerView recyclerview;
     @BindView(R.id.btn_down_time)
     Button btnDownTime;
+    @BindView(R.id.btn_down_log)
+    Button btnDownLog;
     private DowntimeActivity activity;
     private DowntimeAdapter adapter;
     private DowntimeContract.Presenter presenter;
     private int stopType = -1;
+    private ConstructionBoat boat;
 
     @Nullable
     @Override
@@ -65,20 +72,33 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
-        List<User> all = DataSupport.findAll(User.class);
+
+        // 设置当前施工船舶
+        List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+        int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+
+        boat = all.get(position - 1);
 
         // 获取数据
         presenter.getStopOptions();
-        presenter.getStartDate(CalendarUtil.getCurrentDate("yyyy-MM-dd"), all.get(0).getUserID());
+        presenter.getStartDate(CalendarUtil.getCurrentDate("yyyy-MM-dd"), boat.getShipNum());
         return view;
     }
 
     @Override
     public void initViews(View view) {
-        // 设置日期
-        tvTitle.setText(CalendarUtil.getCurrentDate("yyyy.MM.dd"));
 
-        activity = (DowntimeActivity)getActivity();
+        if (boat != null) {
+            tvTitle.setText("施工船舶: " + boat.getShipName());
+        } else {
+            List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+            int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+
+            boat = all.get(position - 1);
+            tvTitle.setText("施工船舶: " + boat.getShipName());
+        }
+
+        activity = (DowntimeActivity) getActivity();
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -96,7 +116,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                 List<User> users = DataSupport.findAll(User.class);
 
                 if (stopType != -1 && !TextUtils.isEmpty(endTime) && !endTime.equals("请选择时间")) {
-                    presenter.stop(0, users.get(0).getUserID(), startTime, endTime, users.get(0).getUserID(), stopType);
+                    presenter.stop(0, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType);
                 } else {
                     Toast.makeText(getContext(), "停工因素或结束时间未选择", Toast.LENGTH_SHORT).show();
                 }
@@ -112,6 +132,15 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
 
                     }
                 });
+            }
+        });
+
+        /** 跳转到停工日志 */
+        btnDownLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO
+                DowntimeLogActivity.startActivity(getContext());
             }
         });
     }
