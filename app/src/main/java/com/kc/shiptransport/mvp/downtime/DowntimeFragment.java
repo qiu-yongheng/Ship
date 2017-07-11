@@ -140,7 +140,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
             @Override
             public void onClick(View view) {
                 // TODO
-                DowntimeLogActivity.startActivity(getContext());
+                DowntimeLogActivity.startActivity(getContext(), SettingUtil.TYPE_STOP);
             }
         });
     }

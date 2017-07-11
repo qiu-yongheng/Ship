@@ -17,15 +17,32 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height">
+    <Button
+        android:id="@+id/btn_return"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="@dimen/btn_height"
+        android:background="@color/gray"
+        android:text="@string/btn_return"
+        android:textColor="@color/text_white"
+        android:textSize="@dimen/text_15sp"/>
     <Button
         android:id="@+id/btn_add"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="@dimen/btn_height"
-        android:layout_alignParentBottom="true"
         android:background="?colorPrimary"
         android:text="@string/btn_add"
         android:textColor="@color/text_white"
         android:textSize="@dimen/text_15sp"/>
+
+    </LinearLayout>
 
 
 </RelativeLayout>

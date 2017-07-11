@@ -120,6 +120,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (position != 0) {
+                    spinner_position = position;
                     // 记录position
                     SharePreferenceUtil.saveInt(getContext(), SettingUtil.LOG_SHIP_POSITION, position);
                 }

@@ -44,6 +44,8 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     @BindView(R.id.btn_add)
     Button btnAdd;
     Unbinder unbinder;
+    @BindView(R.id.btn_return)
+    Button btnReturn;
     private PartitionActivity activity;
     private PartitionAdapter adapter;
     private PartitionContract.Presenter presenter;
@@ -85,6 +87,14 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
             public void onClick(View view) {
                 adapter.add(adapter.list.size());
                 recyclerview.smoothScrollToPosition(adapter.list.size());
+            }
+        });
+
+        /** 返回 */
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
             }
         });
     }

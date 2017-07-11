@@ -251,7 +251,7 @@ public class DataRepository implements DataSouceImpl {
                 reset();
 
                 if (type == SettingUtil.TYPE_RECORDEDSAND) {
-                    // 过砂记录
+                    /** 过砂记录 */
                     List<RecordList> recordLists = DataSupport.findAll(RecordList.class);
 
                     for (RecordList recordList : recordLists) {
@@ -663,7 +663,7 @@ public class DataRepository implements DataSouceImpl {
 
                 /** 根据类型计算没有做相关处理的船次 */
                 if (type == SettingUtil.TYPE_RECORDEDSAND) { // 过砂记录
-                    /**过砂记录, IsFinish = 0的个数 */
+                    /** 过砂记录, IsFinish = 0的个数 */
                     num = DataSupport.where("IsFinish = ?", "0").count(RecordList.class);
                 } else if (type == SettingUtil.TYPE_VOYAGEINFO) { // 航次信息完善
                     /** 航次信息完善, IsPerfect = 0的个数 */
@@ -674,9 +674,12 @@ public class DataRepository implements DataSouceImpl {
                 } else if (type == SettingUtil.TYPE_SUPPLY) { // 验砂
                     /** 验砂 */
                     num = DataSupport.where("IsReceptionSandTime = ?", "0").count(WeekTask.class);
-                }else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
+                } else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
                     /** 量方 */
                     num = DataSupport.where("IsTheAmountOfTime = ?", "0").count(WeekTask.class);
+                } else if (type == SettingUtil.TYPE_SCANNER) {
+                    /** 扫描件 */
+                    num = DataSupport.where("IsFinshReceptionSandAttachment = ?", "0").count(WeekTask.class);
                 } else {
                     // 1. 获取一周任务
                     List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);

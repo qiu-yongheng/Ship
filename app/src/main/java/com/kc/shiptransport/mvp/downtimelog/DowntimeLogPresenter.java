@@ -100,6 +100,7 @@ public class DowntimeLogPresenter implements DowntimeLogContract.Presenter {
                             @Override
                             public void onNext(@NonNull List<ThreadSandLogBean> threadSandLogBeen) {
                                 view.showThreadLog(threadSandLogBeen);
+                                Toast.makeText(context, "搜索到: " + threadSandLogBeen.size() + "条数据", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

@@ -86,6 +86,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
     private DowntimeLogAdapter logAdapter;
     private int mType;
     private ThreadLogAdapter threadAdapter;
+    private int shipWidth;
 
     @Nullable
     @Override
@@ -95,9 +96,6 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
         initViews(view);
         initListener();
 
-        /** 获取类型 */
-        mType = activity.type;
-
         // TODO
         return view;
     }
@@ -105,6 +103,9 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
     @Override
     public void initViews(View view) {
         activity = (DowntimeLogActivity) getActivity();
+
+        /** 获取类型 */
+        mType = activity.type;
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -261,6 +262,12 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
         });
 
         /** 船舶账号 */
+        tvShipAccount.post(new Runnable() {
+            @Override
+            public void run() {
+                shipWidth = tvShipAccount.getMeasuredWidth();
+            }
+        });
         tvShipAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -269,7 +276,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
                 //取值范围0.0f-1.0f 值越小越暗
                 popupWindow = new CommonPopupWindow.Builder(getContext())
                         .setView(R.layout.popup_down)
-                        .setWidthAndHeight(measuredWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .setWidthAndHeight(shipWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
                         .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
                             @Override
                             public void getChildView(View view, int layoutResId) {
@@ -378,6 +385,18 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
     public void showThreadLog(List<ThreadSandLogBean> list) {
         if (threadAdapter == null) {
             threadAdapter = new ThreadLogAdapter(getContext(), list);
+            threadAdapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, int... type) {
+                    // 跳转到详情界面
+
+                }
+
+                @Override
+                public void onItemLongClick(View view, int position) {
+
+                }
+            });
             recyclerview.setAdapter(threadAdapter);
         } else {
             threadAdapter.setDates(list);

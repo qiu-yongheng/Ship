@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
@@ -34,19 +33,35 @@ public class ThreadLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new NormalHolder(inflate.inflate(R.layout.item_down_log, parent, false));
+        return new NormalHolder(inflate.inflate(R.layout.item_thread_sand_log, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         ThreadSandLogBean logBean = list.get(position);
 
-        ((NormalHolder)holder).mTvShipAccount.setText(downLogBean.getShipName());
-        ((NormalHolder)holder).mTvStopType.setText(downLogBean.getStopTypeName());
-        ((NormalHolder)holder).mTvCreator.setText(downLogBean.getCreatorName());
-        ((NormalHolder)holder).mTvStartTime.setText(downLogBean.getStartTime());
-        ((NormalHolder)holder).mTvEndTime.setText(downLogBean.getEndTime());
-        ((NormalHolder)holder).mTvSystemTime.setText(downLogBean.getSystemDate());
+        ((NormalHolder)holder).mTvShipAccount.setText(logBean.getShipName());
+        ((NormalHolder)holder).mTvShipItemNum.setText(logBean.getShipItemNum());
+        ((NormalHolder)holder).mTvPartition.setText(logBean.getPartitionNameArr());
+        ((NormalHolder)holder).mTvLayer.setText(logBean.getLayerName());
+        ((NormalHolder)holder).mTvQuantity.setText(logBean.getQuantity() + "m³");
+        ((NormalHolder)holder).mTvRemark.setText(logBean.getRemark());
+
+
+
+        ((NormalHolder)holder).mTvStartTime.setText(logBean.getStartTime());
+        ((NormalHolder)holder).mTvEndTime.setText(logBean.getEndTime());
+        ((NormalHolder)holder).mTvSystemTime.setText(logBean.getSystemDate());
+
+        ((NormalHolder)holder).mTvCreator.setText(logBean.getCreatorName());
+
+        ((NormalHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 跳转到详情界面
+                listener.onItemClick(holder.itemView, holder.getLayoutPosition());
+            }
+        });
     }
 
     public void setDates(List<ThreadSandLogBean> list) {
@@ -57,20 +72,31 @@ public class ThreadLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     class NormalHolder extends RecyclerView.ViewHolder {
 
         private final TextView mTvShipAccount;
-        private final TextView mTvStopType;
-        private final TextView mTvCreator;
         private final TextView mTvStartTime;
         private final TextView mTvEndTime;
         private final TextView mTvSystemTime;
+        private final TextView mTvShipItemNum;
+        private final TextView mTvPartition;
+        private final TextView mTvLayer;
+        private final TextView mTvQuantity;
+        private final TextView mTvRemark;
+        private final TextView mTvCreator;
 
         public NormalHolder(View itemView) {
             super(itemView);
             mTvShipAccount = (TextView) itemView.findViewById(R.id.text_ship_account);
-            mTvStopType = (TextView) itemView.findViewById(R.id.text_stop_type);
-            mTvCreator = (TextView) itemView.findViewById(R.id.text_creator);
+            mTvShipItemNum = (TextView) itemView.findViewById(R.id.text_ship_item_num);
+            mTvPartition = (TextView) itemView.findViewById(R.id.tv_partition);
+            mTvLayer = (TextView) itemView.findViewById(R.id.text_layer);
+            mTvQuantity = (TextView) itemView.findViewById(R.id.text_quantity);
+            mTvRemark = (TextView) itemView.findViewById(R.id.text_remark);
+
             mTvStartTime = (TextView) itemView.findViewById(R.id.text_start_time);
             mTvEndTime = (TextView) itemView.findViewById(R.id.text_end_time);
             mTvSystemTime = (TextView) itemView.findViewById(R.id.text_system_time);
+            mTvCreator = (TextView) itemView.findViewById(R.id.text_creator);
+
+
         }
     }
 

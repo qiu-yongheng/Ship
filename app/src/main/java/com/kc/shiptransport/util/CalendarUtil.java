@@ -338,9 +338,9 @@ public class CalendarUtil {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 String format = df.format(c.getTime());
                 view.setText(format);
-
             }
         }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+
 
         datePickerDialog.show();
     }

@@ -26,8 +26,8 @@ import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
+import com.kc.shiptransport.mvp.downtimelog.DowntimeLogActivity;
 import com.kc.shiptransport.mvp.partition.PartitionActivity;
-import com.kc.shiptransport.mvp.threadsandlog.ThreadSandLogActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
@@ -92,6 +92,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     private ThreadSandAdapter adapter;
     private int layoutID;
     private ConstructionBoat boat;
+    private boolean flag = false;
 
     @Nullable
     @Override
@@ -131,7 +132,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         mBtnThreadSandLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ThreadSandLogActivity.startActivity(getContext());
+                DowntimeLogActivity.startActivity(getContext(), SettingUtil.TYPE_THREAD);
             }
         });
 
@@ -170,6 +171,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                         .setView(R.layout.popup_down)
                         .setWidthAndHeight(measuredWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
                         .setAnimationStyle(R.style.AnimDown)
+                        .setBackGroundLevel(0.8f)
                         .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
                             @Override
                             public void getChildView(View view, int layoutResId) {
@@ -326,6 +328,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
     @Override
     public void showStartDate(LogCurrentDateBean bean) {
+
         // 修改开始日期
         tvStartTime.setText(bean.getStartTime());
         // 施工船舶
@@ -348,7 +351,8 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
     @Override
     public void showPartition(PartitionSBBean bean) {
-        tvConstructionDevision.setText(bean.getPartition());
+        flag = true;
+        tvConstructionDevision.setText(TextUtils.isEmpty(bean.getPartition()) ? "" : bean.getPartition());
         tvDevisionNum.setText(String.valueOf(bean.getSize()));
     }
 
@@ -368,7 +372,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     @Override
     public void onResume() {
         super.onResume();
-        if (adapter != null) {
+        if (flag) {
             // 获取施工分区
             presenter.getPartition(boat.getShipNum());
         }

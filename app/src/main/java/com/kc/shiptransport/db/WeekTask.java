@@ -61,6 +61,8 @@ public class WeekTask extends DataSupport{
     private int PerfectBoatRecordID;
     /** 1 已量方 0 未量方 */
     private int IsTheAmountOfTime;
+    /** 1 已完善扫描件 0 未完善扫描件 */
+    private int IsFinshReceptionSandAttachment;
 
     public int getItemID() {
         return ItemID;
@@ -228,5 +230,13 @@ public class WeekTask extends DataSupport{
 
     public void setSelected(String selected) {
         this.selected = selected;
+    }
+
+    public int getIsFinshReceptionSandAttachment() {
+        return IsFinshReceptionSandAttachment;
+    }
+
+    public void setIsFinshReceptionSandAttachment(int isFinshReceptionSandAttachment) {
+        IsFinshReceptionSandAttachment = isFinshReceptionSandAttachment;
     }
 }
