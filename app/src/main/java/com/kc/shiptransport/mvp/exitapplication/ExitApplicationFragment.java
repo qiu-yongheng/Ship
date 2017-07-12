@@ -1,29 +1,34 @@
-package com.kc.shiptransport.mvp.scanner;
+package com.kc.shiptransport.mvp.exitapplication;
 
 import android.app.ProgressDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.basemvp.BaseMvpFragment;
-import com.kc.shiptransport.mvp.scannerdetail.ScannerDetailActivity;
+import com.kc.shiptransport.mvp.exitapplicationdetail.ExitApplicationDetailActivity;
 import com.kc.shiptransport.util.SettingUtil;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 /**
  * @author qiuyongheng
- * @time 2017/6/13  15:40
+ * @time 2017/7/12  11:45
  * @desc ${TODD}
  */
 
-public class ScannerFragment extends BaseMvpFragment {
+public class ExitApplicationFragment extends BaseMvpFragment {
 
-    private ScannerActivity activity;
+    private ExitApplicationActivity activity;
 
     @Override
     public void showLoading(boolean active) {
         if (active) {
-            activity.showProgressDailog(getResources().getString(R.string.dialog_loading), getResources().getString(R.string.dialog_loading), new OnDailogCancleClickListener() {
+            activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
                 @Override
                 public void onCancle(ProgressDialog dialog) {
                     presenter.unsubscribe();
@@ -42,46 +47,43 @@ public class ScannerFragment extends BaseMvpFragment {
 
     @Override
     protected int getType() {
-        return SettingUtil.TYPE_SCANNER;
+        return SettingUtil.TYPE_EXIT_APPLICATION;
     }
 
     @Override
     protected void initToolbar(Toolbar toolbar) {
-        activity = (ScannerActivity) getActivity();
+        activity = (ExitApplicationActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     protected int getRedText() {
-        return R.string.scanner_red;
+        return R.string.exit_red;
     }
 
     @Override
     protected int getBlackText() {
-        return R.string.scanner_black;
+        return R.string.exit_black;
     }
 
     @Override
     protected String abs_showTitleOtherInfo(String data) {
-        return "分包商: " + data;
+        return data;
     }
 
     @Override
     protected String abs_showStayInfo(String data) {
-        return "未完善船次: " + data;
+        return "未退场航次: " + data;
     }
 
     @Override
     protected void abs_onItemClick(View view, int position) {
-        ScannerDetailActivity.startActivity(getActivity(), position, 0);
-    }
+        // 点击查看详情, 传递itemID
+        List<ExitList> exitLists = DataSupport.where("position = ?", String.valueOf(position)).find(ExitList.class);
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (adapter != null) {
-            presenter.start(jumpWeek, TYPE, subcontractorAccount);
+        if (!exitLists.isEmpty()) {
+            ExitApplicationDetailActivity.startActivity(getContext(), exitLists.get(0).getItemID());
         }
     }
 }

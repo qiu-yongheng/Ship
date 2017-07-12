@@ -1,14 +1,317 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/view_toolbar"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:padding="10dp"
+                android:src="@mipmap/icon_head"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/iv_icon"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="asdf"/>
+
+                <TextView
+                    android:id="@+id/tv_user_account"
+                    style="@style/text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="asdfasdf"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_change_password"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin_10"
+                android:gravity="center_vertical"
+                android:text="@string/text_change_password"
+                android:textColor="@color/red"
+                android:textSize="@dimen/text_15sp"/>
+        </RelativeLayout>
+
+        <include layout="@layout/view_divi"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_sex"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:gravity="center"
+                android:text="@string/text_sex"/>
+
+
+            <LinearLayout
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_sex"
+                    style="@style/text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/icon_go"
+                    android:adjustViewBounds="true"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <include layout="@layout/view_divi"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_section"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:gravity="center"
+                android:text="@string/text_section"/>
+
+            <LinearLayout
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_section"
+                    style="@style/text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/icon_go"
+                    android:adjustViewBounds="true"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <include layout="@layout/view_divi"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_duties"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:gravity="center"
+                android:text="@string/text_duties"/>
+
+            <LinearLayout
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_duties"
+                    style="@style/text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/icon_go"
+                    android:adjustViewBounds="true"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <include layout="@layout/view_divi"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_phone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:gravity="center"
+                android:text="@string/text_phone"/>
+
+            <LinearLayout
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_phone"
+                    style="@style/text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/icon_go"
+                    android:adjustViewBounds="true"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <include layout="@layout/view_divi"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_email"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:gravity="center"
+                android:text="@string/text_email"/>
+
+            <LinearLayout
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_email"
+                    style="@style/text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/icon_go"
+                    android:adjustViewBounds="true"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <include layout="@layout/view_divi"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_tell"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:gravity="center"
+                android:text="@string/text_tell"/>
+
+            <LinearLayout
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_tell"
+                    style="@style/text_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center"/>
+
+                <ImageView
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/icon_go"
+                    android:adjustViewBounds="true"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <include layout="@layout/view_divi"/>
+
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_mine_exit"
-        android:layout_alignParentBottom="true"
-        android:text="@string/btn_exit"
-        android:textSize="@dimen/text_15sp"
-        android:background="?colorPrimary"
-        android:textColor="@color/text_white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="?colorPrimary"
+        android:text="@string/btn_exit"
+        android:textColor="@color/text_white"
+        android:textSize="@dimen/text_15sp"/>
 </RelativeLayout>

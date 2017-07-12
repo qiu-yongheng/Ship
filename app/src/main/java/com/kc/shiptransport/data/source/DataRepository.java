@@ -53,6 +53,7 @@ import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.down.StopList;
 import com.kc.shiptransport.db.down.StopOption;
+import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
@@ -310,6 +311,35 @@ public class DataRepository implements DataSouceImpl {
                         }
                     }
 
+                } else if (type == SettingUtil.TYPE_EXIT_APPLICATION) {
+                    /** 退场申请 */
+                    List<ExitList> sampleList = DataSupport.findAll(ExitList.class);
+
+                    for (ExitList sample : sampleList) {
+                        switch (Integer.valueOf(sample.getPosition()) % 7) {
+                            case 0:
+                                day_0 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 1:
+                                day_1 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 2:
+                                day_2 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 3:
+                                day_3 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 4:
+                                day_4 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 5:
+                                day_5 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                            case 6:
+                                day_6 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                        }
+                    }
                 } else {
                     List<WeekTask> weekLists;
                     if (type == SettingUtil.TYPE_SUPPLY || type == SettingUtil.TYPE_AMOUNT) { // 验砂 或 量方
@@ -680,6 +710,9 @@ public class DataRepository implements DataSouceImpl {
                 } else if (type == SettingUtil.TYPE_SCANNER) {
                     /** 扫描件 */
                     num = DataSupport.where("IsFinshReceptionSandAttachment = ?", "0").count(WeekTask.class);
+                } else if (type == SettingUtil.TYPE_EXIT_APPLICATION) {
+                    /** 退场申请 */
+                    num = DataSupport.where("IsExit = ?", "0").count(ExitList.class);
                 } else {
                     // 1. 获取一周任务
                     List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
@@ -2947,6 +2980,88 @@ public class DataRepository implements DataSouceImpl {
 
                 e.onNext(list);
                 e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.49 获取可以进行退场申请的数据
+     * @return
+     */
+    @Override
+    public Observable<Boolean> GetExitApplicationList(final int jumpWeek, final String account) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                /* 开始时间 */
+                String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
+                /* 结束时间 */
+                String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
+
+                Log.d("==", "请求日期: " + startDay + "-" + endDay);
+
+                // 发送网络请求
+                String result = mRemoteDataSource.GetExitApplicationList(account, startDay, endDay);
+
+                // 解析数据
+                List<ExitList> lists = gson.fromJson(result, new TypeToken<List<ExitList>>() {
+                }.getType());
+
+                /* 3. 初始化数据库 */
+                deleteAll(ExitList.class);
+
+                /* 4. 保存数据到数据库 */
+                DataSupport.saveAll(lists);
+
+                /* 5. 对数据进行排序 */
+
+                // 1. 创建一个二维集合存放分类好的数据
+                List<List<ExitList>> totalLists = new ArrayList<>();
+
+                // 2. 查询数据
+                List<ExitList> recordLists = DataSupport.findAll(ExitList.class);
+
+                // 3. 按照时间进行分类
+                Set set = new HashSet();
+                for (ExitList bean : recordLists) {
+                    String planDay = bean.getPlanDay();
+                    if (set.contains(planDay)) {
+
+                    } else {
+                        set.add(planDay);
+                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(ExitList.class));
+                    }
+                }
+
+                // 4. 更新position
+                for (List<ExitList> list : totalLists) {
+                    for (int i = 1; i <= list.size(); i++) {
+                        // 更新数据
+                        ExitList record = list.get(i - 1);
+                        record.setPosition(String.valueOf(dateToPosition(record.getPlanDay(), i, jumpWeek)));
+                        record.save();
+                    }
+                }
+
+                e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 3.1 修改密码
+     * @param LoginName
+     * @param OldPassword
+     * @param NewPassword
+     * @return
+     */
+    @Override
+    public Observable<Boolean> ChangeUserPassword(String LoginName, String OldPassword, String NewPassword) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+
             }
         });
     }

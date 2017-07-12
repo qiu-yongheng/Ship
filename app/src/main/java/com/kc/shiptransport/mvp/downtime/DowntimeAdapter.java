@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.downtime;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ import java.util.List;
  * @desc ${TODD}
  */
 
-public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private List<StopOption> list;
     private final LayoutInflater inflate;
@@ -49,9 +50,9 @@ public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         StopOption stopOption = list.get(position);
         if (holder instanceof NormalHolder) {
-            ((NormalHolder)holder).mCheckBox.setText(stopOption.getName());
+            ((NormalHolder) holder).mCheckBox.setText(stopOption.getName());
 
-            ((NormalHolder)holder).mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            ((NormalHolder) holder).mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b) {
@@ -66,13 +67,13 @@ public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
 
             if (checkedIndex == position) {
-                ((NormalHolder)holder).mCheckBox.setChecked(true);
+                ((NormalHolder) holder).mCheckBox.setChecked(true);
             } else {
-                ((NormalHolder)holder).mCheckBox.setChecked(false);
+                ((NormalHolder) holder).mCheckBox.setChecked(false);
             }
 
         } else if (holder instanceof HeardHolder) {
-            ((HeardHolder)holder).mTvStopName.setText(stopOption.getOptionType());
+            ((HeardHolder) holder).mTvStopName.setText(stopOption.getOptionType());
         }
     }
 
@@ -107,6 +108,7 @@ public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     /**
      * 获取类型
+     *
      * @param position
      * @return
      */
@@ -120,5 +122,42 @@ public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setOnRecyclerViewClickListener(OnRecyclerviewItemClickListener listener) {
         this.listener = listener;
+    }
+
+    /**
+     * 根据type, 修改item宽度
+     * @param recyclerView
+     */
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+
+        if (layoutManager instanceof GridLayoutManager) {
+            final GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+            final GridLayoutManager.SpanSizeLookup spanSizeLookup = gridLayoutManager.getSpanSizeLookup();
+
+            /** span size表示一个item的跨度，跨度了多少个span */
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    int viewType = getItemViewType(position);
+                    if (viewType == TYPE_HEADER) {
+                        /** 如果是标题, 设置宽度占满所有span */
+                        return gridLayoutManager.getSpanCount();
+                    }
+
+                    if (spanSizeLookup != null) {
+                        /** 普通item, 设置宽度是一个span的宽度 */
+                        return spanSizeLookup.getSpanSize(position);
+                    }
+
+                    return 1;
+                }
+            });
+
+            gridLayoutManager.setSpanCount(gridLayoutManager.getSpanCount());
+        }
     }
 }

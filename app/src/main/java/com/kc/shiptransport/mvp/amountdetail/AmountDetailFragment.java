@@ -297,7 +297,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         // 甲板方
         etDeckVolume.setText(TextUtils.isEmpty(deckGauge) ? "" : deckGauge);
         // 量方时间
-        tvSupplyTime.setText(TextUtils.isEmpty(theAmountOfTime) ? "" : theAmountOfTime);
+        tvSupplyTime.setText(TextUtils.isEmpty(theAmountOfTime) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : theAmountOfTime);
 
         /** 显示图片 */
         if (adapter == null) {

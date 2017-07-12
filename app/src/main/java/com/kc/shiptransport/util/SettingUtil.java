@@ -85,6 +85,8 @@ public class SettingUtil {
     public static final int TYPE_STOP = 8;
     /* 抛砂 */
     public static final int TYPE_THREAD = 9;
+    /* 退场申请 */
+    public static final int TYPE_EXIT_APPLICATION = 10;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 

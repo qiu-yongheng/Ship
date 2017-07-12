@@ -2347,4 +2347,103 @@ public class RemoteDataSource {
         String result = object.getProperty(0).toString();
         return result;
     }
+
+    /**
+     * 1.49 获取可以进行退场申请的数据
+     * @param SubcontractorAccount
+     * @param StartDate
+     * @param EndDate
+     * @return
+     */
+    public String GetExitApplicationList(String SubcontractorAccount, String StartDate, String EndDate) {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetExitApplicationList";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetExitApplicationList";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("SubcontractorAccount", SubcontractorAccount);
+        rpc.addProperty("StartDate", StartDate);
+        rpc.addProperty("EndDate", EndDate);
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
+
+    /**
+     * 3.1 修改密码
+     * @return
+     */
+    public String ChangeUserPassword(String LoginName, String OldPassword, String NewPassword) {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "ChangeUserPassword";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/ChangeUserPassword";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("LoginName", LoginName);
+        rpc.addProperty("OldPassword", OldPassword);
+        rpc.addProperty("NewPassword", NewPassword);
+
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+
+        HttpTransportSE transport = new HttpTransportSE(endPoint, timeout);
+
+        FakeX509TrustManager.allowAllSSL();
+
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 获取返回的数据
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        // 获取返回的结果
+        String result = object.getProperty(0).toString();
+        return result;
+    }
 }

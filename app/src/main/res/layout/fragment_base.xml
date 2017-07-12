@@ -53,7 +53,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="2017年5月"
                 android:textColor="#fff"/>
 
             <android.support.v7.widget.AppCompatTextView
@@ -62,7 +61,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="待验砂船次: 1"
                 android:textColor="#fff"/>
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/title_spinner"

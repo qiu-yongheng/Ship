@@ -32,6 +32,7 @@ import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
 
@@ -274,7 +275,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         tvAvgValue.setText("平均航次方量: " + (TextUtils.isEmpty(avgSquare) ? "0" : avgSquare) + "㎡");
 
         // 时间
-        tvSupplyTime.setText(TextUtils.isEmpty(receptionSandTime) ? "" : receptionSandTime);
+        tvSupplyTime.setText(TextUtils.isEmpty(receptionSandTime) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : receptionSandTime);
 
 
         List<SupplyDetail.ReceptionSandAttachmentListBean> list = value.getReceptionSandAttachmentList();

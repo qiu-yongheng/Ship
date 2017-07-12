@@ -25,6 +25,7 @@ import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.scannerdetail.ScannerDetailActivity;
 import com.kc.shiptransport.mvp.voyagedetail.VoyageDetailActivity;
+import com.kc.shiptransport.util.CalendarUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -245,7 +246,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         this.value = value;
 
         String preAcceptanceTime = value.getPreAcceptanceTime();
-        tvAcceptanceTime.setText(TextUtils.isEmpty(preAcceptanceTime) ? "" : preAcceptanceTime);
+        tvAcceptanceTime.setText(TextUtils.isEmpty(preAcceptanceTime) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : preAcceptanceTime);
         shipItemNum = value.getShipItemNum();
         tvShipName.setText(value.getShipName());
         tvShipId.setText("船次: " + (shipItemNum == null ? "" : shipItemNum));
@@ -262,6 +263,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
 
         Float materialIntegrity = value.getMaterialIntegrity();
         Float materialTimeliness = value.getMaterialTimeliness();
+
         // 回显评价
         rbComplete.setRating(materialIntegrity == null ? 0 : materialIntegrity);
         rbTimely.setRating(materialTimeliness == null ? 0 : materialTimeliness);

@@ -25,6 +25,8 @@ import java.util.List;
 
 public class CalendarUtil {
     private static Calendar calendar = Calendar.getInstance();
+    public static final String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
+    public static final String YYYY_MM_DD = "yyyy-MM-dd";
 
     private void getWeekAndDay() {
         //获取当前时间为本月的第几周

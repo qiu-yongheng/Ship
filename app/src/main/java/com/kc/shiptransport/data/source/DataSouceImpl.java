@@ -605,5 +605,18 @@ public interface DataSouceImpl {
      */
     Observable<List<ThreadSandLogBean>> GetConstructionBoatThrowingSandList(int ItemID, String ShipAccount, String StartTime, String EndTime, String Creator);
 
+    /**
+     * 1.49 获取可以进行退场申请的数据
+     * @return
+     */
+    Observable<Boolean> GetExitApplicationList(int jumpWeek, String account);
 
+    /**
+     * 3.1 修改密码
+     * @param LoginName
+     * @param OldPassword
+     * @param NewPassword
+     * @return
+     */
+    Observable<Boolean> ChangeUserPassword(String LoginName, String OldPassword, String NewPassword);
 }
