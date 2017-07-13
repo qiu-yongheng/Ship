@@ -16,11 +16,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.mvp.changepassword.ChangePasswordActivity;
 import com.kc.shiptransport.mvp.login.LoginActivity;
 import com.kc.shiptransport.mvp.main.MainActivity;
 import com.kc.shiptransport.util.SettingUtil;
 import com.umeng.analytics.MobclickAgent;
+
+import org.litepal.crud.DataSupport;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,6 +99,11 @@ public class MineFragment extends Fragment {
 
         // 添加下划线
         tvChangePassword.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//下划线
+
+        // 显示用户信息
+        User user = DataSupport.findAll(User.class).get(0);
+        tvUserName.setText(user.getUserName());
+        tvUserAccount.setText(user.getUserID());
     }
 
     public void initListener() {

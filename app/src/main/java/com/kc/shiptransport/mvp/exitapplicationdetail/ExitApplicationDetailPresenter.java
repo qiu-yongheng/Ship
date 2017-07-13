@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.kc.shiptransport.data.source.DataRepository;
 
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+
 /**
  * @author qiuyongheng
  * @time 2017/7/12  10:03
@@ -32,13 +34,24 @@ public class ExitApplicationDetailPresenter implements ExitApplicationDetailCont
 
     }
 
+
     @Override
-    public void getDates() {
+    public void getDates(int SubcontractorInterimApproachPlanID) {
 
     }
 
     @Override
     public void commit() {
+
+    }
+
+    @Override
+    public void deleteImgForItemID(int itemID) {
+
+    }
+
+    @Override
+    public void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String subcontractorAccount) {
 
     }
 }

@@ -3057,11 +3057,16 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> ChangeUserPassword(String LoginName, String OldPassword, String NewPassword) {
+    public Observable<Boolean> ChangeUserPassword(final String LoginName, final String OldPassword, final String NewPassword) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.ChangeUserPassword(LoginName, OldPassword, NewPassword);
 
+                CommitResultBean commitResultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(commitResultBean.getMessage() == 1);
+                e.onComplete();
             }
         });
     }

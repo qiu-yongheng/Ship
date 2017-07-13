@@ -1,4 +1,4 @@
-package com.kc.shiptransport.mvp.amountdetail;
+package com.kc.shiptransport.mvp.exitapplicationdetail;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +23,7 @@ import java.util.List;
  * @desc ${TODO}
  */
 
-public class AmountDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ExitApplicationDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
     private final LayoutInflater inflater;
     /**
@@ -37,7 +37,7 @@ public class AmountDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public List<AmountDetail.TheAmountOfSideAttachmentListBean> list;
     private OnRecyclerviewItemClickListener listener;
 
-    public AmountDetailAdapter(Context context, List<AmountDetail.TheAmountOfSideAttachmentListBean> list) {
+    public ExitApplicationDetailAdapter(Context context, List<AmountDetail.TheAmountOfSideAttachmentListBean> list) {
         this.context = context;
         this.list = list;
         this.inflater = LayoutInflater.from(context);

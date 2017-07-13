@@ -16,11 +16,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.view.actiivty.ImageActivity;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 
 /**
  * @author qiuyongheng
@@ -66,6 +78,7 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
     AppCompatButton btnCommit;
     private ExitApplicationDetailContract.Presenter presenter;
     private ExitApplicationDetailActivity activity;
+    private ExitApplicationDetailAdapter adapter;
 
     @Nullable
     @Override
@@ -136,5 +149,58 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
     @Override
     public void showCommitResult(boolean isSuccess) {
 
+    }
+
+    /**
+     * 获取要显示的数据, 显示图片列表
+     */
+    @Override
+    public void showDates() {
+        /** 初始化图片列表 */
+        if (adapter == null) {
+            adapter = new ExitApplicationDetailAdapter(getContext(), null);
+            adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, int... type) {
+                    /** 预览, 删除图片 */
+                    AmountDetail.TheAmountOfSideAttachmentListBean bean = adapter.list.get(position);
+                    if (type[0] == 0) {
+                        // 预览
+                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+                    } else {
+                        // 删除
+                        presenter.deleteImgForItemID(bean.getItemID());
+                    }
+                }
+
+                @Override
+                public void onItemLongClick(View view, int position) {
+                    /** 弹出图片选择器 */
+                    int size = adapter.list.size();
+                    int max = 3 - size;
+                    if (max > 0) {
+                        RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
+                            @Override
+                            public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                // 把图片解析成可以上传的任务, 上传
+                                List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                                presenter.getCommitImgList(imageMultipleResultEvent, activity.itemID, all.get(0).getSubcontractorAccount());
+                            }
+
+                            @Override
+                            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            recyclerview.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
     }
 }

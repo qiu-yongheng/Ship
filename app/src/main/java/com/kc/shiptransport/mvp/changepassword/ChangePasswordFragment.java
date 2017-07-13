@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+
+import org.litepal.crud.DataSupport;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,7 +71,28 @@ public class ChangePasswordFragment extends Fragment implements ChangePasswordCo
         btnCommitChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 判断原密码是否为空
+                if (TextUtils.isEmpty(etOriPass.getText().toString())) {
+                    Toast.makeText(getContext(), "请输入原密码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
+                // 判断新密码是否为空
+                if (TextUtils.isEmpty(etChangePass.getText().toString()) || TextUtils.isEmpty(etNewPassAgain.getText().toString())) {
+                    Toast.makeText(getContext(), "请输入新密码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // 判断新密码是否一致
+                if (!etChangePass.getText().toString().equals(etNewPassAgain.getText().toString())) {
+                    Toast.makeText(getContext(), "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                User user = DataSupport.findAll(User.class).get(0);
+                // 发送网络请求
+                presenter.changePassword(user.getUserID(), etOriPass.getText().toString(), etChangePass.getText().toString());
             }
         });
     }
@@ -100,5 +125,15 @@ public class ChangePasswordFragment extends Fragment implements ChangePasswordCo
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void showChangeResult(boolean isSuccess) {
+        if (isSuccess) {
+            Toast.makeText(getContext(), "修改密码成功", Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
+        } else {
+            Toast.makeText(getContext(), "原密码错误, 请重试", Toast.LENGTH_SHORT).show();
+        }
     }
 }

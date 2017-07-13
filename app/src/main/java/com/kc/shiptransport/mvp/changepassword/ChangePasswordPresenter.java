@@ -4,7 +4,12 @@ import android.content.Context;
 
 import com.kc.shiptransport.data.source.DataRepository;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author qiuyongheng
@@ -34,5 +39,36 @@ public class ChangePasswordPresenter implements ChangePasswordContract.Presenter
     @Override
     public void unsubscribe() {
         compositeDisposable.clear();
+    }
+
+    @Override
+    public void changePassword(String LoginName, String OldPassword, String NewPassword) {
+        view.showLoading(true);
+        dataRepository
+                .ChangeUserPassword(LoginName, OldPassword, NewPassword)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showChangeResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
     }
 }

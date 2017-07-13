@@ -5,7 +5,7 @@ import org.litepal.crud.DataSupport;
 /**
  * @author qiuyongheng
  * @time 2017/7/12  13:40
- * @desc 退场计划
+ * @desc 退场计划, 日历数据
  */
 
 public class ExitList extends DataSupport{

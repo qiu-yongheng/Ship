@@ -11,10 +11,10 @@ import com.kc.shiptransport.mvp.BaseView;
 
 public interface ChangePasswordContract{
     interface View extends BaseView<Presenter> {
-
+        void showChangeResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {
-
+        void changePassword(String LoginName, String OldPassword, String NewPassword);
     }
 }
