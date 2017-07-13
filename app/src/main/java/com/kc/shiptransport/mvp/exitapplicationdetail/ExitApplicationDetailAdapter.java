@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
@@ -34,10 +34,10 @@ public class ExitApplicationDetailAdapter extends RecyclerView.Adapter<RecyclerV
      * item类型: 添加图片
      */
     private static final int TYPE_ADD = 1;
-    public List<AmountDetail.TheAmountOfSideAttachmentListBean> list;
+    public List<ExitDetail.AttachmentListBean> list;
     private OnRecyclerviewItemClickListener listener;
 
-    public ExitApplicationDetailAdapter(Context context, List<AmountDetail.TheAmountOfSideAttachmentListBean> list) {
+    public ExitApplicationDetailAdapter(Context context, List<ExitDetail.AttachmentListBean> list) {
         this.context = context;
         this.list = list;
         this.inflater = LayoutInflater.from(context);
@@ -58,7 +58,7 @@ public class ExitApplicationDetailAdapter extends RecyclerView.Adapter<RecyclerV
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof NormalHolder) {
             // 获取图片地址, 显示
-            AmountDetail.TheAmountOfSideAttachmentListBean listBean = list.get(position);
+            ExitDetail.AttachmentListBean listBean = list.get(position);
             RxGalleryUtil.showImage(context, listBean.getFilePath(), null, null, ((NormalHolder) holder).mIvNormal);
 
             // 点击图片, 预览图片
@@ -89,7 +89,7 @@ public class ExitApplicationDetailAdapter extends RecyclerView.Adapter<RecyclerV
         }
     }
 
-    public void setDates(List<AmountDetail.TheAmountOfSideAttachmentListBean> list) {
+    public void setDates(List<ExitDetail.AttachmentListBean> list) {
         this.list = list;
     }
 

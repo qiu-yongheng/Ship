@@ -86,4 +86,12 @@ public class ExitApplicationFragment extends BaseMvpFragment {
             ExitApplicationDetailActivity.startActivity(getContext(), exitLists.get(0).getItemID());
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            presenter.start(jumpWeek, TYPE, subcontractorAccount);
+        }
+    }
 }

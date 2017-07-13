@@ -27,6 +27,7 @@ import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.down.StopOption;
+import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
@@ -484,7 +485,7 @@ public interface DataSouceImpl {
      * @param creator
      * @return
      */
-    Observable<List<CommitImgListBean>> getAmountImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator);
+    Observable<List<CommitImgListBean>> getImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator);
 
     /**
      * 1.34 获取洗石场所在地数据
@@ -620,5 +621,32 @@ public interface DataSouceImpl {
      */
     Observable<Boolean> ChangeUserPassword(String LoginName, String OldPassword, String NewPassword);
 
+    /**
+     * 1.51 根据退场ItemID,获取退场申请的数据
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    Observable<ExitDetail> GetExitApplicationRecordByItemID(int SubcontractorInterimApproachPlanID);
 
+    /**
+     * 1.53 删除退场申请图片数据
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteExitApplicationAttachmentByItemID(int ItemID);
+
+    /**
+     * 1.52 提交退场申请图片数据
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    Observable<Boolean> InsertExitApplicationAttachment(String json, String ByteDataStr);
+
+    /**
+     * 1.50 提交退场申请数据
+     * @param json
+     * @return
+     */
+    Observable<Boolean> InsertExitApplicationRecord(int ItemID, String ExitTime, String Creator, String Remark, String RemnantAmount, int SubcontractorInterimApproachPlanID);
 }

@@ -1,13 +1,17 @@
 package com.kc.shiptransport.mvp.exitapplicationdetail;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -17,15 +21,20 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Subcontractor;
-import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.exitapplication.ExitDetail;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
+import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -76,6 +85,8 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
     AppCompatButton btnCancel;
     @BindView(R.id.btn_commit)
     AppCompatButton btnCommit;
+    @BindView(R.id.et_remark)
+    EditText etRemark;
     private ExitApplicationDetailContract.Presenter presenter;
     private ExitApplicationDetailActivity activity;
     private ExitApplicationDetailAdapter adapter;
@@ -88,13 +99,19 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
         initViews(view);
         initListener();
 
-        // TODO
+        // TODO 获取要显示的数据
+        presenter.getDates(activity.itemID, 0);
         return view;
     }
 
     @Override
     public void initViews(View view) {
-        activity = (ExitApplicationDetailActivity)getActivity();
+        activity = (ExitApplicationDetailActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setTitle(R.string.title_exit_application);
+
+        recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 4));
     }
 
     @Override
@@ -111,9 +128,40 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                String userID = DataSupport.findAll(User.class).get(0).getUserID();
+                String time = tvSupplyTime.getText().toString();
+                String quantum = etQuantum.getText().toString();
+                String remark = etRemark.getText().toString();
+                
+                if (TextUtils.isEmpty(quantum)) {
+                    Toast.makeText(getContext(), "请填写残余方量", Toast.LENGTH_SHORT).show();
+                } else {
+                    presenter.commit(0, time, userID, remark, quantum, activity.itemID);
+                }
             }
         });
+
+        tvSupplyTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CalendarUtil.showPickerDialog(getContext(), tvSupplyTime, CalendarUtil.YYYY_MM_DD_HH_MM, new OnTimePickerSureClickListener() {
+                    @Override
+                    public void onSure(String str) {
+                        // TODO 可以限制不能选择之前的时间
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -148,22 +196,68 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
 
     @Override
     public void showCommitResult(boolean isSuccess) {
-
+        if (isSuccess) {
+            Toast.makeText(getContext(), "提交成功", Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
+        } else {
+            Toast.makeText(getContext(), "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
      * 获取要显示的数据, 显示图片列表
      */
     @Override
-    public void showDates() {
+    public void showDates(ExitDetail bean) {
+        // 船名
+        String shipName = bean.getShipName();
+        // 供应商
+        String subcontractorName = bean.getSubcontractorName();
+        // 船长
+        String captain = bean.getCaptain();
+        // 手机
+        String captainPhone = bean.getCaptainPhone();
+        // 航次编号
+        String shipItemNum = bean.getShipItemNum();
+        // 到达锚地时间
+        String arrivaOfAnchorageTime = bean.getArrivaOfAnchorageTime();
+        // 装舱方
+        String compartmentQuantity = bean.getCompartmentQuantity();
+        // 材料分类
+        String materialClassification = bean.getMaterialClassification();
+        // 退场时间
+        String exitTime = bean.getExitTime();
+        // 残余方量
+        String remnantAmount = bean.getRemnantAmount();
+
+        /** 设置数据 */
+        tvShipName.setText(TextUtils.isEmpty(shipName) ? "" : shipName);
+        tvSub.setText(TextUtils.isEmpty(subcontractorName) ? "" : subcontractorName);
+        tvCaptain.setText(TextUtils.isEmpty(captain) ? "" : captain);
+        tvCaptainPhone.setText(TextUtils.isEmpty(captainPhone) ? "" : captainPhone);
+        tvShipNum.setText(TextUtils.isEmpty(shipItemNum) ? "" : shipItemNum);
+        tvArriveAnchorTime.setText(TextUtils.isEmpty(arrivaOfAnchorageTime) ? "" : arrivaOfAnchorageTime);
+        tvStowage.setText(TextUtils.isEmpty(compartmentQuantity) ? "" : compartmentQuantity);
+        tvMaterial.setText(TextUtils.isEmpty(materialClassification) ? "" : materialClassification);
+        tvSupplyTime.setText(TextUtils.isEmpty(exitTime) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : exitTime);
+        etQuantum.setText(TextUtils.isEmpty(remnantAmount) ? "" : remnantAmount);
+
+
+        /** 获取图片列表 */
+        List<ExitDetail.AttachmentListBean> imageList = bean.getAttachmentList();
+        if (imageList == null) {
+            imageList = new ArrayList<>();
+        }
+
+
         /** 初始化图片列表 */
         if (adapter == null) {
-            adapter = new ExitApplicationDetailAdapter(getContext(), null);
+            adapter = new ExitApplicationDetailAdapter(getContext(), imageList);
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
                     /** 预览, 删除图片 */
-                    AmountDetail.TheAmountOfSideAttachmentListBean bean = adapter.list.get(position);
+                    ExitDetail.AttachmentListBean bean = adapter.list.get(position);
                     if (type[0] == 0) {
                         // 预览
                         ImageActivity.startActivity(getContext(), bean.getFilePath());
@@ -200,6 +294,51 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
 
             recyclerview.setAdapter(adapter);
         } else {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void showProgress(int max) {
+        activity.progressDialog("提交图片", max, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 取消任务
+                presenter.unsubscribe();
+            }
+        });
+    }
+
+    @Override
+    public void updateProgress() {
+        activity.updataProgress(new OnProgressFinishListener() {
+            @Override
+            public void onFinish() {
+                // TODO 全部上传后的回调
+                presenter.getDates(activity.itemID, 1);
+            }
+        });
+    }
+
+    @Override
+    public void showDeleteResult(Boolean aBoolean) {
+        if (aBoolean) {
+            Toast.makeText(getContext(), "删除成功", Toast.LENGTH_SHORT).show();
+            presenter.getDates(activity.itemID, 1);
+        } else {
+            Toast.makeText(getContext(), "删除失败, 请重试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showImgList(ExitDetail exitDetail) {
+        List<ExitDetail.AttachmentListBean> list = exitDetail.getAttachmentList();
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        if (adapter != null) {
+            adapter.setDates(list);
             adapter.notifyDataSetChanged();
         }
     }

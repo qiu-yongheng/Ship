@@ -30,6 +30,7 @@ import com.kc.shiptransport.util.SharePreferenceUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -129,6 +130,20 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                 CalendarUtil.showPickerDialog(getContext(), textEndTime, "yyyy-MM-dd HH:mm", new OnTimePickerSureClickListener() {
                     @Override
                     public void onSure(String str) {
+                        /** 不能选择在开始时间之前的时间 */
+                        // 开始时间
+                        String startTime = textStartTime.getText().toString();
+                        try {
+                            boolean isLastDate = CalendarUtil.isLastDate(startTime, str);
+
+                            if (isLastDate) {
+                                Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
+                                textEndTime.setText("");
+                            }
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 });

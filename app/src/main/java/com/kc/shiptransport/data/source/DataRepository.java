@@ -53,6 +53,7 @@ import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.down.StopList;
 import com.kc.shiptransport.db.down.StopOption;
+import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
@@ -2508,7 +2509,7 @@ public class DataRepository implements DataSouceImpl {
     }
 
     /**
-     * 创建量方图片提交任务
+     * 创建图片提交任务
      *
      * @param imageMultipleResultEvent
      * @param itemID
@@ -2516,7 +2517,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<List<CommitImgListBean>> getAmountImgList(final ImageMultipleResultEvent imageMultipleResultEvent, final int itemID, final String creator) {
+    public Observable<List<CommitImgListBean>> getImgList(final ImageMultipleResultEvent imageMultipleResultEvent, final int itemID, final String creator) {
         return Observable.create(new ObservableOnSubscribe<List<CommitImgListBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<CommitImgListBean>> e) throws Exception {
@@ -2528,7 +2529,7 @@ public class DataRepository implements DataSouceImpl {
 
                 for (MediaBean bean : mediaBeanList) {
                     // 创建对象
-                    CommitImgListBean amountImgListBean = new CommitImgListBean();
+                    CommitImgListBean imgListBean = new CommitImgListBean();
 
 
                     // 图片名
@@ -2556,10 +2557,10 @@ public class DataRepository implements DataSouceImpl {
 
 
                     // 保存数据
-                    amountImgListBean.setJson(json);
-                    amountImgListBean.setByteDataStr(ByteDataStr);
+                    imgListBean.setJson(json);
+                    imgListBean.setByteDataStr(ByteDataStr);
 
-                    lists.add(amountImgListBean);
+                    lists.add(imgListBean);
                 }
 
                 e.onNext(lists);
@@ -3066,6 +3067,101 @@ public class DataRepository implements DataSouceImpl {
                 CommitResultBean commitResultBean = gson.fromJson(result, CommitResultBean.class);
 
                 e.onNext(commitResultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.51 根据退场ItemID,获取退场申请的数据
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    @Override
+    public Observable<ExitDetail> GetExitApplicationRecordByItemID(final int SubcontractorInterimApproachPlanID) {
+        return Observable.create(new ObservableOnSubscribe<ExitDetail>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<ExitDetail> e) throws Exception {
+                String result = mRemoteDataSource.GetExitApplicationRecordByItemID(SubcontractorInterimApproachPlanID);
+                List<ExitDetail> list = gson.fromJson(result, new TypeToken<List<ExitDetail>>() {
+                }.getType());
+
+                // 初始化数据库
+                DataSupport.deleteAll(ExitDetail.class);
+
+                // 保存数据
+                ExitDetail exitDetail = list.get(0);
+                exitDetail.save();
+
+                e.onNext(exitDetail);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.53 删除退场申请图片数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteExitApplicationAttachmentByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteExitApplicationAttachmentByItemID(ItemID);
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.52 提交退场申请图片数据
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertExitApplicationAttachment(final String json, final String ByteDataStr) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.InsertExitApplicationAttachment(json, ByteDataStr);
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.50 提交退场申请数据
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertExitApplicationRecord(final int ItemID, final String ExitTime, final String Creator, final String Remark, final String RemnantAmount, final int SubcontractorInterimApproachPlanID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ItemID", ItemID);
+                jsonObject.put("ExitTime", ExitTime);
+                jsonObject.put("Creator", Creator);
+                jsonObject.put("Remark", Remark);
+                jsonObject.put("RemnantAmount", RemnantAmount);
+                jsonObject.put("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+
+                jsonArray.put(jsonObject);
+
+                String json = jsonArray.toString();
+
+
+                String result = mRemoteDataSource.InsertExitApplicationRecord(json);
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+                e.onNext(bean.getMessage() == 1);
                 e.onComplete();
             }
         });

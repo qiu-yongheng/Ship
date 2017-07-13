@@ -17,9 +17,9 @@ import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.amount.AmountActivity;
 import com.kc.shiptransport.mvp.attendance.AttendanceActivity;
 import com.kc.shiptransport.mvp.attendanceaudit.AttendanceAuditActivity;
+import com.kc.shiptransport.mvp.exitapplication.ExitApplicationActivity;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
 import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
-import com.kc.shiptransport.mvp.sample.SampleActivity;
 import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
 import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
@@ -121,14 +121,16 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             break;
                         case 16:
                             // 验砂取样
-                            SampleActivity.navigateToSampleActivity(getContext());
+//                            SampleActivity.navigateToSampleActivity(getContext());
+
+                            // TODO 退场申请
+                            ExitApplicationActivity.startActivity(getContext());
                             break;
                         case 17:
                             // 过砂记录
                             RecordedSandActivity.startActivity(getContext());
 
-                            // TODO 退场申请
-                            //ExitApplicationActivity.startActivity(getContext());
+
                             break;
 
                         /** AppPID = 18 考勤管理 */

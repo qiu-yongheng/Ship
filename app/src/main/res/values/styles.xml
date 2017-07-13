@@ -54,4 +54,17 @@
         <item name="android:windowExitAnimation">@anim/up_scale_out</item>
     </style>
 
+
+    <!--备注框-->
+    <style name="et_remark">
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:background">@drawable/et_bg</item>
+        <item name="android:gravity">left|top</item>
+        <item name="android:hint">@string/et_hint_remark</item>
+        <item name="android:textColorHint">@color/text_gray</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/text_tag_gray</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
 </resources>

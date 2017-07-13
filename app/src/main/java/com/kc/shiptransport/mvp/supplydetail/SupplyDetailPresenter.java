@@ -210,7 +210,7 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
     @Override
     public void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator) {
         dataRepository
-                .getAmountImgList(imageMultipleResultEvent, itemID, creator)
+                .getImgList(imageMultipleResultEvent, itemID, creator)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<List<CommitImgListBean>>() {
