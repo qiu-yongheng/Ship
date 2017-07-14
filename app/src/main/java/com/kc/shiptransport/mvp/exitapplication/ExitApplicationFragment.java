@@ -83,7 +83,7 @@ public class ExitApplicationFragment extends BaseMvpFragment {
         List<ExitList> exitLists = DataSupport.where("position = ?", String.valueOf(position)).find(ExitList.class);
 
         if (!exitLists.isEmpty()) {
-            ExitApplicationDetailActivity.startActivity(getContext(), exitLists.get(0).getItemID());
+            ExitApplicationDetailActivity.startActivity(getContext(), exitLists.get(0).getItemID(), exitLists.get(0).getIsExit());
         }
     }
 

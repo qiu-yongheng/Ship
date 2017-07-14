@@ -84,6 +84,14 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
 
     @Override
     public void initListener() {
+        /** 设置当前时间 */
+        textTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CalendarUtil.showDatePickerDialog(getContext(), textTime);
+            }
+        });
+
         /** 停工 */
         rlStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +99,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
                 if (spinner_position == 0) {
                     Toast.makeText(getContext(), "请选择施工船舶", Toast.LENGTH_SHORT).show();
                 } else {
-                    DowntimeActivity.startActivity(getContext());
+                    DowntimeActivity.startActivity(getContext(), textTime.getText().toString());
                 }
             }
         });
@@ -103,7 +111,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
                 if (spinner_position == 0) {
                     Toast.makeText(getContext(), "请选择施工船舶", Toast.LENGTH_SHORT).show();
                 } else {
-                    ThreadSandActivity.startActivity(getContext());
+                    ThreadSandActivity.startActivity(getContext(), textTime.getText().toString());
                 }
             }
         });

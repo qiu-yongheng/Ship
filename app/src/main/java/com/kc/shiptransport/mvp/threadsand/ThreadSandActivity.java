@@ -18,12 +18,17 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class ThreadSandActivity extends BaseActivity{
 
+    private static final String CURRENTDATE = "CURRENTDATE";
     private ThreadSandFragment fragment;
+    public String currentDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
+
+        Bundle bundle = getIntent().getExtras();
+        currentDate = bundle.getString(CURRENTDATE);
 
         if (savedInstanceState  != null) {
             fragment = (ThreadSandFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ThreadSandFragment");
@@ -50,9 +55,10 @@ public class ThreadSandActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, String currentDate) {
         Intent intent = new Intent(context, ThreadSandActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putString(CURRENTDATE, currentDate);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

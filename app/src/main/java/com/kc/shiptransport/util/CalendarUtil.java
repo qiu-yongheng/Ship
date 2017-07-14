@@ -216,11 +216,14 @@ public class CalendarUtil {
         Date start = sdf.parse(startTime);
         Date end = sdf.parse(endTime);
 
+        // 公历
         GregorianCalendar startCal = new GregorianCalendar();
         GregorianCalendar endCal = new GregorianCalendar();
         
         startCal.setTime(start);
         endCal.setTime(end);
+
+
 
         long gap = endCal.getTimeInMillis() - startCal.getTimeInMillis();
 
@@ -379,6 +382,42 @@ public class CalendarUtil {
      */
     public static void showPickerDialog(final Context context, final TextView view, final String format, final OnTimePickerSureClickListener listener) {
         final Calendar now = Calendar.getInstance();
+
+        // 显示时间选择器
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                now.set(Calendar.HOUR_OF_DAY, hour);
+                now.set(Calendar.MINUTE, minute);
+                SimpleDateFormat df = new SimpleDateFormat(format);
+                String format = df.format(now.getTime());
+                view.setText(format);
+                listener.onSure(format);
+            }
+        }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+
+        timePickerDialog.show();
+    }
+
+    /**
+     * 选择指定日期的时间
+     * @param context
+     * @param view
+     * @param format
+     * @param Date
+     * @param listener
+     * @throws ParseException
+     */
+    public static void showPickerDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(YYYY_MM_DD);
+        Date d = sdf.parse(Date);
+        // 公历
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(d);
+
+        // 只修改当前的日期, 时间不修改
+        final Calendar now = Calendar.getInstance();
+        now.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR));
 
         // 显示时间选择器
         TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {

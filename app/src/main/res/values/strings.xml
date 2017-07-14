@@ -142,6 +142,8 @@
     <string name="hint_new_pass_again">请再次输入新密码</string>
     <string name="btn_commit_change">提交修改</string>
     <string name="title_change_pass">修改密码</string>
+    <string name="text_man">男</string>
+    <string name="text_woman">女</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

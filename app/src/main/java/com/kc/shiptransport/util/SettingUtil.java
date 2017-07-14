@@ -43,9 +43,9 @@ public class SettingUtil {
 
     /*---------------------------------------------------holder控件类型---------------------------------------------------*/
     /* sample */
-    public static final int HOLDER_IMAGE_1 = 101;
-    public static final int HOLDER_IMAGE_2 = 102;
-    public static final int HOLDER_CONS_SHIP = 103;
+    public static final int HOLDER_IMAGE_1 = 1;
+    public static final int HOLDER_IMAGE_2 = 2;
+    public static final int HOLDER_CONS_SHIP = 3;
 
     /*---------------------------------------------------holder控件类型---------------------------------------------------*/
 
@@ -56,10 +56,6 @@ public class SettingUtil {
 
     /* 未验收 */
     public static final String NO_ACCEPTED = "No_Accepted";
-
-
-
-
     /*-----------------------------------------------checkbox单选框--------------------------------------------------*/
 
 
@@ -68,61 +64,74 @@ public class SettingUtil {
 
     /*-----------------------------------------------审核类型(判断是否已审核)--------------------------------------------------*/
     /* 验收 */
-    public static final int TYPE_ACCEPT = 1;
+    public static final int TYPE_ACCEPT = 101;
     /* 验砂 */
-    public static final int TYPE_SUPPLY = 2;
+    public static final int TYPE_SUPPLY = 102;
     /* 量方 */
-    public static final int TYPE_AMOUNT = 3;
+    public static final int TYPE_AMOUNT = 103;
     /* 过砂记录 */
-    public static final int TYPE_RECORDEDSAND = 4;
+    public static final int TYPE_RECORDEDSAND = 104;
     /* 分包商航次信息完善 */
-    public static final int TYPE_VOYAGEINFO = 5;
+    public static final int TYPE_VOYAGEINFO = 105;
     /* 验砂取样 */
-    public static final int TYPE_SAMPLE = 6;
+    public static final int TYPE_SAMPLE = 106;
     /* 分包商航次信息扫描件 */
-    public static final int TYPE_SCANNER = 7;
+    public static final int TYPE_SCANNER = 107;
     /* 停工 */
-    public static final int TYPE_STOP = 8;
+    public static final int TYPE_STOP = 108;
     /* 抛砂 */
-    public static final int TYPE_THREAD = 9;
+    public static final int TYPE_THREAD = 109;
     /* 退场申请 */
-    public static final int TYPE_EXIT_APPLICATION = 10;
+    public static final int TYPE_EXIT_APPLICATION = 110;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 
     /*-----------------------------------------------扫描件类型--------------------------------------------------*/
     /* 装舱现场照片 */
-    public static final int ID_STOWAGE = 1111;
+    public static final int ID_STOWAGE = 201;
     /* 舱单 */
-    public static final int ID_SHIP_BILL = 1112;
+    public static final int ID_SHIP_BILL = 202;
     /* 托运单 */
-    public static final int ID_CONSIGNMENT_BILL = 1113;
+    public static final int ID_CONSIGNMENT_BILL = 203;
     /* 碎石粉装创记录表 */
-    public static final int ID_GRAVEL = 1114;
+    public static final int ID_GRAVEL = 204;
     /* 选择计划航线图 */
-    public static final int ID_STRIP_PLOT = 1115;
+    public static final int ID_STRIP_PLOT = 205;
     /* 计划航线图 */
-    public static final int ID_STRIP_PLOT_PLAN = 1116;
+    public static final int ID_STRIP_PLOT_PLAN = 206;
     /* 送货单 */
-    public static final int ID_DELIVERY_BILL = 1117;
+    public static final int ID_DELIVERY_BILL = 207;
     /* 预验收质量记录表 */
-    public static final int ID_QC = 1118;
+    public static final int ID_QC = 208;
     /* 海关放行通知照片 */
-    public static final int ID_CUSTOMS = 1119;
+    public static final int ID_CUSTOMS = 209;
     /* 航线对比图 */
-    public static final int ID_CONTRAST = 1120;
+    public static final int ID_CONTRAST = 210;
     /* 海关单 */
-    public static final int ID_CUSTOMS_BILL = 1121;
-
+    public static final int ID_CUSTOMS_BILL = 211;
     /* 删除 */
-    public static final int ITEM_DELETE = 1122;
-
+    public static final int ITEM_DELETE = 212;
     /*-----------------------------------------------扫描件类型--------------------------------------------------*/
 
     // 信息完善item类型
-    public static final int TYPE_TEXT = 200;
-    public static final int TYPE_DATA = 201;
-    public static final int TYPE_ARRAY = 202;
-    public static final int TYPE_READ_ONLY = 203;
-    public static final int TYPE_NUMBER = 204;
+    public static final int TYPE_TEXT = 301;
+    public static final int TYPE_DATA = 302;
+    public static final int TYPE_ARRAY = 303;
+    public static final int TYPE_READ_ONLY = 304;
+    public static final int TYPE_NUMBER = 305;
+
+    /*-----------------------------------------------用户信息--------------------------------------------------*/
+    /* 性别 */
+    public static final int ID_SEX = 401;
+    /* 部门 */
+    public static final int ID_DEPARTMENT = 402;
+    /* 职务 */
+    public static final int ID_DUTIES = 403;
+    /* 手机 */
+    public static final int ID_PHONE = 404;
+    /* email */
+    public static final int ID_EMAIL = 405;
+    /* 电话 */
+    public static final int ID_TELL = 406;
+    /*-----------------------------------------------用户信息--------------------------------------------------*/
 }

@@ -17,8 +17,10 @@ import com.kc.shiptransport.mvp.BaseActivity;
 public class ExitApplicationDetailActivity extends BaseActivity{
 
     private static final String ITEMID = "ITEMID";
+    private static final String EXIT = "EXIT";
     private ExitApplicationDetailFragment fragment;
     public int itemID;
+    public int isExit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class ExitApplicationDetailActivity extends BaseActivity{
 
         Bundle bundle = getIntent().getExtras();
         itemID = bundle.getInt(ITEMID);
+        isExit = bundle.getInt(EXIT);
 
         if (savedInstanceState != null) {
             fragment = (ExitApplicationDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ExitApplicationDetailFragment");
@@ -52,10 +55,11 @@ public class ExitApplicationDetailActivity extends BaseActivity{
         }
     }
 
-    public static void startActivity(Context context, int itemID) {
+    public static void startActivity(Context context, int itemID, int isExit) {
         Intent intent = new Intent(context, ExitApplicationDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(ITEMID, itemID);
+        bundle.putInt(EXIT, isExit);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

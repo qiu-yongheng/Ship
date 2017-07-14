@@ -18,12 +18,17 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class DowntimeActivity extends BaseActivity{
 
+    private static String CURRENTDATE = "CURRENTDATE";
     private DowntimeFragment fragment;
+    public String currentDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
+
+        Bundle bundle = getIntent().getExtras();
+        currentDate = bundle.getString(CURRENTDATE);
 
         if (savedInstanceState != null) {
             fragment = (DowntimeFragment) getSupportFragmentManager().getFragment(savedInstanceState, "DowntimeFragment");
@@ -50,9 +55,10 @@ public class DowntimeActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, String currentDate) {
         Intent intent = new Intent(context, DowntimeActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putString(CURRENTDATE, currentDate);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

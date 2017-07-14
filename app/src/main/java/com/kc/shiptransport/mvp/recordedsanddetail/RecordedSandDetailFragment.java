@@ -164,6 +164,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
                         etAfter4.getText().toString().equals(HINT_TAG) ||
                         TextUtils.isEmpty(etActualAmountSand.getText()) ||
                         etActualAmountSand.getText().toString().equals(HINT_TAG)) {
+
                     Toast.makeText(activity, "还有数据未填写", Toast.LENGTH_SHORT).show();
 
                 } else {

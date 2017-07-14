@@ -61,6 +61,7 @@ import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.threadsand.Layered;
 import com.kc.shiptransport.db.user.User;
+import com.kc.shiptransport.db.userinfo.UserInfo;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -592,6 +593,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.6返回供砂明细,根据ItemID获取对应的数据接口
+     *
      * @param itemID
      * @param isCashe 是否从缓存获取数据, true: 优先从DB获取     false: 优先从网络获取
      * @return
@@ -729,20 +731,20 @@ public class DataRepository implements DataSouceImpl {
                                     num++;
                                 }
                             }
-//                            else if (type == SettingUtil.TYPE_SUPPLY) { // 验砂
-//                                time = weektask.getPreAcceptanceTime();
-//                                time2 = weektask.getReceptionSandTime();
-//                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
-//                                    num++;
-//                                }
-//                            }
-//                            else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
-//                                time = weektask.getPreAcceptanceTime();
-//                                time2 = weektask.getTheAmountOfTime();
-//                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
-//                                    num++;
-//                                }
-//                            }
+                            //                            else if (type == SettingUtil.TYPE_SUPPLY) { // 验砂
+                            //                                time = weektask.getPreAcceptanceTime();
+                            //                                time2 = weektask.getReceptionSandTime();
+                            //                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
+                            //                                    num++;
+                            //                                }
+                            //                            }
+                            //                            else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
+                            //                                time = weektask.getPreAcceptanceTime();
+                            //                                time2 = weektask.getTheAmountOfTime();
+                            //                                if ((time != null && !time.equals("")) && (time2 == null || time2.equals(""))) {
+                            //                                    num++;
+                            //                                }
+                            //                            }
                         }
                     }
                 }
@@ -1264,6 +1266,10 @@ public class DataRepository implements DataSouceImpl {
                             break;
                         case 20:
                             // 考勤审核
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 21:
+                            // 退场申请
                             list.setIcon_id(R.mipmap.plan);
                             break;
                     }
@@ -2726,6 +2732,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.42 获取停工因素选项数据
+     *
      * @return
      */
     @Override
@@ -2763,7 +2770,6 @@ public class DataRepository implements DataSouceImpl {
                 List<StopOption> all = DataSupport.order("OptionType asc").find(StopOption.class);
 
 
-
                 e.onNext(all);
                 e.onComplete();
             }
@@ -2772,10 +2778,11 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.43 提交施工日志（停工）数据
+     *
      * @return
      */
     @Override
-    public Observable<Boolean> InsertConstructionBoatStopDaily(final int ItemID, final String ShipAccount, final String StartTime, final String EndTime, final String Creator, final int StopTypeID) {
+    public Observable<Boolean> InsertConstructionBoatStopDaily(final int ItemID, final String ShipAccount, final String StartTime, final String EndTime, final String Creator, final int StopTypeID, final String remark) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -2787,6 +2794,7 @@ public class DataRepository implements DataSouceImpl {
                 jsonObject.put("EndTime", EndTime);
                 jsonObject.put("Creator", Creator);
                 jsonObject.put("StopTypeID", StopTypeID);
+                jsonObject.put("Remark", remark);
 
                 jsonArray.put(jsonObject);
 
@@ -2804,6 +2812,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.45 获取当天施工日志（开始时间默认值）
+     *
      * @param CurrentDate
      * @param CurrentBoatAccount
      * @return
@@ -2831,6 +2840,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 根据账号, 获取抛沙分区
+     *
      * @param userAccount
      * @return
      */
@@ -2862,6 +2872,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 获取抛砂分区数据
+     *
      * @param account
      * @return
      */
@@ -2870,12 +2881,17 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<PartitionSBBean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<PartitionSBBean> e) throws Exception {
-                List<PartitionNum> numList = DataSupport.where("userAccount = ?", account).find(PartitionNum.class);
+                List<PartitionNum> numList = DataSupport.where("userAccount = ? and num is not null", account).find(PartitionNum.class);
 
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < numList.size(); i++) {
-                    sb.append(numList.get(i).getNum());
-                    if (i != (numList.size()-1)) {
+                    String num = numList.get(i).getNum();
+                    if (TextUtils.isEmpty(num)) {
+                        return;
+                    }
+
+                    sb.append(num);
+                    if (i != (numList.size() - 1)) {
                         sb.append(";");
                     }
                 }
@@ -2892,6 +2908,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.46 提交施工日志（抛砂）数据
+     *
      * @param json
      * @return
      */
@@ -2912,6 +2929,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 获取抛砂分层
+     *
      * @return
      */
     @Override
@@ -2936,6 +2954,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.44 获取施工日志（停工）数据
+     *
      * @param ItemID
      * @param ShipAccount
      * @param StartTime
@@ -2962,6 +2981,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.48	 获取施工日志（抛砂）数据
+     *
      * @param ItemID
      * @param ShipAccount
      * @param StartTime
@@ -2987,6 +3007,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.49 获取可以进行退场申请的数据
+     *
      * @return
      */
     @Override
@@ -3052,6 +3073,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 3.1 修改密码
+     *
      * @param LoginName
      * @param OldPassword
      * @param NewPassword
@@ -3074,6 +3096,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.51 根据退场ItemID,获取退场申请的数据
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -3101,6 +3124,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.53 删除退场申请图片数据
+     *
      * @param ItemID
      * @return
      */
@@ -3119,6 +3143,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.52 提交退场申请图片数据
+     *
      * @param json
      * @param ByteDataStr
      * @return
@@ -3138,6 +3163,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.50 提交退场申请数据
+     *
      * @return
      */
     @Override
@@ -3162,6 +3188,80 @@ public class DataRepository implements DataSouceImpl {
                 String result = mRemoteDataSource.InsertExitApplicationRecord(json);
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
                 e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 3.2 修改用户信息
+     *
+     * @param LoginName
+     * @param Department
+     * @param Email
+     * @param title
+     * @param Mobile
+     * @param TelephoneNumber
+     * @param sex
+     * @return
+     */
+    @Override
+    public Observable<Boolean> ChangeUserData(final String LoginName, final String Department, final String Email, final String title, final String Mobile, final String TelephoneNumber, final String sex) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 解析json
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("LoginName", LoginName);
+                jsonObject.put("Department", Department);
+                jsonObject.put("Email", Email);
+                jsonObject.put("Sex", (TextUtils.isEmpty(sex) ? "" : sex));
+                jsonObject.put("Title", title);
+                jsonObject.put("Mobile", Mobile);
+                jsonObject.put("TelephoneNumber", TelephoneNumber);
+
+                jsonArray.put(jsonObject);
+
+                String json = jsonArray.toString();
+
+                Log.d("==", "用户信息修改: " + json);
+
+                String result = mRemoteDataSource.ChangeUserData(json);
+
+                CommitResultBean commitResultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(commitResultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 3.3 获取用户信息
+     *
+     * @param LoginName
+     * @return
+     */
+    @Override
+    public Observable<Boolean> GetUserDataByLoginName(final String LoginName) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.GetUserDataByLoginName(LoginName);
+
+                Log.d("==", "用户信息: " + result);
+
+                List<UserInfo> list = gson.fromJson(result, new TypeToken<List<UserInfo>>() {
+                }.getType());
+
+                // 初始化数据库
+                DataSupport.deleteAll(UserInfo.class);
+
+                // 保持到数据库
+                boolean save = list.get(0).save();
+
+                e.onNext(save);
                 e.onComplete();
             }
         });

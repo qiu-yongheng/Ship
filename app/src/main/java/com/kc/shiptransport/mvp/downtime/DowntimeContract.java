@@ -23,6 +23,6 @@ public interface DowntimeContract {
     interface Presenter extends BasePresenter {
         void getStopOptions();
         void getStartDate(String CurrentDate, String CurrentBoatAccount);
-        void stop(int itemID, String userID, String startTime, String endTime, String id, int type);
+        void stop(int itemID, String userID, String startTime, String endTime, String id, int type, String remark);
     }
 }

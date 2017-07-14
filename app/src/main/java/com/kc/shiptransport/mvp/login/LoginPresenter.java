@@ -16,8 +16,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -61,9 +61,9 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void loadData(final String username) {
         // 获取分包商
-//        Observable<Boolean> subcontractor = mDataRepository
-//                .getSubcontractor(username)
-//                .subscribeOn(Schedulers.io());
+        //        Observable<Boolean> subcontractor = mDataRepository
+        //                .getSubcontractor(username)
+        //                .subscribeOn(Schedulers.io());
 
         // 获取船
         Observable<Boolean> ship = mDataRepository
@@ -80,10 +80,18 @@ public class LoginPresenter implements LoginContract.Presenter {
         //                .GetConstructionBoat()
         //                .subscribeOn(Schedulers.io());
 
-        Observable.zip(ship, appList, new BiFunction<Boolean, Boolean, Boolean>() {
+        // 获取用户信息
+        Observable<Boolean> userInfo = mDataRepository
+                .GetUserDataByLoginName(username)
+                .subscribeOn(Schedulers.io());
+
+
+
+
+        Observable.zip(ship, appList, userInfo, new Function3<Boolean, Boolean, Boolean, Boolean>() {
             @Override
-            public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception {
-                if (aBoolean && aBoolean2) {
+            public Boolean apply(@NonNull Boolean aBoolean, @NonNull Boolean aBoolean2, @NonNull Boolean aBoolean3) throws Exception {
+                if (aBoolean && aBoolean2 && aBoolean3) {
                     return true;
                 } else {
                     return false;
@@ -93,6 +101,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             @Override
             public Observable<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
                 if (aBoolean) {
+                    // 获取施工船舶, 如果放在zip中执行, 有一定概率服务器响应不回来
                     return mDataRepository.GetConstructionBoat();
                 } else {
                     return Observable.create(new ObservableOnSubscribe<Boolean>() {

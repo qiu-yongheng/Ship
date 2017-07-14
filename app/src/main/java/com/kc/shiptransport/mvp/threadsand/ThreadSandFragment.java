@@ -38,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -109,7 +110,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
 
         // 获取开始时间
-        presenter.getDates(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"), boat.getShipNum());
+        presenter.getDates(activity.currentDate, boat.getShipNum());
 
         // 获取施工分区
         presenter.getPartition(boat.getShipNum());
@@ -141,12 +142,29 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         tvEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showPickerDialog(getContext(), tvEndTime, "yyyy-MM-dd HH:mm", new OnTimePickerSureClickListener() {
-                    @Override
-                    public void onSure(String str) {
+                try {
+                    CalendarUtil.showPickerDialog(getContext(), tvEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
+                        @Override
+                        public void onSure(String str) {
+                            /** 不能选择在开始时间之前的时间 */
+                            // 开始时间
+                            String startTime = tvStartTime.getText().toString();
+                            try {
+                                boolean isLastDate = CalendarUtil.isLastDate(startTime, str);
 
-                    }
-                });
+                                if (isLastDate) {
+                                    Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
+                                    tvEndTime.setText("");
+                                }
+
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
         /** 施工分层 */

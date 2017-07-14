@@ -31,6 +31,15 @@ public class DownLogBean {
     private String StartTime;
     private String EndTime;
     private String SystemDate;
+    private String Remark;
+
+    public String getRemark() {
+        return Remark;
+    }
+
+    public void setRemark(String remark) {
+        Remark = remark;
+    }
 
     public int getItemID() {
         return ItemID;

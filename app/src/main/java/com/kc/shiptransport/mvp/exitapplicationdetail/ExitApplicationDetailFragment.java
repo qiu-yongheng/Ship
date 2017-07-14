@@ -97,7 +97,22 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
         View view = inflater.inflate(R.layout.fragment_exit_application, container, false);
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
+
+        /** 如果已完善, 不能修改 */
+        if (activity.isExit == 1) {
+            // 已完善
+            btnCommit.setVisibility(View.GONE);
+            etQuantum.setFocusable(false);
+            etQuantum.setFocusableInTouchMode(false);
+        } else {
+            // 未完善
+            btnCommit.setVisibility(View.VISIBLE);
+            etQuantum.setFocusable(true);
+            etQuantum.setFocusableInTouchMode(true);
+        }
+
         initListener();
+
 
         // TODO 获取要显示的数据
         presenter.getDates(activity.itemID, 0);

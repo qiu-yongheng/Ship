@@ -54,6 +54,11 @@
         <item name="android:windowExitAnimation">@anim/up_scale_out</item>
     </style>
 
+    <style name="AnimBottem" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
+
 
     <!--备注框-->
     <style name="et_remark">

@@ -546,7 +546,7 @@ public interface DataSouceImpl {
      * 1.43 提交施工日志（停工）数据
      * @return
      */
-    Observable<Boolean> InsertConstructionBoatStopDaily(int ItemID, String ShipAccount, String StartTime, String EndTime, String Creator, int StopTypeID);
+    Observable<Boolean> InsertConstructionBoatStopDaily(int ItemID, String ShipAccount, String StartTime, String EndTime, String Creator, int StopTypeID, String remark);
 
     /**
      * 1.45 获取当天施工日志（开始时间默认值）
@@ -645,8 +645,27 @@ public interface DataSouceImpl {
 
     /**
      * 1.50 提交退场申请数据
-     * @param json
      * @return
      */
     Observable<Boolean> InsertExitApplicationRecord(int ItemID, String ExitTime, String Creator, String Remark, String RemnantAmount, int SubcontractorInterimApproachPlanID);
+
+    /**
+     * 3.2 修改用户信息
+     * @param LoginName
+     * @param Department
+     * @param Email
+     * @param title
+     * @param Mobile
+     * @param TelephoneNumber
+     * @param sex
+     * @return
+     */
+    Observable<Boolean> ChangeUserData(String LoginName, String Department, String Email, String title, String Mobile, String TelephoneNumber, String sex);
+
+    /**
+     * 3.3 获取用户信息
+     * @param LoginName
+     * @return
+     */
+    Observable<Boolean> GetUserDataByLoginName(String LoginName);
 }

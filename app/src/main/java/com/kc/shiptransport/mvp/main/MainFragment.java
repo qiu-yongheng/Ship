@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -30,6 +31,7 @@ public class MainFragment extends Fragment {
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
     Unbinder unbinder;
+    private MineFragment mineFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +52,8 @@ public class MainFragment extends Fragment {
 
     private void initView(View view) {
         // 绑定view
-        viewpager.setAdapter(new TabAdapter(getActivity().getSupportFragmentManager(), new HomeFragment(), new UpcomingFragment(), new MineFragment()));
+        mineFragment = new MineFragment();
+        viewpager.setAdapter(new TabAdapter(getActivity().getSupportFragmentManager(), new HomeFragment(), new UpcomingFragment(), mineFragment));
         // 缓存3个标签的数据, 不重复加载数据
         viewpager.setOffscreenPageLimit(3);
         // 绑定viewpage
@@ -104,5 +107,11 @@ public class MainFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mineFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

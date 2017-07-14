@@ -46,6 +46,8 @@ public class DowntimeLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ((NormalHolder)holder).mTvStartTime.setText(downLogBean.getStartTime());
         ((NormalHolder)holder).mTvEndTime.setText(downLogBean.getEndTime());
         ((NormalHolder)holder).mTvSystemTime.setText(downLogBean.getSystemDate());
+        ((NormalHolder)holder).mTvRemark.setText(downLogBean.getRemark());
+
     }
 
     public void setDates(List<DownLogBean> list) {
@@ -61,6 +63,7 @@ public class DowntimeLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private final TextView mTvStartTime;
         private final TextView mTvEndTime;
         private final TextView mTvSystemTime;
+        private final TextView mTvRemark;
 
         public NormalHolder(View itemView) {
             super(itemView);
@@ -70,6 +73,8 @@ public class DowntimeLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mTvStartTime = (TextView) itemView.findViewById(R.id.text_start_time);
             mTvEndTime = (TextView) itemView.findViewById(R.id.text_end_time);
             mTvSystemTime = (TextView) itemView.findViewById(R.id.text_system_time);
+            mTvRemark = (TextView) itemView.findViewById(R.id.text_remark);
+
         }
     }
 

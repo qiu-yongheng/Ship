@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.main;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -51,5 +52,17 @@ public class MainActivity extends BaseActivity {
         if (mainFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "MainFragment", mainFragment);
         }
+    }
+
+    /**
+     * 接受用户信息修改回调
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mainFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,8 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     Button btnDownTime;
     @BindView(R.id.btn_down_log)
     Button btnDownLog;
+    @BindView(R.id.et_remark)
+    EditText etRemark;
     private DowntimeActivity activity;
     private DowntimeAdapter adapter;
     private DowntimeContract.Presenter presenter;
@@ -80,9 +83,10 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
 
         boat = all.get(position - 1);
 
-        // 获取数据
+        // 获取停工因素
         presenter.getStopOptions();
-        presenter.getStartDate(CalendarUtil.getCurrentDate("yyyy-MM-dd"), boat.getShipNum());
+        // 获取开始日期
+        presenter.getStartDate(activity.currentDate, boat.getShipNum());
         return view;
     }
 
@@ -114,39 +118,50 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                 String startTime = textStartTime.getText().toString();
                 // 结束时间
                 String endTime = textEndTime.getText().toString();
+                // 备注
+                String remark = etRemark.getText().toString();
+
                 List<User> users = DataSupport.findAll(User.class);
 
                 if (stopType != -1 && !TextUtils.isEmpty(endTime) && !endTime.equals("请选择时间")) {
-                    presenter.stop(0, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType);
+                    presenter.stop(0, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark);
                 } else {
                     Toast.makeText(getContext(), "停工因素或结束时间未选择", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        /** 选择结束时间 */
         ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showPickerDialog(getContext(), textEndTime, "yyyy-MM-dd HH:mm", new OnTimePickerSureClickListener() {
+                try {
+                CalendarUtil.showPickerDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
                     @Override
                     public void onSure(String str) {
                         /** 不能选择在开始时间之前的时间 */
                         // 开始时间
                         String startTime = textStartTime.getText().toString();
+
+                        boolean isLastDate = false;
                         try {
-                            boolean isLastDate = CalendarUtil.isLastDate(startTime, str);
-
-                            if (isLastDate) {
-                                Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
-                                textEndTime.setText("");
-                            }
-
+                            isLastDate = CalendarUtil.isLastDate(startTime, str);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
 
+                        if (isLastDate) {
+                                Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
+                                textEndTime.setText("");
+                            }
+
+
                     }
                 });
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
