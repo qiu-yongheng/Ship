@@ -33,6 +33,7 @@ import com.kc.shiptransport.util.CalendarUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -116,12 +117,16 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         rlRecordStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showTimePickerDialog(getContext(), tvStartTime, new OnTimePickerSureClickListener() {
-                    @Override
-                    public void onSure(String str) {
+                try {
+                    CalendarUtil.showTimePickerDialog(getContext(), tvStartTime, new OnTimePickerSureClickListener() {
+                        @Override
+                        public void onSure(String str) {
 
-                    }
-                });
+                        }
+                    }, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -129,12 +134,16 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         rlRecordEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showTimePickerDialog(getContext(), tvEndTime, new OnTimePickerSureClickListener() {
-                    @Override
-                    public void onSure(String str) {
+                try {
+                    CalendarUtil.showTimePickerDialog(getContext(), tvEndTime, new OnTimePickerSureClickListener() {
+                        @Override
+                        public void onSure(String str) {
 
-                    }
-                });
+                        }
+                    }, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

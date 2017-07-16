@@ -157,7 +157,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
 
 
                     }
-                });
+                }, false);
 
                 } catch (ParseException e) {
                     e.printStackTrace();

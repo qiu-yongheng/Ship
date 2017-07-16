@@ -23,6 +23,7 @@ import com.kc.shiptransport.util.CalendarUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,7 +75,11 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
         mTextAttendanceTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showDatePickerDialog(getContext(), mTextAttendanceTime);
+                try {
+                    CalendarUtil.showDatePickerDialog(getContext(), mTextAttendanceTime, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

@@ -35,6 +35,7 @@ import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,7 +186,11 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         tvSupplyTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showTimePickerDialog(getContext(), tvSupplyTime);
+                try {
+                    CalendarUtil.showTimePickerDialog(getContext(), tvSupplyTime, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

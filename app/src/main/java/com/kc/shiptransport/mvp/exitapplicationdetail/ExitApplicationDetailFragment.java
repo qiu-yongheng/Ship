@@ -34,6 +34,7 @@ import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,12 +160,16 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
         tvSupplyTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showPickerDialog(getContext(), tvSupplyTime, CalendarUtil.YYYY_MM_DD_HH_MM, new OnTimePickerSureClickListener() {
-                    @Override
-                    public void onSure(String str) {
-                        // TODO 可以限制不能选择之前的时间
-                    }
-                });
+                try {
+                    CalendarUtil.showPickerDialog(getContext(), tvSupplyTime, CalendarUtil.YYYY_MM_DD_HH_MM, new OnTimePickerSureClickListener() {
+                        @Override
+                        public void onSure(String str) {
+                            // TODO 可以限制不能选择之前的时间
+                        }
+                    }, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

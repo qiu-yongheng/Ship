@@ -24,6 +24,7 @@ import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.attendancerecord.AttendanceRecordActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 
+import java.text.ParseException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -101,7 +102,11 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
         textTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showDatePickerDialog(getContext(), textTime);
+                try {
+                    CalendarUtil.showDatePickerDialog(getContext(), textTime, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

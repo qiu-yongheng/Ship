@@ -161,7 +161,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                                 e.printStackTrace();
                             }
                         }
-                    });
+                    }, false);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

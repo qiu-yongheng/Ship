@@ -1,7 +1,6 @@
 package com.kc.shiptransport.mvp.supplydetail;
 
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
@@ -32,15 +29,15 @@ import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import org.litepal.crud.DataSupport;
 
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -206,20 +203,16 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         tvSupplyTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar now = Calendar.getInstance();
-                TimePickerDialog timePickerDialog = new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                        Calendar instance = Calendar.getInstance();
-                        instance.set(Calendar.HOUR_OF_DAY, hour);
-                        instance.set(Calendar.MINUTE, minute);
-                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        String format = df.format(instance.getTime());
-                        tvSupplyTime.setText(format);
-                    }
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
+                try {
+                    CalendarUtil.showPickerDialog(getContext(), tvSupplyTime, CalendarUtil.YYYY_MM_DD_HH_MM, new OnTimePickerSureClickListener() {
+                        @Override
+                        public void onSure(String str) {
 
-                timePickerDialog.show();
+                        }
+                    }, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

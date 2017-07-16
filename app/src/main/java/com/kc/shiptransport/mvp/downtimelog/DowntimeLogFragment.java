@@ -31,6 +31,7 @@ import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -189,7 +190,11 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
         tvStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showDatePickerDialog(getContext(), tvStartTime);
+                try {
+                    CalendarUtil.showDatePickerDialog(getContext(), tvStartTime, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -197,7 +202,11 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
         tvEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CalendarUtil.showDatePickerDialog(getContext(), tvEndTime);
+                try {
+                    CalendarUtil.showDatePickerDialog(getContext(), tvEndTime, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

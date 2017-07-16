@@ -24,6 +24,7 @@ import com.kc.shiptransport.util.SpinnerUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +89,11 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
         textTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CalendarUtil.showDatePickerDialog(getContext(), textTime);
+                try {
+                    CalendarUtil.showDatePickerDialog(getContext(), textTime, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
