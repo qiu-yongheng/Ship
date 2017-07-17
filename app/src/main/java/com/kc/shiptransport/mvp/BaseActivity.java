@@ -154,19 +154,37 @@ public class BaseActivity extends AppCompatActivity {
      * 显示对话框
      *
      * @param msg
-     * @param listenter
+     * @param okListener
      */
-    public void showDailog(String title, String msg, DialogInterface.OnClickListener listenter) {
-        alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
-        alertDialog.setTitle(title);
-        alertDialog.setMessage(msg);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "取消", new DialogInterface.OnClickListener() {
+    public void showDailog(String title, String msg, DialogInterface.OnClickListener okListener) {
+        showDailog(title, msg, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 alertDialog.dismiss();
             }
-        });
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "确认", listenter);
+        }, okListener);
+    }
+
+    /**
+     * 显示对话框
+     *
+     * @param msg
+     */
+    public void showDailog(String title, String msg, DialogInterface.OnClickListener cancelListener, DialogInterface.OnClickListener okListener) {
+        showDailog(title, msg, "取消", "确认", cancelListener, okListener);
+    }
+
+    /**
+     * 显示对话框
+     *
+     * @param msg
+     */
+    public void showDailog(String title, String msg, String cancel, String ok, DialogInterface.OnClickListener cancelListener, DialogInterface.OnClickListener okListener) {
+        alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(msg);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, cancel, cancelListener);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, ok, okListener);
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
     }

@@ -116,7 +116,12 @@ public class DataRepository implements DataSouceImpl {
     @Override
     public void getSubcontractorInfo(String username) {
         // 1. 获取数据, 缓存到数据库
-        String subcontractorInfo = mRemoteDataSource.getSubcontractorInfo(username);
+        String subcontractorInfo = null;
+        try {
+            subcontractorInfo = mRemoteDataSource.getSubcontractorInfo(username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Log.d("info", "分包商json: " + subcontractorInfo);
         // 保存到数据库
         List<SubcontractorBean> ls = gson.fromJson(subcontractorInfo, new TypeToken<List<SubcontractorBean>>() {
@@ -136,7 +141,12 @@ public class DataRepository implements DataSouceImpl {
     @Override
     public void getShipInfo(String username) {
         // 2. 获取数据, 缓存到数据库
-        String shipInfo = mRemoteDataSource.getShipInfo(username);
+        String shipInfo = null;
+        try {
+            shipInfo = mRemoteDataSource.getShipInfo(username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         List<ShipBean> list = gson.fromJson(shipInfo, new TypeToken<List<ShipBean>>() {
         }.getType());
         if (list != null && !list.isEmpty()) {

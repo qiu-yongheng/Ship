@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
+
     <application
         android:name=".app.App"
         android:allowBackup="true"
@@ -77,6 +78,27 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"/>
+
+        <service
+            android:name=".download.DownloadService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <!--
+            name:可以直接使用默认的FileProvider，也可以继承做其它操作。
+            authorities:定义唯一一个authorities，和构建content://uri中的getUriForFile方法的authority参数一致
+            resource：指向保存位置path配置的xml文件。
+            其它都是固定的。
+       -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.kc.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>
