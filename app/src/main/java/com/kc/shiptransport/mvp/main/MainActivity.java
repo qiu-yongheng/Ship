@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity {
             downloadBinder = (DownloadService.DownloadBinder) service;
 
             /** 检查更新 */
-            presenter.checkVersionCode(downloadBinder);
+            //presenter.checkVersionCode(downloadBinder);
         }
 
     };

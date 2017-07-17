@@ -342,7 +342,7 @@ public class MineFragment extends Fragment {
      */
     public void changeInfo(UserInfo userInfo) {
         showLoadding(true);
-        dataRepository.ChangeUserData(userInfo.getLoginName(), userInfo.getDisplayName(), userInfo.getEmail(), userInfo.getTitle(), userInfo.getMobile(), userInfo.getTelephoneNumber(), userInfo.getSex())
+        dataRepository.ChangeUserData(userInfo.getLoginName(), userInfo.getDepartment(), userInfo.getEmail(), userInfo.getTitle(), userInfo.getMobile(), userInfo.getTelephoneNumber(), userInfo.getSex())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
