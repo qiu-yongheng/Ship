@@ -8,16 +8,22 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:background="?colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize">
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="?colorPrimary">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/tv_title"
+                android:paddingLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:textColor="#fff"
                 android:textSize="@dimen/text_15sp"/>
 
@@ -31,6 +37,8 @@
                 android:textColor="#fff"
                 android:textSize="@dimen/text_15sp"/>
         </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+
 
         <LinearLayout
             android:layout_width="match_parent"

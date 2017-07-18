@@ -6,8 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -63,6 +65,8 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     Button btnDownLog;
     @BindView(R.id.et_remark)
     EditText etRemark;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private DowntimeActivity activity;
     private DowntimeAdapter adapter;
     private DowntimeContract.Presenter presenter;
@@ -103,9 +107,22 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
             tvTitle.setText("施工船舶: " + boat.getShipName());
         }
 
+        setHasOptionsMenu(true);
         activity = (DowntimeActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 3));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -136,28 +153,28 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
             @Override
             public void onClick(View view) {
                 try {
-                CalendarUtil.showPickerDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
-                    @Override
-                    public void onSure(String str) {
-                        /** 不能选择在开始时间之前的时间 */
-                        // 开始时间
-                        String startTime = textStartTime.getText().toString();
+                    CalendarUtil.showTimeDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
+                        @Override
+                        public void onSure(String str) {
+                            /** 不能选择在开始时间之前的时间 */
+                            // 开始时间
+                            String startTime = textStartTime.getText().toString();
 
-                        boolean isLastDate = false;
-                        try {
-                            isLastDate = CalendarUtil.isLastDate(startTime, str);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                            boolean isLastDate = false;
+                            try {
+                                isLastDate = CalendarUtil.isLastDate(startTime, str);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
 
-                        if (isLastDate) {
+                            if (isLastDate) {
                                 Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
                                 textEndTime.setText("");
                             }
 
 
-                    }
-                }, false);
+                        }
+                    }, false);
 
                 } catch (ParseException e) {
                     e.printStackTrace();

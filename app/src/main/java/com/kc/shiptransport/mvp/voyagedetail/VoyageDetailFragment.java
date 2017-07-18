@@ -25,6 +25,8 @@ import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.view.actiivty.InputActivity;
 
+import java.text.ParseException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -159,14 +161,18 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                             break;
                         case SettingUtil.TYPE_DATA:
                             // 时间
-                            CalendarUtil.showTimePickerDialog(getContext(), new OnTimePickerSureClickListener() {
-                                @Override
-                                public void onSure(String str) {
-                                    // 保存数据
-                                    columnsBean.setValue(str);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
+                            try {
+                                CalendarUtil.showTimePickerDialog(getContext(), new OnTimePickerSureClickListener() {
+                                    @Override
+                                    public void onSure(String str) {
+                                        // 保存数据
+                                        columnsBean.setValue(str);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }, false);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         case SettingUtil.TYPE_ARRAY:
                             // 数组

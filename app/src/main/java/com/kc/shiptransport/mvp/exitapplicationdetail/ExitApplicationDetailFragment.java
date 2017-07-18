@@ -161,7 +161,7 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
             @Override
             public void onClick(View view) {
                 try {
-                    CalendarUtil.showPickerDialog(getContext(), tvSupplyTime, CalendarUtil.YYYY_MM_DD_HH_MM, new OnTimePickerSureClickListener() {
+                    CalendarUtil.showTimePickerDialog(getContext(), tvSupplyTime, new OnTimePickerSureClickListener() {
                         @Override
                         public void onSure(String str) {
                             // TODO 可以限制不能选择之前的时间

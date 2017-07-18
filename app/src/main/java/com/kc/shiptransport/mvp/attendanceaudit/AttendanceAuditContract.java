@@ -20,7 +20,7 @@ public interface AttendanceAuditContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getAttendance();
+        void getAttendance(String userID);
         void commitAudit(List<AttendanceRecordList> list, int position, int type);
     }
 }

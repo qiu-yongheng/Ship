@@ -155,23 +155,6 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
                 if (spinner_position == 0 ||
                         tvStartTime.getText().equals(HINT_TAG) ||
                         tvEndTime.getText().equals(HINT_TAG) ||
-                        TextUtils.isEmpty(etBefore1.getText()) ||
-                        etBefore1.getText().toString().equals(HINT_TAG) ||
-                        TextUtils.isEmpty(etBefore2.getText()) ||
-                        etBefore2.getText().toString().equals(HINT_TAG) ||
-                        TextUtils.isEmpty(etBefore3.getText()) ||
-                        etBefore3.getText().toString().equals(HINT_TAG) ||
-                        TextUtils.isEmpty(etBefore4.getText()) ||
-                        etBefore4.getText().toString().equals(HINT_TAG) ||
-                        TextUtils.isEmpty(etAfter1.getText()) ||
-                        etAfter1.getText().toString().equals(HINT_TAG) ||
-                        TextUtils.isEmpty(etAfter2.getText()) ||
-                        etAfter2.getText().toString().equals(HINT_TAG) ||
-                        TextUtils.isEmpty(etAfter3.getText()) ||
-                        etAfter3.getText().toString().equals(HINT_TAG) ||
-                        TextUtils.isEmpty(etAfter4.getText()) ||
-                        etAfter4.getText().toString().equals(HINT_TAG) ||
-                        TextUtils.isEmpty(etActualAmountSand.getText()) ||
                         etActualAmountSand.getText().toString().equals(HINT_TAG)) {
 
                     Toast.makeText(activity, "还有数据未填写", Toast.LENGTH_SHORT).show();
@@ -196,18 +179,27 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
                     bean.setStartTime(tvStartTime.getText().toString());
 
                     bean.setEndTime(tvEndTime.getText().toString());
+                    String before1 = etBefore1.getText().toString();
+                    String before2 = etBefore2.getText().toString();
+                    String before3 = etBefore3.getText().toString();
+                    String before4 = etBefore4.getText().toString();
+                    bean.setBeforeOverSandDraft1(Float.valueOf(TextUtils.isEmpty(before1) ? "0" : before1));
+                    bean.setBeforeOverSandDraft2(Float.valueOf(TextUtils.isEmpty(before2) ? "0" : before2));
+                    bean.setBeforeOverSandDraft3(Float.valueOf(TextUtils.isEmpty(before3) ? "0" : before3));
+                    bean.setBeforeOverSandDraft4(Float.valueOf(TextUtils.isEmpty(before4) ? "0" : before4));
 
-                    bean.setBeforeOverSandDraft1(Float.valueOf(etBefore1.getText().toString()));
-                    bean.setBeforeOverSandDraft2(Float.valueOf(etBefore2.getText().toString()));
-                    bean.setBeforeOverSandDraft3(Float.valueOf(etBefore3.getText().toString()));
-                    bean.setBeforeOverSandDraft4(Float.valueOf(etBefore4.getText().toString()));
 
-                    bean.setAfterOverSandDraft1(Float.valueOf(etAfter1.getText().toString()));
-                    bean.setAfterOverSandDraft2(Float.valueOf(etAfter2.getText().toString()));
-                    bean.setAfterOverSandDraft3(Float.valueOf(etAfter3.getText().toString()));
-                    bean.setAfterOverSandDraft4(Float.valueOf(etAfter4.getText().toString()));
+                    String after1 = etAfter1.getText().toString();
+                    String after2 = etAfter2.getText().toString();
+                    String after3 = etAfter3.getText().toString();
+                    String after4 = etAfter4.getText().toString();
+                    bean.setAfterOverSandDraft1(Float.valueOf(TextUtils.isEmpty(after1) ? "0" : after1));
+                    bean.setAfterOverSandDraft2(Float.valueOf(TextUtils.isEmpty(after2) ? "0" : after2));
+                    bean.setAfterOverSandDraft3(Float.valueOf(TextUtils.isEmpty(after3) ? "0" : after3));
+                    bean.setAfterOverSandDraft4(Float.valueOf(TextUtils.isEmpty(after4) ? "0" : after4));
 
-                    bean.setActualAmountOfSand(Float.valueOf(etActualAmountSand.getText().toString()));
+                    String amountSand = etActualAmountSand.getText().toString();
+                    bean.setActualAmountOfSand(Float.valueOf(TextUtils.isEmpty(amountSand) ? "0" : amountSand));
 
                     bean.setIsFinish(IsFinish);
 

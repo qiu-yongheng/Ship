@@ -24,6 +24,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.userinfo.UserInfo;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.mvp.about.AboutActivity;
 import com.kc.shiptransport.mvp.changepassword.ChangePasswordActivity;
 import com.kc.shiptransport.mvp.login.LoginActivity;
 import com.kc.shiptransport.mvp.main.MainActivity;
@@ -89,6 +90,8 @@ public class MineFragment extends Fragment {
     TextView tvTell;
     @BindView(R.id.rl_tell)
     RelativeLayout rlTell;
+    @BindView(R.id.rl_about)
+    RelativeLayout rlAbout;
     private SharedPreferences sp;
     private MainActivity activity;
     private UserInfo userInfo;
@@ -128,6 +131,7 @@ public class MineFragment extends Fragment {
 
     /**
      * 更新数据
+     *
      * @param userInfo
      */
     private void syncDates(UserInfo userInfo) {
@@ -296,6 +300,15 @@ public class MineFragment extends Fragment {
                         SettingUtil.ID_TELL);
             }
         });
+
+        /** 软件版本 */
+        rlAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AboutActivity.startActivity(getContext());
+            }
+        });
+
 
     }
 

@@ -52,10 +52,10 @@ public class AttendanceAuditPresenter implements AttendanceAuditContract.Present
      * 获取考勤列表
      */
     @Override
-    public void getAttendance() {
+    public void getAttendance(String userID) {
         view.showLoading(true);
         dataRepository
-                .GetAttendanceRecords(0, "", "", "")
+                .GetAttendanceRecords(0, "", "", "", userID)
                 .subscribeOn(Schedulers.io())
                 .flatMap(new Function<List<AttendanceRecordList>, ObservableSource<AttendanceRecordList>>() {
                     @Override

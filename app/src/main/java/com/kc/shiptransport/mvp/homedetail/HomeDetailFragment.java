@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -37,8 +39,11 @@ import butterknife.ButterKnife;
  */
 
 public class HomeDetailFragment extends Fragment implements HomeDetailContract.View {
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.recyclerview)
-    RecyclerView mRecyclerview;
+    RecyclerView recyclerview;
     private HomeDetailContract.Presenter presenter;
     private HomeDetailActivity activity;
     private HomeDetailAdapter adapter;
@@ -58,9 +63,23 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
 
     @Override
     public void initViews(View view) {
+        setHasOptionsMenu(true);
         activity = (HomeDetailActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setTitle(R.string.toolbar_title);
 
-        mRecyclerview.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 3));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -76,7 +95,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
     @Override
     public void showLoading(boolean isShow) {
 
-   }
+    }
 
     @Override
     public void showError(String msg) {
@@ -85,6 +104,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
 
     /**
      * 显示二级界面 , 根据appid设置点击事件
+     *
      * @param lists
      */
     @Override
@@ -150,10 +170,15 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                 }
             });
 
-            mRecyclerview.setAdapter(adapter);
+            recyclerview.setAdapter(adapter);
         } else {
             adapter.setDates(lists);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

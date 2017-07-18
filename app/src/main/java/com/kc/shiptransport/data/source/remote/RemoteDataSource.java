@@ -670,7 +670,7 @@ public class RemoteDataSource {
      * @param EndDate
      * @return
      */
-    public String GetAttendanceRecords(int ItemID, String Creator, String StartDate, String EndDate) throws Exception {
+    public String GetAttendanceRecords(int ItemID, String Creator, String StartDate, String EndDate, String Auditor) throws Exception {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
@@ -687,6 +687,8 @@ public class RemoteDataSource {
         rpc.addProperty("Creator", Creator);
         rpc.addProperty("StartDate", StartDate);
         rpc.addProperty("EndDate", EndDate);
+        rpc.addProperty("Auditor", Auditor);
+
 
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
         return getCallResult(endPoint, soapAction, rpc);

@@ -47,10 +47,10 @@ public class AttendanceRecordPresenter implements AttendanceRecordContract.Prese
     }
 
     @Override
-    public void getAttendance(String subcontractorAccount, String time) {
+    public void getAttendance(String subcontractorAccount, String time, String Auditor) {
         view.showLoadding(true);
         dataRepository
-                .GetAttendanceRecords(0, subcontractorAccount, time, time)
+                .GetAttendanceRecords(0, subcontractorAccount, time, time, Auditor)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<AttendanceRecordList>>() {
@@ -61,7 +61,7 @@ public class AttendanceRecordPresenter implements AttendanceRecordContract.Prese
 
                     @Override
                     public void onNext(@NonNull List<AttendanceRecordList> attendanceRecordLists) {
-                        Toast.makeText(context, "加载成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "搜索到" + attendanceRecordLists.size() + "条记录", Toast.LENGTH_SHORT).show();
                         view.showAttendance(attendanceRecordLists);
                     }
 

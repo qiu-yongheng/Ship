@@ -72,4 +72,9 @@
         <item name="android:padding">5dp</item>
     </style>
 
+    <!--toolbar-->
+    <style name="GeryToolBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
 </resources>

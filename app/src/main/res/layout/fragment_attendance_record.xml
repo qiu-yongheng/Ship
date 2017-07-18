@@ -22,10 +22,11 @@
             android:padding="@dimen/cardview_margin_5dp"
             android:clickable="true"
             android:textSize="@dimen/text_15sp"
+            android:gravity="center"
             android:textColor="@color/text_gray"
             android:id="@+id/text_attendance_time"
             android:background="@drawable/tv_bg"
-            android:layout_width="wrap_content"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"/>
 
         <Button

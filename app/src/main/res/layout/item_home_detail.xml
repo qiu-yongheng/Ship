@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="#fff"
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        app:titleTextColor="@color/text_white"
+        android:id="@+id/toolbar"
         android:background="?colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize">
-        <TextView
-            android:text="@string/toolbar_title"
-            android:textColor="#fff"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
+        android:layout_height="?actionBarSize"/>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"

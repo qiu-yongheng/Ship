@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -72,6 +74,8 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
     TextView mTvTitle;
     @BindView(R.id.tv_divi)
     TextView mTvDivi;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private DowntimeLogContract.Presenter presenter;
     private DowntimeLogActivity activity;
     private boolean show = true;
@@ -103,7 +107,11 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
 
     @Override
     public void initViews(View view) {
+        setHasOptionsMenu(true);
         activity = (DowntimeLogActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         /** 获取类型 */
         mType = activity.type;
@@ -129,6 +137,16 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
                 mTvDivi.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -361,6 +379,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
 
     /**
      * 停工日志
+     *
      * @param list
      */
     @Override
@@ -388,6 +407,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
 
     /**
      * 抛砂日志
+     *
      * @param list
      */
     @Override

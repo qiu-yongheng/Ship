@@ -311,37 +311,40 @@ public class CalendarUtil {
      * @param context
      * @param listener
      */
-    public static void showTimePickerDialog(final Context context, final OnTimePickerSureClickListener listener) {
-        final Calendar now = Calendar.getInstance();
+    public static void showTimePickerDialog(final Context context, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
+        if (isSystem) {
+            final Calendar now = Calendar.getInstance();
+            // 显示日期选择器
+            DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                    final Calendar c = Calendar.getInstance();
+                    c.set(Calendar.YEAR, year);
+                    c.set(Calendar.MONTH, month);
+                    c.set(Calendar.DAY_OF_MONTH, day);
 
-        // 显示日期选择器
-        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                final Calendar c = Calendar.getInstance();
-                c.set(Calendar.YEAR, year);
-                c.set(Calendar.MONTH, month);
-                c.set(Calendar.DAY_OF_MONTH, day);
+                    // 显示时间选择器
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                            c.set(Calendar.HOUR_OF_DAY, hour);
+                            c.set(Calendar.MINUTE, minute);
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            String format = df.format(c.getTime());
+                            listener.onSure(format);
+                        }
+                    }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
 
-                // 显示时间选择器
-                TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                        c.set(Calendar.HOUR_OF_DAY, hour);
-                        c.set(Calendar.MINUTE, minute);
-                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        String format = df.format(c.getTime());
-                        listener.onSure(format);
-                    }
-                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
-
-                timePickerDialog.show();
+                    timePickerDialog.show();
 
 
-            }
-        }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                }
+            }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
 
-        datePickerDialog.show();
+            datePickerDialog.show();
+        } else {
+            showTimePicker(context, null, YYYY_MM_DD_HH_MM, null, listener, new boolean[]{true, true, true, true, true, false}, false);
+        }
     }
 
     /**
@@ -351,6 +354,21 @@ public class CalendarUtil {
      * @param view
      */
     public static void showDatePickerDialog(final Context context, final TextView view, boolean isSystem) throws ParseException {
+        showDatePickerDialog(context, view, new OnTimePickerSureClickListener() {
+            @Override
+            public void onSure(String str) {
+
+            }
+        }, false);
+    }
+
+    /**
+     * 弹出日期选择器
+     *
+     * @param context
+     * @param view
+     */
+    public static void showDatePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
         if (isSystem) {
             final Calendar now = Calendar.getInstance();
 
@@ -366,20 +384,15 @@ public class CalendarUtil {
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     String format = df.format(c.getTime());
                     view.setText(format);
+                    listener.onSure(format);
                 }
             }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
 
 
             datePickerDialog.show();
         } else {
-            showTimePicker(context, view, YYYY_MM_DD, null, new OnTimePickerSureClickListener() {
-                @Override
-                public void onSure(String str) {
-
-                }
-            }, new boolean[]{true, true, true, false, false, false}, false);
+            showTimePicker(context, view, YYYY_MM_DD, null, listener, new boolean[]{true, true, true, false, false, false}, false);
         }
-
     }
 
     /**
@@ -389,9 +402,14 @@ public class CalendarUtil {
      * @param context
      * @param view
      */
-    public static void showPickerDialog(final Context context, final TextView view, final String format, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
+    public static void showTimeDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
         if (isSystem) {
+            Calendar calendar = getCalendar(Date);
+
+            // 只修改当前的日期, 时间不修改
             final Calendar now = Calendar.getInstance();
+            // 设置日
+            now.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR));
 
             // 显示时间选择器
             TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
@@ -408,9 +426,8 @@ public class CalendarUtil {
 
             timePickerDialog.show();
         } else {
-            showTimePicker(context, view, format, null, listener, new boolean[] {false, false, false, true, true, false}, false);
+            showTimePicker(context, view, format, Date, listener, new boolean[]{false, false, false, true, true, false}, false);
         }
-
     }
 
     /**
@@ -423,7 +440,7 @@ public class CalendarUtil {
      * @param listener
      * @throws ParseException
      */
-    public static void showPickerDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
+    public static void showDateDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
         if (isSystem) {
             Calendar calendar = getCalendar(Date);
 
@@ -467,24 +484,34 @@ public class CalendarUtil {
         //因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
 
         Calendar selectedDate = Calendar.getInstance();
+        // 如果有指定日期, 设置当前默认选中时间为指定时间
         if (!TextUtils.isEmpty(Date)) {
-            selectedDate = getCalendar(Date);
+            Calendar now = getCalendar(Date);
+            // 设置年
+            selectedDate.set(Calendar.YEAR, now.get(Calendar.YEAR));
+            // 设置月
+            selectedDate.set(Calendar.MONTH, now.get(Calendar.MONTH));
+            // 设置日
+            selectedDate.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
         }
 
 
         Calendar startDate = Calendar.getInstance();
         startDate.set(2013, 0, 23);
         Calendar endDate = Calendar.getInstance();
-        endDate.set(2019, 11, 28);
+        endDate.set(2020, 11, 28);
 
         //时间选择器
         pvTime = new TimePickerView.Builder(context, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
-                TextView textView = (TextView) v;
                 String time = getTime(date, format);
-                textView.setText(time);
+
+                if (v != null) {
+                    TextView textView = (TextView) v;
+                    textView.setText(time);
+                }
                 listener.onSure(time);
             }
         })

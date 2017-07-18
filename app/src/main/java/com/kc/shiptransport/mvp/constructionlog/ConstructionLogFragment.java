@@ -3,7 +3,9 @@ package com.kc.shiptransport.mvp.constructionlog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,17 +41,18 @@ import butterknife.Unbinder;
  */
 
 public class ConstructionLogFragment extends Fragment implements ConstructionLogContract.View {
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
+
+    Unbinder unbinder;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.text_ship_name)
+    Spinner textShipName;
     @BindView(R.id.text_time)
     TextView textTime;
     @BindView(R.id.rl_stop)
     RelativeLayout rlStop;
     @BindView(R.id.rl_throw_sand)
     RelativeLayout rlThrowSand;
-    Unbinder unbinder;
-    @BindView(R.id.text_ship_name)
-    Spinner textShipName;
     private ConstructionLogContract.Presenter presenter;
     private ConstructionLogActivity activity;
     private int spinner_position;
@@ -66,9 +69,12 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
 
     @Override
     public void initViews(View view) {
+        setHasOptionsMenu(true);
         // 设置标题
-        tvTitle.setText(R.string.title_construction);
         activity = (ConstructionLogActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setTitle(R.string.title_construction);
 
         // 设置船名
         //        List<User> all = DataSupport.findAll(User.class);
@@ -81,6 +87,16 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
 
         // 获取上次选择施工船舶的position
         spinner_position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

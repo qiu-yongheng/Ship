@@ -100,7 +100,7 @@
     <string name="text_time">考勤日期:</string>
     <string name="title_attendance">考勤</string>
     <string name="et_hint_remark">添加备注</string>
-    <string name="btn_quiry">考勤记录</string>
+    <string name="btn_quiry">搜索全部</string>
     <string name="text_date_select">日期选择:</string>
     <string name="attendance_audit">考勤管理</string>
     <string name="btn_agree">审核通过</string>
@@ -144,6 +144,9 @@
     <string name="title_change_pass">修改密码</string>
     <string name="text_man">男</string>
     <string name="text_woman">女</string>
+    <string name="text_about">软件版本</string>
+    <string name="text_current_version">当前版本</string>
+    <string name="text_check_update">检查更新</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

@@ -218,7 +218,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
         Observable<Boolean> observable = null;
         switch (type) {
             case SettingUtil.TYPE_SUPPLY: // 验砂
-            case SettingUtil.TYPE_AMOUNT: // 量方
+            case SettingUtil.TYPE_AMOUNT: // TODO 量方 (目前还未抽离, 暂时放在前面)
                 observable = dataRepository
                         .doRefresh(jumpWeek)
                         .subscribeOn(Schedulers.io())
@@ -230,7 +230,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
                             }
                         });
                 break;
-            case SettingUtil.TYPE_ACCEPT: // 验收 (目前没有用到)
+            case SettingUtil.TYPE_ACCEPT: // TODO 验收 (目前没有用到)
             case SettingUtil.TYPE_SCANNER: // 扫描件
                 observable = dataRepository
                         .doRefresh(jumpWeek)

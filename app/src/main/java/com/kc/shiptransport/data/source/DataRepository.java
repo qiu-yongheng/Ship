@@ -2073,12 +2073,12 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate) {
+    public Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate, final String Auditor) {
         return Observable.create(new ObservableOnSubscribe<List<AttendanceRecordList>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<AttendanceRecordList>> e) throws Exception {
                 // 发送网络请求
-                String result = mRemoteDataSource.GetAttendanceRecords(itemID, account, startDate, endDate);
+                String result = mRemoteDataSource.GetAttendanceRecords(itemID, account, startDate, endDate, Auditor);
 
                 // 解析数据
                 List<AttendanceRecordList> list = gson.fromJson(result, new TypeToken<List<AttendanceRecordList>>() {
@@ -3034,6 +3034,8 @@ public class DataRepository implements DataSouceImpl {
 
                 // 发送网络请求
                 String result = mRemoteDataSource.GetExitApplicationList(account, startDay, endDay);
+
+                Log.d("==", "退场申请数据: " + result);
 
                 // 解析数据
                 List<ExitList> lists = gson.fromJson(result, new TypeToken<List<ExitList>>() {

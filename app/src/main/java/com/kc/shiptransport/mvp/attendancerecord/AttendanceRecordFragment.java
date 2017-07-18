@@ -17,8 +17,9 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.AttendanceRecordList;
-import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 
 import org.litepal.crud.DataSupport;
@@ -48,7 +49,7 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
     private AttendanceRecordActivity activity;
     private AttendanceRecordContract.Presenter presenter;
     private AttendanceRecordAdapter adapter;
-    private List<Subcontractor> all;
+    private User user;
 
     @Nullable
     @Override
@@ -57,18 +58,19 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
         ButterKnife.bind(this, view);
         initViews(view);
         initListener();
-        all = DataSupport.findAll(Subcontractor.class);
-        presenter.getAttendance(all.get(0).getSubcontractorAccount(), CalendarUtil.getCurrentDate("yyyy-MM-dd"));
+
+        user = DataSupport.findAll(User.class).get(0);
+        presenter.getAttendance(user.getUserID(), CalendarUtil.getCurrentDate("yyyy-MM-dd"), "");
         return view;
     }
 
     public void initListener() {
+        /** 搜索全部 */
         mBtnQuiry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String time = mTextAttendanceTime.getText().toString();
-
-                presenter.getAttendance(all.get(0).getSubcontractorAccount(), time);
+                presenter.getAttendance(user.getUserID(), "", "");
+                mTextAttendanceTime.setText("");
             }
         });
 
@@ -76,7 +78,13 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
             @Override
             public void onClick(View view) {
                 try {
-                    CalendarUtil.showDatePickerDialog(getContext(), mTextAttendanceTime, false);
+                    CalendarUtil.showDatePickerDialog(getContext(), mTextAttendanceTime, new OnTimePickerSureClickListener() {
+                        @Override
+                        public void onSure(String str) {
+                            // 选择完时间后, 直接搜索
+                            presenter.getAttendance(user.getUserID(), str, "");
+                        }
+                    }, false);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
