@@ -401,7 +401,7 @@ public interface DataSouceImpl {
      * 获取考勤记录
      * @return
      */
-    Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate);
+    Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate, String Auditor);
 
     /**
      * 根据进场ID获取验砂取样详细
@@ -652,7 +652,8 @@ public interface DataSouceImpl {
     /**
      * 3.2 修改用户信息
      * @param LoginName
-     * @param Department
+     * @param DisplayName
+     * @param DepartmentID
      * @param Email
      * @param title
      * @param Mobile
@@ -660,7 +661,7 @@ public interface DataSouceImpl {
      * @param sex
      * @return
      */
-    Observable<Boolean> ChangeUserData(String LoginName, String Department, String Email, String title, String Mobile, String TelephoneNumber, String sex);
+    Observable<Boolean> ChangeUserData(String LoginName, String DisplayName, int DepartmentID, String Email, String title, String Mobile, String TelephoneNumber, String sex);
 
     /**
      * 3.3 获取用户信息
@@ -668,4 +669,10 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> GetUserDataByLoginName(String LoginName);
+
+    /**
+     * 3.4 获取部门信息
+     * @return
+     */
+    Observable<Boolean> GetDepartmentsOptions();
 }

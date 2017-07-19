@@ -6,9 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -84,6 +86,8 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     Unbinder unbinder;
     @BindView(R.id.btn_thread_sand_log)
     Button mBtnThreadSandLog;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private ThreadSandActivity activity;
     private ThreadSandContract.Presenter presenter;
     private CommonPopupWindow popupWindow;
@@ -124,7 +128,20 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         // 设置标题
         tvTitle.setText(R.string.title_thread_sand);
 
+        setHasOptionsMenu(true);
         activity = (ThreadSandActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -143,7 +160,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             @Override
             public void onClick(View view) {
                 try {
-                    CalendarUtil.showPickerDialog(getContext(), tvEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
+                    CalendarUtil.showTimeDialog(getContext(), tvEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
                         @Override
                         public void onSure(String str) {
                             /** 不能选择在开始时间之前的时间 */

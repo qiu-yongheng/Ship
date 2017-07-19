@@ -97,8 +97,7 @@ public class SampleFragment extends BaseMvpFragment{
     public void onResume() {
         super.onResume();
         if (adapter != null) {
-            presenter.getTime(jumpWeek);
-            presenter.getSubcontractorList();
+            presenter.doRefresh(jumpWeek, TYPE, subcontractorAccount);
         }
     }
 }

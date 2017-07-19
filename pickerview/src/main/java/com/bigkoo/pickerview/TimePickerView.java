@@ -519,6 +519,9 @@ public class TimePickerView extends BasePickerView implements View.OnClickListen
             hours = date.get(Calendar.HOUR_OF_DAY);
             minute = date.get(Calendar.MINUTE);
             seconds = date.get(Calendar.SECOND);
+
+            // 默认选中指定的时间
+            calendar = date;
         }
 
 

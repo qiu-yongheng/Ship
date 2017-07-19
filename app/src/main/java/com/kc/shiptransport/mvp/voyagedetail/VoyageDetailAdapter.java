@@ -56,7 +56,11 @@ public class VoyageDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (type.equals("select")) {
             String value = TextUtils.isEmpty(columnsBean.getValue()) ? "" : columnsBean.getValue();
             String[] split = value.split(";");
-            ((NormalHolder) holder).mTvValue.setText(split[0]);
+            if (split.length != 0) {
+                ((NormalHolder) holder).mTvValue.setText(split[0]);
+            } else {
+                ((NormalHolder) holder).mTvValue.setText("");
+            }
         } else {
             // 显示字段参数
             ((NormalHolder) holder).mTvValue.setText(TextUtils.isEmpty(columnsBean.getValue()) ? "" : columnsBean.getValue());

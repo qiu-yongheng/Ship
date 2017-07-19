@@ -1,38 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
+        app:theme="@style/GeryToolBar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="?colorPrimary">
 
-        <TextView
-            style="@style/text_title_w"
-            android:id="@+id/tv_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"/>
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btn_scanner_all"
-            style="@style/text_title_w"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="?colorPrimary"
-            android:text="@string/btn_scanner_all"/>
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_title"
+                style="@style/text_title_w"
+                android:paddingLeft="@dimen/margin_10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"/>
+
+            <Button
+                android:id="@+id/btn_scanner_all"
+                style="@style/text_title_w"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="?colorPrimary"
+                android:text="@string/btn_scanner_all"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
 
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:orientation="vertical">
 
         <include layout="@layout/view_divi"/>
 
@@ -128,9 +138,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginBottom="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height_32"
+                android:layout_marginBottom="@dimen/margin_10"
                 android:layout_marginLeft="@dimen/margin_10"
                 android:layout_marginRight="@dimen/margin_10"
                 android:orientation="horizontal">

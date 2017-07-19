@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.AttendanceRecordList;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 
@@ -59,6 +60,7 @@ public class AttendanceAuditFragment extends Fragment implements AttendanceAudit
     private AttendanceAuditAdapter adapter;
     private Animation showAnim;
     private Animation hideAnim;
+    private User user;
 
     @Nullable
     @Override
@@ -68,8 +70,9 @@ public class AttendanceAuditFragment extends Fragment implements AttendanceAudit
         initViews(view);
         initListener();
 
+        user = DataSupport.findAll(User.class).get(0);
         // 获取考勤审核列表
-        presenter.getAttendance();
+        presenter.getAttendance(user.getUserID());
         return view;
     }
 
@@ -294,7 +297,7 @@ public class AttendanceAuditFragment extends Fragment implements AttendanceAudit
         if (isSuccess) {
             Toast.makeText(getContext(), "提交成功", Toast.LENGTH_SHORT).show();
             // 重新请求数据
-            presenter.getAttendance();
+            presenter.getAttendance(user.getUserID());
         } else {
             Toast.makeText(getContext(), "提交失败", Toast.LENGTH_SHORT).show();
         }

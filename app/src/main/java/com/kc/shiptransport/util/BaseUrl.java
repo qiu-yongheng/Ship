@@ -9,10 +9,10 @@ public class BaseUrl {
     /**
      * 正式服
      */
-//        public static final String EndPoint = "http://cchk3.ccgdc.com/AppService/cchk3WebService.asmx";
+        public static final String EndPoint = "http://cchk3.ccgdc.com/AppService/cchk3WebService.asmx";
 
     /**
      * 测试服
      */
-    public static final String EndPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
+//    public static final String EndPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
 }

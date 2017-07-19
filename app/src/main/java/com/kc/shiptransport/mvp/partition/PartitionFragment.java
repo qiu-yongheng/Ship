@@ -7,11 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
@@ -37,8 +38,6 @@ import butterknife.Unbinder;
  */
 
 public class PartitionFragment extends Fragment implements PartitionContract.View {
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
     @BindView(R.id.btn_add)
@@ -46,6 +45,8 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     Unbinder unbinder;
     @BindView(R.id.btn_return)
     Button btnReturn;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private PartitionActivity activity;
     private PartitionAdapter adapter;
     private PartitionContract.Presenter presenter;
@@ -71,12 +72,24 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     @Override
     public void initViews(View view) {
         // 设置标题
-        tvTitle.setText(R.string.title_partition);
-
+        setHasOptionsMenu(true);
         activity = (PartitionActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setTitle(R.string.title_partition);
 
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

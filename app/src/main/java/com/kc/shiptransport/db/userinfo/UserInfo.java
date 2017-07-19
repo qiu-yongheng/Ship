@@ -25,11 +25,20 @@ public class UserInfo extends DataSupport{
     private String LoginName;
     private String DisplayName;
     private String Department;
+    private int DepartmentID;
     private String Email;
     private String Title;
     private String Mobile;
     private String TelephoneNumber;
     private String Sex;
+
+    public int getDepartmentID() {
+        return DepartmentID;
+    }
+
+    public void setDepartmentID(int departmentID) {
+        DepartmentID = departmentID;
+    }
 
     public String getLoginName() {
         return LoginName;

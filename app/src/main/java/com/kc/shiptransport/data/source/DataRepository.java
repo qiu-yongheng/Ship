@@ -60,6 +60,7 @@ import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.threadsand.Layered;
+import com.kc.shiptransport.db.user.Department;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.db.userinfo.UserInfo;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
@@ -1430,7 +1431,7 @@ public class DataRepository implements DataSouceImpl {
                         if (split.length > 1) {
                             jsonObject.put(columnsBean.getColumnName(), split[1]);
                         } else {
-                            jsonObject.put(columnsBean.getColumnName(), split[0]);
+                            jsonObject.put(columnsBean.getColumnName(), "");
                         }
                     } else {
                         jsonObject.put(columnsBean.getColumnName(), columnsBean.getValue());
@@ -2073,12 +2074,12 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate) {
+    public Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate, final String Auditor) {
         return Observable.create(new ObservableOnSubscribe<List<AttendanceRecordList>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<AttendanceRecordList>> e) throws Exception {
                 // 发送网络请求
-                String result = mRemoteDataSource.GetAttendanceRecords(itemID, account, startDate, endDate);
+                String result = mRemoteDataSource.GetAttendanceRecords(itemID, account, startDate, endDate, Auditor);
 
                 // 解析数据
                 List<AttendanceRecordList> list = gson.fromJson(result, new TypeToken<List<AttendanceRecordList>>() {
@@ -3035,6 +3036,8 @@ public class DataRepository implements DataSouceImpl {
                 // 发送网络请求
                 String result = mRemoteDataSource.GetExitApplicationList(account, startDay, endDay);
 
+                Log.d("==", "退场申请数据: " + result);
+
                 // 解析数据
                 List<ExitList> lists = gson.fromJson(result, new TypeToken<List<ExitList>>() {
                 }.getType());
@@ -3207,7 +3210,8 @@ public class DataRepository implements DataSouceImpl {
      * 3.2 修改用户信息
      *
      * @param LoginName
-     * @param Department
+     * @param DisplayName
+     * @param DepartmentID
      * @param Email
      * @param title
      * @param Mobile
@@ -3216,7 +3220,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> ChangeUserData(final String LoginName, final String Department, final String Email, final String title, final String Mobile, final String TelephoneNumber, final String sex) {
+    public Observable<Boolean> ChangeUserData(final String LoginName, final String DisplayName, final int DepartmentID, final String Email, final String title, final String Mobile, final String TelephoneNumber, final String sex) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -3224,7 +3228,8 @@ public class DataRepository implements DataSouceImpl {
                 JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("LoginName", LoginName);
-                jsonObject.put("Department", Department);
+                jsonObject.put("DisplayName", DisplayName);
+                jsonObject.put("DepartmentID", DepartmentID);
                 jsonObject.put("Email", Email);
                 jsonObject.put("Sex", (TextUtils.isEmpty(sex) ? "" : sex));
                 jsonObject.put("Title", title);
@@ -3272,6 +3277,34 @@ public class DataRepository implements DataSouceImpl {
                 boolean save = list.get(0).save();
 
                 e.onNext(save);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 3.4 获取部门信息
+     * @return
+     */
+    @Override
+    public Observable<Boolean> GetDepartmentsOptions() {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.GetDepartmentsOptions();
+
+                Log.d("==", "部门信息: " + result);
+
+                List<Department> list = gson.fromJson(result, new TypeToken<List<Department>>() {
+                }.getType());
+
+                // 初始化数据库表
+                DataSupport.deleteAll(Department.class);
+
+                // 保存到数据库
+                DataSupport.saveAll(list);
+
+                e.onNext(true);
                 e.onComplete();
             }
         });

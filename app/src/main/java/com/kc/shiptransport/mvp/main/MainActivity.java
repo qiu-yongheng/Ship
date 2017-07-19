@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity {
             /** 授权 */
             // 处理 “不再提醒”
             if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                showDailog("警告", "拒绝权限将无法使用程序", "授权", "退出", new DialogInterface.OnClickListener() {
+                showDailog("警告", "请同意APP使用存储权限, 拒绝权限将无法使用程序", "授权", "退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         /** 授权 */
