@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.mine;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
@@ -20,14 +21,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.source.DataRepository;
+import com.kc.shiptransport.db.user.Department;
 import com.kc.shiptransport.db.userinfo.UserInfo;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.about.AboutActivity;
 import com.kc.shiptransport.mvp.changepassword.ChangePasswordActivity;
 import com.kc.shiptransport.mvp.login.LoginActivity;
 import com.kc.shiptransport.mvp.main.MainActivity;
+import com.kc.shiptransport.util.SelectUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 import com.kc.shiptransport.view.actiivty.InputActivity;
@@ -35,14 +39,11 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author 邱永恒
@@ -97,6 +98,7 @@ public class MineFragment extends Fragment {
     private UserInfo userInfo;
     private DataRepository dataRepository;
     private CommonPopupWindow popupWindow;
+    private MinePresenter presenter;
 
     @Nullable
     @Override
@@ -106,10 +108,13 @@ public class MineFragment extends Fragment {
         initView(view);
         initListener();
 
-        // TODO 加载数据
-        dataRepository = new DataRepository();
+        new MinePresenter(getContext(), this, new DataRepository());
 
         return view;
+    }
+
+    public void setPresenter(MinePresenter presenter) {
+        this.presenter = presenter;
     }
 
     private void initView(View view) {
@@ -125,8 +130,6 @@ public class MineFragment extends Fragment {
         // 显示用户信息
         userInfo = DataSupport.findAll(UserInfo.class).get(0);
         syncDates(userInfo);
-
-
     }
 
     /**
@@ -158,20 +161,23 @@ public class MineFragment extends Fragment {
         btnMineExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                activity.showDailog("退出登录", "真的需要退出登录吗?", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 记录登出
+                        MobclickAgent.onProfileSignOff();
 
-                // 记录登出
-                MobclickAgent.onProfileSignOff();
+                        SharedPreferences.Editor edit = sp.edit();
+                        edit.putString(SettingUtil.DATA_USERNAME, "");
+                        edit.putString(SettingUtil.DATA_PASSWORD, "");
+                        edit.putBoolean(SettingUtil.KEY_REMEMBER_PASSWORD, false);
+                        edit.putBoolean(SettingUtil.KEY_AUTHOR_LOGIN, false);
+                        edit.apply();
 
-
-                SharedPreferences.Editor edit = sp.edit();
-                edit.putString(SettingUtil.DATA_USERNAME, "");
-                edit.putString(SettingUtil.DATA_PASSWORD, "");
-                edit.putBoolean(SettingUtil.KEY_REMEMBER_PASSWORD, false);
-                edit.putBoolean(SettingUtil.KEY_AUTHOR_LOGIN, false);
-                edit.apply();
-
-                LoginActivity.navigateToLoginActivity(getContext());
-                getActivity().finish();
+                        LoginActivity.navigateToLoginActivity(getContext());
+                        getActivity().finish();
+                    }
+                });
             }
         });
 
@@ -216,7 +222,7 @@ public class MineFragment extends Fragment {
                                             popupWindow.dismiss();
                                         }
 
-                                        changeInfo(userInfo);
+                                        presenter.changeInfo(userInfo);
                                     }
                                 });
 
@@ -229,7 +235,7 @@ public class MineFragment extends Fragment {
                                             popupWindow.dismiss();
                                         }
 
-                                        changeInfo(userInfo);
+                                        presenter.changeInfo(userInfo);
                                     }
                                 });
 
@@ -245,11 +251,25 @@ public class MineFragment extends Fragment {
         rlSection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputActivity.startActivityForResult(getActivity(),
-                        "部门",
-                        userInfo.getDepartment(),
-                        SettingUtil.TYPE_TEXT,
-                        SettingUtil.ID_DEPARTMENT);
+//                InputActivity.startActivityForResult(getActivity(),
+//                        "部门",
+//                        userInfo.getDepartment(),
+//                        SettingUtil.TYPE_TEXT,
+//                        SettingUtil.ID_DEPARTMENT);
+
+                final List<Department> list = DataSupport.order("SortNum asc").find(Department.class);
+                SelectUtil<Department> selectUtil = new SelectUtil<>();
+                selectUtil.showSelectDialog(getContext(), list, false, new OptionsPickerView.OnOptionsSelectListener() {
+                    @Override
+                    public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                        String pickerViewText = list.get(options1).getPickerViewText();
+                        tvSection.setText(pickerViewText);
+                        userInfo.setDepartment(pickerViewText);
+                        userInfo.setDepartmentID(list.get(options1).getItemID());
+
+                        presenter.changeInfo(userInfo);
+                    }
+                });
             }
         });
 
@@ -347,40 +367,11 @@ public class MineFragment extends Fragment {
                 userInfo.setTelephoneNumber(str);
                 break;
         }
-        changeInfo(userInfo);
+
+        presenter.changeInfo(userInfo);
     }
 
-    /**
-     * 修改用户信息
-     */
-    public void changeInfo(UserInfo userInfo) {
-        showLoadding(true);
-        dataRepository.ChangeUserData(userInfo.getLoginName(), userInfo.getDepartment(), userInfo.getEmail(), userInfo.getTitle(), userInfo.getMobile(), userInfo.getTelephoneNumber(), userInfo.getSex())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Boolean aBoolean) {
-                        showResult(aBoolean);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        showLoadding(false);
-                        showResult(false);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        showLoadding(false);
-                    }
-                });
-    }
 
     /**
      * 修改结果

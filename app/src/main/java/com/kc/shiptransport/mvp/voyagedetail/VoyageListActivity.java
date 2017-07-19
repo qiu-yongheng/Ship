@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -39,7 +40,12 @@ public class VoyageListActivity extends BaseActivity {
     private static final String ARR = "ARR";
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
+    @BindView(R.id.btn_return)
+    Button btnReturn;
+    @BindView(R.id.btn_cancel)
+    Button btnCancel;
     private DatesListAdapter adapter;
+    private VoyageDetailBean.ColumnsBean.ArrBean bean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,26 @@ public class VoyageListActivity extends BaseActivity {
         }.getType());
 
         showList(list);
+
+        initListener();
+    }
+
+    private void initListener() {
+        /** 返回 */
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                returnData();
+            }
+        });
+
+        /** 取消选择 */
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     private void showList(List<VoyageDetailBean.ColumnsBean.ArrBean> list) {
@@ -62,14 +88,8 @@ public class VoyageListActivity extends BaseActivity {
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
-                    VoyageDetailBean.ColumnsBean.ArrBean bean = adapter.list.get(position);
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putString(NUM, bean.getItemID());
-                    bundle.putString(NAME, bean.getName());
-                    intent.putExtras(bundle);
-                    setResult(SettingUtil.TYPE_ARRAY, intent);
-                    finish();
+                    bean = adapter.list.get(position);
+                    returnData();
                 }
 
                 @Override
@@ -84,6 +104,22 @@ public class VoyageListActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 返回数据
+     */
+    private void returnData() {
+        if (bean != null) {
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+
+            bundle.putString(NUM, bean.getItemID());
+            bundle.putString(NAME, bean.getName());
+            intent.putExtras(bundle);
+            setResult(SettingUtil.TYPE_ARRAY, intent);
+            finish();
+        }
+    }
+
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static void startActivityForResult(Activity activity, String arr, int requestCode) {
@@ -93,24 +129,6 @@ public class VoyageListActivity extends BaseActivity {
         intent.putExtras(bundle);
         activity.startActivityForResult(intent, requestCode, bundle);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     class DatesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -134,9 +152,9 @@ public class VoyageListActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
             VoyageDetailBean.ColumnsBean.ArrBean bean = list.get(position);
-            ((NormalHolder)holder).mTvShipName.setText(bean.getName());
+            ((NormalHolder) holder).mTvShipName.setText(bean.getName());
 
-            ((NormalHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+            ((NormalHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onItemClick(holder.itemView, holder.getLayoutPosition());

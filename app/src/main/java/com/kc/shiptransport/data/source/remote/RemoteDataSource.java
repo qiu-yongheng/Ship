@@ -1496,8 +1496,6 @@ public class RemoteDataSource {
 
     }
 
-
-
     /**
      * 3.3 获取用户信息
      *
@@ -1518,6 +1516,27 @@ public class RemoteDataSource {
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
         rpc.addProperty("LoginName", LoginName);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 3.4 获取部门信息
+     * @return
+     * @throws Exception
+     */
+    public String GetDepartmentsOptions() throws Exception {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetDepartmentsOptions";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetDepartmentsOptions";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
 
         return getCallResult(endPoint, soapAction, rpc);
     }

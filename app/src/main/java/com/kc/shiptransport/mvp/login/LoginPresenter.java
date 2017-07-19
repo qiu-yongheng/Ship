@@ -17,7 +17,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
+import io.reactivex.functions.Function4;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -65,12 +65,12 @@ public class LoginPresenter implements LoginContract.Presenter {
         //                .getSubcontractor(username)
         //                .subscribeOn(Schedulers.io());
 
-        // 获取船
+        /** 获取船 */
         Observable<Boolean> ship = mDataRepository
                 .getShip(username)
                 .subscribeOn(Schedulers.io());
 
-        // 获取要显示的模块
+        /** 获取要显示的模块 */
         Observable<Boolean> appList = mDataRepository
                 .getAppList(username)
                 .subscribeOn(Schedulers.io());
@@ -80,18 +80,22 @@ public class LoginPresenter implements LoginContract.Presenter {
         //                .GetConstructionBoat()
         //                .subscribeOn(Schedulers.io());
 
-        // 获取用户信息
+        /** 获取用户信息 */
         Observable<Boolean> userInfo = mDataRepository
                 .GetUserDataByLoginName(username)
                 .subscribeOn(Schedulers.io());
 
+        /** 获取部门信息 */
+        Observable<Boolean> department = mDataRepository
+                .GetDepartmentsOptions()
+                .subscribeOn(Schedulers.io());
 
 
 
-        Observable.zip(ship, appList, userInfo, new Function3<Boolean, Boolean, Boolean, Boolean>() {
+        Observable.zip(ship, appList, userInfo, department, new Function4<Boolean, Boolean, Boolean, Boolean, Boolean>() {
             @Override
-            public Boolean apply(@NonNull Boolean aBoolean, @NonNull Boolean aBoolean2, @NonNull Boolean aBoolean3) throws Exception {
-                if (aBoolean && aBoolean2 && aBoolean3) {
+            public Boolean apply(@NonNull Boolean aBoolean, @NonNull Boolean aBoolean2, @NonNull Boolean aBoolean3, @NonNull Boolean aBoolean4) throws Exception {
+                if (aBoolean && aBoolean2 && aBoolean3 && aBoolean4) {
                     return true;
                 } else {
                     return false;
