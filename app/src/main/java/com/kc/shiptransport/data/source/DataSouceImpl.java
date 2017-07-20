@@ -361,10 +361,10 @@ public interface DataSouceImpl {
 
     /**
      * 根据position获取过砂记录
-     * @param position
+     * @param itemID
      * @return
      */
-    Observable<RecordList> getRecordListForPosition(int position);
+    Observable<RecordList> getRecordListForItemID(int itemID);
 
     /**
      * 获取分包商航次完善扫描件类型数据
@@ -675,4 +675,11 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> GetDepartmentsOptions();
+
+    /**
+     * 1.18 获取对应的过砂记录信息明细
+     * @param itemID
+     * @return
+     */
+    Observable<RecordedSandShowList> GetOverSandRecordByItemID(int itemID);
 }

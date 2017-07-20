@@ -2,6 +2,7 @@ package com.kc.shiptransport.mvp.recordedsanddetail;
 
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.db.RecordList;
+import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -20,11 +21,13 @@ public interface RecordedSandDetailContract {
         void showLoadding(boolean isShow);
         void showError(String msg);
         void showResult(Boolean isSuccess);
+
+        void showDetail(RecordedSandShowList bean);
     }
 
     interface Presenter extends BasePresenter {
         void getSpinner();
-        void getShip(int position);
+        void getShip(int itemID);
         void commit(RecordedSandUpdataBean bean);
 
         void getDetail(int itemID);

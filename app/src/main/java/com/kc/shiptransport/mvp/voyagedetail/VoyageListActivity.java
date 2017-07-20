@@ -78,7 +78,6 @@ public class VoyageListActivity extends BaseActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-<<<<<<< HEAD
                 showDailog("还原", "是否需要取消选择", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -92,9 +91,6 @@ public class VoyageListActivity extends BaseActivity {
                         finish();
                     }
                 });
-=======
-
->>>>>>> b43001f558625ee317099677ae95ad7ee26a2c0b
             }
         });
     }
@@ -125,10 +121,7 @@ public class VoyageListActivity extends BaseActivity {
      * 返回数据
      */
     private void returnData() {
-<<<<<<< HEAD
         // 如果有选择数据, 添加到bundle, 返回
-=======
->>>>>>> b43001f558625ee317099677ae95ad7ee26a2c0b
         if (bean != null) {
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
@@ -137,13 +130,8 @@ public class VoyageListActivity extends BaseActivity {
             bundle.putString(NAME, bean.getName());
             intent.putExtras(bundle);
             setResult(SettingUtil.TYPE_ARRAY, intent);
-<<<<<<< HEAD
         }
         finish();
-=======
-            finish();
-        }
->>>>>>> b43001f558625ee317099677ae95ad7ee26a2c0b
     }
 
 

@@ -97,14 +97,6 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     }
 
     public void initListener() {
-        /* 点击弹出时间选择器 */
-        tvAcceptanceTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
         /* 取消 */
         btnAcceptanceCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,23 +114,6 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                     Toast.makeText(activity, "验收时间或评价不能为空", Toast.LENGTH_SHORT).show();
                 } else {
                     presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, shipItemNum, value);
-                }
-            }
-        });
-
-        /* 点击弹出时间选择器 */
-        tvAcceptanceTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    CalendarUtil.showTimePickerDialog(getContext(), tvAcceptanceTime, new OnTimePickerSureClickListener() {
-                        @Override
-                        public void onSure(String str) {
-
-                        }
-                    }, false);
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -176,6 +151,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                 ScannerDetailActivity.startActivity(getActivity(), activity.itemID, 1);
             }
         });
+
+
     }
 
     @Override
@@ -193,15 +170,30 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
             btnAcceptanceCommit.setVisibility(View.GONE);
             btnAcceptanceCancel.setText(R.string.btn_return);
 
+
             // 设置只能用来看
-            //            rbComplete.setIsIndicator(true);
-            //            rbTimely.setIsIndicator(true);
+            rbComplete.setIsIndicator(true);
+            rbTimely.setIsIndicator(true);
         } else {
             // 未验收
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
 
-            //            rbComplete.setRating(2);
-            //            rbComplete.setIsIndicator(false);
+            /* 点击弹出时间选择器 */
+            tvAcceptanceTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        CalendarUtil.showTimePickerDialog(getContext(), tvAcceptanceTime, new OnTimePickerSureClickListener() {
+                            @Override
+                            public void onSure(String str) {
+
+                            }
+                        }, false);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
 
@@ -260,6 +252,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         // 回显评价
         rbComplete.setRating(materialIntegrity == null ? 0 : materialIntegrity);
         rbTimely.setRating(materialTimeliness == null ? 0 : materialTimeliness);
+
     }
 
     @Override

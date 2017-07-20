@@ -1,4 +1,4 @@
-package com.kc.shiptransport.mvp.recordedsanddetail;
+package com.kc.shiptransport.mvp.recordedsanddetaillist;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,15 +16,11 @@ import com.kc.shiptransport.mvp.BaseActivity;
  * @desc ${TODD}
  */
 
-public class RecordedSandDetailActivity extends BaseActivity{
+public class RecordedSandDetailListActivity extends BaseActivity{
 
     private static final String ITEMID = "ITEMID";
-    private static final String TYPE = "TYPE";
-    private static final String RECORDEDID = "RECORDEDID";
-    private RecordedSandDetailFragment fragment;
+    private RecordedSandDetailListFragment fragment;
     public int itemID;
-    public int type;
-    public int recordedID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +29,11 @@ public class RecordedSandDetailActivity extends BaseActivity{
 
         Bundle bundle = getIntent().getExtras();
         itemID = bundle.getInt(ITEMID);
-        recordedID = bundle.getInt(RECORDEDID);
-        type = bundle.getInt(TYPE);
 
         if (savedInstanceState != null) {
-            fragment = (RecordedSandDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "RecordedSandDetailFragment");
+            fragment = (RecordedSandDetailListFragment) getSupportFragmentManager().getFragment(savedInstanceState, "RecordedSandDetailListFragment");
         } else {
-            fragment = new RecordedSandDetailFragment();
+            fragment = new RecordedSandDetailListFragment();
         }
 
         if (!fragment.isAdded()) {
@@ -49,24 +43,22 @@ public class RecordedSandDetailActivity extends BaseActivity{
                     .commit();
         }
 
-        new RecordedSandDetailPresenter(this, fragment, new DataRepository());
+        new RecordedSandDetailListPresenter(this, fragment, new DataRepository());
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (fragment.isAdded()) {
-            getSupportFragmentManager().putFragment(outState, "RecordedSandDetailFragment", fragment);
+            getSupportFragmentManager().putFragment(outState, "RecordedSandDetailListFragment", fragment);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, int itemID, int type, int recordedID) {
-        Intent intent = new Intent(context, RecordedSandDetailActivity.class);
+    public static void startActivity(Context context, int itemID) {
+        Intent intent = new Intent(context, RecordedSandDetailListActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(ITEMID, itemID);
-        bundle.putInt(RECORDEDID, recordedID);
-        bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

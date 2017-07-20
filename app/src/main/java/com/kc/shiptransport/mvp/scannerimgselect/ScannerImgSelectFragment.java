@@ -115,30 +115,38 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                             // 显示图片
                             ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
                         } else {
-                            // 删除图片
-                            presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                            if (activity.isFinshReceptionSandAttachment == 0) {
+                                // 删除图片
+                                presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                            } else if (activity.isFinshReceptionSandAttachment == 1) {
+                                Toast.makeText(getContext(), "信息已完善, 不可删除", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
                     @Override
                     public void onItemLongClick(View view, int position) {
-                        // 弹出图片选择器, 设置多选图片张数
-                        int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
-                        if (maxSize > 0) {
-                            RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
-                                @Override
-                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-                                    // 提交图片
-                                    presenter.commit(imageMultipleResultEvent, activity.mSubID, activity.mTypeID, activity.mShipAccount);
-                                }
+                        if (activity.isFinshReceptionSandAttachment == 0) {
+                            // 弹出图片选择器, 设置多选图片张数
+                            int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
+                            if (maxSize > 0) {
+                                RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
+                                    @Override
+                                    public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                        // 提交图片
+                                        presenter.commit(imageMultipleResultEvent, activity.mSubID, activity.mTypeID, activity.mShipAccount);
+                                    }
 
-                                @Override
-                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
-                                    // 单选回调
-                                }
-                            });
-                        } else {
-                            Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+                                        // 单选回调
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (activity.isFinshReceptionSandAttachment == 1) {
+                            Toast.makeText(getContext(), "信息已完善, 不能添加图片", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

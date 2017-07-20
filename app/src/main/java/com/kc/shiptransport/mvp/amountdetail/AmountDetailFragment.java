@@ -132,13 +132,11 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                 if (!TextUtils.isEmpty(theAmountTime) &&
                         !TextUtils.isEmpty(deck) &&
                         !deck.equals("0") &&
-                        !TextUtils.isEmpty(dedu) &&
-                        !dedu.equals("0")) {
+                        !TextUtils.isEmpty(dedu)) {
                     presenter.commit(value.getItemID(), theAmountTime, value.getSubcontractorAccount(), activity.itemID, value.getShipAccount(), value.getCapacity(), deck, dedu, all.get(0).getSubcontractorAccount());
                 } else {
                     Toast.makeText(getContext(), "还有数据未填写", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -181,18 +179,6 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                 presenter.getTotalVolume(ship, deck, value.getCapacity());
             }
         });
-
-        // 选择时间
-        tvSupplyTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    CalendarUtil.showTimePickerDialog(getContext(), tvSupplyTime, false);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     @Override
@@ -216,6 +202,18 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
             btnCommit.setVisibility(View.VISIBLE);
             btnCancel.setText(R.string.btn_cancle);
+
+            // 选择时间
+            tvSupplyTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        CalendarUtil.showTimePickerDialog(getContext(), tvSupplyTime, false);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 4));
@@ -316,32 +314,40 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                         // 预览
                         ImageActivity.startActivity(getContext(), bean.getFilePath());
                     } else {
-                        // 删除
-                        presenter.deleteImgForItemID(bean.getItemID());
+                        if (activity.isAmount) {
+                            Toast.makeText(getContext(), "量方已完善, 不可删除图片", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // 删除
+                            presenter.deleteImgForItemID(bean.getItemID());
+                        }
                     }
                 }
 
                 @Override
                 public void onItemLongClick(View view, int position) {
-                    // 弹出图片选择器
-                    int size = adapter.list.size();
-                    int max = 3 - size;
-                    if (max > 0) {
-                        RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
-                            @Override
-                            public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-                                // 把图片解析成可以上传的任务, 上传
-                                List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-                                presenter.getCommitImgList(imageMultipleResultEvent, activity.itemID, all.get(0).getSubcontractorAccount());
-                            }
-
-                            @Override
-                            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
-
-                            }
-                        });
+                    if (activity.isAmount) {
+                        Toast.makeText(getContext(), "量方已完善, 不可添加图片", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                        // 弹出图片选择器
+                        int size = adapter.list.size();
+                        int max = 3 - size;
+                        if (max > 0) {
+                            RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
+                                @Override
+                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                    // 把图片解析成可以上传的任务, 上传
+                                    List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                                    presenter.getCommitImgList(imageMultipleResultEvent, activity.itemID, all.get(0).getSubcontractorAccount());
+                                }
+
+                                @Override
+                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });

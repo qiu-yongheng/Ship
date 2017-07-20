@@ -10,13 +10,11 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.basemvp.BaseMvpFragment;
-import com.kc.shiptransport.mvp.recordedsanddetail.RecordedSandDetailActivity;
+import com.kc.shiptransport.mvp.recordedsanddetaillist.RecordedSandDetailListActivity;
 import com.kc.shiptransport.mvp.recordedsandshow.RecordedSandShowActivity;
 import com.kc.shiptransport.util.SettingUtil;
 
 import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 /**
  * @author qiuyongheng
@@ -108,13 +106,14 @@ public class RecordedSandFragment extends BaseMvpFragment {
      */
     @Override
     protected void abs_onItemClick(View view, int position) {
-        List<RecordList> all = DataSupport.where("position = ?", String.valueOf(position)).find(RecordList.class);
-        if (all.get(0).getIsFinish() == 1) {
+        RecordList recordList = DataSupport.where("position = ?", String.valueOf(position)).find(RecordList.class).get(0);
+        if (recordList.getIsFinish() == 1) {
             // 跳转到查看界面
-            RecordedSandShowActivity.startActivity(getActivity(), position, all.get(0).getItemID());
+            RecordedSandShowActivity.startActivity(getActivity(), recordList.getItemID());
         } else {
             // 跳转到填写界面
-            RecordedSandDetailActivity.startActivity(getActivity(), position);
+            //RecordedSandDetailActivity.startActivity(getActivity(), position);
+            RecordedSandDetailListActivity.startActivity(getContext(), recordList.getItemID());
         }
     }
 }

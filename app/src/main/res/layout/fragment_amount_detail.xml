@@ -134,6 +134,7 @@
                     android:textSize="@dimen/text_15sp"/>
 
                 <EditText
+                    android:text="0"
                     android:textSize="@dimen/text_15sp"
                     android:id="@+id/et_ship_volume"
                     android:layout_width="0dp"

@@ -26,10 +26,12 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.RecordList;
+import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.SettingUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -107,8 +109,18 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
+
+
         presenter.subscribe();
-        presenter.getShip(activity.position);
+
+        /** itemID是进场计划ID */
+        presenter.getShip(activity.itemID);
+
+        /** 判断是否修改 */
+        if (activity.type == SettingUtil.TYPE_UPDATE_RECORDED) {
+            /** 修改数据, itemID是条目ID */
+            presenter.getDetail(activity.recordedID);
+        }
         return view;
     }
 
@@ -163,7 +175,12 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
                     // 数据都填写才能提交
                     RecordedSandUpdataBean bean = new RecordedSandUpdataBean();
 
-                    bean.setItemID(0);
+                    /** 判断是新增还是修改 条目编号 */
+                    if (activity.type == SettingUtil.TYPE_UPDATE_RECORDED) {
+                        bean.setItemID(activity.recordedID);
+                    } else {
+                        bean.setItemID(0);
+                    }
 
                     bean.setSubcontractorInterimApproachPlanID(recordList.getItemID());
 
@@ -345,5 +362,56 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         } else {
             Toast.makeText(getContext(), "提交失败, 请重试", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * 回显需要修改的数据
+     *
+     * @param bean
+     */
+    @Override
+    public void showDetail(RecordedSandShowList bean) {
+        // 供砂船
+        String sandHandlingShipName = bean.getSandHandlingShipName();
+        // 施工船
+        String constructionShipID = bean.getConstructionShipID();
+        String constructionShipName = bean.getConstructionShipName();
+        // 开始时间
+        String startTime = bean.getStartTime();
+        // 结束时间
+        String endTime = bean.getEndTime();
+        // 过砂前吃水
+        float beforeOverSandDraft1 = bean.getBeforeOverSandDraft1();
+        float beforeOverSandDraft2 = bean.getBeforeOverSandDraft2();
+        float beforeOverSandDraft3 = bean.getBeforeOverSandDraft3();
+        float beforeOverSandDraft4 = bean.getBeforeOverSandDraft4();
+        // 过砂后吃水
+        float afterOverSandDraft1 = bean.getAfterOverSandDraft1();
+        float afterOverSandDraft2 = bean.getAfterOverSandDraft2();
+        float afterOverSandDraft3 = bean.getAfterOverSandDraft3();
+        float afterOverSandDraft4 = bean.getAfterOverSandDraft4();
+        // 实际过砂量
+        float actualAmountOfSand = bean.getActualAmountOfSand();
+
+        tvStartTime.setText(startTime);
+        tvEndTime.setText(endTime);
+
+        etBefore1.setText(String.valueOf(beforeOverSandDraft1));
+        etBefore2.setText(String.valueOf(beforeOverSandDraft2));
+        etBefore3.setText(String.valueOf(beforeOverSandDraft3));
+        etBefore4.setText(String.valueOf(beforeOverSandDraft4));
+
+        etAfter1.setText(String.valueOf(afterOverSandDraft1));
+        etAfter2.setText(String.valueOf(afterOverSandDraft2));
+        etAfter3.setText(String.valueOf(afterOverSandDraft3));
+        etAfter4.setText(String.valueOf(afterOverSandDraft4));
+
+        etActualAmountSand.setText(String.valueOf(actualAmountOfSand));
+
+        ConstructionBoat boat = DataSupport.where("ShipNum = ?", constructionShipID).find(ConstructionBoat.class).get(0);
+
+        // 回显选择
+        spinner_position = boat.getPosition();
+        spReceiveShip.setSelection(spinner_position);
     }
 }

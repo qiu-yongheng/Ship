@@ -1540,4 +1540,28 @@ public class RemoteDataSource {
 
         return getCallResult(endPoint, soapAction, rpc);
     }
+
+    /**
+     * 1.18 获取对应的过砂记录信息明细
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String GetOverSandRecordByItemID(int ItemID) throws Exception {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetOverSandRecordByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetOverSandRecordByItemID";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
 }

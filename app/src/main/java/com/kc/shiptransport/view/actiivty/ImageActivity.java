@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.bm.library.PhotoView;
 import com.kc.shiptransport.R;
@@ -24,6 +27,8 @@ public class ImageActivity extends BaseActivity {
     private static final String IMAGPATH = "IMAGPATH";
     @BindView(R.id.img)
     PhotoView mImg;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +39,31 @@ public class ImageActivity extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         String imagPath = bundle.getString(IMAGPATH);
 
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("图片详情");
+
         // 启动缩放
         mImg.enable();
         RxGalleryUtil.showImage(this, imagPath, null, null, mImg);
+
+        // 点击图片退出
+        mImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

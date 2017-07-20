@@ -110,6 +110,22 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
             btnCommit.setVisibility(View.VISIBLE);
             etQuantum.setFocusable(true);
             etQuantum.setFocusableInTouchMode(true);
+
+            tvSupplyTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        CalendarUtil.showTimePickerDialog(getContext(), tvSupplyTime, new OnTimePickerSureClickListener() {
+                            @Override
+                            public void onSure(String str) {
+                                // TODO 可以限制不能选择之前的时间
+                            }
+                        }, false);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         initListener();
@@ -122,6 +138,7 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
 
     @Override
     public void initViews(View view) {
+        setHasOptionsMenu(true);
         activity = (ExitApplicationDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -148,27 +165,11 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
                 String time = tvSupplyTime.getText().toString();
                 String quantum = etQuantum.getText().toString();
                 String remark = etRemark.getText().toString();
-                
+
                 if (TextUtils.isEmpty(quantum)) {
                     Toast.makeText(getContext(), "请填写残余方量", Toast.LENGTH_SHORT).show();
                 } else {
                     presenter.commit(0, time, userID, remark, quantum, activity.itemID);
-                }
-            }
-        });
-
-        tvSupplyTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    CalendarUtil.showTimePickerDialog(getContext(), tvSupplyTime, new OnTimePickerSureClickListener() {
-                        @Override
-                        public void onSure(String str) {
-                            // TODO 可以限制不能选择之前的时间
-                        }
-                    }, false);
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -282,32 +283,40 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
                         // 预览
                         ImageActivity.startActivity(getContext(), bean.getFilePath());
                     } else {
-                        // 删除
-                        presenter.deleteImgForItemID(bean.getItemID());
+                        if (activity.isExit == 1) {
+                            Toast.makeText(getContext(), "退场申请已提交, 不能删除图片", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // 删除
+                            presenter.deleteImgForItemID(bean.getItemID());
+                        }
                     }
                 }
 
                 @Override
                 public void onItemLongClick(View view, int position) {
-                    /** 弹出图片选择器 */
-                    int size = adapter.list.size();
-                    int max = 3 - size;
-                    if (max > 0) {
-                        RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
-                            @Override
-                            public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-                                // 把图片解析成可以上传的任务, 上传
-                                List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-                                presenter.getCommitImgList(imageMultipleResultEvent, activity.itemID, all.get(0).getSubcontractorAccount());
-                            }
-
-                            @Override
-                            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
-
-                            }
-                        });
+                    if (activity.isExit == 1) {
+                        Toast.makeText(getContext(), "退场申请已提交, 不能新增图片", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                        /** 弹出图片选择器 */
+                        int size = adapter.list.size();
+                        int max = 3 - size;
+                        if (max > 0) {
+                            RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
+                                @Override
+                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                    // 把图片解析成可以上传的任务, 上传
+                                    List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                                    presenter.getCommitImgList(imageMultipleResultEvent, activity.itemID, all.get(0).getSubcontractorAccount());
+                                }
+
+                                @Override
+                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });

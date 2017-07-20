@@ -33,7 +33,7 @@ import butterknife.Unbinder;
  * @desc ${TODD}
  */
 
-public class ScannerDetailFragment extends Fragment implements ScannerDetailContract.View, View.OnClickListener {
+public class ScannerDetailFragment extends Fragment implements ScannerDetailContract.View{
 
 
     @BindView(R.id.toolbar)
@@ -46,6 +46,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     private Unbinder unbinder;
     private ScannerDetailAdapter adapter;
     private WeekTask weekTask;
+    private int isFinshReceptionSandAttachment;
 
     @Nullable
     @Override
@@ -54,6 +55,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
+
         // TODO 回显数据(从网络获取)
         presenter.start(activity.position, activity.type);
         return view;
@@ -96,16 +98,6 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     }
 
     /**
-     * 处理点击事件
-     *
-     * @param view
-     */
-    @Override
-    public void onClick(View view) {
-
-    }
-
-    /**
      * 显示标题
      *
      * @param weekTask
@@ -113,6 +105,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     @Override
     public void showTitle(WeekTask weekTask) {
         this.weekTask = weekTask;
+        // 是否完善
+        isFinshReceptionSandAttachment = weekTask.getIsFinshReceptionSandAttachment();
         activity.getSupportActionBar().setTitle(weekTask.getShipName());
     }
 
@@ -157,7 +151,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
                             bean.getConstructionBoatAccount(),
                             bean.getAttachmentCount(),
                             bean.getDefalutAttachmentCount(),
-                            activity.type);
+                            activity.type,
+                            isFinshReceptionSandAttachment);
                 }
 
                 @Override

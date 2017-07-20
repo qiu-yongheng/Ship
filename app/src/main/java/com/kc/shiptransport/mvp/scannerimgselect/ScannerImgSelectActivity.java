@@ -25,6 +25,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
     private static final String ATTACHMENTCOUNT = "ATTACHMENTCOUNT";
     private static final String DEFALUTATTACHMENTCOUNT = "DEFALUTATTACHMENTCOUNT";
     private static final String P_TYPE = "P_TYPE";
+    private static final String ISFINSHRECEPTIONSANDATTACHMENT = "ISFINSHRECEPTIONSANDATTACHMENT";
 
     private ScannerImgSelectFragment fragment;
     public int mTypeID;
@@ -34,6 +35,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
     public int mAttachmentCount;
     public int mDefaulAttachmentCount;
     public int p_type;
+    public int isFinshReceptionSandAttachment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
         mAttachmentCount = bundle.getInt(ATTACHMENTCOUNT);
         mDefaulAttachmentCount = bundle.getInt(DEFALUTATTACHMENTCOUNT);
         p_type = bundle.getInt(P_TYPE);
-
+        isFinshReceptionSandAttachment = bundle.getInt(ISFINSHRECEPTIONSANDATTACHMENT);
 
         if (savedInstanceState != null) {
             fragment = (ScannerImgSelectFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ScannerImgSelectFragment");
@@ -75,7 +77,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, int typeID, int subID, String title, String shipAccount, int AttachmentCount, int DefalutAttachmentCount, int p_type) {
+    public static void startActivity(Context context, int typeID, int subID, String title, String shipAccount, int AttachmentCount, int DefalutAttachmentCount, int p_type, int isFinshReceptionSandAttachment) {
         Intent intent = new Intent(context, ScannerImgSelectActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(TYPEID, typeID);
@@ -85,6 +87,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
         bundle.putInt(ATTACHMENTCOUNT, AttachmentCount);
         bundle.putInt(DEFALUTATTACHMENTCOUNT, DefalutAttachmentCount);
         bundle.putInt(P_TYPE, p_type);
+        bundle.putInt(ISFINSHRECEPTIONSANDATTACHMENT, isFinshReceptionSandAttachment);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

@@ -1542,7 +1542,11 @@ public class DataRepository implements DataSouceImpl {
                 if (!list.isEmpty()) {
                     DataSupport.deleteAll(ConstructionBoat.class);
                     // 保存到数据库
-                    DataSupport.saveAll(list);
+                    for (int i = 0; i < list.size(); i++) {
+                        ConstructionBoat boat = list.get(i);
+                        boat.setPosition(i+1);
+                        boat.save();
+                    }
                 }
 
                 e.onNext(true);
@@ -1875,15 +1879,15 @@ public class DataRepository implements DataSouceImpl {
     /**
      * 根据position获取过砂记录
      *
-     * @param position
+     * @param itemID
      * @return
      */
     @Override
-    public Observable<RecordList> getRecordListForPosition(final int position) {
+    public Observable<RecordList> getRecordListForItemID(final int itemID) {
         return Observable.create(new ObservableOnSubscribe<RecordList>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<RecordList> e) throws Exception {
-                List<RecordList> recordLists = DataSupport.where("position = ?", String.valueOf(position)).find(RecordList.class);
+                List<RecordList> recordLists = DataSupport.where("ItemID = ?", String.valueOf(itemID)).find(RecordList.class);
                 if (recordLists.isEmpty()) {
                     e.onError(new RuntimeException("获取数据失败！"));
                 } else {
@@ -3284,6 +3288,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 3.4 获取部门信息
+     *
      * @return
      */
     @Override
@@ -3305,6 +3310,28 @@ public class DataRepository implements DataSouceImpl {
                 DataSupport.saveAll(list);
 
                 e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.18 获取对应的过砂记录信息明细
+     *
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<RecordedSandShowList> GetOverSandRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<RecordedSandShowList>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<RecordedSandShowList> e) throws Exception {
+                String result = mRemoteDataSource.GetOverSandRecordByItemID(itemID);
+
+                List<RecordedSandShowList> lists = gson.fromJson(result, new TypeToken<List<RecordedSandShowList>>() {
+                }.getType());
+
+                e.onNext(lists.get(0));
                 e.onComplete();
             }
         });

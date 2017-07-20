@@ -62,7 +62,7 @@ public class RecordedSandDetailPresenter implements RecordedSandDetailContract.P
         Observable.create(new ObservableOnSubscribe<List<String>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<String>> e) throws Exception {
-                List<ConstructionBoat> boats = DataSupport.findAll(ConstructionBoat.class);
+                List<ConstructionBoat> boats = DataSupport.order("position asc").find(ConstructionBoat.class);
                 List<String> datas = new ArrayList<>();
 
                 datas.add("请选择施工船");
@@ -100,9 +100,9 @@ public class RecordedSandDetailPresenter implements RecordedSandDetailContract.P
     }
 
     @Override
-    public void getShip(int position) {
+    public void getShip(int itemID) {
         dataRepository
-                .getRecordListForPosition(position)
+                .getRecordListForItemID(itemID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<RecordList>() {
@@ -178,31 +178,37 @@ public class RecordedSandDetailPresenter implements RecordedSandDetailContract.P
                 });
     }
 
+    /**
+     * 获取需要修改的数据
+     * @param itemID
+     */
     @Override
     public void getDetail(int itemID) {
+        view.showLoadding(true);
         dataRepository
-                .GetOverSandRecordBySubcontractorInterimApproachPlanID(itemID)
+                .GetOverSandRecordByItemID(itemID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<RecordedSandShowList>>() {
+                .subscribe(new Observer<RecordedSandShowList>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(@NonNull List<RecordedSandShowList> recordedSandShowLists) {
-
+                    public void onNext(@NonNull RecordedSandShowList recordedSandShowList) {
+                        view.showDetail(recordedSandShowList);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-
+                        view.showLoadding(false);
+                        view.showError(e.toString());
                     }
 
                     @Override
                     public void onComplete() {
-
+                        view.showLoadding(false);
                     }
                 });
     }
