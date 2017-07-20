@@ -149,6 +149,7 @@
     <string name="text_check_update">检查更新</string>
     <string name="btn_add_recorded">添加过砂记录</string>
     <string name="title_recorded_sand_detail_list">过砂记录</string>
+    <string name="btn_update">修改</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

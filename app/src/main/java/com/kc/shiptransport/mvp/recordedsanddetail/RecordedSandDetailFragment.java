@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.recordedsanddetail;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
+import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 
@@ -164,67 +166,17 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
             @Override
             public void onClick(View view) {
                 // TODO: 2017/6/27
-                if (spinner_position == 0 ||
-                        tvStartTime.getText().equals(HINT_TAG) ||
-                        tvEndTime.getText().equals(HINT_TAG) ||
-                        etActualAmountSand.getText().toString().equals(HINT_TAG)) {
-
-                    Toast.makeText(activity, "还有数据未填写", Toast.LENGTH_SHORT).show();
-
+                if (activity.type == SettingUtil.TYPE_UPDATE_RECORDED) {
+                    /** 更新 */
+                    activity.showDailog("修改", "真的要修改过砂记录吗", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            commit();
+                        }
+                    });
                 } else {
-                    // 数据都填写才能提交
-                    RecordedSandUpdataBean bean = new RecordedSandUpdataBean();
-
-                    /** 判断是新增还是修改 条目编号 */
-                    if (activity.type == SettingUtil.TYPE_UPDATE_RECORDED) {
-                        bean.setItemID(activity.recordedID);
-                    } else {
-                        bean.setItemID(0);
-                    }
-
-                    bean.setSubcontractorInterimApproachPlanID(recordList.getItemID());
-
-                    // 供砂船
-                    bean.setSandHandlingShipID(recordList.getShipAccount());
-                    bean.setSandHandlingShipName(recordList.getShipName());
-
-                    // 受砂船
-                    List<ConstructionBoat> boats = DataSupport.findAll(ConstructionBoat.class);
-                    bean.setConstructionShipID(boats.get(spinner_position - 1).getShipNum());
-                    bean.setConstructionShipName(boats.get(spinner_position - 1).getShipName());
-
-                    bean.setStartTime(tvStartTime.getText().toString());
-
-                    bean.setEndTime(tvEndTime.getText().toString());
-                    String before1 = etBefore1.getText().toString();
-                    String before2 = etBefore2.getText().toString();
-                    String before3 = etBefore3.getText().toString();
-                    String before4 = etBefore4.getText().toString();
-                    bean.setBeforeOverSandDraft1(Float.valueOf(TextUtils.isEmpty(before1) ? "0" : before1));
-                    bean.setBeforeOverSandDraft2(Float.valueOf(TextUtils.isEmpty(before2) ? "0" : before2));
-                    bean.setBeforeOverSandDraft3(Float.valueOf(TextUtils.isEmpty(before3) ? "0" : before3));
-                    bean.setBeforeOverSandDraft4(Float.valueOf(TextUtils.isEmpty(before4) ? "0" : before4));
-
-
-                    String after1 = etAfter1.getText().toString();
-                    String after2 = etAfter2.getText().toString();
-                    String after3 = etAfter3.getText().toString();
-                    String after4 = etAfter4.getText().toString();
-                    bean.setAfterOverSandDraft1(Float.valueOf(TextUtils.isEmpty(after1) ? "0" : after1));
-                    bean.setAfterOverSandDraft2(Float.valueOf(TextUtils.isEmpty(after2) ? "0" : after2));
-                    bean.setAfterOverSandDraft3(Float.valueOf(TextUtils.isEmpty(after3) ? "0" : after3));
-                    bean.setAfterOverSandDraft4(Float.valueOf(TextUtils.isEmpty(after4) ? "0" : after4));
-
-                    String amountSand = etActualAmountSand.getText().toString();
-                    bean.setActualAmountOfSand(Float.valueOf(TextUtils.isEmpty(amountSand) ? "0" : amountSand));
-
-                    bean.setIsFinish(IsFinish);
-
-                    // 当前登录用户
-                    List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-                    bean.setCreator(all.get(0).getSubcontractorAccount());
-
-                    presenter.commit(bean);
+                    /** 新增 */
+                    commit();
                 }
 
             }
@@ -253,6 +205,84 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         });
     }
 
+    /**
+     * 提交过砂记录
+     */
+    private void commit() {
+        if (spinner_position == 0 ||
+                tvStartTime.getText().equals(HINT_TAG) ||
+                tvEndTime.getText().equals(HINT_TAG) ||
+                etActualAmountSand.getText().toString().equals(HINT_TAG)) {
+
+            Toast.makeText(activity, "还有数据未填写", Toast.LENGTH_SHORT).show();
+
+        } else {
+            // 数据都填写才能提交
+            final RecordedSandUpdataBean bean = new RecordedSandUpdataBean();
+
+            /** 判断是新增还是修改 条目编号 */
+            if (activity.type == SettingUtil.TYPE_UPDATE_RECORDED) {
+                bean.setItemID(activity.recordedID);
+            } else {
+                bean.setItemID(0);
+            }
+
+            bean.setSubcontractorInterimApproachPlanID(recordList.getItemID());
+
+            // 供砂船
+            bean.setSandHandlingShipID(recordList.getShipAccount());
+            bean.setSandHandlingShipName(recordList.getShipName());
+
+            // 受砂船
+            List<ConstructionBoat> boats = DataSupport.findAll(ConstructionBoat.class);
+            bean.setConstructionShipID(boats.get(spinner_position - 1).getShipNum());
+            bean.setConstructionShipName(boats.get(spinner_position - 1).getShipName());
+
+            bean.setStartTime(tvStartTime.getText().toString());
+
+            bean.setEndTime(tvEndTime.getText().toString());
+            String before1 = etBefore1.getText().toString();
+            String before2 = etBefore2.getText().toString();
+            String before3 = etBefore3.getText().toString();
+            String before4 = etBefore4.getText().toString();
+            bean.setBeforeOverSandDraft1(Float.valueOf(TextUtils.isEmpty(before1) ? "0" : before1));
+            bean.setBeforeOverSandDraft2(Float.valueOf(TextUtils.isEmpty(before2) ? "0" : before2));
+            bean.setBeforeOverSandDraft3(Float.valueOf(TextUtils.isEmpty(before3) ? "0" : before3));
+            bean.setBeforeOverSandDraft4(Float.valueOf(TextUtils.isEmpty(before4) ? "0" : before4));
+
+
+            String after1 = etAfter1.getText().toString();
+            String after2 = etAfter2.getText().toString();
+            String after3 = etAfter3.getText().toString();
+            String after4 = etAfter4.getText().toString();
+            bean.setAfterOverSandDraft1(Float.valueOf(TextUtils.isEmpty(after1) ? "0" : after1));
+            bean.setAfterOverSandDraft2(Float.valueOf(TextUtils.isEmpty(after2) ? "0" : after2));
+            bean.setAfterOverSandDraft3(Float.valueOf(TextUtils.isEmpty(after3) ? "0" : after3));
+            bean.setAfterOverSandDraft4(Float.valueOf(TextUtils.isEmpty(after4) ? "0" : after4));
+
+            String amountSand = etActualAmountSand.getText().toString();
+            bean.setActualAmountOfSand(Float.valueOf(TextUtils.isEmpty(amountSand) ? "0" : amountSand));
+
+            bean.setIsFinish(IsFinish);
+
+            // 当前登录用户
+            List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+            bean.setCreator(all.get(0).getSubcontractorAccount());
+
+            /** 判断是否结束过砂, 弹出相应的提示 */
+            if (IsFinish == 1) {
+                activity.showDailog("结束过砂", "是否结束过砂, 结束后就不能修改过砂记录了", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        presenter.commit(bean);
+                    }
+                });
+            } else {
+                presenter.commit(bean);
+            }
+        }
+    }
+
     @Override
     public void initViews(View view) {
         setHasOptionsMenu(true);
@@ -260,6 +290,13 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.setTitle(R.string.recorded_title);
+
+        /** 根据不同的类型, 改变按钮的描述 */
+        if (activity.type == SettingUtil.TYPE_UPDATE_RECORDED) {
+            btnCommit.setText(R.string.btn_update);
+        } else {
+            btnCommit.setText(R.string.btn_commit);
+        }
     }
 
     @Override
@@ -357,6 +394,12 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
             } else {
                 btnCommit.setVisibility(View.VISIBLE);
                 btnReturn.setVisibility(View.GONE);
+            }
+
+            /** 判断是否结束过砂, 如果结束过砂, 跳转到进场计划界面 */
+            if (IsFinish == 1) {
+                RecordedSandActivity.startActivity(getContext());
+                activity.finish();
             }
             getActivity().onBackPressed();
         } else {
