@@ -404,7 +404,7 @@ public interface DataSouceImpl {
     Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate, String Auditor);
 
     /**
-     * 根据进场ID获取验砂取样详细
+     * 1.23根据进场计划ID获取验砂取样信息明细
      * @param SubcontractorInterimApproachPlanID
      * @return
      */

@@ -2102,7 +2102,7 @@ public class DataRepository implements DataSouceImpl {
     }
 
     /**
-     * 根据进场ID获取验砂取样详细
+     * 1.23根据进场计划ID获取验砂取样信息明细
      *
      * @param SubcontractorInterimApproachPlanID
      * @return

@@ -54,6 +54,10 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
         compositeDisposable.clear();
     }
 
+    /**
+     * 根据position获取进场计划数据
+     * @param position
+     */
     @Override
     public void getShipInfo(int position) {
         dataRepository

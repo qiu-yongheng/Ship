@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -48,6 +50,12 @@ public class DatesListActivity extends BaseActivity {
     public static final String NAME = "NAME";
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
+    @BindView(R.id.btn_return)
+    Button btnReturn;
+    @BindView(R.id.btn_cancel)
+    Button btnCancel;
+    @BindView(R.id.ll_btn)
+    LinearLayout llBtn;
     private DatesListAdapter adapter;
 
     @Override
@@ -104,8 +112,32 @@ public class DatesListActivity extends BaseActivity {
                     }
                 });
 
+        initListener();
 
+    }
 
+    private void initListener() {
+        /** 返回 */
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        /** 取消选择 */
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString(NUM, "");
+                bundle.putString(NAME, "");
+                intent.putExtras(bundle);
+                setResult(0, intent);
+                finish();
+            }
+        });
     }
 
     private void showList(List<ConstructionBoat> list) {
@@ -146,28 +178,10 @@ public class DatesListActivity extends BaseActivity {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     class DatesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private final Context context;
-        public   List<ConstructionBoat> list;
+        public List<ConstructionBoat> list;
         private final LayoutInflater inflate;
         private OnRecyclerviewItemClickListener listener;
 
@@ -185,9 +199,9 @@ public class DatesListActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
             ConstructionBoat boat = list.get(position);
-            ((NormalHolder)holder).mTvShipName.setText(boat.getShipName());
+            ((NormalHolder) holder).mTvShipName.setText(boat.getShipName());
 
-            ((NormalHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+            ((NormalHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onItemClick(holder.itemView, holder.getLayoutPosition());

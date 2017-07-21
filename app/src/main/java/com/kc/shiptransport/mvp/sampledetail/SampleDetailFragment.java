@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,11 +75,18 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     TextView textBatch;
     @BindView(R.id.rl_bacth)
     RelativeLayout rlBacth;
+    @BindView(R.id.btn_return)
+    Button btnReturn;
+    @BindView(R.id.ll_btn)
+    LinearLayout llBtn;
+    @BindView(R.id.view)
+    View view;
     private SampleDetailContract.Presenter presenter;
     private SampleDetailActivity activity;
     private SampleDetailAdapter mAdapter;
     private int itemID;
     private SandSample sandSample;
+    private int isExit;
     //private SampleShowDatesBean sampleShowDates;
 
     @Nullable
@@ -118,7 +126,19 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         rlBacth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InputActivity.startActivityForResult(getActivity(), getResources().getString(R.string.hint_fill), "", SettingUtil.TYPE_TEXT, 100);
+                if (isExit == 1) {
+                    Toast.makeText(getContext(), "不能修改数据", Toast.LENGTH_SHORT).show();
+                } else {
+                    InputActivity.startActivityForResult(getActivity(), getResources().getString(R.string.hint_fill), "", SettingUtil.TYPE_TEXT, 100);
+                }
+            }
+        });
+
+        /** 返回 */
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.onBackPressed();
             }
         });
 
@@ -290,7 +310,17 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
      */
     @Override
     public void showDetailList(SampleShowDatesBean bean) {
-        //this.sampleShowDates = bean;
+        /** 判断是否退场, 如果已退场, 不能修改提交数据 */
+        isExit = bean.getIsExit();
+        if (isExit == 1) {
+            Toast.makeText(getContext(), "已进行退场申请, 不能修改验砂取样记录", Toast.LENGTH_SHORT).show();
+            btnAdd.setVisibility(View.GONE);
+            btnCommit.setVisibility(View.GONE);
+            view.setVisibility(View.GONE);
+
+            btnReturn.setVisibility(View.VISIBLE);
+        }
+
 
         // 回显数据
         textBatch.setText(bean.getBatch());
@@ -324,151 +354,158 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         // 设置adapter
         if (mAdapter == null) {
             mAdapter = new SampleDetailAdapter(getContext(), bean);
-            mAdapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
-                @Override
-                public void onItemClick(View view, final int position, final int... type) {
-                    // 获取position对应数据
-                    final SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = mAdapter.sandSamplingNumRecordList.get(position);
-
-                    final List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> imageList = numRecordListBean.getSandSamplingAttachmentRecordList();
-
-                    if (imageList.isEmpty()) {
-                        imageList.add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
-                        imageList.add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
-                    } else if (imageList.size() == 1) {
-                        imageList.add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
-                    }
-
-                    switch (type[0]) {
-                        case SettingUtil.HOLDER_IMAGE_1:
-                            RxGalleryUtil.getImagRadio(getActivity(), new OnRxGalleryRadioListener() {
-                                @Override
-                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-
-                                    // 保存图片地址
-                                    imageList.get(0).setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
-
-                                    // 图片名
-                                    String title = imageMultipleResultEvent.getResult().get(0).getTitle();
-
-                                    // 图片类型
-                                    String mimeType = imageMultipleResultEvent.getResult().get(0).getMimeType();
-                                    String[] split = mimeType.split("/");
-                                    String suffixName = split[split.length - 1];
-
-                                    imageList.get(0).setFileName(title + "." + suffixName);
+            /** 如果已退场, 不处理点击事件 */
+            if (isExit == 1) {
+                Toast.makeText(getContext(), "已退场, 不能修改数据", Toast.LENGTH_SHORT).show();
+            } else {
 
 
-                                    // 保存图片到列表中, 等待提交
-                                    List<SampleImageList> sampleImageLists = DataSupport
-                                            .where("itemID = ? and position = ? and img_x = ?", String.valueOf(itemID), String.valueOf(position), String.valueOf(type[0]))
-                                            .find(SampleImageList.class);
+                mAdapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, final int position, final int... type) {
+                        // 获取position对应数据
+                        final SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = mAdapter.sandSamplingNumRecordList.get(position);
 
-                                    if (sampleImageLists.isEmpty()) {
-                                        // 数据库没有, 保存到数据库
-                                        SampleImageList list = new SampleImageList();
-                                        list.setItemID(itemID);
-                                        list.setPosition(position);
-                                        list.setImg_x(type[0]);
-                                        list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
-                                        list.setFileName(title + "." + suffixName);
-                                        list.setSuffixName(suffixName);
-                                        list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
-                                        list.save();
-                                    } else {
-                                        // 有缓存数据, 修改
-                                        SampleImageList list = sampleImageLists.get(0);
-                                        list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
-                                        list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
-                                        list.save();
-                                    }
+                        final List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> imageList = numRecordListBean.getSandSamplingAttachmentRecordList();
 
-                                    mAdapter.notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
-
-                                }
-                            });
-                            break;
-                        case SettingUtil.HOLDER_IMAGE_2:
-                            RxGalleryUtil.getImagRadio(getActivity(), new OnRxGalleryRadioListener() {
-                                @Override
-                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-                                    // 保存图片地址
-                                    imageList.get(1).setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
-
-                                    // 图片名
-                                    String title = imageMultipleResultEvent.getResult().get(0).getTitle();
-
-                                    // 图片类型
-                                    String mimeType = imageMultipleResultEvent.getResult().get(0).getMimeType();
-                                    String[] split = mimeType.split("/");
-                                    String suffixName = split[split.length - 1];
-
-                                    imageList.get(1).setFileName(title + "." + suffixName);
-
-
-                                    // 保存图片到列表中, 等待提交
-                                    List<SampleImageList> sampleImageLists = DataSupport
-                                            .where("itemID = ? and position = ? and img_x = ?", String.valueOf(itemID), String.valueOf(position), String.valueOf(type[0]))
-                                            .find(SampleImageList.class);
-
-                                    if (sampleImageLists.isEmpty()) {
-                                        // 数据库没有, 保存到数据库
-                                        SampleImageList list = new SampleImageList();
-                                        list.setItemID(itemID);
-                                        list.setPosition(position);
-                                        list.setImg_x(type[0]);
-                                        list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
-                                        list.setFileName(title + "." + suffixName);
-                                        list.setSuffixName(suffixName);
-                                        list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
-                                        list.save();
-                                    } else {
-                                        // 有缓存数据, 修改
-                                        SampleImageList list = sampleImageLists.get(0);
-                                        list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
-                                        list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
-                                        list.save();
-                                    }
-
-                                    mAdapter.notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
-
-                                }
-                            });
-                            break;
-                        case SettingUtil.HOLDER_CONS_SHIP:
-                            // 跳转到施工船舶选择界面
-                            DatesListActivity.startActivityForResult(getActivity(), position);
-                            break;
-                    }
-                }
-
-                @Override
-                public void onItemLongClick(View view, final int position) {
-
-
-                    activity.showDailog("删除", "是否删除该数据", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = mAdapter.sandSamplingNumRecordList.get(position);
-                            if (mAdapter.sandSamplingNumRecordList.size() <= 3) {
-                                Toast.makeText(getContext(), "取样次数不能少于3次", Toast.LENGTH_SHORT).show();
-                            } else {
-                                // 发送网络请求, 删除item
-                                presenter.deleteItem(numRecordListBean.getItemID());
-                                mAdapter.delete(position);
-                            }
+                        if (imageList.isEmpty()) {
+                            imageList.add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
+                            imageList.add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
+                        } else if (imageList.size() == 1) {
+                            imageList.add(new SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean());
                         }
-                    });
-                }
-            });
+
+                        switch (type[0]) {
+                            case SettingUtil.HOLDER_IMAGE_1:
+                                RxGalleryUtil.getImagRadio(getActivity(), new OnRxGalleryRadioListener() {
+                                    @Override
+                                    public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+
+                                        // 保存图片地址
+                                        imageList.get(0).setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+
+                                        // 图片名
+                                        String title = imageMultipleResultEvent.getResult().get(0).getTitle();
+
+                                        // 图片类型
+                                        String mimeType = imageMultipleResultEvent.getResult().get(0).getMimeType();
+                                        String[] split = mimeType.split("/");
+                                        String suffixName = split[split.length - 1];
+
+                                        imageList.get(0).setFileName(title + "." + suffixName);
+
+
+                                        // 保存图片到列表中, 等待提交
+                                        List<SampleImageList> sampleImageLists = DataSupport
+                                                .where("itemID = ? and position = ? and img_x = ?", String.valueOf(itemID), String.valueOf(position), String.valueOf(type[0]))
+                                                .find(SampleImageList.class);
+
+                                        if (sampleImageLists.isEmpty()) {
+                                            // 数据库没有, 保存到数据库
+                                            SampleImageList list = new SampleImageList();
+                                            list.setItemID(itemID);
+                                            list.setPosition(position);
+                                            list.setImg_x(type[0]);
+                                            list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+                                            list.setFileName(title + "." + suffixName);
+                                            list.setSuffixName(suffixName);
+                                            list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
+                                            list.save();
+                                        } else {
+                                            // 有缓存数据, 修改
+                                            SampleImageList list = sampleImageLists.get(0);
+                                            list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+                                            list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
+                                            list.save();
+                                        }
+
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                                    }
+                                });
+                                break;
+                            case SettingUtil.HOLDER_IMAGE_2:
+                                RxGalleryUtil.getImagRadio(getActivity(), new OnRxGalleryRadioListener() {
+                                    @Override
+                                    public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                        // 保存图片地址
+                                        imageList.get(1).setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+
+                                        // 图片名
+                                        String title = imageMultipleResultEvent.getResult().get(0).getTitle();
+
+                                        // 图片类型
+                                        String mimeType = imageMultipleResultEvent.getResult().get(0).getMimeType();
+                                        String[] split = mimeType.split("/");
+                                        String suffixName = split[split.length - 1];
+
+                                        imageList.get(1).setFileName(title + "." + suffixName);
+
+
+                                        // 保存图片到列表中, 等待提交
+                                        List<SampleImageList> sampleImageLists = DataSupport
+                                                .where("itemID = ? and position = ? and img_x = ?", String.valueOf(itemID), String.valueOf(position), String.valueOf(type[0]))
+                                                .find(SampleImageList.class);
+
+                                        if (sampleImageLists.isEmpty()) {
+                                            // 数据库没有, 保存到数据库
+                                            SampleImageList list = new SampleImageList();
+                                            list.setItemID(itemID);
+                                            list.setPosition(position);
+                                            list.setImg_x(type[0]);
+                                            list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+                                            list.setFileName(title + "." + suffixName);
+                                            list.setSuffixName(suffixName);
+                                            list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
+                                            list.save();
+                                        } else {
+                                            // 有缓存数据, 修改
+                                            SampleImageList list = sampleImageLists.get(0);
+                                            list.setFilePath(imageMultipleResultEvent.getResult().get(0).getOriginalPath());
+                                            list.setConstructionBoatAccount(numRecordListBean.getConstructionBoatAccount());
+                                            list.save();
+                                        }
+
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                                    }
+                                });
+                                break;
+                            case SettingUtil.HOLDER_CONS_SHIP:
+                                // 跳转到施工船舶选择界面
+                                DatesListActivity.startActivityForResult(getActivity(), position);
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, final int position) {
+
+
+                        activity.showDailog("删除", "是否删除该数据", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                SampleShowDatesBean.SandSamplingNumRecordListBean numRecordListBean = mAdapter.sandSamplingNumRecordList.get(position);
+                                if (mAdapter.sandSamplingNumRecordList.size() <= 3) {
+                                    Toast.makeText(getContext(), "取样次数不能少于3次", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // 发送网络请求, 删除item
+                                    presenter.deleteItem(numRecordListBean.getItemID());
+                                    mAdapter.delete(position);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
 
             recyclerview.setAdapter(mAdapter);
 
