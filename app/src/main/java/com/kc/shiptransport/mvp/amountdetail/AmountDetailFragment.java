@@ -31,6 +31,7 @@ import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import org.litepal.crud.DataSupport;
@@ -309,7 +310,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
-                    AmountDetail.TheAmountOfSideAttachmentListBean bean = adapter.list.get(position);
+                    final AmountDetail.TheAmountOfSideAttachmentListBean bean = adapter.list.get(position);
                     if (type[0] == 0) {
                         // 预览
                         ImageActivity.startActivity(getContext(), bean.getFilePath());
@@ -317,8 +318,13 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                         if (activity.isAmount) {
                             Toast.makeText(getContext(), "量方已完善, 不可删除图片", Toast.LENGTH_SHORT).show();
                         } else {
-                            // 删除
-                            presenter.deleteImgForItemID(bean.getItemID());
+                            activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // 删除
+                                    presenter.deleteImgForItemID(bean.getItemID());
+                                }
+                            });
                         }
                     }
                 }
@@ -330,7 +336,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                     } else {
                         // 弹出图片选择器
                         int size = adapter.list.size();
-                        int max = 3 - size;
+                        int max = SettingUtil.NUM_IMAGE_SELECTION - size;
                         if (max > 0) {
                             RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
                                 @Override

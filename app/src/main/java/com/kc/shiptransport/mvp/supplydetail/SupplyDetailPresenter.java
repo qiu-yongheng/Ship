@@ -209,6 +209,7 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
      */
     @Override
     public void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator) {
+        view.showLoading(true);
         dataRepository
                 .getImgList(imageMultipleResultEvent, itemID, creator)
                 .subscribeOn(Schedulers.io())

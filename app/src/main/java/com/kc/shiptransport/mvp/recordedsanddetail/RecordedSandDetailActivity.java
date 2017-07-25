@@ -21,10 +21,12 @@ public class RecordedSandDetailActivity extends BaseActivity{
     private static final String ITEMID = "ITEMID";
     private static final String TYPE = "TYPE";
     private static final String RECORDEDID = "RECORDEDID";
+    private static final String ISREADONLY = "ISREADONLY";
     private RecordedSandDetailFragment fragment;
     public int itemID;
     public int type;
     public int recordedID;
+    public boolean isReadOnly;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class RecordedSandDetailActivity extends BaseActivity{
         itemID = bundle.getInt(ITEMID);
         recordedID = bundle.getInt(RECORDEDID);
         type = bundle.getInt(TYPE);
+        isReadOnly = bundle.getBoolean(ISREADONLY);
 
         if (savedInstanceState != null) {
             fragment = (RecordedSandDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "RecordedSandDetailFragment");
@@ -61,12 +64,13 @@ public class RecordedSandDetailActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, int itemID, int type, int recordedID) {
+    public static void startActivity(Context context, int itemID, int type, int recordedID, boolean isReadOnly) {
         Intent intent = new Intent(context, RecordedSandDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(ITEMID, itemID);
         bundle.putInt(RECORDEDID, recordedID);
         bundle.putInt(TYPE, type);
+        bundle.putBoolean(ISREADONLY, isReadOnly);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

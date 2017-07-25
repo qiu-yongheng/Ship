@@ -158,6 +158,7 @@ public class ExitApplicationDetailPresenter implements ExitApplicationDetailCont
      */
     @Override
     public void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String subcontractorAccount) {
+        view.showLoading(true);
         dataRepository
                 .getImgList(imageMultipleResultEvent, itemID, subcontractorAccount)
                 .subscribeOn(Schedulers.io())

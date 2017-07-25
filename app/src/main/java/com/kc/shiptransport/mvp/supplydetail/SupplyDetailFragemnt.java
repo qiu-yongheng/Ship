@@ -32,6 +32,7 @@ import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import org.litepal.crud.DataSupport;
@@ -282,7 +283,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
-                    SupplyDetail.ReceptionSandAttachmentListBean bean = adapter.list.get(position);
+                    final SupplyDetail.ReceptionSandAttachmentListBean bean = adapter.list.get(position);
                     if (type[0] == 0) {
                         // 预览
                         ImageActivity.startActivity(getContext(), bean.getFilePath());
@@ -290,8 +291,13 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                         if (activity.isSupply) {
                             Toast.makeText(getContext(), "验砂已完成, 不能删除图片", Toast.LENGTH_SHORT).show();
                         } else {
-                            // 删除
-                            presenter.deleteImgForItemID(bean.getItemID());
+                            activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // 删除
+                                    presenter.deleteImgForItemID(bean.getItemID());
+                                }
+                            });
                         }
                     }
                 }
@@ -303,7 +309,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                     } else {
                         // 弹出图片选择器
                         int size = adapter.list.size();
-                        int max = 3 - size;
+                        int max = SettingUtil.NUM_IMAGE_SELECTION - size;
                         if (max > 0) {
                             RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
                                 @Override

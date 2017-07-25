@@ -84,6 +84,7 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
 
     @Override
     public void commit(ImageMultipleResultEvent imageMultipleResultEvent, final int subID, final int typeID, String shipAccount) {
+        view.showLoading(true);
         dataRepository
                 .getScanImgList(imageMultipleResultEvent, subID, typeID, shipAccount)
                 .subscribeOn(Schedulers.io())

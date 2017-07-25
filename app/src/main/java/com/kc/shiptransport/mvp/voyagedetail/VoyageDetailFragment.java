@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +19,15 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
+import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.view.actiivty.InputActivity;
+
+import org.litepal.crud.DataSupport;
 
 import java.text.ParseException;
 
@@ -77,13 +81,16 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
+        WeekTask weekTask = DataSupport.where("position = ?", String.valueOf(activity.mPosition)).find(WeekTask.class).get(0);
+
         // 根据type, 初始化不同的控件
-        if (activity.type == 0) {
-            // 提交数据
+        if (activity.type == 0 && TextUtils.isEmpty(weekTask.getPreAcceptanceTime())) {
+            // 提交数据 (编辑模式, 并且没有验砂)
             btnCommit.setVisibility(View.VISIBLE);
-        } else if (activity.type == 1) {
-            // 查看数据, 不可修改
+        } else if (activity.type == 1 || !TextUtils.isEmpty(weekTask.getPreAcceptanceTime())) {
+            // 查看数据, 不可修改 (只读模式, 或者已经验砂)
             btnCommit.setVisibility(View.GONE);
+            btnReturn.setVisibility(View.VISIBLE);
         }
     }
 
@@ -105,6 +112,14 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             public void onClick(View view) {
                 // TODO
                 presenter.commit(adapter.bean);
+            }
+        });
+
+        // 返回
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
             }
         });
     }

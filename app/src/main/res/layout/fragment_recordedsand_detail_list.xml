@@ -20,12 +20,22 @@
             android:layout_weight="1"
             android:background="@color/blue"
             android:text="@string/btn_add_recorded"/>
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btn_return"
+            style="@style/text_title_w"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/blue"
+            android:text="@string/btn_return"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_marginTop="?actionBarSize"
-        android:layout_above="@id/ll_btn"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_btn"
+        android:layout_marginTop="?actionBarSize"/>
 </RelativeLayout>

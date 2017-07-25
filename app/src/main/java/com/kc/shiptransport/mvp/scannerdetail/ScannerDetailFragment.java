@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -105,8 +106,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     @Override
     public void showTitle(WeekTask weekTask) {
         this.weekTask = weekTask;
-        // 是否完善
-        isFinshReceptionSandAttachment = weekTask.getIsFinshReceptionSandAttachment();
+        // 是否完善 (如果已验砂, 不能修改)
+        isFinshReceptionSandAttachment = TextUtils.isEmpty(weekTask.getPreAcceptanceTime()) ? 0 : 1;
         activity.getSupportActionBar().setTitle(weekTask.getShipName());
     }
 

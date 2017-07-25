@@ -10,6 +10,9 @@ public class SettingUtil {
     /* 列表item数 */
     public static final int Recycler_item_num = 147;
 
+    /* 选取图片数量 */
+    public static final int NUM_IMAGE_SELECTION = 8;
+
 
 
     /* 记住密码 */

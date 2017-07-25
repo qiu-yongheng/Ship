@@ -488,8 +488,6 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
 
                     @Override
                     public void onItemLongClick(View view, final int position) {
-
-
                         activity.showDailog("删除", "是否删除该数据", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

@@ -10,11 +10,10 @@
              android:id="@+id/include"/>
 
     <ScrollView
+        android:layout_marginBottom="@dimen/btn_height"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/include"
-        android:layout_toRightOf="@+id/btn_return"
-        android:layout_toEndOf="@+id/btn_return">
+        android:layout_below="@+id/include">
 
         <LinearLayout
             android:id="@+id/ll"
@@ -73,6 +72,15 @@
                     android:layout_alignParentRight="true"
                     android:spinnerMode="dialog"
                     android:text="@string/text_unfilled"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/text_normal_size"/>
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tv_receive_ship"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
                     android:textColor="@color/text_gray"
                     android:textSize="@dimen/text_normal_size"/>
             </RelativeLayout>
@@ -311,25 +319,32 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/btn_commit"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_height"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:background="@color/btn_bg_blue"
-        android:text="@string/btn_commit"
-        android:textColor="@color/text_white"
-        android:textSize="@dimen/text_18sp"/>
-
-    <Button
-        android:id="@+id/btn_return"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_height"
-        android:layout_alignParentBottom="true"
-        android:background="@color/text_gray"
-        android:text="@string/btn_return"
-        android:textColor="@color/text_black"
-        android:textSize="@dimen/text_18sp"
-        android:visibility="gone"/>
+        android:layout_height="@dimen/btn_height">
 
+        <Button
+            android:id="@+id/btn_commit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_height"
+            android:layout_alignParentBottom="true"
+            android:background="@color/btn_bg_blue"
+            android:text="@string/btn_commit"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_18sp"/>
+
+        <Button
+            android:id="@+id/btn_return"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_height"
+            android:layout_alignParentBottom="true"
+            android:background="@color/text_gray"
+            android:text="@string/btn_return"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/text_18sp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 </RelativeLayout>

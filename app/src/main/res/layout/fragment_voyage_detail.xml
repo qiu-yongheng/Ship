@@ -29,7 +29,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/text_gray"
         android:text="@string/btn_return"
-        android:textColor="@color/text_black"
+        android:textColor="@color/text_white"
         android:textSize="@dimen/text_18sp"
         android:visibility="gone"/>
 </RelativeLayout>

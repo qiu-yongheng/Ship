@@ -11,7 +11,6 @@ import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.basemvp.BaseMvpFragment;
 import com.kc.shiptransport.mvp.recordedsanddetaillist.RecordedSandDetailListActivity;
-import com.kc.shiptransport.mvp.recordedsandshow.RecordedSandShowActivity;
 import com.kc.shiptransport.util.SettingUtil;
 
 import org.litepal.crud.DataSupport;
@@ -109,11 +108,13 @@ public class RecordedSandFragment extends BaseMvpFragment {
         RecordList recordList = DataSupport.where("position = ?", String.valueOf(position)).find(RecordList.class).get(0);
         if (recordList.getIsFinish() == 1) {
             // 跳转到查看界面
-            RecordedSandShowActivity.startActivity(getActivity(), recordList.getItemID());
+            //RecordedSandShowActivity.startActivity(getActivity(), recordList.getItemID()); // 以toolbar分页的方式显示数据
+            // 跳转到列表界面, 只读
+            RecordedSandDetailListActivity.startActivity(getContext(), recordList.getItemID(), true);
         } else {
             // 跳转到填写界面
             //RecordedSandDetailActivity.startActivity(getActivity(), position);
-            RecordedSandDetailListActivity.startActivity(getContext(), recordList.getItemID());
+            RecordedSandDetailListActivity.startActivity(getContext(), recordList.getItemID(), false);
         }
     }
 }

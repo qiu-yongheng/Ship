@@ -22,6 +22,7 @@ import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import java.util.List;
@@ -110,16 +111,21 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                 adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position, int... type) {
-                        ScannerImgListByTypeBean scannerImgListByTypeBean = adapter.list.get(position);
+                        final ScannerImgListByTypeBean scannerImgListByTypeBean = adapter.list.get(position);
                         if (type[0] == 0) {
                             // 显示图片
                             ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
                         } else {
                             if (activity.isFinshReceptionSandAttachment == 0) {
-                                // 删除图片
-                                presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                                activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        // 删除图片
+                                        presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                                    }
+                                });
                             } else if (activity.isFinshReceptionSandAttachment == 1) {
-                                Toast.makeText(getContext(), "信息已完善, 不可删除", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "验砂已完成, 不可删除", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -128,7 +134,8 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                     public void onItemLongClick(View view, int position) {
                         if (activity.isFinshReceptionSandAttachment == 0) {
                             // 弹出图片选择器, 设置多选图片张数
-                            int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
+//                            int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
+                            int maxSize = SettingUtil.NUM_IMAGE_SELECTION - adapter.list.size();
                             if (maxSize > 0) {
                                 RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
                                     @Override
@@ -146,7 +153,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                                 Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
                             }
                         } else if (activity.isFinshReceptionSandAttachment == 1) {
-                            Toast.makeText(getContext(), "信息已完善, 不能添加图片", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "验砂, 不能添加图片", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

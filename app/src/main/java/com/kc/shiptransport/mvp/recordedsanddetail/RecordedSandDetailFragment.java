@@ -93,11 +93,13 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
     Button btnCommit;
     @BindView(R.id.btn_return)
     Button btnReturn;
-    Unbinder unbinder;
     @BindView(R.id.sp_receive_ship)
     Spinner spReceiveShip;
     @BindView(R.id.et_actual_amount_sand)
     EditText etActualAmountSand;
+    @BindView(R.id.tv_receive_ship)
+    TextView tvReceiveShip;
+    Unbinder unbinder;
     private RecordedSandDetailActivity activity;
     private RecordedSandDetailContract.Presenter presenter;
     private int IsFinish = 0;
@@ -111,7 +113,6 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
-
 
         presenter.subscribe();
 
@@ -127,60 +128,81 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
     }
 
     public void initListener() {
-        // 开始时间
-        rlRecordStartTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    CalendarUtil.showTimePickerDialog(getContext(), tvStartTime, new OnTimePickerSureClickListener() {
-                        @Override
-                        public void onSure(String str) {
+        /** 判断是否可用修改 */
+        if (activity.isReadOnly) {
+            // 不能修改
+        } else {
+            // 可以修改
+            // 开始时间
+            rlRecordStartTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        CalendarUtil.showTimePickerDialog(getContext(), tvStartTime, new OnTimePickerSureClickListener() {
+                            @Override
+                            public void onSure(String str) {
 
-                        }
-                    }, false);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                            }
+                        }, false);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
 
-        // 结束时间
-        rlRecordEndTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    CalendarUtil.showTimePickerDialog(getContext(), tvEndTime, new OnTimePickerSureClickListener() {
-                        @Override
-                        public void onSure(String str) {
+            // 结束时间
+            rlRecordEndTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        CalendarUtil.showTimePickerDialog(getContext(), tvEndTime, new OnTimePickerSureClickListener() {
+                            @Override
+                            public void onSure(String str) {
 
-                        }
-                    }, false);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                            }
+                        }, false);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
 
-        // 提交
-        btnCommit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: 2017/6/27
-                if (activity.type == SettingUtil.TYPE_UPDATE_RECORDED) {
-                    /** 更新 */
-                    activity.showDailog("修改", "真的要修改过砂记录吗", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            commit();
-                        }
-                    });
-                } else {
-                    /** 新增 */
-                    commit();
+            // 提交
+            btnCommit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // TODO: 2017/6/27
+                    if (activity.type == SettingUtil.TYPE_UPDATE_RECORDED) {
+                        /** 更新 */
+                        activity.showDailog("修改", "真的要修改过砂记录吗", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                commit();
+                            }
+                        });
+                    } else {
+                        /** 新增 */
+                        commit();
+                    }
+
                 }
+            });
 
-            }
-        });
+            // 监听过砂完成
+            radiobtnFinishRecorde.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        // 过砂完成
+                        IsFinish = 1;
+                    } else {
+                        // 过砂未完成
+                        IsFinish = 0;
+                    }
+                }
+            });
+        }
+
 
         // 返回
         btnReturn.setOnClickListener(new View.OnClickListener() {
@@ -190,19 +212,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
             }
         });
 
-        // 监听过砂完成
-        radiobtnFinishRecorde.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    // 过砂完成
-                    IsFinish = 1;
-                } else {
-                    // 过砂未完成
-                    IsFinish = 0;
-                }
-            }
-        });
+
     }
 
     /**
@@ -269,6 +279,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
             List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
             bean.setCreator(all.get(0).getSubcontractorAccount());
 
+
             /** 判断是否结束过砂, 弹出相应的提示 */
             if (IsFinish == 1) {
                 activity.showDailog("结束过砂", "是否结束过砂, 结束后就不能修改过砂记录了", new DialogInterface.OnClickListener() {
@@ -296,6 +307,45 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
             btnCommit.setText(R.string.btn_update);
         } else {
             btnCommit.setText(R.string.btn_commit);
+        }
+
+        /** 判断是否可以修改 */
+        if (activity.isReadOnly) {
+            // 不可修改
+            tvReceiveShip.setVisibility(View.VISIBLE);
+            spReceiveShip.setVisibility(View.GONE);
+            btnCommit.setVisibility(View.GONE);
+            btnReturn.setVisibility(View.VISIBLE);
+            etAfter1.setFocusable(false);
+            etAfter1.setFocusableInTouchMode(false);
+
+            etAfter2.setFocusable(false);
+            etAfter2.setFocusableInTouchMode(false);
+
+            etAfter3.setFocusable(false);
+            etAfter3.setFocusableInTouchMode(false);
+
+            etAfter4.setFocusable(false);
+            etAfter4.setFocusableInTouchMode(false);
+
+            etBefore1.setFocusable(false);
+            etBefore1.setFocusableInTouchMode(false);
+
+            etBefore2.setFocusable(false);
+            etBefore2.setFocusableInTouchMode(false);
+
+            etBefore3.setFocusable(false);
+            etBefore3.setFocusableInTouchMode(false);
+
+            etBefore4.setFocusable(false);
+            etBefore4.setFocusableInTouchMode(false);
+
+            etActualAmountSand.setFocusable(false);
+            etActualAmountSand.setFocusableInTouchMode(false);
+
+            radiobtnFinishRecorde.setClickable(false);
+        } else {
+            // 可以修改
         }
     }
 
@@ -439,6 +489,8 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         tvStartTime.setText(startTime);
         tvEndTime.setText(endTime);
 
+        tvReceiveShip.setText(constructionShipName);
+
         etBefore1.setText(String.valueOf(beforeOverSandDraft1));
         etBefore2.setText(String.valueOf(beforeOverSandDraft2));
         etBefore3.setText(String.valueOf(beforeOverSandDraft3));
@@ -455,6 +507,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
 
         // 回显选择
         spinner_position = boat.getPosition();
+
         spReceiveShip.setSelection(spinner_position);
     }
 }

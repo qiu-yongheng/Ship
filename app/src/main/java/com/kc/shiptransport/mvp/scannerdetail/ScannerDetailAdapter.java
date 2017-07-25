@@ -43,7 +43,7 @@ public class ScannerDetailAdapter extends RecyclerView.Adapter<RecyclerView.View
         ((NormalHolder)holder).mTvItemTitle.setText(bean.getSubcontractorPerfectBoatScannerAttachmentTypeName());
         // 设置进度
         ((NormalHolder)holder).mTvProgress.setText("(" + bean.getAttachmentCount() + "/" + bean.getDefalutAttachmentCount() + ")");
-        // 设置状态
+        // 设置状态 (当前选中图片 >= 默认需求图片)
         if (bean.getAttachmentCount() >= bean.getDefalutAttachmentCount()) {
             ((NormalHolder)holder).mTvState.setText("已完成");
             ((NormalHolder)holder).mTvState.setTextColor(context.getResources().getColor(R.color.text_red));

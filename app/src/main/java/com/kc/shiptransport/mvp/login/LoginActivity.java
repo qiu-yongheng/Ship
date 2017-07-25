@@ -127,6 +127,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                 // 保存用户名
                 SharedPreferences.Editor edit = sp.edit();
                 edit.putString(SettingUtil.DATA_USERNAME, username);
+                edit.putString(SettingUtil.DATA_PASSWORD, password);
                 edit.apply();
 
                 if (username.isEmpty() || password.isEmpty()) {

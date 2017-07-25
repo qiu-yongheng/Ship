@@ -138,7 +138,7 @@ public class RxGalleryUtil {
                 .placeholder(defaultDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE) // 开启缓存
                 .error(errorDrawable)
-                .centerCrop()
+                .fitCenter()
                 .into(imageView);
     }
 }

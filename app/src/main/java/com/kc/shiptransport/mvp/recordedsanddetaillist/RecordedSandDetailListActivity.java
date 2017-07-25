@@ -19,8 +19,10 @@ import com.kc.shiptransport.mvp.BaseActivity;
 public class RecordedSandDetailListActivity extends BaseActivity{
 
     private static final String ITEMID = "ITEMID";
+    private static final String ISREADONLY = "ISREADONLY";
     private RecordedSandDetailListFragment fragment;
     public int itemID;
+    public boolean isReadOnly;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class RecordedSandDetailListActivity extends BaseActivity{
 
         Bundle bundle = getIntent().getExtras();
         itemID = bundle.getInt(ITEMID);
+        isReadOnly = bundle.getBoolean(ISREADONLY);
 
         if (savedInstanceState != null) {
             fragment = (RecordedSandDetailListFragment) getSupportFragmentManager().getFragment(savedInstanceState, "RecordedSandDetailListFragment");
@@ -55,10 +58,11 @@ public class RecordedSandDetailListActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, int itemID) {
+    public static void startActivity(Context context, int itemID, boolean isReadOnly) {
         Intent intent = new Intent(context, RecordedSandDetailListActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(ITEMID, itemID);
+        bundle.putBoolean(ISREADONLY, isReadOnly);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

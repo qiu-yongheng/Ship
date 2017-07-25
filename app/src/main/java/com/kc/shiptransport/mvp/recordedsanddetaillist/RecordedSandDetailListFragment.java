@@ -45,6 +45,8 @@ public class RecordedSandDetailListFragment extends Fragment implements Recorded
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     Unbinder unbinder;
+    @BindView(R.id.btn_return)
+    Button btnReturn;
     private RecordedSandDetailListContract.Presenter presenter;
     private RecordedSandDetailListActivity activity;
     private RecordedSandDetailListAdapter adapter;
@@ -72,6 +74,17 @@ public class RecordedSandDetailListFragment extends Fragment implements Recorded
 
         /** 初始化recycler_view */
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        /** 判断是否能添加过砂记录 */
+        if (activity.isReadOnly) {
+            // 只读
+            btnReturn.setVisibility(View.VISIBLE);
+            btnAdd.setVisibility(View.GONE);
+        } else {
+            // 编辑
+            btnReturn.setVisibility(View.GONE);
+            btnAdd.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -81,7 +94,15 @@ public class RecordedSandDetailListFragment extends Fragment implements Recorded
             @Override
             public void onClick(View view) {
                 // 跳转到填写界面
-                RecordedSandDetailActivity.startActivity(getActivity(), activity.itemID, SettingUtil.TYPE_NEW_RECORDED, 0);
+                RecordedSandDetailActivity.startActivity(getActivity(), activity.itemID, SettingUtil.TYPE_NEW_RECORDED, 0, false);
+            }
+        });
+
+        /** 返回 */
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
             }
         });
     }
@@ -136,7 +157,7 @@ public class RecordedSandDetailListFragment extends Fragment implements Recorded
                     RecordedSandShowList sandShowList = adapter.list.get(position);
 
                     /** 跳转到编辑界面(修改) */
-                    RecordedSandDetailActivity.startActivity(getActivity(), activity.itemID, SettingUtil.TYPE_UPDATE_RECORDED, sandShowList.getItemID());
+                    RecordedSandDetailActivity.startActivity(getActivity(), activity.itemID, SettingUtil.TYPE_UPDATE_RECORDED, sandShowList.getItemID(), activity.isReadOnly);
                 }
 
                 @Override

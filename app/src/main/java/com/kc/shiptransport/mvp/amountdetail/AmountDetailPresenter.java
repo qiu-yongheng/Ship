@@ -205,6 +205,7 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
      */
     @Override
     public void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator) {
+        view.showLoading(true);
         dataRepository
                 .getImgList(imageMultipleResultEvent, itemID, creator)
                 .subscribeOn(Schedulers.io())
