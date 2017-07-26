@@ -192,6 +192,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Intent intent = new Intent(this, DownloadService.class);
+        stopService(intent);
         unbindService(connection);
     }
 }

@@ -250,7 +250,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
                             @Override
                             public void getChildView(View view, int layoutResId) {
                                 // 初始化控件
-                                RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycle_view);
+                                RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
 
                                 recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
@@ -308,7 +308,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
                             @Override
                             public void getChildView(View view, int layoutResId) {
                                 // 初始化控件
-                                RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycle_view);
+                                RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
 
                                 recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 2));
 

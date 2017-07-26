@@ -2,12 +2,13 @@
 <resources>
     <dimen name="text_normal_size">15sp</dimen>
     <dimen name="marginleft_14">14dp</dimen>
-    <dimen name="text_13sp">13sp</dimen>
     <dimen name="btn_height">45dp</dimen>
     <dimen name="text_18sp">18sp</dimen>
     <dimen name="item_height">45dp</dimen>
     <dimen name="item_margin">8dp</dimen>
     <dimen name="item_head_height">40dp</dimen>
+    <dimen name="text_13sp">13sp</dimen>
+    <dimen name="text_14sp">14sp</dimen>
     <dimen name="text_15sp">15sp</dimen>
     <dimen name="text_20sp">20sp</dimen>
     <dimen name="item_sample_image_height">80dp</dimen>

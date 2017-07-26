@@ -56,7 +56,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.tv_ship_name)
+    @BindView(R.id.tv)
     TextView tvShipName;
     @BindView(R.id.tv_ship_id)
     TextView tvShipId;

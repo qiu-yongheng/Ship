@@ -6,7 +6,7 @@
 
     <TextView
         android:gravity="center"
-        android:id="@+id/tv_ship_name"
+        android:id="@+id/tv"
         style="@style/text_tag"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height"/>

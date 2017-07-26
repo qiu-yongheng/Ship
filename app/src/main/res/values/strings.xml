@@ -150,6 +150,11 @@
     <string name="btn_add_recorded">添加过砂记录</string>
     <string name="title_recorded_sand_detail_list">过砂记录</string>
     <string name="btn_update">修改</string>
+    <string name="select_time">全部时间</string>
+    <string name="select_sub">全部分包商</string>
+    <string name="select_ship">全部施工船舶</string>
+    <string name="title_analysis">供砂进度跟踪</string>
+    <string name="btn_ok">确定</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
@@ -163,10 +168,22 @@
         <item>过砂记录</item>
     </array>
 
+    <!-- 材料分类 -->
     <array name="voyage_spinner">
         <item>请选择材料分类</item>
         <item>细砂（0~3mm）</item>
         <item>细砂（0~5mm）</item>
         <item>粗砂</item>
+    </array>
+
+    <!-- 时间选择 -->
+    <array name="select_time">
+        <item>全部</item>
+        <item>未来7天</item>
+        <item>最近3天</item>
+        <item>最近7天</item>
+        <item>最近1月</item>
+        <item>最近3月</item>
+        <item>自定义时间</item>
     </array>
 </resources>

@@ -58,7 +58,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
 
     @BindView(R.id.toolbar_supply_detail)
     Toolbar toolbarSupplyDetail;
-    @BindView(R.id.tv_ship_name)
+    @BindView(R.id.tv)
     TextView tvShipName;
     @BindView(R.id.tv_ship_id)
     TextView tvShipId;

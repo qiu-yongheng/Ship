@@ -54,7 +54,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 public class ExitApplicationDetailFragment extends Fragment implements ExitApplicationDetailContract.View {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.tv_ship_name)
+    @BindView(R.id.tv)
     TextView tvShipName;
     @BindView(R.id.tv_sub)
     TextView tvSub;

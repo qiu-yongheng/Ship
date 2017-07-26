@@ -71,6 +71,7 @@
         <activity android:name=".mvp.changepassword.ChangePasswordActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.about.AboutActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.recordedsanddetaillist.RecordedSandDetailListActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.analysis.AnalysisActivity" android:launchMode="singleTask"/>
 
 
         <activity

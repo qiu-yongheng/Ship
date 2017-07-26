@@ -187,7 +187,7 @@ public class VoyageListActivity extends BaseActivity {
 
             public NormalHolder(View itemView) {
                 super(itemView);
-                mTvShipName = (TextView) itemView.findViewById(R.id.tv_ship_name);
+                mTvShipName = (TextView) itemView.findViewById(R.id.tv);
             }
         }
 

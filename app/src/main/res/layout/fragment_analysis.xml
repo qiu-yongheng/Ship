@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <include layout="@layout/view_toolbar"/>
+
+    <LinearLayout
+        android:background="@color/text_white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:id="@+id/select_time"
+            android:layout_width="0dp"
+            style="@style/text_tag_small"
+            android:text="@string/select_time"
+            android:gravity="center"
+            android:drawableBottom="@mipmap/pull_down"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <View
+            android:layout_width="1dp"
+            android:background="@color/Dividing_line"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:drawableBottom="@mipmap/pull_down"
+            style="@style/text_tag_small"
+            android:id="@+id/select_sub"
+            android:layout_width="0dp"
+            android:text="@string/select_sub"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <View
+            android:layout_width="1dp"
+            android:background="@color/Dividing_line"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:drawableBottom="@mipmap/pull_down"
+            style="@style/text_tag_small"
+            android:id="@+id/select_ship"
+            android:layout_width="0dp"
+            android:text="@string/select_ship"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <include layout="@layout/view_divi"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

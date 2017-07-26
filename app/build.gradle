@@ -73,4 +73,6 @@ dependencies {
 
     // 联动选择框
     compile project(':pickerview')
+    // 封装的通用Adapter
+    compile project(':baseadapter-recyclerview')
 }

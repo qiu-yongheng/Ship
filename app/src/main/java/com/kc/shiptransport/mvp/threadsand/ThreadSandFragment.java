@@ -59,7 +59,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     TextView tvTitle;
     @BindView(R.id.tv_record)
     TextView tvRecord;
-    @BindView(R.id.tv_ship_name)
+    @BindView(R.id.tv)
     TextView tvShipName;
     @BindView(R.id.tv_ship_type)
     TextView tvShipType;
@@ -211,7 +211,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                             @Override
                             public void getChildView(View view, int layoutResId) {
                                 // 初始化控件
-                                RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycle_view);
+                                RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
 
                                 recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 3));
 

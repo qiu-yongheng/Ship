@@ -64,7 +64,7 @@ class RecordedSandDetailListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         public NormalHolder(View itemView) {
             super(itemView);
-            mTvShipName = (TextView) itemView.findViewById(R.id.tv_ship_name);
+            mTvShipName = (TextView) itemView.findViewById(R.id.tv);
             mTvStartTime = (TextView) itemView.findViewById(R.id.tv_start_time);
             mTvEndTime = (TextView) itemView.findViewById(R.id.tv_end_time);
             mTvSand = (TextView) itemView.findViewById(R.id.tv_sand);

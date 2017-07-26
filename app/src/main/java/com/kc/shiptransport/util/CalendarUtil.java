@@ -49,6 +49,21 @@ public class CalendarUtil {
     }
 
     /**
+     * 获取当前日期, 偏移后的日期
+     * @param format
+     * @param dateType
+     * @param num
+     * @return
+     */
+    public static String getOffsetDate(String format, int dateType, int num) {
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        Calendar cal = Calendar.getInstance();
+        cal.add(dateType, num);
+
+        return df.format(cal.getTime());
+    }
+
+    /**
      * 获取当天日期
      *
      * @param format 自定义格式化格式
@@ -369,6 +384,45 @@ public class CalendarUtil {
      * @param view
      */
     public static void showDatePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
+        //        if (isSystem) {
+        //            final Calendar now = Calendar.getInstance();
+        //
+        //            // 显示日期选择器
+        //            DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+        //                @Override
+        //                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        //                    final Calendar c = Calendar.getInstance();
+        //                    c.set(Calendar.YEAR, year);
+        //                    c.set(Calendar.MONTH, month);
+        //                    c.set(Calendar.DAY_OF_MONTH, day);
+        //
+        //                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        //                    String format = df.format(c.getTime());
+        //                    view.setText(format);
+        //                    listener.onSure(format);
+        //                }
+        //            }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+        //
+        //
+        //            datePickerDialog.show();
+        //        } else {
+        //            showTimePicker(context, view, YYYY_MM_DD, null, listener, new boolean[]{true, true, true, false, false, false}, false);
+        //        }
+
+        showDatePickerDialog(context, view, listener, false, isSystem);
+    }
+
+    /**
+     * 弹出日期选择器
+     *
+     * @param context
+     * @param view
+     * @param listener
+     * @param isDialog
+     * @param isSystem
+     * @throws ParseException
+     */
+    public static void showDatePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, boolean isDialog, boolean isSystem) throws ParseException {
         if (isSystem) {
             final Calendar now = Calendar.getInstance();
 
@@ -391,7 +445,7 @@ public class CalendarUtil {
 
             datePickerDialog.show();
         } else {
-            showTimePicker(context, view, YYYY_MM_DD, null, listener, new boolean[]{true, true, true, false, false, false}, false);
+            showTimePicker(context, view, YYYY_MM_DD, null, listener, new boolean[]{true, true, true, false, false, false}, isDialog);
         }
     }
 
