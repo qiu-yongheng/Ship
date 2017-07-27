@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.CardView
+        android:layout_marginBottom="2dp"
+        style="@style/card_view"
+        app:cardElevation="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginRight="@dimen/margin_12"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_show"/>
+
+                <TextView
+                    style="@style/text_tag_big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:text="信息完善阶段"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_divi"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="船长姓名"/>
+
+                    <TextView
+                        android:id="@+id/tv_captain_name"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="船长电话"/>
+
+                    <TextView
+                        android:id="@+id/tv_captain_phone"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="石场名称"/>
+
+                    <TextView
+                        android:id="@+id/tv_store_name"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="装仓时间"/>
+
+                    <TextView
+                        android:id="@+id/tv_load_time"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="AIS MMIS Num"/>
+
+                    <TextView
+                        android:id="@+id/tv_AIS_MMIS_NUM"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="隔仓数量"/>
+
+                    <TextView
+                        android:id="@+id/tv_com_num"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="货物名称"/>
+
+                    <TextView
+                        android:id="@+id/tv_goods_name"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="载重量"/>
+
+                    <TextView
+                        android:id="@+id/tv_weight_quan"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="洗石场所在地"/>
+
+                    <TextView
+                        android:id="@+id/tv_store_location"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="离开石场时间"/>
+
+                    <TextView
+                        android:id="@+id/tv_leave_store_time"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="清关结束时间"/>
+
+                    <TextView
+                        android:id="@+id/tv_clear_time"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="到达锚地时间"/>
+
+                    <TextView
+                        android:id="@+id/tv_arrive_anchor_time"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="材料分类"/>
+
+                    <TextView
+                        android:id="@+id/tv_material"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height_32"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/text_tag_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="供货方"/>
+
+                    <TextView
+                        android:id="@+id/tv_receiver"
+                        style="@style/text_description_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

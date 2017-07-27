@@ -1,7 +1,10 @@
 package com.kc.shiptransport.mvp.analysis;
 
+import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
+
+import java.util.List;
 
 /**
  * @author 邱永恒
@@ -11,7 +14,7 @@ import com.kc.shiptransport.mvp.BaseView;
 
 public interface AnalysisContract {
     interface View extends BaseView<Presenter> {
-        void getSearchResult();
+        void showSearchResult(List<ProgressTrack> list);
     }
 
     interface Presenter extends BasePresenter {

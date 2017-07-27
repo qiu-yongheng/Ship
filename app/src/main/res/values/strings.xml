@@ -152,9 +152,10 @@
     <string name="btn_update">修改</string>
     <string name="select_time">全部时间</string>
     <string name="select_sub">全部分包商</string>
-    <string name="select_ship">全部施工船舶</string>
+    <string name="select_ship">全部供砂船舶</string>
     <string name="title_analysis">供砂进度跟踪</string>
     <string name="btn_ok">确定</string>
+    <string name="title_analysis_detail">分包商进场计划进度跟踪</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

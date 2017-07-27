@@ -24,8 +24,11 @@ import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.analysis.AnalysisDetail;
+import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.partition.PartitionNum;
@@ -52,6 +55,12 @@ public interface DataSouceImpl {
      * 获取分包商信息, 并缓存到数据库
      */
     void getSubcontractorInfo(String username);
+
+    /**
+     * 获取所有分包商列表
+     * @return
+     */
+    Observable<List<SubcontractorList>> getSubcontractorList();
 
     /**
      * 获取船舶信息, 并缓存到数据库
@@ -682,4 +691,21 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<RecordedSandShowList> GetOverSandRecordByItemID(int itemID);
+
+    /**
+     * 2.5 获取分包商进场计划进度跟踪
+     * @param SubcontractorAccount
+     * @param ShipName
+     * @param StartDate
+     * @param EndDate
+     * @return
+     */
+    Observable<List<ProgressTrack>> GetSubcontractorInterimApproachPlanProgressTracking(String SubcontractorAccount, String ShipName, String StartDate, String EndDate);
+
+    /**
+     * 2.4 根据进场计划ID，获取供砂过程总表
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    Observable<AnalysisDetail> GetAllDetailBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
 }

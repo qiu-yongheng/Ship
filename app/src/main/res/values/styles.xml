@@ -30,10 +30,22 @@
         <item name="android:textColor">@color/text_tag_gray</item>
     </style>
 
+    <!--标题文字 小号-->
+    <style name="text_tag_big">
+        <item name="android:textSize">@dimen/text_17.5sp</item>
+        <item name="android:textColor">@color/text_tag_gray</item>
+    </style>
+
     <!--描述文字-->
     <style name="text_description">
         <item name="android:textColor">@color/text_gray</item>
         <item name="android:textSize">@dimen/text_15sp</item>
+    </style>
+
+    <!--描述文字 小号-->
+    <style name="text_description_small">
+        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:textSize">@dimen/text_14sp</item>
     </style>
 
     <!--标题文字-->
@@ -41,6 +53,15 @@
         <item name="android:textColor">@color/text_white</item>
         <item name="android:textSize">@dimen/text_15sp</item>
     </style>
+
+    <!-- cardView -->
+    <style name="card_view">
+        <item name="android:layout_marginLeft">@dimen/marginleft_14</item>
+        <item name="android:layout_marginRight">@dimen/marginleft_14</item>
+        <item name="android:layout_marginTop">@dimen/margin_12</item>
+    </style>
+
+
 
 
 

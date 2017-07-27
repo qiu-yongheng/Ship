@@ -26,6 +26,7 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
     private SparseArrayCompat<View> mFootViews = new SparseArrayCompat<>();
 
     private RecyclerView.Adapter mInnerAdapter;
+    private OnHeadAndFootClickListener listener;
 
     public HeaderAndFooterWrapper(RecyclerView.Adapter adapter) {
         mInnerAdapter = adapter;
@@ -33,7 +34,7 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 创建viewHolder
-     *
+     * <p>
      * 1. 判断是否是header
      * 2. 判断是否是foot
      * 3. 如果都不是, 返回adapter的viewHolder
@@ -57,7 +58,7 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 获取控件类型
-     *
+     * <p>
      * 1. 判断是否是header
      * 2. 判断是否是foot
      * 3. 如果不是header与foot, 返回传入adapter的viewHolder
@@ -81,15 +82,32 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 绑定数据
+     *
      * @param holder
      * @param position
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (isHeaderViewPos(position)) {
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(v, holder, holder.getAdapterPosition());
+                    }
+                }
+            });
             return;
         }
         if (isFooterViewPos(position)) {
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(v, holder, holder.getAdapterPosition());
+                }
+            });
             return;
         }
         mInnerAdapter.onBindViewHolder(holder, position - getHeadersCount());
@@ -97,8 +115,9 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 获取控件长度
-     *
+     * <p>
      * header长度 + foot长度 + 传入adapter长度
+     *
      * @return
      */
     @Override
@@ -137,6 +156,7 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 瀑布流, 设置item的宽度 (瀑布流没有getSpanSizeLookup方法)
+     *
      * @param holder
      */
     @Override
@@ -151,6 +171,7 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 判断position对应的view是否header
+     *
      * @param position
      * @return
      */
@@ -160,6 +181,7 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 判断position对应的view是否foot
+     *
      * @param position
      * @return
      */
@@ -169,8 +191,9 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 添加header到map集合中, key = 固定值 + 当前集合长度; value = view
-     *
+     * <p>
      * 好处: key不会重复
+     *
      * @param view
      */
     public void addHeaderView(View view) {
@@ -179,8 +202,9 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 添加foot到map集合中, key = 固定值 + 当前集合长度; value = view
-     *
+     * <p>
      * 好处: key不会重复
+     *
      * @param view
      */
     public void addFootView(View view) {
@@ -189,6 +213,7 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 获取header数量
+     *
      * @return
      */
     public int getHeadersCount() {
@@ -197,11 +222,21 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
 
     /**
      * 获取foot数量
+     *
      * @return
      */
     public int getFootersCount() {
         return mFootViews.size();
     }
 
+    /**
+     * item点击监听接口
+     */
+    public interface OnHeadAndFootClickListener {
+        void onItemClick(View view, RecyclerView.ViewHolder holder, int position);
+    }
 
+    public void setHeadAndFootClickListener(OnHeadAndFootClickListener listener) {
+        this.listener = listener;
+    }
 }

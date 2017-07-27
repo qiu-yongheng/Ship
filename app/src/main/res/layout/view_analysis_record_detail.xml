@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="记录条目"/>
+
+        <TextView
+            android:id="@+id/tv_record_num"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="实际过砂量"/>
+
+        <TextView
+            android:id="@+id/tv_sand_reality"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="供砂船舶名称"/>
+
+        <TextView
+            android:id="@+id/tv_sand_ship"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="施工船舶名称"/>
+
+        <TextView
+            android:id="@+id/tv_cons_ship"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始时间"/>
+
+        <TextView
+            android:id="@+id/tv_start_time"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="结束时间"/>
+
+        <TextView
+            android:id="@+id/tv_end_time"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="过砂前吃水1"/>
+
+        <TextView
+            android:id="@+id/tv_before_1"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="过砂前吃水2"/>
+
+        <TextView
+            android:id="@+id/tv_before_2"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="过砂前吃水3"/>
+
+        <TextView
+            android:id="@+id/tv_before_3"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="过砂前吃水4"/>
+
+        <TextView
+            android:id="@+id/tv_before_4"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="过砂后吃水1"/>
+
+        <TextView
+            android:id="@+id/tv_after_1"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="过砂后吃水2"/>
+
+        <TextView
+            android:id="@+id/tv_after_2"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="过砂后吃水3"/>
+
+        <TextView
+            android:id="@+id/tv_after_3"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_32"
+        android:layout_marginLeft="@dimen/margin_12"
+        android:layout_marginRight="@dimen/margin_12"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/text_tag_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="过砂后吃水4"/>
+
+        <TextView
+            android:id="@+id/tv_after_4"
+            style="@style/text_description_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -163,6 +163,14 @@ public class MultiItemTypeAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
     }
 
     /**
+     * 更新数据
+     * @param dates
+     */
+    public void setDates(List<T> dates) {
+        mDatas = dates;
+    }
+
+    /**
      * 添加item类型案例
      * @param itemViewDelegate item类型样式布局案例
      * @return
@@ -190,6 +198,8 @@ public class MultiItemTypeAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
     protected boolean useItemViewDelegateManager() {
         return mItemViewDelegateManager.getItemViewDelegateCount() > 0;
     }
+
+
 
     /**
      * item点击监听接口

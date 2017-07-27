@@ -10,6 +10,7 @@
     <dimen name="text_13sp">13sp</dimen>
     <dimen name="text_14sp">14sp</dimen>
     <dimen name="text_15sp">15sp</dimen>
+    <dimen name="text_17.5sp">17.5sp</dimen>
     <dimen name="text_20sp">20sp</dimen>
     <dimen name="item_sample_image_height">80dp</dimen>
     <dimen name="image_size">60dp</dimen>
@@ -33,4 +34,5 @@
     <dimen name="margin_12">12dp</dimen>
     <dimen name="margin_17">17dp</dimen>
     <dimen name="margin_10">10dp</dimen>
+    <dimen name="marginleft_11">11dp</dimen>
 </resources>

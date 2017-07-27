@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.analysis;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,11 +18,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.SubcontractorList;
+import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.ship.ShipList;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
+import com.kc.shiptransport.mvp.analysisdetail.AnalysisDetailActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
+import com.zhy.adapter.recyclerview.wrapper.EmptyWrapper;
+import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
+
+import org.litepal.crud.DataSupport;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -31,6 +41,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
 
 /**
  * @author 邱永恒
@@ -53,8 +64,13 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     private AnalysisActivity activity;
     private AnalysisContract.Presenter presenter;
     private CommonPopupWindow pop_time;
-    private String startTime;
-    private String endTime;
+    private String startTime = "";
+    private String endTime = "";
+    private CommonPopupWindow pop_sub;
+    private CommonPopupWindow pop_ship;
+    private String subAccount = "";
+    private String consShip = "";
+    private CommonAdapter<ProgressTrack> adapter;
 
     @Nullable
     @Override
@@ -65,6 +81,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         initListener();
 
         // TODO
+        presenter.subscribe();
         return view;
     }
 
@@ -111,7 +128,6 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                 Button btnReturn = (Button) view.findViewById(R.id.btn_return);
                                 Button btnOk = (Button) view.findViewById(R.id.btn_ok);
 
-
                                 // 获取数据
                                 String[] stringArray = getResources().getStringArray(R.array.select_time);
                                 List<String> dates = new ArrayList<String>();
@@ -127,7 +143,6 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                     @Override
                                                     public void onClick(View view) {
                                                         selectTime.setText(s);
-                                                        Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
 
                                                         switch (position) {
                                                             case 0:
@@ -168,13 +183,15 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                         }
 
                                                         if (pop_time.isShowing() && position != 6) {
+                                                            // 搜索
+                                                            presenter.search(startTime, endTime, subAccount, consShip);
+
                                                             pop_time.dismiss();
                                                         }
                                                     }
                                                 });
                                     }
                                 };
-
 
 
                                 /** ------------------------------ 点击事件 ------------------------------ */
@@ -225,6 +242,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                 btnOk.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+                                        // 搜索
+                                        presenter.search(startTime, endTime, subAccount, consShip);
+
                                         if (pop_time.isShowing()) {
                                             pop_time.dismiss();
                                         }
@@ -254,7 +274,90 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         selectSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /** 文字高亮 */
+                initSelectColor();
+                selectSub.setTextColor(getResources().getColor(R.color.colorPrimary));
 
+                if (pop_sub != null && pop_sub.isShowing()) {
+                    return;
+                }
+
+                pop_sub = new CommonPopupWindow.Builder(getContext())
+                        .setView(R.layout.popup_down)
+                        .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .setAnimationStyle(R.style.AnimDown)
+                        .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
+                            @Override
+                            public void getChildView(View view, int layoutResId) {
+                                // 初始化控件
+                                final RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
+                                recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                // 获取数据
+                                List<SubcontractorList> list = DataSupport.findAll(SubcontractorList.class);
+
+                                // 创建适配器
+                                CommonAdapter<SubcontractorList> adapter = new CommonAdapter<SubcontractorList>(getContext(), R.layout.item_analysis, list) {
+                                    @Override
+                                    protected void convert(ViewHolder holder, final SubcontractorList subcontractor, int position) {
+                                        holder.setText(R.id.tv, subcontractor.getSubcontractorName())
+                                                .setOnClickListener(R.id.tv, new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+
+                                                        selectSub.setText(subcontractor.getSubcontractorName());
+
+                                                        // 获取账号
+                                                        subAccount = subcontractor.getSubcontractorAccount();
+
+                                                        // TODO 搜索
+                                                        presenter.search(startTime, endTime, subAccount, consShip);
+
+                                                        // 隐藏pop
+                                                        if (pop_sub.isShowing()) {
+                                                            pop_sub.dismiss();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                };
+
+
+                                // 添加头
+                                HeaderAndFooterWrapper<Object> headWrapper = new HeaderAndFooterWrapper<>(adapter);
+                                View inflate = LayoutInflater.from(getContext()).inflate(R.layout.item_analysis, recycle_view, false);
+                                TextView v = (TextView) inflate.findViewById(R.id.tv);
+                                v.setText("全部");
+                                headWrapper.addHeaderView(inflate);
+
+                                headWrapper.setHeadAndFootClickListener(new HeaderAndFooterWrapper.OnHeadAndFootClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                                        selectSub.setText("全部分包商");
+                                        subAccount = "";
+
+                                        // 搜索
+                                        presenter.search(startTime, endTime, subAccount, consShip);
+                                        if (pop_sub.isShowing()) {
+                                            pop_sub.dismiss();
+                                        }
+                                    }
+                                });
+
+                                recycle_view.setAdapter(headWrapper);
+                            }
+                        })
+                        .setOutsideTouchable(true)
+                        .create();
+                pop_sub.showAsDropDown(view);
+
+                /** 消失监听 */
+                pop_sub.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        initSelectColor();
+                    }
+                });
             }
         });
 
@@ -262,7 +365,87 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         selectShip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /** 文字高亮 */
+                initSelectColor();
+                selectShip.setTextColor(getResources().getColor(R.color.colorPrimary));
 
+                if (pop_ship != null && pop_ship.isShowing()) {
+                    return;
+                }
+
+                pop_ship = new CommonPopupWindow.Builder(getContext())
+                        .setView(R.layout.popup_down)
+                        .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .setAnimationStyle(R.style.AnimDown)
+                        .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
+                            @Override
+                            public void getChildView(View view, int layoutResId) {
+                                // 初始化控件
+                                final RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
+                                recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                // 获取数据
+                                List<ShipList> list = DataSupport.order("ShipID asc").find(ShipList.class);
+
+                                // 创建adapter
+                                CommonAdapter<ShipList> adapter = new CommonAdapter<ShipList>(getContext(), R.layout.item_analysis, list) {
+                                    @Override
+                                    protected void convert(ViewHolder holder, final ShipList ShipList, int position) {
+                                        holder.setText(R.id.tv, ShipList.getShipName())
+                                                .setOnClickListener(R.id.tv, new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        selectShip.setText(ShipList.getShipName());
+
+                                                        consShip = ShipList.getShipName();
+
+                                                        // 搜索
+                                                        presenter.search(startTime, endTime, subAccount, consShip);
+
+                                                        if (pop_ship.isShowing()) {
+                                                            pop_ship.dismiss();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                };
+
+
+                                // 添加头
+                                HeaderAndFooterWrapper<Object> headWrapper = new HeaderAndFooterWrapper<>(adapter);
+                                View inflate = LayoutInflater.from(getContext()).inflate(R.layout.item_analysis, recycle_view, false);
+                                TextView v = (TextView) inflate.findViewById(R.id.tv);
+                                v.setText("全部");
+                                headWrapper.addHeaderView(inflate);
+
+                                headWrapper.setHeadAndFootClickListener(new HeaderAndFooterWrapper.OnHeadAndFootClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                                        selectShip.setText("全部供砂船舶");
+                                        consShip = "";
+
+                                        // 搜索
+                                        presenter.search(startTime, endTime, subAccount, consShip);
+                                        if (pop_ship.isShowing()) {
+                                            pop_ship.dismiss();
+                                        }
+                                    }
+                                });
+
+                                recycle_view.setAdapter(headWrapper);
+                            }
+                        })
+                        .setOutsideTouchable(true)
+                        .create();
+                pop_ship.showAsDropDown(view);
+
+                /** 消失监听 */
+                pop_ship.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        initSelectColor();
+                    }
+                });
             }
         });
     }
@@ -290,12 +473,21 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
 
     @Override
     public void showLoading(boolean isShow) {
-
+        if (isShow) {
+            activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
+        } else {
+            activity.hideProgressDailog();
+        }
     }
 
     @Override
     public void showError(String msg) {
-
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -308,7 +500,31 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
      * 搜索结果
      */
     @Override
-    public void getSearchResult() {
+    public void showSearchResult(List<ProgressTrack> list) {
+        //        if (adapter == null) {
+        adapter = new CommonAdapter<ProgressTrack>(getContext(), R.layout.item_analysis_list, list) {
+            @Override
+            protected void convert(ViewHolder holder, final ProgressTrack progressTrack, int position) {
+                holder.setText(R.id.tv_sub_name, progressTrack.getSubcontractorName())
+                        .setText(R.id.tv_plan_time, progressTrack.getPlanDay())
+                        .setText(R.id.tv_ship_name, progressTrack.getShipName())
+                        .setText(R.id.tv_state, progressTrack.getStatusValue())
+                        .setOnClickListener(R.id.card_view, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // TODO 跳转
+                                AnalysisDetailActivity.startActivity(getContext(), progressTrack.getItemID());
+                            }
+                        });
+            }
+        };
 
+        EmptyWrapper<Object> emptyWrapper = new EmptyWrapper<>(adapter);
+        emptyWrapper.setEmptyView(LayoutInflater.from(getContext()).inflate(R.layout.empty_view, recycleView, false));
+        recycleView.setAdapter(emptyWrapper);
+        //        } else {
+        //            adapter.setDates(list);
+        //            adapter.notifyDataSetChanged();
+        //        }
     }
 }

@@ -1564,4 +1564,58 @@ public class RemoteDataSource {
 
         return getCallResult(endPoint, soapAction, rpc);
     }
+
+    /**
+     * 2.5 获取分包商进场计划进度跟踪
+     * @param SubcontractorAccount
+     * @param ShipName
+     * @param StartDate
+     * @param EndDate
+     * @return
+     * @throws Exception
+     */
+    public String GetSubcontractorInterimApproachPlanProgressTracking(String SubcontractorAccount, String ShipName, String StartDate, String EndDate) throws Exception {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetSubcontractorInterimApproachPlanProgressTracking";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetSubcontractorInterimApproachPlanProgressTracking";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("SubcontractorAccount", SubcontractorAccount);
+        rpc.addProperty("ShipName", ShipName);
+        rpc.addProperty("StartDate", StartDate);
+        rpc.addProperty("EndDate", EndDate);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 2.4 根据进场计划ID，获取供砂过程总表
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     * @throws Exception
+     */
+    public String GetAllDetailBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID) throws Exception {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetAllDetailBySubcontractorInterimApproachPlanID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetAllDetailBySubcontractorInterimApproachPlanID";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
 }

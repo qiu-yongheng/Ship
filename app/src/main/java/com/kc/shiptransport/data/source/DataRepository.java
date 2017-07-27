@@ -51,6 +51,8 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.analysis.AnalysisDetail;
+import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.down.StopList;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
@@ -123,10 +125,13 @@ public class DataRepository implements DataSouceImpl {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         Log.d("info", "分包商json: " + subcontractorInfo);
+
         // 保存到数据库
         List<SubcontractorBean> ls = gson.fromJson(subcontractorInfo, new TypeToken<List<SubcontractorBean>>() {
         }.getType());
+
         if (ls != null && !ls.isEmpty()) {
             // 清空数据
             DataSupport.deleteAll(SubcontractorList.class);
@@ -137,6 +142,33 @@ public class DataRepository implements DataSouceImpl {
                 subcontractor.save();
             }
         }
+    }
+
+    /**
+     * 获取所有分包商列表
+     *
+     * @return
+     */
+    @Override
+    public Observable<List<SubcontractorList>> getSubcontractorList() {
+        return Observable.create(new ObservableOnSubscribe<List<SubcontractorList>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<SubcontractorList>> e) throws Exception {
+                String result = mRemoteDataSource.getSubcontractorInfo("");
+
+                List<SubcontractorList> list = gson.fromJson(result, new TypeToken<List<SubcontractorList>>() {
+                }.getType());
+
+                // 初始化数据库
+                DataSupport.deleteAll(SubcontractorList.class);
+
+                // 保存到数据库
+                DataSupport.saveAll(list);
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
     }
 
     @Override
@@ -1544,7 +1576,7 @@ public class DataRepository implements DataSouceImpl {
                     // 保存到数据库
                     for (int i = 0; i < list.size(); i++) {
                         ConstructionBoat boat = list.get(i);
-                        boat.setPosition(i+1);
+                        boat.setPosition(i + 1);
                         boat.save();
                     }
                 }
@@ -3337,6 +3369,50 @@ public class DataRepository implements DataSouceImpl {
         });
     }
 
+    /**
+     * 2.5 获取分包商进场计划进度跟踪
+     * @param SubcontractorAccount
+     * @param ShipName
+     * @param StartDate
+     * @param EndDate
+     * @return
+     */
+    @Override
+    public Observable<List<ProgressTrack>> GetSubcontractorInterimApproachPlanProgressTracking(final String SubcontractorAccount, final String ShipName, final String StartDate, final String EndDate) {
+        return Observable.create(new ObservableOnSubscribe<List<ProgressTrack>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<ProgressTrack>> e) throws Exception {
+                String result = mRemoteDataSource.GetSubcontractorInterimApproachPlanProgressTracking(SubcontractorAccount, ShipName, StartDate, EndDate);
+
+                List<ProgressTrack> list = gson.fromJson(result, new TypeToken<List<ProgressTrack>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 2.4 根据进场计划ID，获取供砂过程总表
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    @Override
+    public Observable<AnalysisDetail> GetAllDetailBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID) {
+        return Observable.create(new ObservableOnSubscribe<AnalysisDetail>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<AnalysisDetail> e) throws Exception {
+                String result = mRemoteDataSource.GetAllDetailBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                List<AnalysisDetail> list = gson.fromJson(result, new TypeToken<List<AnalysisDetail>>() {
+                }.getType());
+
+                e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
 
     /**
      *
