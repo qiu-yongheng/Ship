@@ -193,9 +193,10 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
     /**
      * 获取要显示的数据
      * @param position
+     * @param isSandSampling
      */
     @Override
-    public void getDates(int position) {
+    public void getDates(int position, final boolean isSandSampling) {
         view.showLoading(true);
         dataRepository
                 .getSampleTaskForPosition(position) // 根据进场ID获取数据
@@ -204,7 +205,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                     @Override
                     public ObservableSource<SampleShowDatesBean> apply(@NonNull SandSample sandSample) throws Exception {
                         // 获取要显示的数据
-                        return dataRepository.GetSandSamplingBySubcontractorInterimApproachPlanID(sandSample.getItemID());
+                        return dataRepository.GetSandSamplingBySubcontractorInterimApproachPlanID(sandSample.getItemID(), isSandSampling);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -252,7 +253,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                         int i = DataSupport.deleteAll(SampleImageList.class, "itemID = ?", String.valueOf(sampleShowDates.getSubcontractorInterimApproachPlanID()));
 
                         // 重新获取数据
-                        return dataRepository.GetSandSamplingBySubcontractorInterimApproachPlanID(sampleShowDates.getSubcontractorInterimApproachPlanID());
+                        return dataRepository.GetSandSamplingBySubcontractorInterimApproachPlanID(sampleShowDates.getSubcontractorInterimApproachPlanID(), true);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

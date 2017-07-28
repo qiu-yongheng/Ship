@@ -17,6 +17,7 @@ import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.acceptance.AcceptanceActivity;
 import com.kc.shiptransport.mvp.amount.AmountActivity;
+import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
 import com.kc.shiptransport.mvp.attendance.AttendanceActivity;
 import com.kc.shiptransport.mvp.attendanceaudit.AttendanceAuditActivity;
 import com.kc.shiptransport.mvp.exitapplication.ExitApplicationActivity;
@@ -152,6 +153,11 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             // 退场申请
                             ExitApplicationActivity.startActivity(getContext());
                             break;
+                        case 22:
+                            // 供砂进度跟踪
+                            AnalysisActivity.startActivity(getContext());
+                            break;
+
                         /** AppPID = 18 考勤管理 */
                         case 19:
                             // 考勤打卡

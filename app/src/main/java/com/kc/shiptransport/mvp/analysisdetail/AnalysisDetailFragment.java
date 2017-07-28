@@ -1,10 +1,14 @@
 package com.kc.shiptransport.mvp.analysisdetail;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,9 +16,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.view.actiivty.ImageActivity;
+import com.zhy.adapter.recyclerview.CommonAdapter;
+import com.zhy.adapter.recyclerview.base.ViewHolder;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -190,6 +202,7 @@ public class AnalysisDetailFragment extends Fragment implements AnalysisDetailCo
 
     /**
      * 改变显示状态
+     *
      * @param isShow
      * @param view
      * @param iv
@@ -300,12 +313,21 @@ public class AnalysisDetailFragment extends Fragment implements AnalysisDetailCo
 
     @Override
     public void showLoading(boolean isShow) {
-
+        if (isShow) {
+            activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
+        } else {
+            activity.hideProgressDailog();
+        }
     }
 
     @Override
     public void showError(String msg) {
-
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -316,10 +338,310 @@ public class AnalysisDetailFragment extends Fragment implements AnalysisDetailCo
 
     /**
      * 显示数据
+     *
      * @param detail
      */
     @Override
     public void showDetail(AnalysisDetail detail) {
+        Toast.makeText(getContext(), "获取数据成功", Toast.LENGTH_SHORT).show();
+        /** 供砂计划 */
+        // 分包商信息
+        String subcontractorName = detail.getSubcontractorName();
+        // 供砂船舶
+        String shipName = detail.getShipName();
+        // 船舶类型
+        String type = detail.getShipType();
+        // 计划日期
+        String planDay = detail.getPlanDay();
+        // 重量
+        String deadweightTon = detail.getDeadweightTon();
+        // 最大吃水
+        String maxTakeInWater = detail.getMaxTakeInWater();
+        // MMSI
+        String mmsi = detail.getMMSI();
+        // 供砂量
+        String sandSupplyCount = detail.getSandSupplyCount();
 
+        tvSubName.setText(TextUtils.isEmpty(subcontractorName) ? "" : subcontractorName);
+        tvShipName.setText(TextUtils.isEmpty(shipName) ? "" : shipName);
+        tvShipType.setText(TextUtils.isEmpty(type) ? "" : type);
+        tvPlanTime.setText(TextUtils.isEmpty(planDay) ? "" : planDay);
+        tvWeight.setText(TextUtils.isEmpty(deadweightTon) ? "" : deadweightTon);
+        tvWater.setText(TextUtils.isEmpty(maxTakeInWater) ? "" : maxTakeInWater);
+        tvMmsi.setText(TextUtils.isEmpty(mmsi) ? "" : mmsi);
+        tvSandCount.setText(TextUtils.isEmpty(sandSupplyCount) ? "" : sandSupplyCount);
+
+        /** 信息完善阶段 */
+        AnalysisDetail.PerfectBoatRecordListBean perfectBoatRecordList = detail.getPerfectBoatRecordList();
+        // 船长姓名
+        String captain = perfectBoatRecordList.getCaptain();
+        // 船长电话
+        String captainPhone = perfectBoatRecordList.getCaptainPhone();
+        // 石场名称
+        String storeName = perfectBoatRecordList.getStoreName();
+        // 装仓时间
+        String loadingDate = perfectBoatRecordList.getLoadingDate();
+        // AIS MMIS NUM
+        String ais_mmsi_num = perfectBoatRecordList.getAIS_MMSI_Num();
+        // 隔舱数量
+        String compartmentQuantity = perfectBoatRecordList.getCompartmentQuantity();
+        // 货物名称
+        String goodsName = perfectBoatRecordList.getGoodsName();
+        // 载重量
+        String deadweightTons = perfectBoatRecordList.getDeadweightTons();
+        // 洗石场所在地
+        String washStoreAddress = perfectBoatRecordList.getWashStoreAddress();
+        // 离开石场时间
+        String leaveStoreTime = perfectBoatRecordList.getLeaveStoreTime();
+        // 清关结束时间
+        String clearanceEndTime = perfectBoatRecordList.getClearanceEndTime();
+        // 到达锚地时间
+        String arrivaOfAnchorageTime = perfectBoatRecordList.getArrivaOfAnchorageTime();
+        // 材料分类
+        String materialClassification = perfectBoatRecordList.getMaterialClassification();
+        // 供货方
+        final String receiver = perfectBoatRecordList.getReceiver();
+
+        tvCaptainName.setText(TextUtils.isEmpty(captain) ? "" : captain);
+        tvCaptainPhone.setText(TextUtils.isEmpty(captainPhone) ? "" : captainPhone);
+        tvStoreName.setText(TextUtils.isEmpty(storeName) ? "" : storeName);
+        tvLoadTime.setText(TextUtils.isEmpty(loadingDate) ? "" : loadingDate);
+        tvAISMMISNUM.setText(TextUtils.isEmpty(ais_mmsi_num) ? "" : ais_mmsi_num);
+        tvComNum.setText(TextUtils.isEmpty(compartmentQuantity) ? "" : compartmentQuantity);
+        tvGoodsName.setText(TextUtils.isEmpty(goodsName) ? "" : goodsName);
+        tvWeightQuan.setText(TextUtils.isEmpty(deadweightTon) ? "" : deadweightTons);
+        tvStoreLocation.setText(TextUtils.isEmpty(washStoreAddress) ? "" : washStoreAddress);
+        tvLeaveStoreTime.setText(TextUtils.isEmpty(leaveStoreTime) ? "" : leaveStoreTime);
+        tvClearTime.setText(TextUtils.isEmpty(clearanceEndTime) ? "" : clearanceEndTime);
+        tvArriveAnchorTime.setText(TextUtils.isEmpty(arrivaOfAnchorageTime) ? "" : arrivaOfAnchorageTime);
+        tvMaterial.setText(TextUtils.isEmpty(materialClassification) ? "" : materialClassification);
+        tvReceiver.setText(TextUtils.isEmpty(receiver) ? "" : receiver);
+
+        /** 分包商进场材料 */
+        List<AnalysisDetail.PerfectBoatScannerRecordListBean> perfectBoatScannerRecordList = detail.getPerfectBoatScannerRecordList();
+
+        recyclerViewScanner.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        CommonAdapter<AnalysisDetail.PerfectBoatScannerRecordListBean> scannerAdapter = new CommonAdapter<AnalysisDetail.PerfectBoatScannerRecordListBean>(getContext(), R.layout.item_analysis_recycler, perfectBoatScannerRecordList) {
+            @Override
+            protected void convert(ViewHolder holder, AnalysisDetail.PerfectBoatScannerRecordListBean perfectBoatScannerRecordListBean, int position) {
+                holder.setText(R.id.tv_title, perfectBoatScannerRecordListBean.getSubcontractorPerfectBoatScannerAttachmentTypeName());
+                RecyclerView recyclerView = holder.getView(R.id.recycler_view);
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+
+                List<AnalysisDetail.PerfectBoatScannerRecordListBean.PerfectBoatScannerRecordAttachmentListBean> perfectBoatScannerRecordAttachmentList = perfectBoatScannerRecordListBean.getPerfectBoatScannerRecordAttachmentList();
+                if (!perfectBoatScannerRecordAttachmentList.isEmpty()) {
+                    CommonAdapter<AnalysisDetail.PerfectBoatScannerRecordListBean.PerfectBoatScannerRecordAttachmentListBean> imageAdapter = new CommonAdapter<AnalysisDetail.PerfectBoatScannerRecordListBean.PerfectBoatScannerRecordAttachmentListBean>(getContext(), R.layout.item_imag, perfectBoatScannerRecordAttachmentList) {
+                        @Override
+                        protected void convert(ViewHolder holder, final AnalysisDetail.PerfectBoatScannerRecordListBean.PerfectBoatScannerRecordAttachmentListBean perfectBoatScannerRecordAttachmentListBean, int position) {
+                            ImageView imageView = holder.getView(R.id.iv_image);
+                            RxGalleryUtil.showImage(getContext(), perfectBoatScannerRecordAttachmentListBean.getFilePath(), null, null, imageView);
+
+                            holder.setOnClickListener(R.id.iv_image, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ImageActivity.startActivity(getContext(), perfectBoatScannerRecordAttachmentListBean.getFilePath());
+                                }
+                            });
+                        }
+                    };
+
+                    recyclerView.setAdapter(imageAdapter);
+                }
+            }
+        };
+
+        recyclerViewScanner.setAdapter(scannerAdapter);
+
+
+        /** 预验收管理 */
+        AnalysisDetail.PreAcceptanceRecordListBean preAcceptanceRecordList = detail.getPreAcceptanceRecordList();
+        // 验收时间
+        String preAcceptanceTime = preAcceptanceRecordList.getPreAcceptanceTime();
+        // 航次编号
+        String shipItemNum = preAcceptanceRecordList.getShipItemNum();
+        // 材料完整性
+        String materialIntegrity = preAcceptanceRecordList.getMaterialIntegrity();
+        // 材料及时性
+        String materialTimeliness = preAcceptanceRecordList.getMaterialTimeliness();
+
+        tvAcceptanceTime.setText(TextUtils.isEmpty(preAcceptanceTime) ? "" : preAcceptanceTime);
+        tvShipCode.setText(TextUtils.isEmpty(shipItemNum) ? "" : shipItemNum);
+        tvMaterialComplete.setText(TextUtils.isEmpty(materialIntegrity) ? "" : materialIntegrity);
+        tvMaterialTimely.setText(TextUtils.isEmpty(materialTimeliness) ? "" : materialTimeliness);
+
+        /** 量方管理 */
+        AnalysisDetail.TheAmountOfTimeRecordListBean theAmountOfTimeRecordList = detail.getTheAmountOfTimeRecordList();
+        // 舱容
+        String capacity = theAmountOfTimeRecordList.getCapacity();
+        // 甲板方
+        String deckGauge = theAmountOfTimeRecordList.getDeckGauge();
+        // 扣方
+        String deduction = theAmountOfTimeRecordList.getDeduction();
+        // 合计方
+        String totalAmount = theAmountOfTimeRecordList.getTotalAmount();
+        // 量方时间
+        String theAmountOfTime = theAmountOfTimeRecordList.getTheAmountOfTime();
+
+        tvCapacity.setText(TextUtils.isEmpty(capacity) ? "" : capacity);
+        tvDeck.setText(TextUtils.isEmpty(deckGauge) ? "" : deckGauge);
+        tvDeduction.setText(TextUtils.isEmpty(deduction) ? "" : deduction);
+        tvTotalAmount.setText(TextUtils.isEmpty(totalAmount) ? "" : totalAmount);
+        tvAmountTime.setText(TextUtils.isEmpty(theAmountOfTime) ? "" : theAmountOfTime);
+
+
+        // 量方图片
+        List<AnalysisDetail.TheAmountOfTimeRecordListBean.TheAmountOfSideAttachmentListBean> theAmountOfSideAttachmentList = theAmountOfTimeRecordList.getTheAmountOfSideAttachmentList();
+        recyclerViewAmount.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        if (!theAmountOfSideAttachmentList.isEmpty()) {
+            CommonAdapter<AnalysisDetail.TheAmountOfTimeRecordListBean.TheAmountOfSideAttachmentListBean> amountAdapter = new CommonAdapter<AnalysisDetail.TheAmountOfTimeRecordListBean.TheAmountOfSideAttachmentListBean>(getContext(), R.layout.item_imag, theAmountOfSideAttachmentList) {
+                @Override
+                protected void convert(ViewHolder holder, final AnalysisDetail.TheAmountOfTimeRecordListBean.TheAmountOfSideAttachmentListBean theAmountOfSideAttachmentListBean, int position) {
+                    ImageView imageView = holder.getView(R.id.iv_image);
+                    RxGalleryUtil.showImage(getContext(), theAmountOfSideAttachmentListBean.getFilePath(), null, null, imageView);
+
+                    holder.setOnClickListener(R.id.iv_image, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ImageActivity.startActivity(getContext(), theAmountOfSideAttachmentListBean.getFilePath());
+                        }
+                    });
+                }
+            };
+
+            recyclerViewAmount.setAdapter(amountAdapter);
+        }
+
+        /** 验砂管理 */
+        AnalysisDetail.ReceptionSandRecordListBean receptionSandRecordList = detail.getReceptionSandRecordList();
+        // 验砂时间
+        String receptionSandTime = receptionSandRecordList.getReceptionSandTime();
+
+        tvSandTime.setText(TextUtils.isEmpty(receptionSandTime) ? "" : receptionSandTime);
+
+        // 验砂图片
+        List<AnalysisDetail.ReceptionSandRecordListBean.ReceptionSandRecordAttachmentListBean> receptionSandRecordAttachmentList = receptionSandRecordList.getReceptionSandRecordAttachmentList();
+        recyclerViewSand.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        if (!receptionSandRecordAttachmentList.isEmpty()) {
+            CommonAdapter<AnalysisDetail.ReceptionSandRecordListBean.ReceptionSandRecordAttachmentListBean> sandAdapter = new CommonAdapter<AnalysisDetail.ReceptionSandRecordListBean.ReceptionSandRecordAttachmentListBean>(getContext(), R.layout.item_imag, receptionSandRecordAttachmentList) {
+                @Override
+                protected void convert(ViewHolder holder, final AnalysisDetail.ReceptionSandRecordListBean.ReceptionSandRecordAttachmentListBean receptionSandRecordAttachmentListBean, int position) {
+                    ImageView imageView = holder.getView(R.id.iv_image);
+                    RxGalleryUtil.showImage(getContext(), receptionSandRecordAttachmentListBean.getFilePath(), null, null, imageView);
+
+                    holder.setOnClickListener(R.id.iv_image, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ImageActivity.startActivity(getContext(), receptionSandRecordAttachmentListBean.getFilePath());
+                        }
+                    });
+                }
+            };
+
+            recyclerViewSand.setAdapter(sandAdapter);
+
+        }
+
+        /** 取样管理 */
+        List<AnalysisDetail.SandSamplingRecordListBean> sandSamplingRecordList = detail.getSandSamplingRecordList();
+        if (!sandSamplingRecordList.isEmpty()) {
+            AnalysisDetail.SandSamplingRecordListBean sandSamplingRecordListBean = sandSamplingRecordList.get(0);
+
+
+            // 取样时间
+            String sandSamplingDate = sandSamplingRecordListBean.getSandSamplingDate();
+            // BATCH
+            String batch = sandSamplingRecordListBean.getBatch();
+
+            tvSampleTime.setText(TextUtils.isEmpty(sandSamplingDate) ? "" : sandSamplingDate);
+            tvBatch.setText(TextUtils.isEmpty(batch) ? "" : batch);
+
+            // 取样编号
+            List<AnalysisDetail.SandSamplingRecordListBean.SandSamplingNumRecordListBean> sandSamplingNumRecordList = sandSamplingRecordListBean.getSandSamplingNumRecordList();
+            recyclerViewSample.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            if (!sandSamplingNumRecordList.isEmpty()) {
+                CommonAdapter<AnalysisDetail.SandSamplingRecordListBean.SandSamplingNumRecordListBean> adapter = new CommonAdapter<AnalysisDetail.SandSamplingRecordListBean.SandSamplingNumRecordListBean>(getContext(), R.layout.item_analysis_sample, sandSamplingNumRecordList) {
+                    @Override
+                    protected void convert(ViewHolder holder, AnalysisDetail.SandSamplingRecordListBean.SandSamplingNumRecordListBean sandSamplingNumRecordListBean, int position) {
+                        holder.setText(R.id.tv_batch, sandSamplingNumRecordListBean.getSamplingNum())
+                                .setText(R.id.tv_ship_name, sandSamplingNumRecordListBean.getConstructionBoatAccountName());
+
+                        // 取样图片
+                        List<AnalysisDetail.SandSamplingRecordListBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> sandSamplingAttachmentRecordList = sandSamplingNumRecordListBean.getSandSamplingAttachmentRecordList();
+
+                        RecyclerView recyclerView = holder.getView(R.id.recycler_view);
+
+                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+                        if (!sandSamplingAttachmentRecordList.isEmpty()) {
+                            CommonAdapter<AnalysisDetail.SandSamplingRecordListBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> sampleAdapter = new CommonAdapter<AnalysisDetail.SandSamplingRecordListBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean>(getContext(), R.layout.item_imag, sandSamplingAttachmentRecordList) {
+                                @Override
+                                protected void convert(ViewHolder holder, final AnalysisDetail.SandSamplingRecordListBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean sandSamplingAttachmentRecordListBean, int position) {
+                                    ImageView imageView = holder.getView(R.id.iv_image);
+                                    RxGalleryUtil.showImage(getContext(), sandSamplingAttachmentRecordListBean.getFilePath(), null, null, imageView);
+
+                                    holder.setOnClickListener(R.id.iv_image, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            ImageActivity.startActivity(getContext(), sandSamplingAttachmentRecordListBean.getFilePath());
+                                        }
+                                    });
+                                }
+                            };
+
+                            recyclerView.setAdapter(sampleAdapter);
+                        }
+                    }
+                };
+
+                recyclerViewSample.setAdapter(adapter);
+            }
+        }
+
+        /** 过砂管理 */
+        List<AnalysisDetail.OverSandRecordListBean> overSandRecordList = detail.getOverSandRecordList();
+        recyclerViewRecord.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (!overSandRecordList.isEmpty()) {
+            CommonAdapter<AnalysisDetail.OverSandRecordListBean> recordAdapter = new CommonAdapter<AnalysisDetail.OverSandRecordListBean>(getContext(), R.layout.item_analysis_record, overSandRecordList) {
+                @Override
+                protected void convert(ViewHolder holder, AnalysisDetail.OverSandRecordListBean overSandRecordListBean, int position) {
+                    holder.setText(R.id.tv_record_num, "第" + (position + 1) + "条过砂记录")
+                            .setText(R.id.tv_sand_reality, overSandRecordListBean.getActualAmountOfSand())
+                            .setText(R.id.tv_sand_ship, overSandRecordListBean.getSandHandlingShipName())
+                            .setText(R.id.tv_cons_ship, overSandRecordListBean.getConstructionShipName())
+                            .setText(R.id.tv_start_time, overSandRecordListBean.getStartTime())
+                            .setText(R.id.tv_end_time, overSandRecordListBean.getEndTime())
+                            .setText(R.id.tv_before_1, overSandRecordListBean.getBeforeOverSandDraft1())
+                            .setText(R.id.tv_before_2, overSandRecordListBean.getBeforeOverSandDraft2())
+                            .setText(R.id.tv_before_3, overSandRecordListBean.getBeforeOverSandDraft3())
+                            .setText(R.id.tv_before_4, overSandRecordListBean.getBeforeOverSandDraft4())
+                            .setText(R.id.tv_after_1, overSandRecordListBean.getAfterOverSandDraft1())
+                            .setText(R.id.tv_after_2, overSandRecordListBean.getAfterOverSandDraft2())
+                            .setText(R.id.tv_after_3, overSandRecordListBean.getAfterOverSandDraft3())
+                            .setText(R.id.tv_after_4, overSandRecordListBean.getAfterOverSandDraft4());
+                }
+            };
+
+            recyclerViewRecord.setAdapter(recordAdapter);
+        }
+
+
+        /** 退场申请 */
+        AnalysisDetail.ExitApplicationRecordListBean exitApplicationRecordList = detail.getExitApplicationRecordList();
+        // 退场时间
+        String exitTime = exitApplicationRecordList.getExitTime();
+        // 残余方量
+        String remnantAmount = exitApplicationRecordList.getRemnantAmount();
+        // 备注
+        String remark = exitApplicationRecordList.getRemark();
+
+        tvExitTime.setText(TextUtils.isEmpty(exitTime) ? "" : exitTime);
+        tvRemnantAmount.setText(TextUtils.isEmpty(remnantAmount) ? "" : remnantAmount);
+        tvRemark.setText(TextUtils.isEmpty(remark) ? "" : remark);
     }
 }

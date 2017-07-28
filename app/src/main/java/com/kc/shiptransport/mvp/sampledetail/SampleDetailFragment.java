@@ -209,7 +209,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         this.sandSample = sandSample;
 
         // 获取要显示的数据
-        presenter.getDates(activity.position);
+        presenter.getDates(activity.position, sandSample.getIsSandSampling() == 1);
     }
 
     /**

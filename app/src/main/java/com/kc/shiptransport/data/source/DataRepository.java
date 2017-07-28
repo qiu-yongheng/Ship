@@ -1315,6 +1315,10 @@ public class DataRepository implements DataSouceImpl {
                             // 退场申请
                             list.setIcon_id(R.mipmap.plan);
                             break;
+                        case 22:
+                            // 供砂进度跟踪
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
                     }
 
                     list.save();
@@ -2137,19 +2141,25 @@ public class DataRepository implements DataSouceImpl {
      * 1.23根据进场计划ID获取验砂取样信息明细
      *
      * @param SubcontractorInterimApproachPlanID
+     * @param isSandSampling
      * @return
      */
     @Override
-    public Observable<SampleShowDatesBean> GetSandSamplingBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID) {
+    public Observable<SampleShowDatesBean> GetSandSamplingBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID, final boolean isSandSampling) {
         return Observable.create(new ObservableOnSubscribe<SampleShowDatesBean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<SampleShowDatesBean> e) throws Exception {
                 // 先判断本地是否有数据没有提交 (进场ID对应)
                 String data = SharePreferenceUtil.getString(getContext(), String.valueOf(SubcontractorInterimApproachPlanID), "");
 
-                if (TextUtils.isEmpty(data)) { // 如果没有本地缓存
+                if (TextUtils.isEmpty(data) || isSandSampling) { // 如果没有本地缓存
+                    /** 删除缓存 */
+                    SharePreferenceUtil.saveString(getContext(), String.valueOf(SubcontractorInterimApproachPlanID), "");
+
                     // 根据进场ID发送网络请求
                     String result = mRemoteDataSource.GetSandSamplingBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                    Log.d("==", "验砂取样: " + result);
 
                     // 解析数据
                     List<SampleShowDatesBean> list = gson.fromJson(result, new TypeToken<List<SampleShowDatesBean>>() {

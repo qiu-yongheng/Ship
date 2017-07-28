@@ -6,7 +6,7 @@
 
     <android.support.v7.widget.CardView
         style="@style/card_view"
-        app:cardElevation="0dp"
+        app:cardElevation="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp">
@@ -47,6 +47,7 @@
                 <include layout="@layout/view_divi"/>
 
                 <android.support.v7.widget.RecyclerView
+                    android:layout_marginBottom="@dimen/margin_10"
                     android:id="@+id/recycler_view_scanner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

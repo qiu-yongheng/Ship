@@ -11,7 +11,8 @@
         android:layout_marginLeft="@dimen/paddingtop_18dp"
         android:layout_marginRight="@dimen/paddingtop_18dp"
         android:layout_marginTop="@dimen/margintop_8dp"
-        app:cardElevation="0dp">
+        android:layout_marginBottom="1dp"
+        app:cardElevation="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"

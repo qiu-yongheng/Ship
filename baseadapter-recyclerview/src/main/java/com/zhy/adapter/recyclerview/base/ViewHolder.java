@@ -94,6 +94,12 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     /** ****************************以下为辅助方法*************************** */
 
     /**
+     * holder.getView(id)
+     *
+     *
+     * */
+
+    /**
      * 设置TextView的值
      *
      * @param viewId

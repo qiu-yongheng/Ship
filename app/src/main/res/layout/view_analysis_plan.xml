@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              xmlns:app="http://schemas.android.com/apk/res-auto">
+              android:layout_height="wrap_content">
+
     <android.support.v7.widget.CardView
         style="@style/card_view"
-        app:cardElevation="0dp"
-        android:layout_marginBottom="2dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        app:cardElevation="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,17 +47,17 @@
                 <include layout="@layout/view_divi"/>
 
                 <RelativeLayout
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height_32"
                     android:layout_marginLeft="@dimen/margin_12"
-                    android:layout_marginRight="@dimen/margin_12">
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_tag_small"
-                        android:text="分包商信息"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="分包商信息"/>
 
                     <TextView
                         android:id="@+id/tv_sub_name"
@@ -67,17 +68,17 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height_32"
                     android:layout_marginLeft="@dimen/margin_12"
-                    android:layout_marginRight="@dimen/margin_12">
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_tag_small"
-                        android:text="供砂船舶"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="供砂船舶"/>
 
                     <TextView
                         android:id="@+id/tv_ship_name"
@@ -88,17 +89,17 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height_32"
                     android:layout_marginLeft="@dimen/margin_12"
-                    android:layout_marginRight="@dimen/margin_12">
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_tag_small"
-                        android:text="船舶类型"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="船舶类型"/>
 
                     <TextView
                         android:id="@+id/tv_ship_type"
@@ -109,17 +110,17 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height_32"
                     android:layout_marginLeft="@dimen/margin_12"
-                    android:layout_marginRight="@dimen/margin_12">
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_tag_small"
-                        android:text="计划日期"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="计划日期"/>
 
                     <TextView
                         android:id="@+id/tv_plan_time"
@@ -130,17 +131,17 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height_32"
                     android:layout_marginLeft="@dimen/margin_12"
-                    android:layout_marginRight="@dimen/margin_12">
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_tag_small"
-                        android:text="重量(顿)"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="重量(顿)"/>
 
                     <TextView
                         android:id="@+id/tv_weight"
@@ -151,17 +152,17 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height_32"
                     android:layout_marginLeft="@dimen/margin_12"
-                    android:layout_marginRight="@dimen/margin_12">
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_tag_small"
-                        android:text="最大吃水"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="最大吃水"/>
 
                     <TextView
                         android:id="@+id/tv_water"
@@ -172,17 +173,17 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height_32"
                     android:layout_marginLeft="@dimen/margin_12"
-                    android:layout_marginRight="@dimen/margin_12">
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_tag_small"
-                        android:text="MMSI"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="MMSI"/>
 
                     <TextView
                         android:id="@+id/tv_mmsi"
@@ -193,17 +194,17 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_height_32"
                     android:layout_marginLeft="@dimen/margin_12"
-                    android:layout_marginRight="@dimen/margin_12">
+                    android:layout_marginRight="@dimen/margin_12"
+                    android:gravity="center_vertical">
 
                     <TextView
                         style="@style/text_tag_small"
-                        android:text="供砂量"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="供砂量"/>
 
                     <TextView
                         android:id="@+id/tv_sand_count"

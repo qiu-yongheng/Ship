@@ -46,6 +46,7 @@
     <style name="text_description_small">
         <item name="android:textColor">@color/text_gray</item>
         <item name="android:textSize">@dimen/text_14sp</item>
+        <item name="android:layout_alignParentRight">true</item>
     </style>
 
     <!--标题文字-->
