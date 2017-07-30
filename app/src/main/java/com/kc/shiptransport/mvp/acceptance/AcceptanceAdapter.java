@@ -65,6 +65,7 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                 ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
+                ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
 
                 // 判断是否已审核

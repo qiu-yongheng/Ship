@@ -126,6 +126,7 @@ public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     /**
      * 根据type, 修改item宽度
+     *
      * @param recyclerView
      */
     @Override

@@ -66,6 +66,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     RecordList recordList = recordLists.get(0);
                     ((NormalHolder) holder).mTvShip.setText(recordList.getShipName());
                     ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(recordList.getSandSupplyCount()));
+                    ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
                     // 判断是否已过砂
                     if (recordList.getIsFinish() == 1) {
@@ -109,6 +110,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     WeekTask weekTask = weekTasks.get(0);
                     ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                     ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
+                    ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
                     // 判断信息是否已完善
                     if (weekTask.getIsTheAmountOfTime() == 1) {
@@ -154,6 +156,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     WeekTask weekTask = weekTasks.get(0);
                     ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                     ((NormalHolder) holder).mTvQuantum.setText("(" + String.valueOf(weekTask.getPerfectBoatItemCount()) + "/14)");
+                    ((NormalHolder) holder).mTvQuantum.setVisibility(View.VISIBLE);
 
                     // 判断信息是否已完善
                     if (weekTask.getIsPerfect() == 1) {
@@ -200,6 +203,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     WeekTask weekTask = weekTasks.get(0);
                     ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                     ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
+                    ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
                     // 判断信息是否已完善
                     if (weekTask.getIsFinshReceptionSandAttachment() == 1) {
@@ -246,6 +250,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     SandSample recordList = recordLists.get(0);
                     ((NormalHolder) holder).mTvShip.setText(recordList.getShipName());
                     ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(recordList.getSandSupplyCount()));
+                    ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
+
                     ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
 
                     // 判断是否已过砂
@@ -289,6 +295,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     ExitList recordList = recordLists.get(0);
                     ((NormalHolder) holder).mTvShip.setText(recordList.getShipName());
                     ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(recordList.getSandSupplyCount()));
+                    ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
+
                     ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
 
                     // 判断是否已过砂
@@ -334,6 +342,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     WeekTask weekTask = weekTasks.get(0);
                     ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                     ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
+                    ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
                     String time = "";
                     // 判断是否已审核

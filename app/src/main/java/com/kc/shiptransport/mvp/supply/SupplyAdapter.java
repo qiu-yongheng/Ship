@@ -60,6 +60,7 @@ public class SupplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 WeekTask weekTask = weekTasks.get(0);
                 ((NormalHolder) holder).mTvShip.setText(weekTask.getShipName());
                 ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
+                ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
                 // 判断是否已审核
                 String receptionSandTime = weekTask.getReceptionSandTime();

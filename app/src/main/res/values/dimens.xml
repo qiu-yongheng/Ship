@@ -35,4 +35,5 @@
     <dimen name="margin_17">17dp</dimen>
     <dimen name="margin_10">10dp</dimen>
     <dimen name="marginleft_11">11dp</dimen>
+    <dimen name="text_12sp">12sp</dimen>
 </resources>
