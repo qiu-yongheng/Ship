@@ -11,13 +11,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.CalendarUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -32,12 +36,15 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<Ship> value;
     private String date;
     private OnRecyclerviewItemClickListener listener;
+    private int isUpdate = 1;
 
     public PlanSetAdapter(Context context, List<Ship> value, String date, int jumpWeek) {
         this.context = context;
         this.value = value;
         this.date = date;
         this.jumpWeek = jumpWeek;
+
+        isUpdatable();
     }
 
     @Override
@@ -99,6 +106,15 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
 
+        if (isUpdate == 1) {
+            // 可以修改
+            ((NormalHolder) holder).mBtnShipTypeSelect.setText("选择");
+            ((NormalHolder) holder).mBtnShipTypeSelect.setBackgroundResource(R.color.red);
+        } else{
+            // 不可以修改
+            ((NormalHolder) holder).mBtnShipTypeSelect.setText("不可修改");
+            ((NormalHolder) holder).mBtnShipTypeSelect.setBackgroundResource(R.color.gray);
+        }
 
 
         // 设置按钮点击事件
@@ -106,7 +122,7 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View view) {
                 int pos = holder.getLayoutPosition();
-                listener.onItemClick(holder.itemView, pos);
+                listener.onItemClick(((NormalHolder) holder).mBtnShipTypeSelect, pos, isUpdate);
             }
         });
     }
@@ -114,6 +130,62 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void setDates(List<Ship> value, String date) {
         this.value = value;
         this.date = date;
+
+        isUpdatable();
+    }
+
+    /**
+     * 判断是否可以修改数据
+     */
+    public void isUpdatable() {
+        // 1. 今天中午时间
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 12);
+        cal.set(Calendar.MINUTE, 0);
+        SimpleDateFormat df = new SimpleDateFormat(CalendarUtil.YYYY_MM_DD_HH_MM);
+        String startTime = df.format(cal.getTime());
+
+        // 2. 当前时间
+        String currentDate = CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM);
+
+        // 3. 当前时间与今天中午时间对比
+        try {
+            boolean lastDate = CalendarUtil.isLastDate(startTime, currentDate);
+
+            if (!lastDate) {
+                // 中午后, 明天与之前的数据不能修改
+
+                // 获取明天的日期
+                Calendar tomorrowTime = Calendar.getInstance();
+                tomorrowTime.add(Calendar.DAY_OF_MONTH, 1);
+                SimpleDateFormat d = new SimpleDateFormat(CalendarUtil.YYYY_MM_DD);
+                String tomorrow = d.format(cal.getTime());
+
+                // 与选择日期进行判断
+                if (!CalendarUtil.isLastDate_YYYY_MM_DD(tomorrow, date)) {
+                    // 选择日期在明天后, 可以修改
+                    isUpdate = 1;
+                } else {
+                    // 不能修改
+                    isUpdate = 0;
+                }
+
+            } else {
+                // 中午前, 今天与之前的数据不能修改
+                String today = CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD);
+
+                // 与选择日期进行判断
+                if (!CalendarUtil.isLastDate_YYYY_MM_DD(today, date)) {
+                    // 选择日期在明天后, 可以修改
+                    isUpdate = 1;
+                } else {
+                    // 不能修改
+                    isUpdate = 0;
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     class NormalHolder extends RecyclerView.ViewHolder {

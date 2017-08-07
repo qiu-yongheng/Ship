@@ -259,6 +259,33 @@ public class CalendarUtil {
     }
 
     /**
+     * 判断结束日期是否在开始日期之前
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws ParseException
+     */
+    public static boolean isLastDate_YYYY_MM_DD(String startTime, String endTime) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(YYYY_MM_DD);
+
+        Date start = sdf.parse(startTime);
+        Date end = sdf.parse(endTime);
+
+        // 公历
+        GregorianCalendar startCal = new GregorianCalendar();
+        GregorianCalendar endCal = new GregorianCalendar();
+
+        startCal.setTime(start);
+        endCal.setTime(end);
+
+
+        long gap = endCal.getTimeInMillis() - startCal.getTimeInMillis();
+
+        return gap <= 0;
+    }
+
+    /**
      * 弹出日期 时间选择器
      * DateFormat.is24HourFormat(context) 判断
      *

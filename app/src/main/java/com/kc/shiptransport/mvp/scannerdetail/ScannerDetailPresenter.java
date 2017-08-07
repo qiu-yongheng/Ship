@@ -88,7 +88,7 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter{
         view.showLoading(true);
         Observable<List<ScannerListBean>> observable = null;
         if (type == 0) {
-            // position
+            // position 编辑
             observable = dataRepository
                     .getWeekTaskForPosition(position)
                     .subscribeOn(Schedulers.io())
@@ -108,7 +108,7 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter{
                     })
                     .observeOn(AndroidSchedulers.mainThread());
         } else if (type == 1) {
-            // itemID
+            // itemID 查看
             List<WeekTask> list = DataSupport.where("ItemID = ?", String.valueOf(position)).find(WeekTask.class);
             view.showTitle(list.get(0));
 

@@ -80,8 +80,14 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-        WeekTask weekTask = DataSupport.where("position = ?", String.valueOf(activity.mPosition)).find(WeekTask.class).get(0);
+        WeekTask weekTask;
+        if (activity.type == 1) {
+            // 查看数据
+            weekTask = DataSupport.where("ItemID = ?", String.valueOf(activity.mPosition)).find(WeekTask.class).get(0);
+        } else {
+            // 编辑数据
+            weekTask = DataSupport.where("position = ?", String.valueOf(activity.mPosition)).find(WeekTask.class).get(0);
+        }
 
         // 根据type, 初始化不同的控件
         if (activity.type == 0 && TextUtils.isEmpty(weekTask.getPreAcceptanceTime())) {

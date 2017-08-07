@@ -505,9 +505,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         adapter = new CommonAdapter<ProgressTrack>(getContext(), R.layout.item_analysis_list, list) {
             @Override
             protected void convert(ViewHolder holder, final ProgressTrack progressTrack, int position) {
-                holder.setText(R.id.tv_sub_name, progressTrack.getSubcontractorName())
+                holder.setText(R.id.tv_sub_name, progressTrack.getShipName())
                         .setText(R.id.tv_plan_time, progressTrack.getPlanDay())
-                        .setText(R.id.tv_ship_name, progressTrack.getShipName())
+                        .setText(R.id.tv_ship_name, progressTrack.getSubcontractorName())
                         .setText(R.id.tv_state, progressTrack.getStatusValue())
                         .setOnClickListener(R.id.card_view, new View.OnClickListener() {
                             @Override

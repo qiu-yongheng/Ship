@@ -259,6 +259,10 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
 
     @Override
     public void showStartDate(LogCurrentDateBean bean) {
-        textStartTime.setText(bean.getStartTime());
+        if (bean != null) {
+            textStartTime.setText(bean.getStartTime());
+        } else {
+            textStartTime.setText("获取数据失败");
+        }
     }
 }

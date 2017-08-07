@@ -71,7 +71,7 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="供砂船舶"/>
+                    android:text="分  包  商"/>
 
                 <TextView
                     android:id="@+id/tv_ship_name"

@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.ship.Ship;
@@ -211,14 +212,18 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
      * @param date
      */
     @Override
-    public void showShipCategory(final List<Ship> value, String date) {
+    public void showShipCategory(final List<Ship> value, final String date) {
         if (adapter == null) {
             adapter = new PlanSetAdapter(activity, value, date, jumpWeek);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
+                    if (type[0] == 1) {
                     // 传递类型
                     navigationToShipSelectActivity(value.get(position).getShipType());
+                    } else {
+                        Toast.makeText(getContext(), "该日期不能修改计划, 请重新选择", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
@@ -228,7 +233,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
             });
             recyclerviewAdd.setAdapter(adapter);
         } else {
-            //adapter.setDates(value, date);
+            adapter.setDates(value, date);
             adapter.notifyDataSetChanged();
         }
     }
