@@ -26,6 +26,7 @@ import com.kc.shiptransport.db.StoneSource;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
@@ -709,4 +710,13 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<AnalysisDetail> GetAllDetailBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
+
+    /**
+     * 1.54 获取供应商预验收评价数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     */
+    Observable<List<AcceptanceEvaluationList>> GetPreAcceptanceEvaluationList(int PageSize, int PageCount, String ConditionJson);
 }

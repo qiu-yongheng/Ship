@@ -1607,8 +1607,8 @@ public class RemoteDataSource {
         // 调用的方法名称
         String methodName = "GetAllDetailBySubcontractorInterimApproachPlanID";
         // EndPoint
-        String endPoint = "http://cchk3.ccgdc.com/AppService/Analysis.asmx";
-//        String endPoint = EndPoint;
+//        String endPoint = "http://cchk3.ccgdc.com/AppService/Analysis.asmx";
+        String endPoint = EndPoint;
         // SOAP Action
         String soapAction = "http://tempuri.org/GetAllDetailBySubcontractorInterimApproachPlanID";
 
@@ -1616,6 +1616,35 @@ public class RemoteDataSource {
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
         rpc.addProperty("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.54 获取供应商预验收评价数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetPreAcceptanceEvaluationList(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetPreAcceptanceEvaluationList";
+        // EndPoint
+        //        String endPoint = "http://cchk3.ccgdc.com/AppService/Analysis.asmx";
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetPreAcceptanceEvaluationList";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
 
         return getCallResult(endPoint, soapAction, rpc);
     }

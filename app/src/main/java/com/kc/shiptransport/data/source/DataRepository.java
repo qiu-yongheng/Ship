@@ -50,6 +50,7 @@ import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
@@ -3419,6 +3420,27 @@ public class DataRepository implements DataSouceImpl {
                 }.getType());
 
                 e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.54 获取供应商预验收评价数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     */
+    @Override
+    public Observable<List<AcceptanceEvaluationList>> GetPreAcceptanceEvaluationList(final int PageSize, final int PageCount, final String ConditionJson) {
+        return Observable.create(new ObservableOnSubscribe<List<AcceptanceEvaluationList>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<AcceptanceEvaluationList>> e) throws Exception {
+                String result = mRemoteDataSource.GetPreAcceptanceEvaluationList(PageSize, PageCount, ConditionJson);
+                List<AcceptanceEvaluationList> list = gson.fromJson(result, new TypeToken<List<AcceptanceEvaluationList>>() {}.getType());
+
+                e.onNext(list);
                 e.onComplete();
             }
         });
