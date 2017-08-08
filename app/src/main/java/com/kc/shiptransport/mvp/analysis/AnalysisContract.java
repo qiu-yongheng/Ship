@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.analysis;
 
+import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -15,9 +16,11 @@ import java.util.List;
 public interface AnalysisContract {
     interface View extends BaseView<Presenter> {
         void showSearchResult(List<ProgressTrack> list);
+        void showEvaluation(List<AcceptanceEvaluationList> list);
     }
 
     interface Presenter extends BasePresenter {
         void search(String startTime, String endTime, String subID, String shipID);
+        void getEvaluation(int pageSize, int pageCount, String startTime, String endTime, String subShipAccount, boolean showLoading);
     }
 }

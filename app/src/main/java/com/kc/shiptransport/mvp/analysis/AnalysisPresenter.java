@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.SubcontractorList;
+import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 
 import java.util.List;
@@ -39,9 +40,11 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
 
     @Override
     public void subscribe() {
+        // 获取分包商列表
         Observable<List<SubcontractorList>> listObservable = dataRepository.getSubcontractorList()
                 .subscribeOn(Schedulers.io());
 
+        // 获取分包商进场计划跟踪
         Observable<List<ProgressTrack>> progressObservable = dataRepository
                 .GetSubcontractorInterimApproachPlanProgressTracking("", "", "", "")
                 .subscribeOn(Schedulers.io());
@@ -85,6 +88,7 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
 
     /**
      * 搜索
+     *
      * @param startTime
      * @param endTime
      * @param subID
@@ -121,4 +125,42 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
                     }
                 });
     }
+
+    /**
+     * 获取分包商评价信息
+     */
+    @Override
+    public void getEvaluation(int pageSize, int pageCount, String startTime, String endTime, String subShipAccount, boolean showLoading) {
+        if (showLoading) {
+            view.showLoading(true);
+        }
+        dataRepository
+                .GetPreAcceptanceEvaluationList(20, 1, startTime, endTime, subShipAccount)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<AcceptanceEvaluationList>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<AcceptanceEvaluationList> acceptanceEvaluationLists) {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+
 }

@@ -187,4 +187,14 @@
         <item>最近3月</item>
         <item>自定义时间</item>
     </array>
+
+    <!-- 时间选择(预验收评价) -->
+    <array name="select_acceptance_time">
+        <item>全部</item>
+        <item>上一周</item>
+        <item>前一周</item>
+        <item>上一月</item>
+        <item>前一月</item>
+        <item>自定义时间</item>
+    </array>
 </resources>

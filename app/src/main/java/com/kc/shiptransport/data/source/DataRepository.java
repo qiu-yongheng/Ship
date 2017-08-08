@@ -3429,15 +3429,74 @@ public class DataRepository implements DataSouceImpl {
      * 1.54 获取供应商预验收评价数据
      * @param PageSize
      * @param PageCount
-     * @param ConditionJson
+     * @param startTime
+     * @param endTime
+     * @param subShipAccount
      * @return
      */
     @Override
-    public Observable<List<AcceptanceEvaluationList>> GetPreAcceptanceEvaluationList(final int PageSize, final int PageCount, final String ConditionJson) {
+    public Observable<List<AcceptanceEvaluationList>> GetPreAcceptanceEvaluationList(final int PageSize, final int PageCount, final String startTime, final String endTime, final String subShipAccount) {
         return Observable.create(new ObservableOnSubscribe<List<AcceptanceEvaluationList>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<AcceptanceEvaluationList>> e) throws Exception {
-                String result = mRemoteDataSource.GetPreAcceptanceEvaluationList(PageSize, PageCount, ConditionJson);
+                String conditionJson = "";
+                if (TextUtils.isEmpty(startTime) && TextUtils.isEmpty(endTime) && TextUtils.isEmpty(subShipAccount)) {
+
+                } else {
+                    JSONObject root = new JSONObject();
+                    JSONObject Condition = new JSONObject();
+
+                    JSONArray Column = new JSONArray();
+
+                    // 分包商账号
+                    JSONObject object1 = new JSONObject();
+                    User user = DataSupport.findAll(User.class).get(0);
+                    object1.put("Name", "SubcontractorAccount");
+                    object1.put("Type", "string");
+                    object1.put("Format", "Equal");
+                    object1.put("Value", user.getUserID());
+
+                    // 验收时间
+                    JSONObject object2 = new JSONObject();
+                    object2.put("Name", "PreAcceptanceTime");
+                    object2.put("Type", "datetime");
+
+                    JSONArray array2 = new JSONArray();
+
+                    JSONObject object21 = new JSONObject();
+                    object21.put("Min", startTime);
+                    JSONObject object22 = new JSONObject();
+                    object21.put("Max", endTime);
+
+                    array2.put(object21);
+                    array2.put(object22);
+
+                    object2.put("Value", array2);
+
+                    // 供砂船舶
+                    JSONObject object3 = new JSONObject();
+                    object1.put("Name", "ShipAccount"); // TODO 需要修改
+                    object1.put("Type", "string");
+                    object1.put("Format", "Equal");
+                    object1.put("Value", subShipAccount);
+
+                    // 保存3个对象到object
+                    Column.put(object1);
+                    Column.put(object2);
+                    Column.put(object3);
+
+                    // 保存object到Condition
+                    Condition.put("Column", Column);
+
+                    // 保存到root
+                    root.put("Condition", Condition);
+
+                    conditionJson = root.toString();
+                }
+
+                Log.d("==", "申请获取分包商预验收评价数据json: " + conditionJson);
+
+                String result = mRemoteDataSource.GetPreAcceptanceEvaluationList(PageSize, PageCount, conditionJson);
                 List<AcceptanceEvaluationList> list = gson.fromJson(result, new TypeToken<List<AcceptanceEvaluationList>>() {}.getType());
 
                 e.onNext(list);

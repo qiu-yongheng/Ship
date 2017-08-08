@@ -718,5 +718,5 @@ public interface DataSouceImpl {
      * @param ConditionJson
      * @return
      */
-    Observable<List<AcceptanceEvaluationList>> GetPreAcceptanceEvaluationList(int PageSize, int PageCount, String ConditionJson);
+    Observable<List<AcceptanceEvaluationList>> GetPreAcceptanceEvaluationList(int PageSize, int PageCount, String startTime, String endTime, String subShipAccount);
 }

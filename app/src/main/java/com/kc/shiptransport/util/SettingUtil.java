@@ -86,6 +86,12 @@ public class SettingUtil {
     public static final int TYPE_THREAD = 109;
     /* 退场申请 */
     public static final int TYPE_EXIT_APPLICATION = 110;
+    /* 进场计划跟踪 */
+    public static final int TYPE_ANALYSIS = 111;
+    /* 查看分包商预验收评价 */
+    public static final int TYPE_ACCEPTANCE_EVALUATION = 112;
+    /* 查看分包商评价排行 */
+    public static final int TYPE_ACCEPTANCE_RANK = 113;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 

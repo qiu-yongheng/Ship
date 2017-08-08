@@ -27,6 +27,7 @@ import com.kc.shiptransport.mvp.sample.SampleActivity;
 import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
 import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
+import com.kc.shiptransport.util.SettingUtil;
 
 import java.util.List;
 
@@ -155,7 +156,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             break;
                         case 22:
                             // 供砂进度跟踪
-                            AnalysisActivity.startActivity(getContext());
+                            AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_ANALYSIS);
                             break;
 
                         /** AppPID = 18 考勤管理 */
