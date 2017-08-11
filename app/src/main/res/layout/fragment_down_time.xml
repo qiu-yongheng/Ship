@@ -50,7 +50,6 @@
             android:layout_marginLeft="@dimen/margin_32"
             android:layout_marginRight="@dimen/margin_32"
             android:layout_marginTop="@dimen/margin_35"
-            android:background="@color/et_bg"
             android:gravity="center"
             android:orientation="horizontal">
 

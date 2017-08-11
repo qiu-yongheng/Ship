@@ -42,6 +42,12 @@
         <item name="android:textSize">@dimen/text_15sp</item>
     </style>
 
+    <!--描述文字 黑色-->
+    <style name="text_description_black">
+        <item name="android:textColor">@color/text_tag_gray</item>
+        <item name="android:textSize">@dimen/text_15sp</item>
+    </style>
+
     <!--描述文字 小号-->
     <style name="text_description_small">
         <item name="android:textColor">@color/text_gray</item>

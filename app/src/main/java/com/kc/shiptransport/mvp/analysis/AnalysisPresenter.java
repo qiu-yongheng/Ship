@@ -5,6 +5,7 @@ import android.content.Context;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
+import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 
 import java.util.List;
@@ -135,7 +136,7 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
             view.showLoading(true);
         }
         dataRepository
-                .GetPreAcceptanceEvaluationList(20, 1, startTime, endTime, subShipAccount)
+                .GetPreAcceptanceEvaluationList(pageSize, pageCount, startTime, endTime, subShipAccount)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<AcceptanceEvaluationList>>() {
@@ -146,7 +147,41 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
 
                     @Override
                     public void onNext(@NonNull List<AcceptanceEvaluationList> acceptanceEvaluationLists) {
+                        view.showEvaluation(acceptanceEvaluationLists);
+                    }
 
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 获取分包商评价排行
+     */
+    @Override
+    public void getRank(String startTime, String endTime) {
+        view. showLoading(true);
+        dataRepository
+                .GetSubcontractorPreAcceptanceEvaluationRanking(startTime, endTime)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Rank>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<Rank> list) {
+                        view.showRank(list);
                     }
 
                     @Override

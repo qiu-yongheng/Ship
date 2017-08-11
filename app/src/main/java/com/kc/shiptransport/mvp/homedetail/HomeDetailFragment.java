@@ -158,6 +158,14 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             // 供砂进度跟踪
                             AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_ANALYSIS);
                             break;
+                        case 23:
+                            // 预验收反馈
+                            AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_ACCEPTANCE_EVALUATION);
+                            break;
+                        case 24:
+                            // 分包商排行
+                            AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_ACCEPTANCE_RANK);
+                            break;
 
                         /** AppPID = 18 考勤管理 */
                         case 19:

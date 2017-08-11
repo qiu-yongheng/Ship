@@ -27,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public class ScannerDetailPresenter implements ScannerDetailContract.Presenter{
+public class ScannerDetailPresenter implements ScannerDetailContract.Presenter {
     private final Context context;
     private final ScannerDetailContract.View view;
     private final DataRepository dataRepository;
@@ -110,7 +110,9 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter{
         } else if (type == 1) {
             // itemID 查看
             List<WeekTask> list = DataSupport.where("ItemID = ?", String.valueOf(position)).find(WeekTask.class);
-            view.showTitle(list.get(0));
+            if (!list.isEmpty()) {
+                view.showTitle(list.get(0));
+            }
 
             observable = dataRepository
                     .getScannerType(position)

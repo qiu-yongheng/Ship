@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.voyagedetail;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import com.kc.shiptransport.view.actiivty.InputActivity;
 import org.litepal.crud.DataSupport;
 
 import java.text.ParseException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,20 +82,23 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        WeekTask weekTask;
+        WeekTask weekTask = null;
         if (activity.type == 1) {
             // 查看数据
-            weekTask = DataSupport.where("ItemID = ?", String.valueOf(activity.mPosition)).find(WeekTask.class).get(0);
+            List<WeekTask> list = DataSupport.where("ItemID = ?", String.valueOf(activity.mPosition)).find(WeekTask.class);
+            if (!list.isEmpty()) {
+                weekTask = list.get(0);
+            }
         } else {
             // 编辑数据
             weekTask = DataSupport.where("position = ?", String.valueOf(activity.mPosition)).find(WeekTask.class).get(0);
         }
 
         // 根据type, 初始化不同的控件
-        if (activity.type == 0 && TextUtils.isEmpty(weekTask.getPreAcceptanceTime())) {
+        if (activity.type == 0 && weekTask != null && TextUtils.isEmpty(weekTask.getPreAcceptanceTime())) {
             // 提交数据 (编辑模式, 并且没有验砂)
             btnCommit.setVisibility(View.VISIBLE);
-        } else if (activity.type == 1 || !TextUtils.isEmpty(weekTask.getPreAcceptanceTime())) {
+        } else if (activity.type == 1 || (weekTask != null && !TextUtils.isEmpty(weekTask.getPreAcceptanceTime()))) {
             // 查看数据, 不可修改 (只读模式, 或者已经验砂)
             btnCommit.setVisibility(View.GONE);
             btnReturn.setVisibility(View.VISIBLE);
@@ -117,7 +122,16 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             @Override
             public void onClick(View view) {
                 // TODO
-                presenter.commit(adapter.bean);
+                if (TextUtils.isEmpty(adapter.bean.getWashStoreAddress())) {
+                    activity.showDailog("提交", "没有填写洗石场所在地, 是否提交?", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            presenter.commit(adapter.bean);
+                        }
+                    });
+                } else {
+                    presenter.commit(adapter.bean);
+                }
             }
         });
 
@@ -255,6 +269,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                     // 保存数据
                     columnsBean.setValue(name + ";" + itemID);
                     columnsBean.setData(itemID);
+                    adapter.bean.setWashStoreAddress(name);
                     break;
             }
 

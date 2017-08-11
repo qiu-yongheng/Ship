@@ -47,7 +47,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     private Unbinder unbinder;
     private ScannerDetailAdapter adapter;
     private WeekTask weekTask;
-    private int isFinshReceptionSandAttachment;
+    private int isFinshReceptionSandAttachment = 1;
 
     @Nullable
     @Override

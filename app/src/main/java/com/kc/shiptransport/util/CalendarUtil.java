@@ -234,9 +234,9 @@ public class CalendarUtil {
     /**
      * 判断结束日期是否在开始日期之前
      *
-     * @param startTime
-     * @param endTime
-     * @return
+     * @param startTime 开始时间
+     * @param endTime 结束
+     * @return 结束时间小于开始时间, 返回true
      * @throws ParseException
      */
     public static boolean isLastDate(String startTime, String endTime) throws ParseException {
@@ -255,7 +255,7 @@ public class CalendarUtil {
 
         long gap = endCal.getTimeInMillis() - startCal.getTimeInMillis();
 
-        return gap < 0;
+        return gap <= 0;
     }
 
     /**

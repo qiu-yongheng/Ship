@@ -27,6 +27,7 @@ import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
+import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
@@ -35,6 +36,7 @@ import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
+import com.kc.shiptransport.db.versionupdate.VersionUpdate;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
 
@@ -715,8 +717,22 @@ public interface DataSouceImpl {
      * 1.54 获取供应商预验收评价数据
      * @param PageSize
      * @param PageCount
-     * @param ConditionJson
      * @return
      */
     Observable<List<AcceptanceEvaluationList>> GetPreAcceptanceEvaluationList(int PageSize, int PageCount, String startTime, String endTime, String subShipAccount);
+
+    /**
+     * 1.55 获取供应商评分排行榜
+     * @return
+     * @param startTime
+     * @param endTime
+     */
+    Observable<List<Rank>> GetSubcontractorPreAcceptanceEvaluationRanking(String startTime, String endTime);
+
+    /**
+     * 4.1 获取当前app最新版本
+     * @param version
+     * @return
+     */
+    Observable<VersionUpdate> GetNewVersion(int version);
 }

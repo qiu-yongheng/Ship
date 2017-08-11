@@ -259,10 +259,12 @@ public class MineFragment extends Fragment {
 
                 final List<Department> list = DataSupport.order("SortNum asc").find(Department.class);
                 SelectUtil<Department> selectUtil = new SelectUtil<>();
-                selectUtil.showSelectDialog(getContext(), list, false, new OptionsPickerView.OnOptionsSelectListener() {
+                selectUtil.showSelectDialog(getContext(), list, false, "", new OptionsPickerView.OnOptionsSelectListener() {
                     @Override
                     public void onOptionsSelect(int options1, int options2, int options3, View v) {
                         String pickerViewText = list.get(options1).getPickerViewText();
+
+                        // 修改界面显示
                         tvSection.setText(pickerViewText);
                         userInfo.setDepartment(pickerViewText);
                         userInfo.setDepartmentID(list.get(options1).getItemID());

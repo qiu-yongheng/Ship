@@ -16,12 +16,14 @@ import com.zhy.adapter.recyclerview.utils.WrapperUtils;
  */
 public class LoadmoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int ITEM_TYPE_LOAD_MORE = Integer.MAX_VALUE - 2;
+    public static final int ITEM_TYPE_NO_MORE = Integer.MAX_VALUE - 3;
+
 
     private RecyclerView.Adapter mInnerAdapter;
     private View mLoadMoreView;
-
-
     private int mLoadMoreLayoutId;
+    private boolean isMoreDates = true;
+    private int mNoMoreLayoutId;
 
     public LoadmoreWrapper(RecyclerView.Adapter adapter) {
         mInnerAdapter = adapter;
@@ -45,14 +47,32 @@ public class LoadmoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     /**
+     * 是否获取到更多数据
+     * @return
+     */
+    private boolean isGetMoreDates() {
+        return isMoreDates;
+    }
+
+    /**
+     * 设置是否有更多数据
+     * @param isMoreDates
+     */
+    public void setIsMoreDates(boolean isMoreDates) {
+        this.isMoreDates = isMoreDates;
+    }
+
+    /**
      * 获取item类型
      * @param position
      * @return
      */
     @Override
     public int getItemViewType(int position) {
-        if (isShowLoadMore(position)) {
+        if (isShowLoadMore(position) && isGetMoreDates()) {
             return ITEM_TYPE_LOAD_MORE;
+        } else if (isShowLoadMore(position)) {
+            return ITEM_TYPE_NO_MORE;
         }
         return mInnerAdapter.getItemViewType(position);
     }
@@ -73,6 +93,8 @@ public class LoadmoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holder = ViewHolder.createViewHolder(parent.getContext(), parent, mLoadMoreLayoutId);
             }
             return holder;
+        } else if (viewType == ITEM_TYPE_NO_MORE) {
+            return ViewHolder.createViewHolder(parent.getContext(), parent, mNoMoreLayoutId);
         }
         return mInnerAdapter.onCreateViewHolder(parent, viewType);
     }
@@ -84,11 +106,13 @@ public class LoadmoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (isShowLoadMore(position)) {
+        if (isShowLoadMore(position) && isGetMoreDates()) {
             if (mOnLoadMoreListener != null) {
                 /** 当加载到 "加载更多" 控件时, 回调接口, 让子类处理 */
                 mOnLoadMoreListener.onLoadMoreRequested();
             }
+            return;
+        } else if (isShowLoadMore(position)) {
             return;
         }
         mInnerAdapter.onBindViewHolder(holder, position);
@@ -174,6 +198,16 @@ public class LoadmoreWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     public LoadmoreWrapper setLoadMoreView(int layoutId) {
         mLoadMoreLayoutId = layoutId;
+        return this;
+    }
+
+    /**
+     * 没有更多数据
+     * @param layoutId
+     * @return
+     */
+    public LoadmoreWrapper setNoMoreView(int layoutId) {
+        mNoMoreLayoutId = layoutId;
         return this;
     }
 }

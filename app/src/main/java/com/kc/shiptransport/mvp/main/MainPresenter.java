@@ -1,7 +1,15 @@
 package com.kc.shiptransport.mvp.main;
 
+import com.kc.shiptransport.data.source.DataRepository;
+import com.kc.shiptransport.db.versionupdate.VersionUpdate;
 import com.kc.shiptransport.download.DownloadService;
 import com.kc.shiptransport.util.AppInfoUtils;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author qiuyongheng
@@ -12,9 +20,11 @@ import com.kc.shiptransport.util.AppInfoUtils;
 public class MainPresenter {
     private final MainActivity activity;
     private int version = 0;
+    private final DataRepository dataRepository;
 
     public MainPresenter(MainActivity activity) {
         this.activity = activity;
+        dataRepository = new DataRepository();
     }
 
     /**
@@ -23,13 +33,36 @@ public class MainPresenter {
      * @param downloadBinder
      */
     public void checkVersionCode(DownloadService.DownloadBinder downloadBinder) {
-        //判断版本
-        if (version > AppInfoUtils.getVersionCode(activity) || true) {
-            /** 更新版本, 弹窗提醒 */
-            activity.showDialog();
-        } else {
-            /** 不需要更新 */
-        }
+        dataRepository
+                .GetNewVersion(AppInfoUtils.getVersionCode(activity))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VersionUpdate>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull VersionUpdate versionUpdate) {
+                        if (versionUpdate.getItemID() == 0) {
+                            // 当前版本已是最新
+                        } else {
+                            /** 更新版本, 弹窗提醒 */
+                            activity.showDialog(versionUpdate);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     /**
@@ -44,9 +77,10 @@ public class MainPresenter {
     /**
      * 开始下载
      * @param downloadBinder
+     * @param versionUpdate
      */
-    public void startDownload(DownloadService.DownloadBinder downloadBinder) {
-        String url = "https://dl.hdslb.com/mobile/latest/iBiliPlayer-bili.apk";
+    public void startDownload(DownloadService.DownloadBinder downloadBinder, VersionUpdate versionUpdate) {
+        String url = versionUpdate.getFilePath();
         downloadBinder.startDownload(url);
     }
 }

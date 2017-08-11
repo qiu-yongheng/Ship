@@ -51,6 +51,7 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.TaskVolume;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
+import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
@@ -66,6 +67,7 @@ import com.kc.shiptransport.db.threadsand.Layered;
 import com.kc.shiptransport.db.user.Department;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.db.userinfo.UserInfo;
+import com.kc.shiptransport.db.versionupdate.VersionUpdate;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -1318,6 +1320,14 @@ public class DataRepository implements DataSouceImpl {
                             break;
                         case 22:
                             // 供砂进度跟踪
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 23:
+                            // 预验收反馈
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 24:
+                            // 分包商排行
                             list.setIcon_id(R.mipmap.plan);
                             break;
                     }
@@ -3382,6 +3392,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 2.5 获取分包商进场计划进度跟踪
+     *
      * @param SubcontractorAccount
      * @param ShipName
      * @param StartDate
@@ -3406,6 +3417,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 2.4 根据进场计划ID，获取供砂过程总表
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -3427,6 +3439,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.54 获取供应商预验收评价数据
+     *
      * @param PageSize
      * @param PageCount
      * @param startTime
@@ -3466,7 +3479,7 @@ public class DataRepository implements DataSouceImpl {
                     JSONObject object21 = new JSONObject();
                     object21.put("Min", startTime);
                     JSONObject object22 = new JSONObject();
-                    object21.put("Max", endTime);
+                    object22.put("Max", endTime);
 
                     array2.put(object21);
                     array2.put(object22);
@@ -3475,15 +3488,17 @@ public class DataRepository implements DataSouceImpl {
 
                     // 供砂船舶
                     JSONObject object3 = new JSONObject();
-                    object1.put("Name", "ShipAccount"); // TODO 需要修改
-                    object1.put("Type", "string");
-                    object1.put("Format", "Equal");
-                    object1.put("Value", subShipAccount);
+                    object3.put("Name", "ShipName"); // TODO 需要修改
+                    object3.put("Type", "string");
+                    object3.put("Format", "Equal");
+                    object3.put("Value", subShipAccount);
 
                     // 保存3个对象到object
                     Column.put(object1);
                     Column.put(object2);
-                    Column.put(object3);
+                    if (!TextUtils.isEmpty(subShipAccount)) {
+                        Column.put(object3);
+                    }
 
                     // 保存object到Condition
                     Condition.put("Column", Column);
@@ -3497,9 +3512,62 @@ public class DataRepository implements DataSouceImpl {
                 Log.d("==", "申请获取分包商预验收评价数据json: " + conditionJson);
 
                 String result = mRemoteDataSource.GetPreAcceptanceEvaluationList(PageSize, PageCount, conditionJson);
-                List<AcceptanceEvaluationList> list = gson.fromJson(result, new TypeToken<List<AcceptanceEvaluationList>>() {}.getType());
+                List<AcceptanceEvaluationList> list = gson.fromJson(result, new TypeToken<List<AcceptanceEvaluationList>>() {
+                }.getType());
 
                 e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.55 获取供应商评分排行榜
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @Override
+    public Observable<List<Rank>> GetSubcontractorPreAcceptanceEvaluationRanking(final String startTime, final String endTime) {
+        return Observable.create(new ObservableOnSubscribe<List<Rank>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<Rank>> e) throws Exception {
+                String json = "{\"Condition\":{\"Column\":[{\"Name\":\"PlanDay\",\"Type\":\"datetime\",\"Value\":[{\"Min\":\"" + startTime + "\"},{\"Max\":\"" + endTime + "\"}]}]}}";
+                String result = mRemoteDataSource.GetSubcontractorPreAcceptanceEvaluationRanking(json);
+                Log.d("==", "分包商评分排行: " + result);
+
+
+                List<Rank> list = gson.fromJson(result, new TypeToken<List<Rank>>() {
+                }.getType());
+
+                DataSupport.deleteAll(Rank.class);
+                DataSupport.saveAll(list);
+
+                List<Rank> lists = DataSupport.order("AvgTotalScore desc").find(Rank.class);
+
+                e.onNext(lists);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 4.1 获取当前app最新版本
+     * @param version
+     * @return
+     */
+    @Override
+    public Observable<VersionUpdate> GetNewVersion(final int version) {
+        return Observable.create(new ObservableOnSubscribe<VersionUpdate>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<VersionUpdate> e) throws Exception {
+                String result = mRemoteDataSource.GetNewVersion(String.valueOf(version));
+
+                List<VersionUpdate> list = gson.fromJson(result, new TypeToken<List<VersionUpdate>>() {
+                }.getType());
+
+                e.onNext(list.get(0));
                 e.onComplete();
             }
         });

@@ -1,6 +1,7 @@
 package com.kc.shiptransport.util;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,7 +30,7 @@ public class SelectUtil<T> {
      * @param isDialog
      * @param listener
      */
-    public void showSelectDialog(Context context, List<T> list, boolean isDialog, OptionsPickerView.OnOptionsSelectListener listener) {
+    public void showSelectDialog(Context context, List<T> list, boolean isDialog, final String title, OptionsPickerView.OnOptionsSelectListener listener) {
         /**
          * @description
          *
@@ -44,7 +45,9 @@ public class SelectUtil<T> {
                     public void customLayout(View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
                         final TextView tvAdd = (TextView) v.findViewById(R.id.tv_add);
+                        final TextView tvTitle = (TextView) v.findViewById(R.id.tv_title);
                         ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
+
                         /** 确定 */
                         tvSubmit.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -69,6 +72,9 @@ public class SelectUtil<T> {
                             }
                         });
 
+                        if (!TextUtils.isEmpty(title)) {
+                            tvTitle.setText(title);
+                        }
                     }
                 })
                 .isDialog(isDialog)

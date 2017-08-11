@@ -13,6 +13,7 @@ public class AcceptanceEvaluationList extends DataSupport{
     /**
      * rownumber : 1
      * ItemID : 4056
+     * PlanDay : 2017-07-30
      * MaterialIntegrity : 5
      * MaterialTimeliness : 5
      * PreAcceptanceTime : 2017-07-28 09:00:00
@@ -25,6 +26,7 @@ public class AcceptanceEvaluationList extends DataSupport{
 
     private int rownumber;
     private int ItemID;
+    private String PlanDay;
     private String MaterialIntegrity;
     private String MaterialTimeliness;
     private String PreAcceptanceTime;
@@ -48,6 +50,14 @@ public class AcceptanceEvaluationList extends DataSupport{
 
     public void setItemID(int ItemID) {
         this.ItemID = ItemID;
+    }
+
+    public String getPlanDay() {
+        return PlanDay;
+    }
+
+    public void setPlanDay(String PlanDay) {
+        this.PlanDay = PlanDay;
     }
 
     public String getMaterialIntegrity() {

@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.versionupdate.VersionUpdate;
 import com.kc.shiptransport.download.DownloadService;
 import com.kc.shiptransport.mvp.BaseActivity;
 
@@ -45,7 +46,7 @@ public class MainActivity extends BaseActivity {
             downloadBinder = (DownloadService.DownloadBinder) service;
 
             /** 检查更新 */
-            //presenter.checkVersionCode(downloadBinder);
+            presenter.checkVersionCode(downloadBinder);
         }
 
     };
@@ -105,7 +106,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public void showDialog() {
+    public void showDialog(final VersionUpdate versionUpdate) {
         showDailog("版本更新", "有新版本发布, 是否更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -116,7 +117,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // 更新
-                presenter.startDownload(downloadBinder);
+                presenter.startDownload(downloadBinder, versionUpdate);
             }
         });
     }

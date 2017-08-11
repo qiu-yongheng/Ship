@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -51,6 +53,13 @@ public class AppInfoUtils {
      * @param apkPath
      */
     public static void installAuto(Context context, String apkPath) {
+        String fileName = apkPath.substring(apkPath.lastIndexOf(".") + 1);
+
+        if (TextUtils.isEmpty(fileName) || !fileName.equals("apk")) {
+            Toast.makeText(context, "下载内容不是APP, 不能进行安装", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent localIntent = new Intent(Intent.ACTION_VIEW);
         localIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Uri uri;

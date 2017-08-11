@@ -1634,10 +1634,85 @@ public class RemoteDataSource {
         // 调用的方法名称
         String methodName = "GetPreAcceptanceEvaluationList";
         // EndPoint
-        //        String endPoint = "http://cchk3.ccgdc.com/AppService/Analysis.asmx";
         String endPoint = EndPoint;
         // SOAP Action
         String soapAction = "http://tempuri.org/GetPreAcceptanceEvaluationList";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.55 获取供应商评分排行榜
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetSubcontractorPreAcceptanceEvaluationRanking(String ConditionJson) throws Exception {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetSubcontractorPreAcceptanceEvaluationRanking";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetSubcontractorPreAcceptanceEvaluationRanking";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 4.1 获取当前app最新版本
+     * @param Version 本地版本
+     * @return
+     * @throws Exception
+     */
+    public String GetNewVersion(String Version) throws Exception {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetLastAppVersion ";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetLastAppVersion ";
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("Version", Version);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 3.5 获取所有用户信息(通讯录数据源)
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetMembers(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "GetMembers ";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = "http://tempuri.org/GetMembers ";
 
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);

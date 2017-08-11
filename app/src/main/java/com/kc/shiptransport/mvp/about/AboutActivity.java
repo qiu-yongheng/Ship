@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.versionupdate.VersionUpdate;
 import com.kc.shiptransport.download.DownloadService;
 import com.kc.shiptransport.mvp.BaseActivity;
 import com.kc.shiptransport.util.AppInfoUtils;
@@ -72,7 +73,6 @@ public class AboutActivity extends BaseActivity {
         bindService(intent, connection, BIND_AUTO_CREATE); // 绑定服务
     }
 
-
     private void initView() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -88,14 +88,14 @@ public class AboutActivity extends BaseActivity {
         rlUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(AboutActivity.this, "功能待完善", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AboutActivity.this, "正在检查新版本", Toast.LENGTH_SHORT).show();
 
-                //presenter.checkVersionCode();
+                presenter.checkVersionCode();
             }
         });
     }
 
-    public void showDialog() {
+    public void showDialog(final VersionUpdate versionUpdate) {
         showDailog("版本更新", "有新版本发布, 是否更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -106,7 +106,7 @@ public class AboutActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // 更新
-                presenter.startDownload(downloadBinder);
+                presenter.startDownload(downloadBinder, versionUpdate);
             }
         });
     }
