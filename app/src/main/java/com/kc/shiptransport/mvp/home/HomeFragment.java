@@ -18,6 +18,7 @@ import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.constructionlog.ConstructionLogActivity;
+import com.kc.shiptransport.mvp.contacts.ContactActivity;
 import com.kc.shiptransport.mvp.homedetail.HomeDetailActivity;
 import com.kc.shiptransport.mvp.main.MainActivity;
 
@@ -138,6 +139,10 @@ public class HomeFragment extends Fragment {
                             break;
                         case 8:
                             // 航线管理
+                            break;
+                        case 9:
+                            // 通讯录
+                            ContactActivity.startActivity(getContext());
                             break;
                         case 18:
                             // 考勤管理

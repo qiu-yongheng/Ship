@@ -55,6 +55,7 @@ import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopList;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
@@ -187,19 +188,6 @@ public class DataRepository implements DataSouceImpl {
         }.getType());
         if (list != null && !list.isEmpty()) {
             DataSupport.deleteAll(Ship.class);
-            //            for (ShipBean listBean : list) {
-            //                Ship ship = new Ship();
-            //                ship.setItemID(listBean.getItemID());
-            //                ship.setShipID(listBean.getShipID());
-            //                ship.setShipAccount(listBean.getShipAccount());
-            //                ship.setShipName(listBean.getShipName());
-            //                ship.setShipType(listBean.getShipType());
-            //                ship.setMaxSandSupplyCount(listBean.getMaxSandSupplyCount());
-            //                ship.setCapacity(listBean.getCapacity());
-            //                ship.setDeckGauge(listBean.getDeckGauge());
-            //                ship.setSelected("0");
-            //                ship.save();
-            //            }
         }
     }
 
@@ -3568,6 +3556,31 @@ public class DataRepository implements DataSouceImpl {
                 }.getType());
 
                 e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 3.5 获取所有用户信息（通讯录数据源）
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     */
+    @Override
+    public Observable<List<Contacts>> GetMembers(final int PageSize, final int PageCount, final String ConditionJson) {
+        return Observable.create(new ObservableOnSubscribe<List<Contacts>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<Contacts>> e) throws Exception {
+                String result = mRemoteDataSource.GetMembers(PageSize, PageCount, ConditionJson);
+                List<Contacts> list = gson.fromJson(result, new TypeToken<List<Contacts>>() {
+                }.getType());
+
+                DataSupport.deleteAll(Contacts.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(list);
                 e.onComplete();
             }
         });

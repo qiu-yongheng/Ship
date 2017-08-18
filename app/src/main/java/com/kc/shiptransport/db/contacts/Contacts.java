@@ -2,13 +2,15 @@ package com.kc.shiptransport.db.contacts;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * @author 邱永恒
  * @time 2017/8/11  9:30
  * @desc 通讯录
  */
 
-public class Contacts extends DataSupport{
+public class Contacts extends DataSupport implements Serializable{
 
     /**
      * LoginName : kl

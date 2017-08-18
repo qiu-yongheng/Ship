@@ -1,6 +1,8 @@
 package com.zhy.adapter.recyclerview.base;
 
 
+import java.util.List;
+
 /**
  * @author qiuyongheng
  * @time 16/6/22  13:44
@@ -20,7 +22,7 @@ public interface ItemViewDelegate<T> {
      * @param position
      * @return
      */
-    boolean isForViewType(T item, int position);
+    boolean isForViewType(T item, List<T> dates, int position);
 
     /**
      * 给控件绑定数据

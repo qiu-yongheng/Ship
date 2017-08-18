@@ -79,17 +79,23 @@ public class MainActivity extends BaseActivity {
         bindService(intent, connection, BIND_AUTO_CREATE); // 绑定服务
 
         /** 运行时权限 */
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
             /** 授权 */
             // 处理 “不再提醒”
             if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                showDailog("警告", "请同意APP使用存储权限, 拒绝权限将无法使用程序", "授权", "退出", new DialogInterface.OnClickListener() {
+                showDailog("警告", "APP正常运行需要相关权限, 拒绝权限将无法使用程序", "授权", "退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         /** 授权 */
                         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                         }
+
+                        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                        }
+
                     }
                 }, new DialogInterface.OnClickListener() {
                     @Override
@@ -102,7 +108,11 @@ public class MainActivity extends BaseActivity {
             }
 
             // 弹出权限请求框
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            String[] permissions = new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.CALL_PHONE};
+
+            ActivityCompat.requestPermissions(MainActivity.this, permissions, 1);
         }
     }
 

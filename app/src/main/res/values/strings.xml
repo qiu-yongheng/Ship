@@ -113,7 +113,7 @@
     <string name="text_scan">扫描件查看</string>
     <string name="text_stop">停工</string>
     <string name="text_throw_sand">抛砂</string>
-    <string name="title_construction">施工日志</string>
+    <string name="title_construction">施工日报</string>
     <string name="btn_down">停工</string>
     <string name="tv_hint">请选择</string>
     <string name="title_thread_sand">抛砂记录</string>
@@ -158,6 +158,7 @@
     <string name="title_analysis_detail">分包商进场计划进度跟踪</string>
     <string name="title_evaluation">预验收评价</string>
     <string name="title_rank">分包商排行</string>
+    <string name="title_contact">通讯录</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

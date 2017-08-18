@@ -31,6 +31,7 @@ import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.partition.PartitionNum;
@@ -735,4 +736,13 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<VersionUpdate> GetNewVersion(int version);
+
+    /**
+     * 3.5 获取所有用户信息（通讯录数据源）
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     */
+    Observable<List<Contacts>> GetMembers(int PageSize, int PageCount, String ConditionJson);
 }

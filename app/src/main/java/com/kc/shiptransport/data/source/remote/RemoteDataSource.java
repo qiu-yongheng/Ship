@@ -1607,7 +1607,6 @@ public class RemoteDataSource {
         // 调用的方法名称
         String methodName = "GetAllDetailBySubcontractorInterimApproachPlanID";
         // EndPoint
-//        String endPoint = "http://cchk3.ccgdc.com/AppService/Analysis.asmx";
         String endPoint = EndPoint;
         // SOAP Action
         String soapAction = "http://tempuri.org/GetAllDetailBySubcontractorInterimApproachPlanID";

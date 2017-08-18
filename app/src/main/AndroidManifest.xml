@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
+    <!-- 添加拨出电话的权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
 
     <application
         android:name=".app.App"
@@ -74,6 +77,8 @@
         <activity android:name=".mvp.analysis.AnalysisActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.analysisdetail.AnalysisDetailActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.acceptanceevaluation.AcceptanceEvaluationActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.contacts.ContactActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.contactsdetail.ContactDetailActivity" android:launchMode="singleTask"/>
 
 
         <activity

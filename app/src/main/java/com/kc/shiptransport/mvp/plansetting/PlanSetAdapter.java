@@ -159,7 +159,7 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Calendar tomorrowTime = Calendar.getInstance();
                 tomorrowTime.add(Calendar.DAY_OF_MONTH, 1);
                 SimpleDateFormat d = new SimpleDateFormat(CalendarUtil.YYYY_MM_DD);
-                String tomorrow = d.format(cal.getTime());
+                String tomorrow = d.format(tomorrowTime.getTime());
 
                 // 与选择日期进行判断
                 if (!CalendarUtil.isLastDate_YYYY_MM_DD(tomorrow, date)) {

@@ -47,7 +47,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         // 未开发的功能, 图标显示灰色
         Integer appID = Integer.valueOf(appList.getAppID());
-        if (appID != 2 && appID != 18 && appID != 3) {
+        if (appID != 2 && appID != 18 && appID != 3 && appID != 9) {
             ColorMatrix cm = new ColorMatrix();
             cm.setSaturation(0); // 设置饱和度
             ColorMatrixColorFilter grayColorFilter = new ColorMatrixColorFilter(cm);

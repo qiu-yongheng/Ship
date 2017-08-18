@@ -2,6 +2,8 @@ package com.zhy.adapter.recyclerview.base;
 
 import android.support.v4.util.SparseArrayCompat;
 
+import java.util.List;
+
 
 /**
  * @author 邱永恒
@@ -93,9 +95,10 @@ public class ItemViewDelegateManager<T> {
      * 提供给adapter调用, 判断当前item类型
      * @param item
      * @param position
+     * @param datas
      * @return
      */
-    public int getItemViewType(T item, int position) {
+    public int getItemViewType(T item, int position, List<T> datas) {
         int delegatesCount = delegates.size();
         /** 遍历获取item类型, 判断当前position对应type */
         for (int i = delegatesCount - 1; i >= 0; i--) {
@@ -103,7 +106,7 @@ public class ItemViewDelegateManager<T> {
             ItemViewDelegate<T> delegate = delegates.valueAt(i);
 
             /** 给子类实现判断, 子类根据: item对应的数据, position --> 判断item当前类型 */
-            if (delegate.isForViewType(item, position)) {
+            if (delegate.isForViewType(item, datas, position)) {
                 /** 返回item类型id */
                 return delegates.keyAt(i);
             }
@@ -118,14 +121,15 @@ public class ItemViewDelegateManager<T> {
      * @param holder holder
      * @param item 数据
      * @param position position
+     * @param datas
      */
-    public void convert(ViewHolder holder, T item, int position) {
+    public void convert(ViewHolder holder, T item, int position, List<T> datas) {
         int delegatesCount = delegates.size();
         for (int i = 0; i < delegatesCount; i++) {
 
             ItemViewDelegate<T> delegate = delegates.valueAt(i);
 
-            if (delegate.isForViewType(item, position)) {
+            if (delegate.isForViewType(item, datas, position)) {
                 /** 给子类实现, 数据绑定 */
                 delegate.convert(holder, item, position);
                 return;

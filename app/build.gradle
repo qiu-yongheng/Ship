@@ -7,8 +7,8 @@ android {
         applicationId "com.kc.shiptransport"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 10
-        versionName "1.2.7"
+        versionCode 12
+        versionName "1.2.7.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -64,6 +64,8 @@ dependencies {
     compile 'top.zibin:Luban:1.1.1'
     // 图片查看
     compile 'com.bm.photoview:library:1.4.1'
+    // 圆形图片控件
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     // 友盟统计
     compile 'com.umeng.analytics:analytics:latest.integration'
 

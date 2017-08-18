@@ -1,6 +1,7 @@
 package com.kc.shiptransport.app;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.umeng.analytics.MobclickAgent;
 
@@ -13,6 +14,9 @@ import org.litepal.LitePalApplication;
  */
 
 public class App extends Application{
+
+    private static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -23,5 +27,11 @@ public class App extends Application{
 
         // 错误统计 (默认开启)
         MobclickAgent.setCatchUncaughtExceptions(true);
+
+        context = getApplicationContext();
+    }
+
+    public static Context getAppContext() {
+        return context;
     }
 }
