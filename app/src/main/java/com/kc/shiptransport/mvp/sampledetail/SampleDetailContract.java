@@ -38,7 +38,7 @@ public interface SampleDetailContract {
         // 提交图片
         void upImage(SampleImageList sampleCommitList);
         // 查看图片
-        void getDates(int position, boolean isSandSampling);
+        void getDates(int position, boolean isSandSampling, boolean isExit);
         void commitJson(SampleShowDatesBean sampleShowDates);
         void deleteItem(int ItemID);
     }

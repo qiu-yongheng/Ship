@@ -420,9 +420,10 @@ public interface DataSouceImpl {
      * 1.23根据进场计划ID获取验砂取样信息明细
      * @param SubcontractorInterimApproachPlanID
      * @param isSandSampling
+     * @param isExit
      * @return
      */
-    Observable<SampleShowDatesBean> GetSandSamplingBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID, boolean isSandSampling);
+    Observable<SampleShowDatesBean> GetSandSamplingBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID, boolean isSandSampling, boolean isExit);
 
     /**
      * 提交验砂取样数据

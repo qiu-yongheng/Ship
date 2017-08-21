@@ -1708,7 +1708,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> getSandSamplingList(final int jumpWeek, final String account) {
+    public Observable<Boolean>  getSandSamplingList(final int jumpWeek, final String account) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -1721,6 +1721,8 @@ public class DataRepository implements DataSouceImpl {
 
                 // 发送网络请求
                 String result = mRemoteDataSource.GetSandSamplingList(account, startDay, endDay, endDay);
+
+                Log.d("==", "验砂取样数据: " + result);
 
                 // 解析数据
                 List<SandSample> lists = gson.fromJson(result, new TypeToken<List<SandSample>>() {
@@ -2141,24 +2143,25 @@ public class DataRepository implements DataSouceImpl {
      *
      * @param SubcontractorInterimApproachPlanID
      * @param isSandSampling
+     * @param isExit
      * @return
      */
     @Override
-    public Observable<SampleShowDatesBean> GetSandSamplingBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID, final boolean isSandSampling) {
+    public Observable<SampleShowDatesBean> GetSandSamplingBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID, final boolean isSandSampling, final boolean isExit) {
         return Observable.create(new ObservableOnSubscribe<SampleShowDatesBean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<SampleShowDatesBean> e) throws Exception {
                 // 先判断本地是否有数据没有提交 (进场ID对应)
                 String data = SharePreferenceUtil.getString(getContext(), String.valueOf(SubcontractorInterimApproachPlanID), "");
 
-                if (TextUtils.isEmpty(data) || isSandSampling) { // 如果没有本地缓存
+                if (TextUtils.isEmpty(data) || isSandSampling || isExit) { // 如果没有本地缓存
                     /** 删除缓存 */
                     SharePreferenceUtil.saveString(getContext(), String.valueOf(SubcontractorInterimApproachPlanID), "");
 
                     // 根据进场ID发送网络请求
                     String result = mRemoteDataSource.GetSandSamplingBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
 
-                    Log.d("==", "验砂取样: " + result);
+                    Log.d("==", "验砂取样item详细数据: " + result);
 
                     // 解析数据
                     List<SampleShowDatesBean> list = gson.fromJson(result, new TypeToken<List<SampleShowDatesBean>>() {
@@ -3441,65 +3444,70 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<AcceptanceEvaluationList>> e) throws Exception {
                 String conditionJson = "";
-                if (TextUtils.isEmpty(startTime) && TextUtils.isEmpty(endTime) && TextUtils.isEmpty(subShipAccount)) {
+                //                if (TextUtils.isEmpty(startTime) && TextUtils.isEmpty(endTime) && TextUtils.isEmpty(subShipAccount)) {
+                //
+                //                } else {
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
 
-                } else {
-                    JSONObject root = new JSONObject();
-                    JSONObject Condition = new JSONObject();
+                JSONArray Column = new JSONArray();
 
-                    JSONArray Column = new JSONArray();
+                // 分包商账号
+                JSONObject object1 = new JSONObject();
+                User user = DataSupport.findAll(User.class).get(0);
+                object1.put("Name", "SubcontractorAccount");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", user.getUserID());
 
-                    // 分包商账号
-                    JSONObject object1 = new JSONObject();
-                    User user = DataSupport.findAll(User.class).get(0);
-                    object1.put("Name", "SubcontractorAccount");
-                    object1.put("Type", "string");
-                    object1.put("Format", "Equal");
-                    object1.put("Value", user.getUserID());
+                // 验收时间
+                JSONObject object2 = new JSONObject();
+                object2.put("Name", "PreAcceptanceTime");
+                object2.put("Type", "datetime");
 
-                    // 验收时间
-                    JSONObject object2 = new JSONObject();
-                    object2.put("Name", "PreAcceptanceTime");
-                    object2.put("Type", "datetime");
+                JSONArray array2 = new JSONArray();
 
-                    JSONArray array2 = new JSONArray();
+                JSONObject object21 = new JSONObject();
+                object21.put("Min", startTime);
+                JSONObject object22 = new JSONObject();
+                object22.put("Max", endTime);
 
-                    JSONObject object21 = new JSONObject();
-                    object21.put("Min", startTime);
-                    JSONObject object22 = new JSONObject();
-                    object22.put("Max", endTime);
+                array2.put(object21);
+                array2.put(object22);
 
-                    array2.put(object21);
-                    array2.put(object22);
+                object2.put("Value", array2);
 
-                    object2.put("Value", array2);
+                // 供砂船舶
+                JSONObject object3 = new JSONObject();
+                object3.put("Name", "ShipName"); // TODO 需要修改
+                object3.put("Type", "string");
+                object3.put("Format", "Equal");
+                object3.put("Value", subShipAccount);
 
-                    // 供砂船舶
-                    JSONObject object3 = new JSONObject();
-                    object3.put("Name", "ShipName"); // TODO 需要修改
-                    object3.put("Type", "string");
-                    object3.put("Format", "Equal");
-                    object3.put("Value", subShipAccount);
-
-                    // 保存3个对象到object
-                    Column.put(object1);
+                // 保存3个对象到object
+                Column.put(object1);
+                if (!TextUtils.isEmpty(startTime) || !TextUtils.isEmpty(endTime)) {
                     Column.put(object2);
-                    if (!TextUtils.isEmpty(subShipAccount)) {
-                        Column.put(object3);
-                    }
-
-                    // 保存object到Condition
-                    Condition.put("Column", Column);
-
-                    // 保存到root
-                    root.put("Condition", Condition);
-
-                    conditionJson = root.toString();
                 }
+
+                if (!TextUtils.isEmpty(subShipAccount)) {
+                    Column.put(object3);
+                }
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                conditionJson = root.toString();
+                //            }
 
                 Log.d("==", "申请获取分包商预验收评价数据json: " + conditionJson);
 
                 String result = mRemoteDataSource.GetPreAcceptanceEvaluationList(PageSize, PageCount, conditionJson);
+
+                Log.d("==", "分包商预验收评价: " + result);
                 List<AcceptanceEvaluationList> list = gson.fromJson(result, new TypeToken<List<AcceptanceEvaluationList>>() {
                 }.getType());
 
@@ -3542,6 +3550,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 4.1 获取当前app最新版本
+     *
      * @param version
      * @return
      */
@@ -3563,6 +3572,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 3.5 获取所有用户信息（通讯录数据源）
+     *
      * @param PageSize
      * @param PageCount
      * @param ConditionJson
@@ -3574,6 +3584,8 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<Contacts>> e) throws Exception {
                 String result = mRemoteDataSource.GetMembers(PageSize, PageCount, ConditionJson);
+
+                Log.d("==", "通讯录: " + result);
                 List<Contacts> list = gson.fromJson(result, new TypeToken<List<Contacts>>() {
                 }.getType());
 

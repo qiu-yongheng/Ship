@@ -9,24 +9,27 @@ import org.litepal.crud.DataSupport;
  */
 
 public class SandSample extends DataSupport{
+
     /**
-     * ItemID : 507
-     * SubcontractorAccount : yflf
-     * SubcontractorName : 誉丰联发
-     * PlanDay : 2017-06-09
-     * ShipAccount : ydgh0768
-     * ShipName : 粤东莞货0768
+     * ItemID : 6564
+     * SubcontractorAccount : csfbs
+     * SubcontractorName : 测试分包商
+     * PlanDay : 2017-08-17
+     * ShipAccount : csgscb
+     * ShipName : 测试供砂船舶
      * ShipType : A类
-     * SandSupplyCount : 3500
-     * Capacity : 2
-     * DeckGauge : 0
-     * ReceptionSandTime : null
-     * PreAcceptanceTime : 2017-06-08 17:20:00
-     * ShipItemNum : 2017060804
+     * SandSupplyCount : 3000
+     * ReceptionSandTime : 2017-08-18 17:18:00
+     * PreAcceptanceTime : 2017-08-18 17:18:00
+     * ShipItemNum : 2017081801
+     * IsExit : 1
+     * ExitTime : 2017-08-18T17:19:00
+     * SandSamplingID : 0
+     * IsSandSampling : 0
      */
-    private String position;
 
     private int ItemID;
+    private String position;
     private String SubcontractorAccount;
     private String SubcontractorName;
     private String PlanDay;
@@ -34,125 +37,13 @@ public class SandSample extends DataSupport{
     private String ShipName;
     private String ShipType;
     private String SandSupplyCount;
-    private String Capacity;
-    private String DeckGauge;
     private String ReceptionSandTime;
     private String PreAcceptanceTime;
     private String ShipItemNum;
-    private int SandSamplingID; // 验砂取样编号, 如果提交过数据, 就不为0
-    private int IsSandSampling; // 1代表已取样，0代表未取样（有三个取样编号，则代表已经取样）
-
-    public int getIsSandSampling() {
-        return IsSandSampling;
-    }
-
-    public void setIsSandSampling(int isSandSampling) {
-        IsSandSampling = isSandSampling;
-    }
-
-    public int getItemID() {
-        return ItemID;
-    }
-
-    public void setItemID(int itemID) {
-        ItemID = itemID;
-    }
-
-    public String getSubcontractorAccount() {
-        return SubcontractorAccount;
-    }
-
-    public void setSubcontractorAccount(String subcontractorAccount) {
-        SubcontractorAccount = subcontractorAccount;
-    }
-
-    public String getSubcontractorName() {
-        return SubcontractorName;
-    }
-
-    public void setSubcontractorName(String subcontractorName) {
-        SubcontractorName = subcontractorName;
-    }
-
-    public String getPlanDay() {
-        return PlanDay;
-    }
-
-    public void setPlanDay(String planDay) {
-        PlanDay = planDay;
-    }
-
-    public String getShipAccount() {
-        return ShipAccount;
-    }
-
-    public void setShipAccount(String shipAccount) {
-        ShipAccount = shipAccount;
-    }
-
-    public String getShipName() {
-        return ShipName;
-    }
-
-    public void setShipName(String shipName) {
-        ShipName = shipName;
-    }
-
-    public String getShipType() {
-        return ShipType;
-    }
-
-    public void setShipType(String shipType) {
-        ShipType = shipType;
-    }
-
-    public String getSandSupplyCount() {
-        return SandSupplyCount;
-    }
-
-    public void setSandSupplyCount(String sandSupplyCount) {
-        SandSupplyCount = sandSupplyCount;
-    }
-
-    public String getCapacity() {
-        return Capacity;
-    }
-
-    public void setCapacity(String capacity) {
-        Capacity = capacity;
-    }
-
-    public String getDeckGauge() {
-        return DeckGauge;
-    }
-
-    public void setDeckGauge(String deckGauge) {
-        DeckGauge = deckGauge;
-    }
-
-    public String getReceptionSandTime() {
-        return ReceptionSandTime;
-    }
-
-    public void setReceptionSandTime(String receptionSandTime) {
-        ReceptionSandTime = receptionSandTime;
-    }
-
-    public String getPreAcceptanceTime() {
-        return PreAcceptanceTime;
-    }
-
-    public void setPreAcceptanceTime(String preAcceptanceTime) {
-        PreAcceptanceTime = preAcceptanceTime;
-    }
-
-    public String getShipItemNum() {
-        return ShipItemNum;
-    }
-
-    public void setShipItemNum(String shipItemNum) {
-        ShipItemNum = shipItemNum;
-    }
+    private int IsExit;
+    private String ExitTime;
+    private int SandSamplingID;
+    private int IsSandSampling;
 
     public String getPosition() {
         return position;
@@ -162,11 +53,123 @@ public class SandSample extends DataSupport{
         this.position = position;
     }
 
+    public int getItemID() {
+        return ItemID;
+    }
+
+    public void setItemID(int ItemID) {
+        this.ItemID = ItemID;
+    }
+
+    public String getSubcontractorAccount() {
+        return SubcontractorAccount;
+    }
+
+    public void setSubcontractorAccount(String SubcontractorAccount) {
+        this.SubcontractorAccount = SubcontractorAccount;
+    }
+
+    public String getSubcontractorName() {
+        return SubcontractorName;
+    }
+
+    public void setSubcontractorName(String SubcontractorName) {
+        this.SubcontractorName = SubcontractorName;
+    }
+
+    public String getPlanDay() {
+        return PlanDay;
+    }
+
+    public void setPlanDay(String PlanDay) {
+        this.PlanDay = PlanDay;
+    }
+
+    public String getShipAccount() {
+        return ShipAccount;
+    }
+
+    public void setShipAccount(String ShipAccount) {
+        this.ShipAccount = ShipAccount;
+    }
+
+    public String getShipName() {
+        return ShipName;
+    }
+
+    public void setShipName(String ShipName) {
+        this.ShipName = ShipName;
+    }
+
+    public String getShipType() {
+        return ShipType;
+    }
+
+    public void setShipType(String ShipType) {
+        this.ShipType = ShipType;
+    }
+
+    public String getSandSupplyCount() {
+        return SandSupplyCount;
+    }
+
+    public void setSandSupplyCount(String SandSupplyCount) {
+        this.SandSupplyCount = SandSupplyCount;
+    }
+
+    public String getReceptionSandTime() {
+        return ReceptionSandTime;
+    }
+
+    public void setReceptionSandTime(String ReceptionSandTime) {
+        this.ReceptionSandTime = ReceptionSandTime;
+    }
+
+    public String getPreAcceptanceTime() {
+        return PreAcceptanceTime;
+    }
+
+    public void setPreAcceptanceTime(String PreAcceptanceTime) {
+        this.PreAcceptanceTime = PreAcceptanceTime;
+    }
+
+    public String getShipItemNum() {
+        return ShipItemNum;
+    }
+
+    public void setShipItemNum(String ShipItemNum) {
+        this.ShipItemNum = ShipItemNum;
+    }
+
+    public int getIsExit() {
+        return IsExit;
+    }
+
+    public void setIsExit(int IsExit) {
+        this.IsExit = IsExit;
+    }
+
+    public String getExitTime() {
+        return ExitTime;
+    }
+
+    public void setExitTime(String ExitTime) {
+        this.ExitTime = ExitTime;
+    }
+
     public int getSandSamplingID() {
         return SandSamplingID;
     }
 
-    public void setSandSamplingID(int sandSamplingID) {
-        SandSamplingID = sandSamplingID;
+    public void setSandSamplingID(int SandSamplingID) {
+        this.SandSamplingID = SandSamplingID;
+    }
+
+    public int getIsSandSampling() {
+        return IsSandSampling;
+    }
+
+    public void setIsSandSampling(int IsSandSampling) {
+        this.IsSandSampling = IsSandSampling;
     }
 }

@@ -117,10 +117,10 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
                 if (TextUtils.isEmpty(phone)) {
                     Toast.makeText(getContext(), "此联系人还未添加手机号码", Toast.LENGTH_SHORT).show();
                 } else if (PatternUtil.patternPhone(phone)) {
-                    Toast.makeText(getContext(), "此号码不是手机号码", Toast.LENGTH_SHORT).show();
-                } else {
                     Intent phoneIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
                     startActivity(phoneIntent);
+                } else {
+                    Toast.makeText(getContext(), "此号码不是手机号码", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -133,10 +133,10 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
                 if (TextUtils.isEmpty(tell)) {
                     Toast.makeText(getContext(), "此联系人还未添加电话号码", Toast.LENGTH_SHORT).show();
                 } else if (PatternUtil.patternTell(tell)) {
-                    Toast.makeText(getContext(), "此号码不是电话号码", Toast.LENGTH_SHORT).show();
-                } else {
                     Intent phoneIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + tell));
                     startActivity(phoneIntent);
+                } else {
+                    Toast.makeText(getContext(), "此号码不是电话号码", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -149,9 +149,6 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getContext(), "此联系人还未添加邮箱", Toast.LENGTH_SHORT).show();
                 } else if (PatternUtil.patternEmail(email)) {
-                    Toast.makeText(getContext(), "此邮箱格式不对", Toast.LENGTH_SHORT).show();
-                } else {
-
                     try {
                         Uri uri = Uri.parse("mailto:" + email);
                         Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
@@ -160,7 +157,8 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
                         Toast.makeText(getContext(), "手机没有发送邮件的APP, 请到应用市场下载", Toast.LENGTH_SHORT).show();
                         Log.e("==", ex.toString());
                     }
-
+                } else {
+                    Toast.makeText(getContext(), "此邮箱格式不对", Toast.LENGTH_SHORT).show();
                 }
             }
         });

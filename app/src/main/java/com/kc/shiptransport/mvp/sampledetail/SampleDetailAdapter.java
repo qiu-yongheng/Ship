@@ -84,7 +84,11 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 if (TextUtils.isEmpty(str) || str.equals("请填写")) {
                     Toast.makeText(context, "请先填写取样编号", Toast.LENGTH_SHORT).show();
                 } else {
-                    listener.onItemClick(((NormalHolder) holder).mBtnImage1, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_1);
+                    if (listener != null) {
+                        listener.onItemClick(((NormalHolder) holder).mBtnImage1, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_1);
+                    } else {
+                        Toast.makeText(context, "已进行退场申请, 不能修改数据", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -99,7 +103,11 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 if (TextUtils.isEmpty(str) || str.equals("请填写")) {
                     Toast.makeText(context, "请先填写取样编号", Toast.LENGTH_SHORT).show();
                 } else {
-                    listener.onItemClick(((NormalHolder) holder).mBtnImage2, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_2);
+                    if (listener != null) {
+                        listener.onItemClick(((NormalHolder) holder).mBtnImage2, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_2);
+                    } else {
+                        Toast.makeText(context, "已进行退场申请, 不能修改数据", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -108,7 +116,11 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ((NormalHolder) holder).mRlConsShip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onItemClick(((NormalHolder) holder).mTvsamplenum, holder.getLayoutPosition(), SettingUtil.HOLDER_CONS_SHIP);
+                if (listener != null) {
+                    listener.onItemClick(((NormalHolder) holder).mTvsamplenum, holder.getLayoutPosition(), SettingUtil.HOLDER_CONS_SHIP);
+                } else {
+                    Toast.makeText(context, "已进行退场申请, 不能修改数据", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -116,7 +128,11 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
+                if (listener != null) {
+                    listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
+                } else {
+                    Toast.makeText(context, "已进行退场申请, 不能修改数据", Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }
         });

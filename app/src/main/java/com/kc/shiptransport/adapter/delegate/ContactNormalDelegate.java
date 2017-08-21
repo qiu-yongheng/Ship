@@ -1,8 +1,10 @@
 package com.kc.shiptransport.adapter.delegate;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 
+import com.github.promeg.pinyinhelper.Pinyin;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.mvp.contactsdetail.ContactDetailActivity;
@@ -31,16 +33,34 @@ public class ContactNormalDelegate implements ItemViewDelegate<Contacts> {
 
     @Override
     public boolean isForViewType(Contacts item, List<Contacts> dates, int position) {
-        boolean b = position != 0 && (dates.get(position).getDisplayName().charAt(0) == dates.get(position - 1).getDisplayName().charAt(0));
+        boolean b1 = position != 0;
+
+        if (!b1) {
+            return false;
+        }
+
+        boolean empty1 = TextUtils.isEmpty(dates.get(position).getDisplayName());
+        boolean empty2 = TextUtils.isEmpty(dates.get(position - 1).getDisplayName());
+
+        boolean b2 = empty1 == empty2;
+
+        boolean b3 = false;
+        if (empty1 && empty2) {
+            b3 = true;
+        } else if (!empty1 && !empty2) {
+            b3 = Pinyin.toPinyin(dates.get(position).getDisplayName().charAt(0)).charAt(0) == Pinyin.toPinyin(dates.get(position - 1).getDisplayName().charAt(0)).charAt(0);
+        }
+
+        boolean b = b1 && (b2 || b3);
         return b;
     }
 
     @Override
     public void convert(ViewHolder holder, final Contacts contacts, int position) {
-        holder.setText(R.id.textViewAvatar, contacts.getDisplayName().substring(0, 1).toUpperCase())
-                .setText(R.id.text_view_name, contacts.getDisplayName())
-                .setText(R.id.text_view_office, contacts.getDepartment())
-                .setText(R.id.text_view_phone, contacts.getMobile())
+        holder.setText(R.id.textViewAvatar, TextUtils.isEmpty(contacts.getDisplayName()) ? "" : contacts.getDisplayName().substring(0, 1).toUpperCase())
+                .setText(R.id.text_view_name, TextUtils.isEmpty(contacts.getDisplayName()) ? "" : contacts.getDisplayName())
+                .setText(R.id.text_view_office, TextUtils.isEmpty(contacts.getDepartment()) ? "" : contacts.getDepartment())
+                .setText(R.id.text_view_phone, TextUtils.isEmpty(contacts.getMobile()) ? "" : contacts.getMobile())
                 .setOnClickListener(R.id.ll, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

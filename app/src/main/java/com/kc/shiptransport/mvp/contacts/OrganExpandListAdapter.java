@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.contacts;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,10 +116,10 @@ public class OrganExpandListAdapter extends BaseExpandableListAdapter{
         }else{
             itemHolder = (ViewHolderItem) convertView.getTag();
         }
-        itemHolder.textViewAvatar.setText(iData.get(groupPosition).get(childPosition).getDisplayName().substring(0, 1).toUpperCase());
-        itemHolder.text_name.setText(iData.get(groupPosition).get(childPosition).getDisplayName());
-        itemHolder.text_office.setText(iData.get(groupPosition).get(childPosition).getDepartment());
-        itemHolder.text_phone.setText(iData.get(groupPosition).get(childPosition).getMobile());
+        itemHolder.textViewAvatar.setText(TextUtils.isEmpty(iData.get(groupPosition).get(childPosition).getDisplayName()) ? "" : iData.get(groupPosition).get(childPosition).getDisplayName().substring(0, 1).toUpperCase());
+        itemHolder.text_name.setText(TextUtils.isEmpty(iData.get(groupPosition).get(childPosition).getDisplayName()) ? "" : iData.get(groupPosition).get(childPosition).getDisplayName());
+        itemHolder.text_office.setText(TextUtils.isEmpty(iData.get(groupPosition).get(childPosition).getDepartment()) ? "" : iData.get(groupPosition).get(childPosition).getDepartment());
+        itemHolder.text_phone.setText(TextUtils.isEmpty(iData.get(groupPosition).get(childPosition).getMobile()) ? "" : iData.get(groupPosition).get(childPosition).getMobile());
         return convertView;
     }
 

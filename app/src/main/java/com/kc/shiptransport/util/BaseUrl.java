@@ -14,5 +14,5 @@ public class BaseUrl {
     /**
      * 测试服
      */
-    //    public static final String EndPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
+//        public static final String EndPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
 }

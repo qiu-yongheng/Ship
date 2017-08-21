@@ -207,9 +207,10 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     public void showItemID(SandSample sandSample) {
         this.itemID = sandSample.getItemID();
         this.sandSample = sandSample;
+        isExit = sandSample.getIsExit();
 
         // 获取要显示的数据
-        presenter.getDates(activity.position, sandSample.getIsSandSampling() == 1);
+        presenter.getDates(activity.position, sandSample.getIsSandSampling() == 1, sandSample.getIsExit() == 1);
     }
 
     /**
@@ -311,7 +312,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     @Override
     public void showDetailList(SampleShowDatesBean bean) {
         /** 判断是否退场, 如果已退场, 不能修改提交数据 */
-        isExit = bean.getIsExit();
+//        isExit = bean.getIsExit();
         if (isExit == 1) {
             Toast.makeText(getContext(), "已进行退场申请, 不能修改验砂取样记录", Toast.LENGTH_SHORT).show();
             btnAdd.setVisibility(View.GONE);
@@ -356,7 +357,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
             mAdapter = new SampleDetailAdapter(getContext(), bean);
             /** 如果已退场, 不处理点击事件 */
             if (isExit == 1) {
-                Toast.makeText(getContext(), "已退场, 不能修改数据", Toast.LENGTH_SHORT).show();
+
             } else {
 
 

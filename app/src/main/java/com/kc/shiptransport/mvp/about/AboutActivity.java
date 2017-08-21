@@ -36,6 +36,8 @@ public class AboutActivity extends BaseActivity {
     TextView tvVersion;
     @BindView(R.id.rl_update)
     RelativeLayout rlUpdate;
+    @BindView(R.id.tv_version_code)
+    TextView tvVersionCode;
     private AboutPresenter presenter;
 
     private DownloadService.DownloadBinder downloadBinder;
@@ -79,8 +81,10 @@ public class AboutActivity extends BaseActivity {
         getSupportActionBar().setTitle("关于综合生产调度管理系统");
 
         String versionName = AppInfoUtils.getVersionName(this);
+        int versionCode = AppInfoUtils.getVersionCode(this);
 
         tvVersion.setText("v " + versionName);
+        tvVersionCode.setText(String.valueOf(versionCode));
     }
 
     private void initListener() {

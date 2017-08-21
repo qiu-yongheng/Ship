@@ -1,5 +1,7 @@
 package com.kc.shiptransport.util;
 
+import android.util.Log;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,10 +12,9 @@ import java.util.regex.Pattern;
  */
 
 public class PatternUtil {
-    public static final String PATTERN_PHONE = "(13\\d|14[57]|15[^4,\\D]|17[13678]|18\\d)\\d{8}|170[0589]\\d{7}";
-    public static final String PATTERN_EMAIL = "#^[a-z_0-9.-]{1,64}@([a-z0-9-]{1,200}.){1,5}[a-z]{1,6}$#i";
-    public static final String PATTERN_TELL = "^[0][1-9]{2,3}-[0-9]{5,10}$";
-    public static final String PATTERN_TELL_NO_NUM = "^[1-9]{1}[0-9]{5,8}$";
+    private static final String PATTERN_PHONE = "(13\\d|14[57]|15[^4,\\D]|17[13678]|18\\d)\\d{8}|170[0589]\\d{7}";
+    private static final String PATTERN_EMAIL = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}";
+    private static final String PATTERN_TELL = "(\\(\\d{3,4}\\)|\\d{3,4}-|\\s)?\\d{7,14}";
 
     /**
      * 正则
@@ -22,10 +23,13 @@ public class PatternUtil {
      * @param data
      * @return
      */
-    public static boolean pattern(String pattern, String data) {
+    private static boolean pattern(String pattern, String data) {
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(data);
-        return m.matches();
+        boolean matches = m.matches();
+
+        Log.d("==", "正则结果: " + matches);
+        return matches;
     }
 
     /**
@@ -45,11 +49,7 @@ public class PatternUtil {
      * @return
      */
     public static boolean patternTell(String tell) {
-        if (tell.length() > 9) {
-            // 有区号
             return pattern(PATTERN_TELL, tell);
-        }
-        return pattern(PATTERN_TELL_NO_NUM, tell);
     }
 
     public static boolean patternEmail(String email) {

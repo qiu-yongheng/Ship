@@ -145,7 +145,7 @@
     <string name="text_man">男</string>
     <string name="text_woman">女</string>
     <string name="text_about">软件版本</string>
-    <string name="text_current_version">当前版本</string>
+    <string name="text_current_version">当前版本名称</string>
     <string name="text_check_update">检查更新</string>
     <string name="btn_add_recorded">添加过砂记录</string>
     <string name="title_recorded_sand_detail_list">过砂记录</string>
@@ -159,6 +159,7 @@
     <string name="title_evaluation">预验收评价</string>
     <string name="title_rank">分包商排行</string>
     <string name="title_contact">通讯录</string>
+    <string name="text_current_version_code">当前版本号</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
