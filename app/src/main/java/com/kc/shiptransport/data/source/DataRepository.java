@@ -73,6 +73,7 @@ import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.FileUtil;
+import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -1479,7 +1480,7 @@ public class DataRepository implements DataSouceImpl {
 
                 String json = jsonArray.toString();
 
-                Log.d("==", "信息完善请求json: " + json);
+                LogUtil.d("信息完善请求json: " + json);
 
 
                 // 发送网络请求
@@ -2779,6 +2780,8 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(@NonNull ObservableEmitter<VoyageDetailBean> e) throws Exception {
                 String result = mRemoteDataSource.GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                LogUtil.d(SubcontractorInterimApproachPlanID + "信息完善: " + result);
 
                 List<VoyageDetailBean> list = gson.fromJson(result, new TypeToken<List<VoyageDetailBean>>() {
                 }.getType());

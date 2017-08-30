@@ -3,6 +3,9 @@ package com.kc.shiptransport.app;
 import android.app.Application;
 import android.content.Context;
 
+import com.elvishew.xlog.LogConfiguration;
+import com.elvishew.xlog.LogLevel;
+import com.elvishew.xlog.XLog;
 import com.umeng.analytics.MobclickAgent;
 
 import org.litepal.LitePalApplication;
@@ -28,10 +31,13 @@ public class App extends Application{
         // 错误统计 (默认开启)
         MobclickAgent.setCatchUncaughtExceptions(true);
 
-        context = getApplicationContext();
-    }
-
-    public static Context getAppContext() {
-        return context;
+        // 初始化XLog
+        LogConfiguration config = new LogConfiguration.Builder()
+                .tag("SHIP_TAG") // TAG
+                .t() // 运行打印线程信息
+                .b() // 允许答应日志边框
+                .st(3) // 允许打印深度为3的调用栈信息
+                .build();
+        XLog.init(LogLevel.ALL, config);
     }
 }

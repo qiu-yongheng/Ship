@@ -8,8 +8,8 @@ import android.view.View;
  * @desc ${TODD}
  */
 
-public interface OnRecyclerviewItemClickListener {
+public interface OnRecyclerviewItemClickListener<T> {
     void onItemClick(View view, int position, int... type);
-    void onItemLongClick(View view , int position);
+    void onItemLongClick(View view, int position);
 
 }

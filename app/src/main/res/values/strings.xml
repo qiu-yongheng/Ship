@@ -160,6 +160,7 @@
     <string name="title_rank">分包商排行</string>
     <string name="title_contact">通讯录</string>
     <string name="text_current_version_code">当前版本号</string>
+    <string name="btn_save">保存</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

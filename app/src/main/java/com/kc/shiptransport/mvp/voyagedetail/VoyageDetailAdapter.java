@@ -46,13 +46,14 @@ public class VoyageDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         // 获取数据
         VoyageDetailBean.ColumnsBean columnsBean = list.get(position);
+
         // 获取类型, 根据类型处理不同的点击事件
         final String type = columnsBean.getControlType();
 
         // 显示标签名
         ((NormalHolder) holder).mTvTag.setText(columnsBean.getLabel());
 
-
+        // 读在线数据
         if (type.equals("select")) {
             String value = TextUtils.isEmpty(columnsBean.getValue()) ? "" : columnsBean.getValue();
             String[] split = value.split(";");
@@ -65,7 +66,6 @@ public class VoyageDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             // 显示字段参数
             ((NormalHolder) holder).mTvValue.setText(TextUtils.isEmpty(columnsBean.getValue()) ? "" : columnsBean.getValue());
         }
-
 
         // 设置点击事件
         ((NormalHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {

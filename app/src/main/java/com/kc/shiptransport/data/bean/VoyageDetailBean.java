@@ -1,5 +1,7 @@
 package com.kc.shiptransport.data.bean;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.List;
 
 /**
@@ -8,7 +10,7 @@ import java.util.List;
  * @desc 信息完善详情
  */
 
-public class VoyageDetailBean {
+public class VoyageDetailBean extends DataSupport{
     /**
      * ItemID : 3561
      * ShipAccount : bsj618
@@ -35,7 +37,8 @@ public class VoyageDetailBean {
     private String StoreName;
     private String WashStoreAddress;
     private String PerfectBoatItemCount;
-    private String IsPerfect;
+    private String IsPerfect; // 1代表已完善，0代表未完善
+    private String IsSumbitted; // 1代表已提交，0代表保存
     private List<ColumnsBean> Columns;
 
 
@@ -133,6 +136,14 @@ public class VoyageDetailBean {
 
     public void setIsPerfect(String IsPerfect) {
         this.IsPerfect = IsPerfect;
+    }
+
+    public String getIsSumbitted() {
+        return IsSumbitted;
+    }
+
+    public void setIsSumbitted(String isSumbitted) {
+        IsSumbitted = isSumbitted;
     }
 
     public List<ColumnsBean> getColumns() {

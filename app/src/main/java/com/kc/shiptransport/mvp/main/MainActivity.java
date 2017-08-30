@@ -66,7 +66,7 @@ public class MainActivity extends BaseActivity {
             mainFragment = new MainFragment();
         }
 
-        if (!mainFragment.isAdded()) {
+        if (mainFragment != null && !mainFragment.isAdded()) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_repository, mainFragment)

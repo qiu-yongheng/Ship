@@ -12,15 +12,32 @@
         android:layout_marginBottom="45dp"
         android:layout_marginTop="?actionBarSize"/>
 
-    <Button
-        android:id="@+id/btn_commit"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_height"
+
+    <LinearLayout
+        android:id="@+id/ll_btn"
         android:layout_alignParentBottom="true"
-        android:background="@color/btn_bg_blue"
-        android:text="@string/btn_commit"
-        android:textColor="@color/text_white"
-        android:textSize="@dimen/text_18sp"/>
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height">
+
+        <Button
+            android:background="@color/red"
+            android:id="@+id/btn_save"
+            style="@style/text_title_w"
+            android:text="@string/btn_save"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:background="@color/blue"
+            android:id="@+id/btn_commit"
+            style="@style/text_title_w"
+            android:text="@string/btn_commit"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_return"
