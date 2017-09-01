@@ -19,8 +19,10 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -126,8 +128,17 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
     @Override
     public void getWeekTask(final int jumpWeek) {
         dataRepository
-                .getWeekTask()
+                .getWeekTask(jumpWeek)
                 .subscribeOn(Schedulers.io())
+                .map(new Function<List<WeekTask>, List<WeekTask>>() {
+                    @Override
+                    public List<WeekTask> apply(@NonNull List<WeekTask> weekTasks) throws Exception {
+                        /** 删除不能进行预验砂的任务 */
+                        DataSupport.deleteAll(WeekTask.class, "IsAllowPreAcceptanceEvaluation = 0");
+                        dataRepository.dataSort(jumpWeek);
+                        return DataSupport.findAll(WeekTask.class);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<WeekTask>>() {
                     @Override
@@ -232,14 +243,14 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
         doRefresh(jumpWeek, subcontractorAccount);
 
         // 3. 验收人
-//        getAcceptanceManName();
+        //        getAcceptanceManName();
 
-        // 4. 获取所有分包商
-//        getSubcontractor();
+        // 4. 获取所有供应商
+        //        getSubcontractor();
     }
 
     /**
-     * 获取所有分包商
+     * 获取所有供应商
      */
     @Override
     public void getSubcontractor() {
@@ -248,7 +259,7 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
             @Override
             public void subscribe(ObservableEmitter<List<SubcontractorList>> e) throws Exception {
                 dataRepository.getSubcontractorInfo("");
-                // 从数据库获取分包商
+                // 从数据库获取供应商
                 List<SubcontractorList> subcontractorList = DataSupport.findAll(SubcontractorList.class);
 
                 e.onNext(subcontractorList);

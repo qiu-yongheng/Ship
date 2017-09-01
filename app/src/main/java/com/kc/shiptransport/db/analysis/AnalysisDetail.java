@@ -15,7 +15,7 @@ public class AnalysisDetail extends DataSupport{
     /**
      * ItemID : 4564
      * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试分包商
+     * SubcontractorName : 测试供应商
      * PlanDay : 2017-07-30
      * ShipAccount : tl8988
      * ShipName : 天力8988

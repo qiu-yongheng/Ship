@@ -193,7 +193,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     public void initViews(View view) {
         SharePreferenceUtil.saveInt(getContext(), SettingUtil.WEEK_JUMP_ACCEPTANCE, 0);
 
-        // 还原当前选中的分包商账号
+        // 还原当前选中的供应商账号
         SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, "");
 
         setHasOptionsMenu(true);
@@ -351,7 +351,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     @Override
     public void showSpinner(final List<SubcontractorList> value) {
         List<String> datas = new ArrayList<>();
-        datas.add("所有分包商");
+        datas.add("所有供应商");
         for (SubcontractorList subcontractor : value) {
             datas.add(subcontractor.getSubcontractorName());
         }
@@ -365,7 +365,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         // 根据上一个界面传过来的position设置当前显示的item
         spinnerSelectSubcontractor.setSelection(0);
 
-        // 点击后, 筛选分包商的数据
+        // 点击后, 筛选供应商的数据
         spinnerSelectSubcontractor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -380,7 +380,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
                     subcontractorAccount = "";
                     presenter.doRefresh(jumpWeek, subcontractorAccount);
                 }
-                // 保存当前选中的分包商账号
+                // 保存当前选中的供应商账号
                 SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, subcontractorAccount);
             }
 

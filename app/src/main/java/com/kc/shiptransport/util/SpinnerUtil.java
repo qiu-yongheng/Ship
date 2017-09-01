@@ -31,7 +31,7 @@ public class SpinnerUtil {
             spinner.setSelection(position);
         }
 
-        // 点击后, 筛选分包商的数据
+        // 点击后, 筛选供应商的数据
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override

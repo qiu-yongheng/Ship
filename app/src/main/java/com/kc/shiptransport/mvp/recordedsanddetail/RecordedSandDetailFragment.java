@@ -391,7 +391,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         // 根据上一个界面传过来的position设置当前显示的item
         //        mSpMaterialOrdar.setSelection(0);
 
-        // 点击后, 筛选分包商的数据
+        // 点击后, 筛选供应商的数据
         spReceiveShip.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override

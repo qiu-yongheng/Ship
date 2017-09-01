@@ -13,7 +13,7 @@ public class ExitList extends DataSupport{
     /**
      * ItemID : 3561
      * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试分包商
+     * SubcontractorName : 测试供应商
      * PlanDay : 2017-07-05
      * ShipAccount : bsj618
      * ShipName : 博石机618

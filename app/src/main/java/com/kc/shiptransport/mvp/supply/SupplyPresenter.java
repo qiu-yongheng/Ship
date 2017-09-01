@@ -137,7 +137,7 @@ public class SupplyPresenter implements SupplyContract.Presenter {
     @Override
     public void getWeekTask(final int jumpWeek) {
         dataRepository
-                .getWeekTask()
+                .getWeekTask(jumpWeek)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<WeekTask>>() {
@@ -256,7 +256,7 @@ public class SupplyPresenter implements SupplyContract.Presenter {
     }
 
     /**
-     * 获取所有分包商
+     * 获取所有供应商
      */
     @Override
     public void getSubcontractor() {
@@ -264,7 +264,7 @@ public class SupplyPresenter implements SupplyContract.Presenter {
             @Override
             public void subscribe(ObservableEmitter<List<SubcontractorList>> e) throws Exception {
                 dataRepository.getSubcontractorInfo("");
-                // 从数据库获取分包商
+                // 从数据库获取供应商
                 List<SubcontractorList> subcontractorList = DataSupport.findAll(SubcontractorList.class);
 
                 e.onNext(subcontractorList);

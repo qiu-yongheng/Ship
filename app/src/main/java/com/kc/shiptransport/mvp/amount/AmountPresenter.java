@@ -76,7 +76,7 @@ public class AmountPresenter implements AmountContract.Presenter{
 
                     @Override
                     public void onError(Throwable e) {
-                        view.showError("分包商信息获取失败");
+                        view.showError("供应商信息获取失败");
                     }
 
                     @Override
@@ -243,7 +243,7 @@ public class AmountPresenter implements AmountContract.Presenter{
             @Override
             public void subscribe(ObservableEmitter<List<SubcontractorList>> e) throws Exception {
                 dataRepository.getSubcontractorInfo("");
-                // 从数据库获取分包商
+                // 从数据库获取供应商
                 List<SubcontractorList> subcontractorList = DataSupport.findAll(SubcontractorList.class);
 
                 e.onNext(subcontractorList);

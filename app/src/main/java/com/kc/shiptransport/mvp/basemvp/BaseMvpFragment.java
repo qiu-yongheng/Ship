@@ -363,7 +363,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
     public void showSpinner(final List<SubcontractorList> value) {
         mTitleSpinner.setVisibility(View.VISIBLE);
         List<String> datas = new ArrayList<>();
-        datas.add("所有分包商");
+        datas.add("所有供应商");
         for (SubcontractorList subcontractor : value) {
             datas.add(subcontractor.getSubcontractorName());
         }
@@ -377,7 +377,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
         // 根据上一个界面传过来的position设置当前显示的item
         mTitleSpinner.setSelection(0);
 
-        // 点击后, 筛选分包商的数据
+        // 点击后, 筛选供应商的数据
         mTitleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 
@@ -395,7 +395,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
                     subcontractorAccount = "";
                     presenter.doRefresh(jumpWeek, TYPE, subcontractorAccount);
                 }
-                // 保存当前选中的分包商账号
+                // 保存当前选中的供应商账号
                 SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, subcontractorAccount);
             }
 

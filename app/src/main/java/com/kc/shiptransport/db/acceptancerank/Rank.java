@@ -5,14 +5,14 @@ import org.litepal.crud.DataSupport;
 /**
  * @author 邱永恒
  * @time 2017/8/10  10:48
- * @desc 分包商评分排行
+ * @desc 供应商评分排行
  */
 
 public class Rank extends DataSupport{
 
     /**
      * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试分包商
+     * SubcontractorName : 测试供应商
      * TotalMaterialIntegrity : 20
      * TotalMaterialTimeliness : 28
      * TotalScore : 48

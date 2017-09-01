@@ -13,22 +13,27 @@ import java.util.List;
 public class AmountDetail extends DataSupport{
 
     /**
-     * ItemID : 415
+     * ItemID : 3012
      * ShipAccount : yhzh3393
      * ShipName : 粤惠州货3393
      * SubcontractorAccount : xgyj
      * SubcontractorName : 香港怡景
-     * ShipItemNum : 2017060801
+     * ShipItemNum : 2017083101
      * TheAmountOfTime : 2017-07-01 00:00:00
      * Capacity : 1400
      * DeckGauge : 1600
      * Deduction : 100
      * Creator : yflf
-     * SystemDate : 2017-07-03 15:48:23
-     * TotalCompleteRide : 2
-     * TotalCompleteSquare : 3200
-     * AvgSquare : 1600
-     * TheAmountOfSideAttachmentList : [{"ItemID":"","FileName":"","FilePath":""}]
+     * SystemDate : 2017-08-31 13:47:50
+     * TotalCompleteRide : 0
+     * TotalCompleteSquare : 0
+     * AvgSquare : 0
+     * LaserQuantitySand : 10
+     * TheAmountOfType : 人工量砂
+     * TheAmountOfPersonnelAccount : liangfangrenyuan1
+     * TheAmountOfPersonnelName : 量方人员1
+     * Remark : test
+     * TheAmountOfSideAttachmentList : [{"ItemID":1030,"FileName":"IMG_20170724164913.jpeg","FilePath":"https://cchk3.kingwi.org/Files/20170728/4399f25f-1e5d-4876-affe-49517fb9c5c7.jpeg"},{"ItemID":28,"FileName":"Screenshot_2017-07-13-15-15-36-374_com.kc.shiptransport.clothes.png","FilePath":"https://cchk3.kingwi.org/Files/20170720/283da871-9552-4a53-b846-2daeb134d77c.png"}]
      */
 
     private int ItemID;
@@ -46,7 +51,21 @@ public class AmountDetail extends DataSupport{
     private String TotalCompleteRide;
     private String TotalCompleteSquare;
     private String AvgSquare;
+    private String LaserQuantitySand;
+    private String TheAmountOfType;
+    private String TheAmountOfPersonnelAccount;
+    private String TheAmountOfPersonnelName;
+    private String Remark;
+    private int IsSumbitted;
     private List<TheAmountOfSideAttachmentListBean> TheAmountOfSideAttachmentList;
+
+    public int getIsSumbitted() {
+        return IsSumbitted;
+    }
+
+    public void setIsSumbitted(int isSumbitted) {
+        IsSumbitted = isSumbitted;
+    }
 
     public int getItemID() {
         return ItemID;
@@ -168,6 +187,46 @@ public class AmountDetail extends DataSupport{
         this.AvgSquare = AvgSquare;
     }
 
+    public String getLaserQuantitySand() {
+        return LaserQuantitySand;
+    }
+
+    public void setLaserQuantitySand(String LaserQuantitySand) {
+        this.LaserQuantitySand = LaserQuantitySand;
+    }
+
+    public String getTheAmountOfType() {
+        return TheAmountOfType;
+    }
+
+    public void setTheAmountOfType(String TheAmountOfType) {
+        this.TheAmountOfType = TheAmountOfType;
+    }
+
+    public String getTheAmountOfPersonnelAccount() {
+        return TheAmountOfPersonnelAccount;
+    }
+
+    public void setTheAmountOfPersonnelAccount(String TheAmountOfPersonnelAccount) {
+        this.TheAmountOfPersonnelAccount = TheAmountOfPersonnelAccount;
+    }
+
+    public String getTheAmountOfPersonnelName() {
+        return TheAmountOfPersonnelName;
+    }
+
+    public void setTheAmountOfPersonnelName(String TheAmountOfPersonnelName) {
+        this.TheAmountOfPersonnelName = TheAmountOfPersonnelName;
+    }
+
+    public String getRemark() {
+        return Remark;
+    }
+
+    public void setRemark(String Remark) {
+        this.Remark = Remark;
+    }
+
     public List<TheAmountOfSideAttachmentListBean> getTheAmountOfSideAttachmentList() {
         return TheAmountOfSideAttachmentList;
     }
@@ -178,9 +237,9 @@ public class AmountDetail extends DataSupport{
 
     public static class TheAmountOfSideAttachmentListBean {
         /**
-         * ItemID :
-         * FileName :
-         * FilePath :
+         * ItemID : 1030
+         * FileName : IMG_20170724164913.jpeg
+         * FilePath : https://cchk3.kingwi.org/Files/20170728/4399f25f-1e5d-4876-affe-49517fb9c5c7.jpeg
          */
 
         private int ItemID;

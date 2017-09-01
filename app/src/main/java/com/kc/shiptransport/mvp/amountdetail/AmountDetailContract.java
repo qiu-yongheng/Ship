@@ -55,13 +55,17 @@ public interface AmountDetailContract {
 
         void commit(int itemID,
                     String TheAmountOfTime,
-                    String subcontractorAccount,
-                    int SubcontractorInterimApproachPlanID,
+                    String subcontractorAccount, int SubcontractorInterimApproachPlanID,
                     String ShipAccount,
                     String Capacity,
                     String DeckGauge,
                     String Deduction,
-                    String Creator);
+                    String Creator,
+                    float LaserQuantitySand,
+                    int TheAmountOfPersonnelID,
+                    String TheAmountOfType,
+                    int IsSumbitted,
+                    String Remark);
 
         void start(int itemID);
 

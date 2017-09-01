@@ -116,6 +116,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                             // 显示图片
                             ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
                         } else {
+
                             if (activity.isFinshReceptionSandAttachment == 0) {
                                 activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
                                     @Override
@@ -153,7 +154,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                                 Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
                             }
                         } else if (activity.isFinshReceptionSandAttachment == 1) {
-                            Toast.makeText(getContext(), "验砂, 不能添加图片", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "已提交, 不能添加图片", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

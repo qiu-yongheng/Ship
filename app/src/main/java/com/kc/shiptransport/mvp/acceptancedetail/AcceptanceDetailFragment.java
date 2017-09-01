@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -77,6 +79,12 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     TextView tvInfo;
     @BindView(R.id.tv_scan)
     TextView tvScan;
+    @BindView(R.id.ll_link)
+    LinearLayout llLink;
+    @BindView(R.id.tv_acceptance_opinion)
+    EditText tvAcceptanceOpinion;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     private AcceptanceDetailContract.Presenter presenter;
     private AcceptanceDetailActivity activity;
     private int rbcomplete = 0;
@@ -97,7 +105,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     }
 
     public void initListener() {
-        /* 取消 */
+        /* 不通过 */
         btnAcceptanceCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +113,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
             }
         });
 
-        /* 提交 */
+        /* 通过 */
         btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -252,6 +260,9 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         // 回显评价
         rbComplete.setRating(materialIntegrity == null ? 0 : materialIntegrity);
         rbTimely.setRating(materialTimeliness == null ? 0 : materialTimeliness);
+
+
+        /** TODO 显示图片 */
 
     }
 

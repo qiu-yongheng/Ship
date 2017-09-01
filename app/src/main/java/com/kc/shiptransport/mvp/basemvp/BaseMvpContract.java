@@ -51,7 +51,7 @@ public interface BaseMvpContract {
         void doRefresh(int jumpWeek, int type, String account);
         // 获取数据
         void start(int jumpWeek, int type, String account);
-        // 获取所有分包商
+        // 获取所有供应商
         void getSubcontractorList();
     }
 }

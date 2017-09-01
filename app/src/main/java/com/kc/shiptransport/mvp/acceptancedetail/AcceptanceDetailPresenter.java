@@ -101,13 +101,13 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                        String time, final int itemID, final int rbcomplete, final int rbtimely, final String shipnum, Acceptance value) {
         view.showLoading(true);
         dataRepository
-                .InsertPreAcceptanceEvaluation(itemID, rbcomplete, rbtimely, time, shipnum, SubcontractorInterimApproachPlanID, value)
+                .InsertPreAcceptanceEvaluation(itemID, rbcomplete, rbtimely, time, SubcontractorInterimApproachPlanID, value)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<Integer, Observable<Boolean>>() { // 同步
                     @Override
                     public Observable<Boolean> apply(Integer integer) throws Exception {
-                        // 更新当前选中的分包商计划
+                        // 更新当前选中的供应商计划
                         if (integer == success) {
                             return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN),
                                     SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));

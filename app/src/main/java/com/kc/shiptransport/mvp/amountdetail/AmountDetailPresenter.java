@@ -136,16 +136,33 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
     @Override
     public void commit(final int itemID,
                        final String TheAmountOfTime,
-                       final String subcontractorAccount,
-                       final int SubcontractorInterimApproachPlanID,
+                       final String subcontractorAccount, final int SubcontractorInterimApproachPlanID,
                        final String ShipAccount,
                        final String Capacity,
                        final String DeckGauge,
                        final String Deduction,
-                       final String Creator) {
+                       final String Creator,
+                       final float LaserQuantitySand,
+                       final int TheAmountOfPersonnelID,
+                       final String TheAmountOfType,
+                       final int IsSumbitted,
+                       final String Remark) {
         view.showLoading(true);
         dataRepository
-                .InsertTheAmountOfSideRecord(itemID, TheAmountOfTime, subcontractorAccount, SubcontractorInterimApproachPlanID, ShipAccount, Capacity, DeckGauge, Deduction, Creator)
+                .InsertTheAmountOfSideRecord(itemID,
+                        TheAmountOfTime,
+                        subcontractorAccount,
+                        SubcontractorInterimApproachPlanID,
+                        ShipAccount,
+                        Capacity,
+                        DeckGauge,
+                        Deduction,
+                        Creator,
+                        LaserQuantitySand,
+                        TheAmountOfPersonnelID,
+                        TheAmountOfType,
+                        IsSumbitted,
+                        Remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<Boolean, Observable<Boolean>>() {

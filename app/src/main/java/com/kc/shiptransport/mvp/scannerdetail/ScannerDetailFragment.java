@@ -1,26 +1,31 @@
 package com.kc.shiptransport.mvp.scannerdetail;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.scannerimgselect.ScannerImgSelectActivity;
+import com.kc.shiptransport.util.ToastUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -34,20 +39,24 @@ import butterknife.Unbinder;
  * @desc ${TODD}
  */
 
-public class ScannerDetailFragment extends Fragment implements ScannerDetailContract.View{
+public class ScannerDetailFragment extends Fragment implements ScannerDetailContract.View {
 
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
+    @BindView(R.id.btn_already_commit)
+    Button btnAlreadyCommit;
+    @BindView(R.id.btn_commit)
+    Button btnCommit;
     private ScannerDetailContract.Presenter presenter;
     private ScannerDetailActivity activity;
     public ScannerImage scannerImage;
     private Unbinder unbinder;
     private ScannerDetailAdapter adapter;
     private WeekTask weekTask;
-    private int isFinshReceptionSandAttachment = 1;
+    private int isSumbittedPerfectBoatScanner = 0;
 
     @Nullable
     @Override
@@ -63,6 +72,28 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     }
 
     public void initListener() {
+        /** 提交 */
+        btnCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.showDailog("提交", getText(R.string.commit_tip).toString(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String userID = DataSupport.findAll(User.class).get(0).getUserID();
+                        int itemID = weekTask.getItemID();
+                        presenter.commit("", userID, itemID, 1, "");
+                    }
+                });
+            }
+        });
+
+        /** 已提交, 返回 */
+        btnAlreadyCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
 
     }
 
@@ -106,9 +137,20 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     @Override
     public void showTitle(WeekTask weekTask) {
         this.weekTask = weekTask;
-        // 是否完善 (如果已验砂, 不能修改)
-        isFinshReceptionSandAttachment = TextUtils.isEmpty(weekTask.getPreAcceptanceTime()) ? 0 : 1;
         activity.getSupportActionBar().setTitle(weekTask.getShipName());
+
+        /** 如果已提交, 不能修改数据 */
+        isSumbittedPerfectBoatScanner = weekTask.getIsSumbittedPerfectBoatScanner();
+
+        if (isSumbittedPerfectBoatScanner == 1) {
+            /** 已提交 */
+            btnAlreadyCommit.setVisibility(View.VISIBLE);
+            btnCommit.setVisibility(View.GONE);
+        } else {
+            /** 未提交 */
+            btnAlreadyCommit.setVisibility(View.GONE);
+            btnCommit.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -153,7 +195,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
                             bean.getAttachmentCount(),
                             bean.getDefalutAttachmentCount(),
                             activity.type,
-                            isFinshReceptionSandAttachment);
+                            isSumbittedPerfectBoatScanner);
                 }
 
                 @Override
@@ -165,6 +207,16 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
         } else {
             adapter.setDates(scannerImage);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void showCommitResult(boolean isSuccess) {
+        if (isSuccess) {
+            ToastUtil.tip(getContext(), "提交成功!");
+            getActivity().onBackPressed();
+        } else {
+            ToastUtil.tip(getContext(), "提交失败, 请重试!");
         }
     }
 

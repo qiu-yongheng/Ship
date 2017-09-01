@@ -21,7 +21,7 @@ public class AcceptanceEvaluationList extends DataSupport{
      * ShipAccount : tl8988
      * ShipName : 天力8988
      * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试分包商
+     * SubcontractorName : 测试供应商
      */
 
     private int rownumber;

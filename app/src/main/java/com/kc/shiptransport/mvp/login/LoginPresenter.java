@@ -5,6 +5,9 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
+import com.kc.shiptransport.util.BaseUrl;
+import com.kc.shiptransport.util.LogUtil;
+import com.kc.shiptransport.util.NetworkUtil;
 
 import java.net.SocketTimeoutException;
 
@@ -56,11 +59,11 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     /**
-     * 获取分包商与船数据
+     * 获取供应商与船数据
      */
     @Override
     public void loadData(final String username) {
-        // 获取分包商
+        // 获取供应商
         //        Observable<Boolean> subcontractor = mDataRepository
         //                .getSubcontractor(username)
         //                .subscribeOn(Schedulers.io());
@@ -89,7 +92,6 @@ public class LoginPresenter implements LoginContract.Presenter {
         Observable<Boolean> department = mDataRepository
                 .GetDepartmentsOptions()
                 .subscribeOn(Schedulers.io());
-
 
 
         Observable.zip(ship, appList, userInfo, department, new Function4<Boolean, Boolean, Boolean, Boolean, Boolean>() {
@@ -155,38 +157,45 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void login(final String username, final String password) {
         view.showloading(true);
-        mDataRepository
-                .login(username, password)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        mCompositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Boolean value) {
-                        view.showResult(value);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        view.showloading(false);
-                        view.showNetworkError();
-                        if (e instanceof SocketTimeoutException) {
-                            view.showError("当前网络不稳定, 请稍候重试");
+        if (NetworkUtil.networkConnected(context)) {
+            mDataRepository
+                    .login(username, password)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<Boolean>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            mCompositeDisposable.add(d);
                         }
-                    }
 
-                    @Override
-                    public void onComplete() {
-                    }
-                });
+                        @Override
+                        public void onNext(Boolean value) {
+                            view.showResult(value);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            LogUtil.e("当前环境: " + BaseUrl.EndPoint + "\n" + e);
+                            view.showloading(false);
+                            view.showNetworkError();
+                            if (e instanceof SocketTimeoutException) {
+                                view.showError("当前网络不稳定, 请稍候重试");
+                            }
+                        }
+
+                        @Override
+                        public void onComplete() {
+                        }
+                    });
+        } else {
+            view.showloading(false);
+            view.showError("当前没有网络连接, 请检查网络");
+        }
+
     }
 
     /**
-     * 获取分包商
+     * 获取供应商
      */
     @Override
     public void getSubcontractor() {

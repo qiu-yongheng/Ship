@@ -16,6 +16,7 @@ import org.ksoap2.transport.HttpTransportSE;
 public class RemoteDataSource {
     private final String EndPoint = BaseUrl.EndPoint;
     private final int timeout = 15000;
+    private final String nameSpace = "http://tempuri.org/";
 
     /**
      * 发送网络请求
@@ -75,7 +76,7 @@ public class RemoteDataSource {
     }
 
     /**
-     * 获取分包商信息
+     * 获取供应商信息
      *
      * @param subcontractorAccount 用户名
      * @return
@@ -264,7 +265,7 @@ public class RemoteDataSource {
     }
 
     /**
-     * 分包商预验收评价
+     * 供应商预验收评价
      *
      * @param json
      * @return
@@ -290,7 +291,7 @@ public class RemoteDataSource {
     }
 
     /**
-     * 获取分包商预供砂计划
+     * 获取供应商预供砂计划
      *
      * @param SubcontractorAccount
      * @param StartDate
@@ -541,7 +542,7 @@ public class RemoteDataSource {
     }
 
     /**
-     * 获取分包商航次完善扫描件类型数据
+     * 获取供应商航次完善扫描件类型数据
      *
      * @return
      */
@@ -745,7 +746,7 @@ public class RemoteDataSource {
     }
 
     /**
-     * 1.29 提交图片到分包商航次完善扫描件表(图片信息)
+     * 1.29 提交图片到供应商航次完善扫描件表(图片信息)
      *
      * @param json
      * @param ByteDataStr
@@ -824,7 +825,7 @@ public class RemoteDataSource {
     }
 
     /**
-     * 1.30	 删除分包商航次完善扫描件表(图片信息)
+     * 1.30	 删除供应商航次完善扫描件表(图片信息)
      *
      * @param ItemID
      * @return
@@ -1566,7 +1567,7 @@ public class RemoteDataSource {
     }
 
     /**
-     * 2.5 获取分包商进场计划进度跟踪
+     * 2.5 获取供应商进场计划进度跟踪
      * @param SubcontractorAccount
      * @param ShipName
      * @param StartDate
@@ -1704,14 +1705,12 @@ public class RemoteDataSource {
      * @throws Exception
      */
     public String GetMembers(int PageSize, int PageCount, String ConditionJson) throws Exception {
-        // 命名空间
-        String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
-        String methodName = "GetMembers ";
+        String methodName = "GetMembers";
         // EndPoint
         String endPoint = EndPoint;
         // SOAP Action
-        String soapAction = "http://tempuri.org/GetMembers ";
+        String soapAction = nameSpace + methodName;
 
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
@@ -1719,6 +1718,49 @@ public class RemoteDataSource {
         rpc.addProperty("PageSize", PageSize);
         rpc.addProperty("PageCount", PageCount);
         rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.56 提交分包商航次完善扫描件(用于确认提交)
+     * @return
+     * @throws Exception
+     */
+    public String InsertSubcontractorPerfectBoatScannerRecord(String json) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertSubcontractorPerfectBoatScannerRecord";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.61 判断是否允许新增或者修改进场计划数据
+     * @param Date
+     * @return
+     * @throws Exception
+     */
+    public String IsAllowEditPlanData(String Date) throws Exception {
+        // 调用的方法名称
+        String methodName = "IsAllowEditPlanData";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("Date", Date);
 
         return getCallResult(endPoint, soapAction, rpc);
     }

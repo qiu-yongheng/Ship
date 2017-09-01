@@ -13,7 +13,7 @@ public class SandSample extends DataSupport{
     /**
      * ItemID : 6564
      * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试分包商
+     * SubcontractorName : 测试供应商
      * PlanDay : 2017-08-17
      * ShipAccount : csgscb
      * ShipName : 测试供砂船舶

@@ -231,7 +231,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         if (result) {
             // 登录成功, 读取数据
             presenter.loadData(sp.getString(SettingUtil.DATA_USERNAME, ""));
-            changeDailogInfo("同步数据", "正在获取分包商数据");
+            changeDailogInfo("同步数据", "正在获取供应商数据");
         } else {
             // 登录失败
             tip("账号或密码错误, 请重新输入");

@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_supply_detail"
@@ -119,98 +121,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_commit_data"
+        android:id="@+id/ll_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_supply_detail"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:text="通过验收时间:"
-            android:textColor="#000"
-            android:textSize="@dimen/text_15sp"/>
-
-        <TextView
-
-            android:id="@+id/tv_acceptance_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/tv_bg"
-            android:clickable="true"
-            android:padding="10dp"
-            android:text="2017-6-1 16:41"
-            android:textSize="@dimen/text_15sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginTop="2dp"
-            android:text="分包商预验收评价"
-            android:textColor="#000"
-            android:textSize="@dimen/text_15sp"/>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/margin_10">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="材料完整性:"
-                android:textColor="#000"
-                android:textSize="@dimen/text_15sp"/>
-
-            <RatingBar
-                android:id="@+id/rb_complete"
-                style="@style/MyRatingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="1"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/margin_10">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="材料及时性:"
-                android:textColor="#000"
-                android:textSize="@dimen/text_15sp"/>
-
-            <RatingBar
-                android:id="@+id/rb_timely"
-                style="@style/MyRatingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="1"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ll_commit_data"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="@dimen/cardview_margin_5dp"
         android:orientation="horizontal">
 
         <TextView
@@ -234,10 +149,153 @@
     </LinearLayout>
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_link"
+        android:layout_marginBottom="@dimen/btn_height"
+        android:layout_marginTop="@dimen/cardview_margin_5dp">
+
+        <LinearLayout
+            android:id="@+id/ll_commit_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:text="通过验收时间:"
+                android:textColor="#000"
+                android:textSize="@dimen/text_15sp"/>
+
+            <TextView
+                android:id="@+id/tv_acceptance_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/tv_bg"
+                android:clickable="true"
+                android:padding="10dp"
+                android:text="2017-6-1 16:41"
+                android:textSize="@dimen/text_15sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginTop="@dimen/cardview_margin_5dp"
+                android:text="预验收意见:"
+                android:textColor="#000"
+                android:textSize="@dimen/text_15sp"/>
+
+            <EditText
+                android:id="@+id/tv_acceptance_opinion"
+                style="@style/et_remark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginTop="2dp"
+                android:clickable="true"
+                android:hint="请输入验收意见"
+                android:padding="10dp"
+                android:textSize="@dimen/text_15sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginTop="2dp"
+                android:text="供应商预验收评价"
+                android:textColor="#000"
+                android:textSize="@dimen/text_15sp"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/margin_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="材料完整性:"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_15sp"/>
+
+                <RatingBar
+                    android:id="@+id/rb_complete"
+                    style="@style/MyRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/margin_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="材料及时性:"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_15sp"/>
+
+                <RatingBar
+                    android:id="@+id/rb_timely"
+                    style="@style/MyRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingRight="20dp"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="预验收记录照片:"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_15sp"/>
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/btn_height"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:orientation="horizontal">
@@ -248,7 +306,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#888"
-            android:text="取消"
+            android:text="不通过"
             android:textColor="#fff"/>
 
         <android.support.v7.widget.AppCompatButton
@@ -257,7 +315,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?colorPrimary"
-            android:text="提交"
+            android:text="通过"
             android:textColor="#fff"/>
     </LinearLayout>
 

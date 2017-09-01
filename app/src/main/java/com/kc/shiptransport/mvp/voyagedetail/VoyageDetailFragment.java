@@ -102,19 +102,6 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             // 编辑数据
             weekTask = DataSupport.where("position = ?", String.valueOf(activity.mPosition)).find(WeekTask.class).get(0);
         }
-
-
-        //        // 根据type, 初始化不同的控件
-        //        if (activity.type == 0 && weekTask != null && TextUtils.isEmpty(weekTask.getPreAcceptanceTime())) {
-        //            // 提交数据 (编辑模式, 并且没有验砂)
-        //            btnCommit.setVisibility(View.VISIBLE);
-        //            isChange = true;
-        //        } else if (activity.type == 1 || (weekTask != null && !TextUtils.isEmpty(weekTask.getPreAcceptanceTime()))) {
-        //            // 查看数据, 不可修改 (只读模式, 或者已经验砂)
-        //            btnCommit.setVisibility(View.GONE);
-        //            btnReturn.setVisibility(View.VISIBLE);
-        //            isChange = false;
-        //        }
     }
 
     @Override
@@ -169,10 +156,13 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
 
                         for (VoyageDetailBean.ColumnsBean columnsBean : adapter.list) {
                             if (TextUtils.isEmpty(columnsBean.getValue())) {
+                                if ("ReadOnly".equals(columnsBean.getControlType())) {
+                                    continue;
+                                }
+
                                 ToastUtil.tip(getContext(), "还有数据未填写, 不能提交!");
                                 return;
                             }
-
                         }
 
                         adapter.bean.setIsSumbitted("1");
@@ -280,16 +270,25 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 // 已提交 或 查看模式
                 btnReturn.setVisibility(View.VISIBLE);
                 llBtn.setVisibility(View.GONE);
+                isChange = false;
             } else if (Integer.valueOf(isSumbitted) == 0) {
                 // 保存
                 btnReturn.setVisibility(View.GONE);
                 llBtn.setVisibility(View.VISIBLE);
+                isChange = true;
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            // 默认保存
-            btnReturn.setVisibility(View.GONE);
-            llBtn.setVisibility(View.VISIBLE);
+            if (activity.type == 1) {
+                btnReturn.setVisibility(View.VISIBLE);
+                llBtn.setVisibility(View.GONE);
+                isChange = false;
+            } else {
+                // 默认保存
+                btnReturn.setVisibility(View.GONE);
+                llBtn.setVisibility(View.VISIBLE);
+                isChange = true;
+            }
         }
 
 

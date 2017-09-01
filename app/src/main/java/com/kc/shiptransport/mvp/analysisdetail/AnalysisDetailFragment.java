@@ -345,7 +345,7 @@ public class AnalysisDetailFragment extends Fragment implements AnalysisDetailCo
     public void showDetail(AnalysisDetail detail) {
         Toast.makeText(getContext(), "获取数据成功", Toast.LENGTH_SHORT).show();
         /** 供砂计划 */
-        // 分包商信息
+        // 供应商信息
         String subcontractorName = detail.getSubcontractorName();
         // 供砂船舶
         String shipName = detail.getShipName();
@@ -417,7 +417,7 @@ public class AnalysisDetailFragment extends Fragment implements AnalysisDetailCo
         tvMaterial.setText(TextUtils.isEmpty(materialClassification) ? "" : materialClassification);
         tvReceiver.setText(TextUtils.isEmpty(receiver) ? "" : receiver);
 
-        /** 分包商进场材料 */
+        /** 供应商进场材料 */
         List<AnalysisDetail.PerfectBoatScannerRecordListBean> perfectBoatScannerRecordList = detail.getPerfectBoatScannerRecordList();
 
         recyclerViewScanner.setLayoutManager(new LinearLayoutManager(getContext()));

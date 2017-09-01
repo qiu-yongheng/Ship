@@ -48,7 +48,7 @@ public interface AcceptanceContract {
         void doRefresh(int jumpWeek, String subcontractorAccount);
         // 加载数据
         void start(int jumpWeek, String subcontractorAccount);
-        // 获取所有分包商
+        // 获取所有供应商
         void getSubcontractor();
     }
 }

@@ -34,7 +34,7 @@ public class SettingUtil {
     /* acceptance jumpWeek */
     public static final String WEEK_JUMP_ACCEPTANCE = "jump_week_acceptance";
 
-    /* 工程人员当前审核分包商账号 */
+    /* 工程人员当前审核供应商账号 */
     public static final String SUBCONTRACTOR_ACCOUNT = "subcontractor_account";
 
 
@@ -74,11 +74,11 @@ public class SettingUtil {
     public static final int TYPE_AMOUNT = 103;
     /* 过砂记录 */
     public static final int TYPE_RECORDEDSAND = 104;
-    /* 分包商航次信息完善 */
+    /* 供应商航次信息完善 */
     public static final int TYPE_VOYAGEINFO = 105;
     /* 验砂取样 */
     public static final int TYPE_SAMPLE = 106;
-    /* 分包商航次信息扫描件 */
+    /* 供应商航次信息扫描件 */
     public static final int TYPE_SCANNER = 107;
     /* 停工 */
     public static final int TYPE_STOP = 108;
@@ -88,9 +88,9 @@ public class SettingUtil {
     public static final int TYPE_EXIT_APPLICATION = 110;
     /* 进场计划跟踪 */
     public static final int TYPE_ANALYSIS = 111;
-    /* 查看分包商预验收评价 */
+    /* 查看供应商预验收评价 */
     public static final int TYPE_ACCEPTANCE_EVALUATION = 112;
-    /* 查看分包商评价排行 */
+    /* 查看供应商评价排行 */
     public static final int TYPE_ACCEPTANCE_RANK = 113;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/

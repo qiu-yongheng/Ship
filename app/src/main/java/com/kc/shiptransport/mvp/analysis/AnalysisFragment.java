@@ -129,7 +129,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             selectSub.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_evaluation);
         } else if (type == SettingUtil.TYPE_ACCEPTANCE_RANK) {
-            // 分包商评价
+            // 供应商评价
             selectSub.setVisibility(View.GONE);
             selectShip.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_rank);
@@ -177,7 +177,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                     // 预验收评价
                                     stringArray = getResources().getStringArray(R.array.select_acceptance_time);
                                 } else if (type == SettingUtil.TYPE_ACCEPTANCE_RANK) {
-                                    // 分包商评价
+                                    // 供应商评价
                                     stringArray = getResources().getStringArray(R.array.select_acceptance_time);
                                 }
 
@@ -285,7 +285,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                                 pop_time.dismiss();
                                                             }
                                                         } else if (type == SettingUtil.TYPE_ACCEPTANCE_RANK) {
-                                                            // 分包商评价
+                                                            // 供应商评价
                                                             switch (position) {
                                                                 case 0:
                                                                     // 全部
@@ -388,7 +388,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                             pageCount = 1;
                                             presenter.getEvaluation(20, pageCount, startTime, endTime, consShip, true);
                                         } else if (type == SettingUtil.TYPE_ACCEPTANCE_RANK) {
-                                            // 分包商评价排行
+                                            // 供应商评价排行
                                             presenter.getRank(startTime, endTime);
                                         }
 
@@ -418,7 +418,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             }
         });
 
-        /** 选择分包商 */
+        /** 选择供应商 */
         selectSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -481,7 +481,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                 headWrapper.setHeadAndFootClickListener(new HeaderAndFooterWrapper.OnHeadAndFootClickListener() {
                                     @Override
                                     public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                                        selectSub.setText("全部分包商");
+                                        selectSub.setText("全部供应商");
                                         subAccount = "";
 
                                         // 搜索
@@ -692,7 +692,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     }
 
     /**
-     * 分包商预验收评价数据
+     * 供应商预验收评价数据
      *
      * @param list
      */
@@ -775,7 +775,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     }
 
     /**
-     * 显示分包商评分排行
+     * 显示供应商评分排行
      */
     @Override
     public void showRank(List<Rank> list) {

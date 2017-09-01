@@ -90,7 +90,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        view.showError("分包商信息获取失败");
+                        view.showError("供应商信息获取失败");
                     }
 
                     @Override
@@ -310,7 +310,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
     }
 
     /**
-     * 获取所有分包商
+     * 获取所有供应商
      */
     @Override
     public void getSubcontractorList() {
@@ -319,7 +319,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
             @Override
             public void subscribe(ObservableEmitter<List<SubcontractorList>> e) throws Exception {
                 dataRepository.getSubcontractorInfo("");
-                // 从数据库获取分包商
+                // 从数据库获取供应商
                 List<SubcontractorList> subcontractorList = DataSupport.findAll(SubcontractorList.class);
 
                 e.onNext(subcontractorList);

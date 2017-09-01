@@ -29,7 +29,7 @@
             android:paddingTop="10dp">
 
             <TextView
-                android:id="@+id/tv"
+                android:id="@+id/tv_ship_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -39,10 +39,10 @@
                 android:textSize="@dimen/text_15sp"/>
 
             <TextView
-                android:layout_marginLeft="10dp"
                 android:id="@+id/tv_ship_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="2"
                 android:singleLine="true"
                 android:text="船次: 20170601"
@@ -117,9 +117,61 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingRight="20dp"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="请选择量砂类型:"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_15sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingRight="20dp"
+                android:paddingTop="5dp">
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_man"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="人工量砂"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_laser"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="激光量砂"/>
+                </RadioGroup>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_deduction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
                 android:paddingRight="20dp"
@@ -134,20 +186,21 @@
                     android:textSize="@dimen/text_15sp"/>
 
                 <EditText
-                    android:text="0"
-                    android:textSize="@dimen/text_15sp"
                     android:id="@+id/et_ship_volume"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:text="0"
+                    android:textSize="@dimen/text_15sp"/>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginLeft="@dimen/margin_10"
+                android:id="@+id/ll_deck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
                 android:paddingRight="20dp"
@@ -162,19 +215,19 @@
                     android:textSize="@dimen/text_15sp"/>
 
                 <EditText
-                    android:textSize="@dimen/text_15sp"
                     android:id="@+id/et_deck_volume"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:textSize="@dimen/text_15sp"/>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
                 android:paddingRight="20dp"
@@ -195,13 +248,55 @@
                     android:layout_weight="2"
                     android:gravity="center"
                     android:textColor="#000"
+                    android:textSize="@dimen/text_15sp"
+                    android:visibility="visible"/>
+
+                <EditText
+                    android:id="@+id/et_total_volume"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:textSize="@dimen/text_15sp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="量方人员:"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_15sp"/>
+
+                <TextView
+                    android:id="@+id/tv_amount_man"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/tv_bg"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="点击选择量方人员"
+                    android:textColor="#000"
                     android:textSize="@dimen/text_15sp"/>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
                 android:paddingRight="20dp"
@@ -231,9 +326,56 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingRight="20dp"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="提交人员:"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_15sp"/>
+
+                <TextView
+                    android:id="@+id/tv_commit_man"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_15sp"
+                    android:visibility="visible"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingRight="20dp"
+                android:paddingTop="5dp">
+
+               <EditText
+                   android:id="@+id/et_remark"
+                   android:layout_width="match_parent"
+                   style="@style/et_remark"
+                   android:lines="3"
+                   android:hint="备注"
+                   android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
                 android:paddingRight="20dp"
@@ -248,7 +390,6 @@
                     android:textSize="@dimen/text_15sp"/>
 
                 <TextView
-                    android:visibility="invisible"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
@@ -258,22 +399,23 @@
                     android:padding="5dp"
                     android:text="gaga"
                     android:textColor="#000"
-                    android:textSize="@dimen/text_15sp"/>
+                    android:textSize="@dimen/text_15sp"
+                    android:visibility="gone"/>
             </LinearLayout>
 
 
             <android.support.v7.widget.RecyclerView
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginTop="10dp"
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginTop="10dp"/>
 
         </LinearLayout>
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/ll"
+        android:id="@+id/ll_btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
@@ -286,7 +428,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#888"
-            android:text="@string/btn_cancle"
+            android:text="@string/btn_save"
             android:textColor="#fff"/>
 
         <android.support.v7.widget.AppCompatButton

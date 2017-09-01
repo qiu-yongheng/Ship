@@ -45,7 +45,7 @@ public class RecordedSandFragment extends BaseMvpFragment {
     @Override
     protected void initData() {
         presenter.subscribe();
-        // 显示所有分包商
+        // 显示所有供应商
         presenter.getTime(jumpWeek);
         presenter.getSubcontractorList();
     }

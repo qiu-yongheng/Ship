@@ -56,12 +56,13 @@ import io.reactivex.Observable;
 public interface DataSouceImpl {
 
     /**
-     * 获取分包商信息, 并缓存到数据库
+     * 获取供应商信息, 并缓存到数据库
      */
     void getSubcontractorInfo(String username);
 
     /**
-     * 获取所有分包商列表
+     * 获取所有供应商列表
+     *
      * @return
      */
     Observable<List<SubcontractorList>> getSubcontractorList();
@@ -72,7 +73,7 @@ public interface DataSouceImpl {
     void getShipInfo(String username);
 
     /**
-     * 获取标题 日期 + 分包商
+     * 获取标题 日期 + 供应商
      *
      * @param jumpWeek
      * @return
@@ -91,8 +92,9 @@ public interface DataSouceImpl {
      * 从本地数据库获取任务
      *
      * @return
+     * @param jumpWeek
      */
-    Observable<List<WeekTask>> getWeekTask();
+    Observable<List<WeekTask>> getWeekTask(int jumpWeek);
 
     /**
      * 计算每天任务总量
@@ -151,14 +153,14 @@ public interface DataSouceImpl {
      */
     Observable<Integer> updateForReceptionSandTime(int itemID, String ReceptionSandTime);
 
-//    /**
-//     * 提交验收审核结果
-//     *
-//     * @param itemID
-//     * @param PassReceptionSandTime
-//     * @return
-//     */
-//    Observable<Integer> UpdateForPassReceptionSandTime(int itemID, String PassReceptionSandTime);
+    //    /**
+    //     * 提交验收审核结果
+    //     *
+    //     * @param itemID
+    //     * @param PassReceptionSandTime
+    //     * @return
+    //     */
+    //    Observable<Integer> UpdateForPassReceptionSandTime(int itemID, String PassReceptionSandTime);
 
     /**
      * 统计未验收的船的数量
@@ -185,18 +187,22 @@ public interface DataSouceImpl {
     Observable<Integer> getPlanMeasure(String date);
 
     /**
-     * 分包商评价
+     * 供应商评价
      *
-     * @param itemID                             评价ID
-     * @param rbcomplete                         材料完整性
-     * @param rbtimely                           材料及时性
-     * @param currentDate                        时间
-     * @param shipNum                            船次编号
+     * @param ItemID                             评价ID
+     * @param MaterialIntegrity                         材料完整性
+     * @param MaterialTimeliness                           材料及时性
+     * @param PreAcceptanceTime                        时间
      * @param subcontractorInterimApproachPlanID 任务ID
      * @param value
      * @return
      */
-    Observable<Integer> InsertPreAcceptanceEvaluation(int itemID, int rbcomplete, int rbtimely, String currentDate, String shipNum, int subcontractorInterimApproachPlanID, Acceptance value);
+    Observable<Integer> InsertPreAcceptanceEvaluation(int ItemID,
+                                                      int MaterialIntegrity,
+                                                      int MaterialTimeliness,
+                                                      String PreAcceptanceTime,
+                                                      int subcontractorInterimApproachPlanID,
+                                                      Acceptance value);
 
     /**
      * 根据类型获取船舶列表
@@ -210,6 +216,7 @@ public interface DataSouceImpl {
      * 取消修改
      * 1. 根据type查询船舶数据, 全部设置 select = 0
      * 2. 根据当前日期, type查询计划数据, 全部设置为select = 1
+     *
      * @param type
      * @param date
      * @return
@@ -220,6 +227,7 @@ public interface DataSouceImpl {
      * 发送网络请求
      * 1. 判断新计划数据: select = 1, itemID = ""
      * 2. 判断取消的数据: select = 0, itemID != ""
+     *
      * @param type
      * @param date
      * @return
@@ -227,21 +235,24 @@ public interface DataSouceImpl {
     Observable<String> doCommit(String type, String date);
 
     /**
-     * 获取分包商信息
-     * @param username 分包商账号名, 如果填null, 获取所有分包商列表
+     * 获取供应商信息
+     *
+     * @param username 供应商账号名, 如果填null, 获取所有供应商列表
      * @return
      */
     Observable<Boolean> getSubcontractor(String username);
 
     /**
      * 获取船舶信息
-     * @param username 分包商账号名, 如果填null, 获取所有船舶列表
+     *
+     * @param username 供应商账号名, 如果填null, 获取所有船舶列表
      * @return
      */
     Observable<Boolean> getShip(String username);
 
     /**
      * 登录
+     *
      * @param username
      * @param password
      * @return
@@ -249,14 +260,16 @@ public interface DataSouceImpl {
     Observable<Boolean> login(String username, String password);
 
     /**
-     * 获取分包商预计划量
+     * 获取供应商预计划量
+     *
      * @return
      */
     Observable<Integer> getTaskVolume(int jumpWeek);
-//    Observable<TaskVolume> getTaskVolume(String account, String startDate, String endDate);
+    //    Observable<TaskVolume> getTaskVolume(String account, String startDate, String endDate);
 
     /**
      * 根据账号获取可以显示的模块
+     *
      * @param account
      * @return
      */
@@ -264,34 +277,43 @@ public interface DataSouceImpl {
 
     /**
      * 获取每日任务需求
-     * @return
+     *
      * @param jumpWeek
+     * @return
      */
     Observable<Integer[]> getDemandDayCount(int jumpWeek);
 
     /**
-     * 获取分包商名字
+     * 获取供应商名字
+     *
      * @return
      */
     Observable<String> getSubcontractorName();
 
     /**
      * 更新量方数据
+     *
      * @return
      */
     Observable<Boolean> InsertTheAmountOfSideRecord(int itemID,
-                                                  String TheAmountOfTime,
-                                                  String subcontractorAccount, int SubcontractorInterimApproachPlanID,
-                                                  String ShipAccount,
-                                                  String Capacity,
-                                                  String DeckGauge,
-                                                  String Deduction,
-                                                  String Creator);
+                                                    String TheAmountOfTime,
+                                                    String subcontractorAccount, int SubcontractorInterimApproachPlanID,
+                                                    String ShipAccount,
+                                                    String Capacity,
+                                                    String DeckGauge,
+                                                    String Deduction,
+                                                    String Creator,
+                                                    float LaserQuantitySand,
+                                                    int TheAmountOfPersonnelID,
+                                                    String TheAmountOfType,
+                                                    int IsSumbitted,
+                                                    String Remark);
 
     /**
      * 信息完善
-     * @return
+     *
      * @param bean
+     * @return
      */
     Observable<Boolean> InsertPerfectBoatRecord(VoyageDetailBean bean);
 
@@ -306,13 +328,15 @@ public interface DataSouceImpl {
     Observable<SandSample> getSampleTaskForPosition(int position);
 
     /**
-     * 获取当前登录的分包商
+     * 获取当前登录的供应商
+     *
      * @return
      */
     Observable<Subcontractor> getCurrentSubcontractor();
 
     /**
      * 获取施工船舶
+     *
      * @return
      */
     Observable<Boolean> GetConstructionBoat();
@@ -320,12 +344,14 @@ public interface DataSouceImpl {
     /**
      * 删除未验收的数据
      * 对数据库数据进行重新排序
+     *
      * @return
      */
     Observable<Boolean> getWeekTaskSort(int jumpWeek);
 
     /**
      * 获取过砂记录
+     *
      * @param jumpWeek
      * @return
      */
@@ -333,12 +359,14 @@ public interface DataSouceImpl {
 
     /**
      * 1.13获取验砂取样信息
+     *
      * @return
      */
     Observable<Boolean> getSandSamplingList(int jumpWeek, String account);
 
     /**
      * 1.17获取对应的航次完善信息明细
+     *
      * @param weekTask
      * @return
      */
@@ -346,6 +374,7 @@ public interface DataSouceImpl {
 
     /**
      * 根据itemID获取扫描图片数据
+     *
      * @param weekTask
      * @return
      */
@@ -353,6 +382,7 @@ public interface DataSouceImpl {
 
     /**
      * 压缩图片
+     *
      * @param file
      * @return
      */
@@ -360,6 +390,7 @@ public interface DataSouceImpl {
 
     /**
      * 获取要提交图片的数据
+     *
      * @param sandSample
      * @return
      */
@@ -367,6 +398,7 @@ public interface DataSouceImpl {
 
     /**
      * 提交图片
+     *
      * @param commitList
      * @return
      */
@@ -374,25 +406,29 @@ public interface DataSouceImpl {
 
     /**
      * 根据position获取过砂记录
+     *
      * @param itemID
      * @return
      */
     Observable<RecordList> getRecordListForItemID(int itemID);
 
     /**
-     * 获取分包商航次完善扫描件类型数据
+     * 获取供应商航次完善扫描件类型数据
+     *
      * @return
      */
     Observable<List<ScannerListBean>> getScannerType(int subID);
 
     /**
      * 提交过砂记录
+     *
      * @return
      */
     Observable<Boolean> InsertOverSandRecord(RecordedSandUpdataBean bean);
 
     /**
      * 根据进场计划ID获取过砂记录明细（多条）
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -400,24 +436,28 @@ public interface DataSouceImpl {
 
     /**
      * 获取考勤类型
+     *
      * @return
      */
     Observable<List<AttendanceType>> GetAttendanceTypeList();
 
     /**
      * 提交考勤数据
+     *
      * @return
      */
     Observable<Boolean> InsertAttendanceRecord(String ItemID, int AttendanceTypeID, String Creator, String Remark, String time);
 
     /**
      * 获取考勤记录
+     *
      * @return
      */
     Observable<List<AttendanceRecordList>> GetAttendanceRecords(final int itemID, final String account, final String startDate, final String endDate, String Auditor);
 
     /**
      * 1.23根据进场计划ID获取验砂取样信息明细
+     *
      * @param SubcontractorInterimApproachPlanID
      * @param isSandSampling
      * @param isExit
@@ -427,6 +467,7 @@ public interface DataSouceImpl {
 
     /**
      * 提交验砂取样数据
+     *
      * @param bean
      * @return
      */
@@ -434,12 +475,14 @@ public interface DataSouceImpl {
 
     /**
      * 根据AppPID获取要显示的图标列表
+     *
      * @return
      */
     Observable<List<AppList>> getAppList(int AppPID);
 
     /**
      * 提交扫描件图片
+     *
      * @param bean
      * @return
      */
@@ -447,12 +490,14 @@ public interface DataSouceImpl {
 
     /**
      * 选择多张图片回调后, 把数据解析成将要提交的集合
+     *
      * @return
      */
     Observable<List<ScanCommitBean>> getScanImgList(ImageMultipleResultEvent imageMultipleResultEvent, int subID, int typeID, String shipAccount);
 
     /**
      * 根据类型获取图片
+     *
      * @param subID
      * @param typeID
      * @return
@@ -460,7 +505,8 @@ public interface DataSouceImpl {
     Observable<List<ScannerImgListByTypeBean>> GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID(int subID, int typeID);
 
     /**
-     * 1.30	 删除分包商航次完善扫描件表(图片信息)
+     * 1.30	 删除供应商航次完善扫描件表(图片信息)
+     *
      * @param ItemID
      * @return
      */
@@ -468,12 +514,14 @@ public interface DataSouceImpl {
 
     /**
      * 1.33	 获取料源石场数据
+     *
      * @return
      */
     Observable<List<StoneSource>> getStoneSource();
 
     /**
      * 1.35 获取量方信息数据
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -481,12 +529,14 @@ public interface DataSouceImpl {
 
     /**
      * 1.27 提交考勤审核数据
+     *
      * @return
      */
     Observable<Boolean> InsertAttendanceCheckRecord(List<AttendanceRecordList> list);
 
     /**
      * 1.36 提交量方图片数据
+     *
      * @param json
      * @param ByteDataStr
      * @return
@@ -495,6 +545,7 @@ public interface DataSouceImpl {
 
     /**
      * 创建量方图片任务
+     *
      * @param imageMultipleResultEvent
      * @param itemID
      * @param creator
@@ -504,12 +555,14 @@ public interface DataSouceImpl {
 
     /**
      * 1.34 获取洗石场所在地数据
+     *
      * @return
      */
     Observable<List<WashStoneSource>> GetWashStoreAddressOptions();
 
     /**
      * 1.37 删除量方图片数据
+     *
      * @param ItemID
      * @return
      */
@@ -517,6 +570,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.37提交验砂图片数据
+     *
      * @param json
      * @param ByteDataStr
      * @return
@@ -525,6 +579,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.39 删除验砂图片数据
+     *
      * @param ItemID
      * @return
      */
@@ -532,6 +587,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.40 根据进场计划ID获取验砂数据
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -539,6 +595,7 @@ public interface DataSouceImpl {
 
     /**
      * 删除过砂取样
+     *
      * @param ItemID
      * @return
      */
@@ -546,6 +603,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.17获取对应的航次完善信息明细
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -553,18 +611,21 @@ public interface DataSouceImpl {
 
     /**
      * 1.42 获取停工因素选项数据
+     *
      * @return
      */
     Observable<List<StopOption>> GetStopOptions();
 
     /**
      * 1.43 提交施工日志（停工）数据
+     *
      * @return
      */
     Observable<Boolean> InsertConstructionBoatStopDaily(int ItemID, String ShipAccount, String StartTime, String EndTime, String Creator, int StopTypeID, String remark);
 
     /**
      * 1.45 获取当天施工日志（开始时间默认值）
+     *
      * @param CurrentDate
      * @param CurrentBoatAccount
      * @return
@@ -573,6 +634,7 @@ public interface DataSouceImpl {
 
     /**
      * 根据账号, 获取抛沙分区
+     *
      * @param userAccount
      * @return
      */
@@ -580,6 +642,7 @@ public interface DataSouceImpl {
 
     /**
      * 获取抛砂分区数据
+     *
      * @param account
      * @return
      */
@@ -587,6 +650,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.46 提交施工日志（抛砂）数据
+     *
      * @param json
      * @return
      */
@@ -594,12 +658,14 @@ public interface DataSouceImpl {
 
     /**
      * 获取抛砂分层
+     *
      * @return
      */
     Observable<Boolean> GetConstructionLayerOptions();
 
     /**
      * 1.44 获取施工日志（停工）数据
+     *
      * @param ItemID
      * @param ShipAccount
      * @param StartTime
@@ -612,6 +678,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.48	 获取施工日志（抛砂）数据
+     *
      * @param ItemID
      * @param ShipAccount
      * @param StartTime
@@ -623,12 +690,14 @@ public interface DataSouceImpl {
 
     /**
      * 1.49 获取可以进行退场申请的数据
+     *
      * @return
      */
     Observable<Boolean> GetExitApplicationList(int jumpWeek, String account);
 
     /**
      * 3.1 修改密码
+     *
      * @param LoginName
      * @param OldPassword
      * @param NewPassword
@@ -638,6 +707,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.51 根据退场ItemID,获取退场申请的数据
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -645,6 +715,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.53 删除退场申请图片数据
+     *
      * @param ItemID
      * @return
      */
@@ -652,6 +723,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.52 提交退场申请图片数据
+     *
      * @param json
      * @param ByteDataStr
      * @return
@@ -660,12 +732,14 @@ public interface DataSouceImpl {
 
     /**
      * 1.50 提交退场申请数据
+     *
      * @return
      */
     Observable<Boolean> InsertExitApplicationRecord(int ItemID, String ExitTime, String Creator, String Remark, String RemnantAmount, int SubcontractorInterimApproachPlanID);
 
     /**
      * 3.2 修改用户信息
+     *
      * @param LoginName
      * @param DisplayName
      * @param DepartmentID
@@ -680,6 +754,7 @@ public interface DataSouceImpl {
 
     /**
      * 3.3 获取用户信息
+     *
      * @param LoginName
      * @return
      */
@@ -687,19 +762,22 @@ public interface DataSouceImpl {
 
     /**
      * 3.4 获取部门信息
+     *
      * @return
      */
     Observable<Boolean> GetDepartmentsOptions();
 
     /**
      * 1.18 获取对应的过砂记录信息明细
+     *
      * @param itemID
      * @return
      */
     Observable<RecordedSandShowList> GetOverSandRecordByItemID(int itemID);
 
     /**
-     * 2.5 获取分包商进场计划进度跟踪
+     * 2.5 获取供应商进场计划进度跟踪
+     *
      * @param SubcontractorAccount
      * @param ShipName
      * @param StartDate
@@ -710,6 +788,7 @@ public interface DataSouceImpl {
 
     /**
      * 2.4 根据进场计划ID，获取供砂过程总表
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -717,6 +796,7 @@ public interface DataSouceImpl {
 
     /**
      * 1.54 获取供应商预验收评价数据
+     *
      * @param PageSize
      * @param PageCount
      * @return
@@ -725,14 +805,16 @@ public interface DataSouceImpl {
 
     /**
      * 1.55 获取供应商评分排行榜
-     * @return
+     *
      * @param startTime
      * @param endTime
+     * @return
      */
     Observable<List<Rank>> GetSubcontractorPreAcceptanceEvaluationRanking(String startTime, String endTime);
 
     /**
      * 4.1 获取当前app最新版本
+     *
      * @param version
      * @return
      */
@@ -740,10 +822,29 @@ public interface DataSouceImpl {
 
     /**
      * 3.5 获取所有用户信息（通讯录数据源）
+     *
      * @param PageSize
      * @param PageCount
      * @param ConditionJson
      * @return
      */
     Observable<List<Contacts>> GetMembers(int PageSize, int PageCount, String ConditionJson);
+
+    /**
+     * 1.56 提交分包商航次完善扫描件（用于确认提交）
+     *
+     * @param ItemID
+     * @param Creator
+     * @param SubcontractorInterimApproachPlanID
+     * @param IsSumbitted
+     * @param Remark
+     * @return
+     */
+    Observable<Boolean> InsertSubcontractorPerfectBoatScannerRecord(String ItemID, String Creator, int SubcontractorInterimApproachPlanID, int IsSumbitted, String Remark);
+
+    /**
+     * 1.61 判断是否允许新增或者修改进场计划数据
+     * @return
+     */
+    Observable<Boolean> IsAllowEditPlanData(String Date);
 }

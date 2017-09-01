@@ -157,4 +157,34 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter {
         // 获取扫描件类型
         getScannerType(position, type);
     }
+
+    @Override
+    public void commit(String ItemID, String Creator, int SubcontractorInterimApproachPlanID, int IsSumbitted, String Remark) {
+        view.showLoading(true);
+        dataRepository.InsertSubcontractorPerfectBoatScannerRecord(ItemID, Creator, SubcontractorInterimApproachPlanID, IsSumbitted, Remark)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showCommitResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
 }

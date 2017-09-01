@@ -14,6 +14,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.ToastUtil;
 
 import java.util.List;
 
@@ -71,21 +72,25 @@ public class VoyageDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ((NormalHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ("text".equals(type)) {
-                    /** 文本输入 */
-                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_TEXT);
-                } else if ("datetime".equals(type)) {
-                    /** 时间输入 */
-                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_DATA);
-                } else if ("select".equals(type)) {
-                    /** 下拉框 */
-                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_ARRAY);
-                } else if ("ReadOnly".equals(type)) {
-                    /** 只读 */
-                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_READ_ONLY);
-                } else if ("number".equals(type)) {
-                    /** 只能输入数字 */
-                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_NUMBER);
+                if (listener != null) {
+                    if ("text".equals(type)) {
+                        /** 文本输入 */
+                        listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_TEXT);
+                    } else if ("datetime".equals(type)) {
+                        /** 时间输入 */
+                        listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_DATA);
+                    } else if ("select".equals(type)) {
+                        /** 下拉框 */
+                        listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_ARRAY);
+                    } else if ("ReadOnly".equals(type)) {
+                        /** 只读 */
+                        listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_READ_ONLY);
+                    } else if ("number".equals(type)) {
+                        /** 只能输入数字 */
+                        listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.TYPE_NUMBER);
+                    }
+                } else {
+                    ToastUtil.tip(context, "不能修改数据");
                 }
             }
         });

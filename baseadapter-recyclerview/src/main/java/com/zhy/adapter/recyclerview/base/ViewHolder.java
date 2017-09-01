@@ -108,7 +108,9 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      */
     public ViewHolder setText(int viewId, String text) {
         TextView tv = getView(viewId);
-        tv.setText(text);
+        if (tv != null) {
+            tv.setText(text);
+        }
         return this;
     }
 

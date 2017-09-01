@@ -56,7 +56,7 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ((NormalHolder) holder).mLlDate.setVisibility(View.INVISIBLE);
 
             if (account == null || account.equals("")) {
-                weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
+                weekTasks = DataSupport.where("position = ?", String.valueOf(position)).find(WeekTask.class);
             } else {
                 weekTasks = DataSupport.where("position = ? and SubcontractorAccount = ?", String.valueOf(position), account).find(WeekTask.class);
             }

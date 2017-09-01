@@ -12,4 +12,8 @@ public class LogUtil {
     public static void d (Object o) {
         XLog.d(o);
     }
+
+    public static void e (Object o) {
+        XLog.e(o);
+    }
 }

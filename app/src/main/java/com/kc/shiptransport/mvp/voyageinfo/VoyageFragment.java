@@ -64,7 +64,7 @@ public class VoyageFragment extends BaseMvpFragment {
 
     @Override
     protected String abs_showTitleOtherInfo(String data) {
-        return "分包商: " + data;
+        return "供应商: " + data;
     }
 
     @Override

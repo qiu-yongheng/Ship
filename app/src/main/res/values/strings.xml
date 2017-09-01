@@ -59,7 +59,7 @@
     <string name="title_sample">取样管理</string>
     <string name="sample_red">红色字体: 已取样</string>
     <string name="sample_black">黑色字体: 未取样</string>
-    <string name="title_scanner">分包商填写进场材料</string>
+    <string name="title_scanner">供应商填写进场材料</string>
     <string name="scanner_red">红色字体: 已完善</string>
     <string name="scanner_black">黑色字体: 未完善</string>
     <string name="scanner_stowage">装舱现场照片</string>
@@ -108,9 +108,9 @@
     <string name="text_attendance_remark">考勤备注:</string>
     <string name="item_cons_ship">施工船舶:</string>
     <string name="hint_click">点击选择</string>
-    <string name="text_amount_photo">量方照片:</string>
-    <string name="text_info">基础信息查看</string>
-    <string name="text_scan">扫描件查看</string>
+    <string name="text_amount_photo">量方照片: (量方纸照片必填)</string>
+    <string name="text_info">信息审核</string>
+    <string name="text_scan">资料审核</string>
     <string name="text_stop">停工</string>
     <string name="text_throw_sand">抛砂</string>
     <string name="title_construction">施工日报</string>
@@ -151,22 +151,23 @@
     <string name="title_recorded_sand_detail_list">过砂记录</string>
     <string name="btn_update">修改</string>
     <string name="select_time">全部时间</string>
-    <string name="select_sub">全部分包商</string>
+    <string name="select_sub">全部供应商</string>
     <string name="select_ship">全部供砂船舶</string>
     <string name="title_analysis">供砂进度跟踪</string>
     <string name="btn_ok">确定</string>
-    <string name="title_analysis_detail">分包商进场计划进度跟踪</string>
+    <string name="title_analysis_detail">供应商进场计划进度跟踪</string>
     <string name="title_evaluation">预验收评价</string>
-    <string name="title_rank">分包商排行</string>
+    <string name="title_rank">供应商排行</string>
     <string name="title_contact">通讯录</string>
     <string name="text_current_version_code">当前版本号</string>
     <string name="btn_save">保存</string>
+    <string name="commit_tip">提交数据后, 将不能再次修改, 是否提交?</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
-        <item>分包商进场计划</item>
-        <item>分包商航次信息完善</item>
-        <item>分包商航次完善扫描件</item>
+        <item>供应商进场计划</item>
+        <item>供应商航次信息完善</item>
+        <item>供应商航次完善扫描件</item>
         <item>待验收航次</item>
         <item>量方管理</item>
         <item>待验砂船次</item>

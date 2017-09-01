@@ -50,7 +50,7 @@ public class PlanPresenter implements PlanContract.Presenter {
 
     @Override
     public void start(int jumpWeek) {
-        // 1. 获取分包商, 周
+        // 1. 获取供应商, 周
         getTitle(jumpWeek);
 
         // 2. 获取当前月
@@ -248,7 +248,7 @@ public class PlanPresenter implements PlanContract.Presenter {
     @Override
     public void getWeekTask(final int jumpWeek) {
         mDataRepository
-                .getWeekTask()
+                .getWeekTask(jumpWeek)
                 .subscribeOn(Schedulers.io())
                 .doOnNext(new Consumer<List<WeekTask>>() {
                     @Override
@@ -280,7 +280,7 @@ public class PlanPresenter implements PlanContract.Presenter {
 
                     @Override
                     public void onComplete() {
-                        // 4. 获取分包商计划量缺口
+                        // 4. 获取供应商计划量缺口
                         getTaskVolume(jumpWeek);
                     }
                 });

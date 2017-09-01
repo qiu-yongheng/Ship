@@ -41,11 +41,11 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
 
     @Override
     public void subscribe() {
-        // 获取分包商列表
+        // 获取供应商列表
         Observable<List<SubcontractorList>> listObservable = dataRepository.getSubcontractorList()
                 .subscribeOn(Schedulers.io());
 
-        // 获取分包商进场计划跟踪
+        // 获取供应商进场计划跟踪
         Observable<List<ProgressTrack>> progressObservable = dataRepository
                 .GetSubcontractorInterimApproachPlanProgressTracking("", "", "", "")
                 .subscribeOn(Schedulers.io());
@@ -128,7 +128,7 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
     }
 
     /**
-     * 获取分包商评价信息
+     * 获取供应商评价信息
      */
     @Override
     public void getEvaluation(int pageSize, int pageCount, String startTime, String endTime, String subShipAccount, boolean showLoading) {
@@ -164,7 +164,7 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
     }
 
     /**
-     * 获取分包商评价排行
+     * 获取供应商评价排行
      */
     @Override
     public void getRank(String startTime, String endTime) {

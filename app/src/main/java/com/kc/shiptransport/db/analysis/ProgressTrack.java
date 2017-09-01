@@ -5,14 +5,14 @@ import org.litepal.crud.DataSupport;
 /**
  * @author 邱永恒
  * @time 2017/7/27  10:21
- * @desc 分包商进场计划进度跟踪
+ * @desc 供应商进场计划进度跟踪
  */
 
 public class ProgressTrack extends DataSupport{
     /**
      * ItemID : 3564
      * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试分包商
+     * SubcontractorName : 测试供应商
      * PlanDay : 2017-07-19
      * ShipAccount : ygzh3966
      * ShipName : 粤广州货3966

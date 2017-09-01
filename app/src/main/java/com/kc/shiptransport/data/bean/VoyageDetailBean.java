@@ -16,7 +16,7 @@ public class VoyageDetailBean extends DataSupport{
      * ShipAccount : bsj618
      * ShipName : 博石机618
      * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试分包商
+     * SubcontractorName : 测试供应商
      * SystemDate :
      * Creator :
      * StoreName :

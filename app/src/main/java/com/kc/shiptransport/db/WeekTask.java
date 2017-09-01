@@ -9,30 +9,37 @@ import org.litepal.crud.DataSupport;
  */
 
 public class WeekTask extends DataSupport{
-    private int id;
     private String position;
     private String selected;
 
 
     /**
-     * ItemID : 1152
+     * ItemID : 6564
      * SubcontractorAccount : csfbs
      * SubcontractorName : 测试分包商
-     * PlanDay : 2017-07-03
-     * ShipAccount : tl368
-     * ShipName : 天力368
-     * ShipType : B类
-     * SandSupplyCount : 2500
-     * ReceptionSandTime : 2017-07-05T19:57:00
-     * PreAcceptanceTime : 2017-07-05 19:54:00
-     * SandSubcontractorPreAcceptanceEvaluationID : 30
-     * DefaultCapacity : 1688
-     * defaultDeckGauge : 793.43
+     * PlanDay : 2017-08-17
+     * ShipAccount : csgscb
+     * ShipName : 测试供砂船舶
+     * ShipType : A类
+     * SandSupplyCount : 3000
+     * ReceptionSandTime : null
+     * PreAcceptanceTime : null
+     * SandSubcontractorPreAcceptanceEvaluationID : null
+     * DefaultCapacity : 1700
+     * DefaultDeckGauge : 1400
+     * IsAllowUpdatePlan : 0
+     * IsSumbittedPerfectBoat : 1
+     * PerfectBoatItemCount : 15
+     * PerfectBoatRecordID : 1020
      * IsPerfect : 1
-     * IsReceptionSandTime : 1
-     * PerfectBoatItemCount : 14
-     * PerfectBoatRecordID : 11
+     * IsFinshPerfectBoatScannerAttachment : 0
+     * IsSumbittedPerfectBoatScanner : 0
+     * PreAcceptanceEvaluationStatus : 0
+     * IsAllowPreAcceptanceEvaluation : 0
      * IsTheAmountOfTime : 0
+     * IsReceptionSandTime : 0
+     * IsSandSampling : 0
+     * IsOverSand : 1
      */
 
     private int ItemID;
@@ -43,26 +50,40 @@ public class WeekTask extends DataSupport{
     private String ShipName;
     private String ShipType;
     private String SandSupplyCount;
-    /** 验砂时间 */
     private String ReceptionSandTime;
-    /** 验收时间 */
     private String PreAcceptanceTime;
-    /** 分包商预验收评价ID */
     private int SandSubcontractorPreAcceptanceEvaluationID;
     private String DefaultCapacity;
-    private String defaultDeckGauge;
-    /** 信息是否完善, 1完善, 0未完善 */
-    private int IsPerfect;
-    /** 1代表已验砂，0代表未验砂 */
-    private int IsReceptionSandTime;
-    /** 已填写字段数量 */
+    private String DefaultDeckGauge;
+    private int IsAllowUpdatePlan;
+    private int IsSumbittedPerfectBoat;
     private int PerfectBoatItemCount;
-    /** 完善船次条目编号 */
     private int PerfectBoatRecordID;
-    /** 1 已量方 0 未量方 */
+    private int IsPerfect;
+    private int IsFinshPerfectBoatScannerAttachment;
+    private int IsSumbittedPerfectBoatScanner;
+    private int PreAcceptanceEvaluationStatus;
+    private int IsAllowPreAcceptanceEvaluation;
     private int IsTheAmountOfTime;
-    /** 1 已完善扫描件 0 未完善扫描件 */
-    private int IsFinshReceptionSandAttachment;
+    private int IsReceptionSandTime;
+    private int IsSandSampling;
+    private int IsOverSand;
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getSelected() {
+        return selected;
+    }
+
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
 
     public int getItemID() {
         return ItemID;
@@ -161,27 +182,27 @@ public class WeekTask extends DataSupport{
     }
 
     public String getDefaultDeckGauge() {
-        return defaultDeckGauge;
+        return DefaultDeckGauge;
     }
 
-    public void setDefaultDeckGauge(String defaultDeckGauge) {
-        this.defaultDeckGauge = defaultDeckGauge;
+    public void setDefaultDeckGauge(String DefaultDeckGauge) {
+        this.DefaultDeckGauge = DefaultDeckGauge;
     }
 
-    public int getIsPerfect() {
-        return IsPerfect;
+    public int getIsAllowUpdatePlan() {
+        return IsAllowUpdatePlan;
     }
 
-    public void setIsPerfect(int IsPerfect) {
-        this.IsPerfect = IsPerfect;
+    public void setIsAllowUpdatePlan(int IsAllowUpdatePlan) {
+        this.IsAllowUpdatePlan = IsAllowUpdatePlan;
     }
 
-    public int getIsReceptionSandTime() {
-        return IsReceptionSandTime;
+    public int getIsSumbittedPerfectBoat() {
+        return IsSumbittedPerfectBoat;
     }
 
-    public void setIsReceptionSandTime(int IsReceptionSandTime) {
-        this.IsReceptionSandTime = IsReceptionSandTime;
+    public void setIsSumbittedPerfectBoat(int IsSumbittedPerfectBoat) {
+        this.IsSumbittedPerfectBoat = IsSumbittedPerfectBoat;
     }
 
     public int getPerfectBoatItemCount() {
@@ -200,6 +221,46 @@ public class WeekTask extends DataSupport{
         this.PerfectBoatRecordID = PerfectBoatRecordID;
     }
 
+    public int getIsPerfect() {
+        return IsPerfect;
+    }
+
+    public void setIsPerfect(int IsPerfect) {
+        this.IsPerfect = IsPerfect;
+    }
+
+    public int getIsFinshPerfectBoatScannerAttachment() {
+        return IsFinshPerfectBoatScannerAttachment;
+    }
+
+    public void setIsFinshPerfectBoatScannerAttachment(int IsFinshPerfectBoatScannerAttachment) {
+        this.IsFinshPerfectBoatScannerAttachment = IsFinshPerfectBoatScannerAttachment;
+    }
+
+    public int getIsSumbittedPerfectBoatScanner() {
+        return IsSumbittedPerfectBoatScanner;
+    }
+
+    public void setIsSumbittedPerfectBoatScanner(int IsSumbittedPerfectBoatScanner) {
+        this.IsSumbittedPerfectBoatScanner = IsSumbittedPerfectBoatScanner;
+    }
+
+    public int getPreAcceptanceEvaluationStatus() {
+        return PreAcceptanceEvaluationStatus;
+    }
+
+    public void setPreAcceptanceEvaluationStatus(int PreAcceptanceEvaluationStatus) {
+        this.PreAcceptanceEvaluationStatus = PreAcceptanceEvaluationStatus;
+    }
+
+    public int getIsAllowPreAcceptanceEvaluation() {
+        return IsAllowPreAcceptanceEvaluation;
+    }
+
+    public void setIsAllowPreAcceptanceEvaluation(int IsAllowPreAcceptanceEvaluation) {
+        this.IsAllowPreAcceptanceEvaluation = IsAllowPreAcceptanceEvaluation;
+    }
+
     public int getIsTheAmountOfTime() {
         return IsTheAmountOfTime;
     }
@@ -208,35 +269,27 @@ public class WeekTask extends DataSupport{
         this.IsTheAmountOfTime = IsTheAmountOfTime;
     }
 
-    public int getId() {
-        return id;
+    public int getIsReceptionSandTime() {
+        return IsReceptionSandTime;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIsReceptionSandTime(int IsReceptionSandTime) {
+        this.IsReceptionSandTime = IsReceptionSandTime;
     }
 
-    public String getPosition() {
-        return position;
+    public int getIsSandSampling() {
+        return IsSandSampling;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setIsSandSampling(int IsSandSampling) {
+        this.IsSandSampling = IsSandSampling;
     }
 
-    public String getSelected() {
-        return selected;
+    public int getIsOverSand() {
+        return IsOverSand;
     }
 
-    public void setSelected(String selected) {
-        this.selected = selected;
-    }
-
-    public int getIsFinshReceptionSandAttachment() {
-        return IsFinshReceptionSandAttachment;
-    }
-
-    public void setIsFinshReceptionSandAttachment(int isFinshReceptionSandAttachment) {
-        IsFinshReceptionSandAttachment = isFinshReceptionSandAttachment;
+    public void setIsOverSand(int IsOverSand) {
+        this.IsOverSand = IsOverSand;
     }
 }

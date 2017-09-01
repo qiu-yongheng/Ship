@@ -26,7 +26,7 @@ public interface LoginContract {
         void loadData(String username);
         // 登录
         void login(String username, String password);
-        // 根据用户名, 获取分包商信息
+        // 根据用户名, 获取供应商信息
         void getSubcontractor();
         // 根据用户名, 获取船信息
         void getShip();

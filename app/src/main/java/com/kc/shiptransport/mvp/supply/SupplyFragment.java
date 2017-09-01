@@ -206,7 +206,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
     public void initViews(View view) {
         SharePreferenceUtil.saveInt(getContext(), SettingUtil.WEEK_JUMP_SUPPLY, 0);
 
-        // 还原当前选中的分包商账号
+        // 还原当前选中的供应商账号
         SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, "");
 
         // 允许使用menu
@@ -358,7 +358,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
         // TODO 这里会报空指针
         mTitleSpinner.setVisibility(View.VISIBLE);
         List<String> datas = new ArrayList<>();
-        datas.add("所有分包商");
+        datas.add("所有供应商");
         for (SubcontractorList subcontractor : value) {
             datas.add(subcontractor.getSubcontractorName());
         }
@@ -372,7 +372,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
         // 根据上一个界面传过来的position设置当前显示的item
         mTitleSpinner.setSelection(0);
 
-        // 点击后, 筛选分包商的数据
+        // 点击后, 筛选供应商的数据
         mTitleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 
@@ -390,7 +390,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
                     subcontractorAccount = "";
                     presenter.doRefresh(jumpWeek, subcontractorAccount);
                 }
-                // 保存当前选中的分包商账号
+                // 保存当前选中的供应商账号
                 SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, subcontractorAccount);
             }
 

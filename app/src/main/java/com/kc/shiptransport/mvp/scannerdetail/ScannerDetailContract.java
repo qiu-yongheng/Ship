@@ -19,6 +19,7 @@ public interface ScannerDetailContract {
         void showLoading(boolean isShow);
         void showError(String msg);
         void showDatas(List<ScannerListBean> scannerImage);
+        void showCommitResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {
@@ -26,5 +27,6 @@ public interface ScannerDetailContract {
         // 获取扫描件类型
         void getScannerType(int position, int type);
         void start(int position, int type);
+        void commit(String ItemID, String Creator, int SubcontractorInterimApproachPlanID, int IsSumbitted, String Remark);
     }
 }

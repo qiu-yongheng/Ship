@@ -119,7 +119,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                     switch (type[0]) {
                         /** AppPID = 2 供砂管理 */
                         case 10:
-                            // 分包商进场计划
+                            // 供应商进场计划
                             PlanActivity.navigateToPlanActivity(getContext());
                             break;
                         case 11:
@@ -135,11 +135,11 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             AmountActivity.navigateToAmountActivity(getContext());
                             break;
                         case 14:
-                            // 分包商航次信息完善
+                            // 供应商航次信息完善
                             VoyageInfoActivity.navigateToVoyageInfoActivity(getContext());
                             break;
                         case 15:
-                            // 分包商航次完善扫描件
+                            // 供应商航次完善扫描件
                             ScannerActivity.navigateToScannerActivity(getContext());
                             break;
                         case 16:
@@ -163,7 +163,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_ACCEPTANCE_EVALUATION);
                             break;
                         case 24:
-                            // 分包商排行
+                            // 供应商排行
                             AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_ACCEPTANCE_RANK);
                             break;
 

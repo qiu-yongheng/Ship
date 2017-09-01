@@ -33,23 +33,27 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="vertical">
+
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/edittext_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="10dp"
                     android:drawableLeft="@mipmap/ico_username"
-                    android:hint="@string/hint_username"/>
+                    android:drawablePadding="10dp"
+                    android:hint="@string/hint_username"
+                    android:singleLine="true"/>
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/edittext_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:drawablePadding="10dp"
                     android:drawableLeft="@mipmap/ico_password"
+                    android:drawablePadding="10dp"
                     android:hint="@string/hint_password"
-                    android:password="true"/>
+                    android:imeOptions="actionDone"
+                    android:password="true"
+                    android:singleLine="true"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

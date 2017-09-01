@@ -79,6 +79,7 @@
         <activity android:name=".mvp.acceptanceevaluation.AcceptanceEvaluationActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.contacts.ContactActivity" android:launchMode="singleTask"/>
         <activity android:name=".mvp.contactsdetail.ContactDetailActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.exitapplicationassessor.ExitApplicationAssessorActivity" android:launchMode="singleTask"/>
 
 
         <activity

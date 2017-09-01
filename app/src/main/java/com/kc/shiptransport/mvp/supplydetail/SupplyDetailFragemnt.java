@@ -131,7 +131,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
             etBatch.setInputType(InputType.TYPE_CLASS_TEXT);
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
-            btnAcceptanceCancel.setText(R.string.btn_cancle);
+            btnAcceptanceCancel.setText("不通过");
 
             /* 点击弹出时间选择器 */
             tvSupplyTime.setOnClickListener(new View.OnClickListener() {

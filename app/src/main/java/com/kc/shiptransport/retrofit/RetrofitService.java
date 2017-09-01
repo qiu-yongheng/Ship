@@ -41,7 +41,7 @@ public interface RetrofitService {
 
     /**
      * 获取船数据
-     * @param userinfo 分包商账号
+     * @param userinfo 供应商账号
      * @return
      */
     @FormUrlEncoded
@@ -49,8 +49,8 @@ public interface RetrofitService {
     Observable<LoginResult> getShip (@Field("userInfo") String userinfo);
 
     /**
-     * 获取分包商数据
-     * @param SubcontractorAccount 分包商账号名
+     * 获取供应商数据
+     * @param SubcontractorAccount 供应商账号名
      * @return
      */
     @FormUrlEncoded
