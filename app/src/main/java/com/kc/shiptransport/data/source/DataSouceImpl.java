@@ -202,7 +202,9 @@ public interface DataSouceImpl {
                                                       int MaterialTimeliness,
                                                       String PreAcceptanceTime,
                                                       int subcontractorInterimApproachPlanID,
-                                                      Acceptance value);
+                                                      Acceptance value,
+                                                      int Status,
+                                                      String Remark);
 
     /**
      * 根据类型获取船舶列表

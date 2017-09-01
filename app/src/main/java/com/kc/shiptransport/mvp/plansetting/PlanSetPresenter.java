@@ -1,17 +1,20 @@
 package com.kc.shiptransport.mvp.plansetting;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.ship.Ship;
+import com.kc.shiptransport.util.LogUtil;
 
 import java.util.List;
 
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -25,6 +28,7 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
     private final PlanSetContract.View view;
     private final DataRepository mDataRepository;
     private final CompositeDisposable compositeDisposable;
+    private Boolean isAllow = false;
 
     public PlanSetPresenter(Context context, PlanSetContract.View view) {
         this.context = context;
@@ -50,9 +54,17 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
      */
     @Override
     public void getShipCategory(final String date) {
-        Log.d("==", "----PlanSetPresenter: 获取所有ship, 分类, 传递当前时间----");
+        view.showLoading(true);
         mDataRepository
-                .getShipCategory()
+                .IsAllowEditPlanData(date)
+                .flatMap(new Function<Boolean, ObservableSource<List<Ship>>>() {
+                    @Override
+                    public ObservableSource<List<Ship>> apply(@NonNull Boolean aBoolean) throws Exception {
+                        isAllow = aBoolean;
+                        LogUtil.d(date + "是否允许修改数据: " + aBoolean);
+                        return mDataRepository.getShipCategory();
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Ship>>() {
@@ -64,17 +76,18 @@ public class PlanSetPresenter implements PlanSetContract.Presenter{
                     @Override
                     public void onNext(List<Ship> value) {
                         // 传递当前选中日期
-                        view.showShipCategory(value, date);
+                        view.showShipCategory(value, date, isAllow);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        view.showLoading(false);
+                        view.showError(e.toString());
                     }
 
                     @Override
                     public void onComplete() {
-
+                        view.showLoading(false);
                     }
                 });
     }

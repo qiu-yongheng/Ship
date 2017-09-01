@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.plansetting;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,11 +26,13 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.ship.Ship;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.shipselect.ShipSelectActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
+import com.kc.shiptransport.util.ToastUtil;
 
 import java.util.List;
 
@@ -180,12 +183,22 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
 
     @Override
     public void showLoading(boolean isShow) {
+        if (isShow) {
 
+            activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
+        } else {
+            activity.hideProgressDailog();
+        }
     }
 
     @Override
     public void showError(String msg) {
-
+        ToastUtil.tip(getContext(), msg);
     }
 
     @Override
@@ -208,19 +221,21 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     /**
      * 获取数据, 显示船舶分类
      * 从数据库获取所有数据
-     *  @param value
+     *
+     * @param value
      * @param date
+     * @param isAllow
      */
     @Override
-    public void showShipCategory(final List<Ship> value, final String date) {
+    public void showShipCategory(final List<Ship> value, final String date, Boolean isAllow) {
         if (adapter == null) {
-            adapter = new PlanSetAdapter(activity, value, date, jumpWeek);
+            adapter = new PlanSetAdapter(activity, value, date, jumpWeek, isAllow);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
                     if (type[0] == 1) {
-                    // 传递类型
-                    navigationToShipSelectActivity(value.get(position).getShipType());
+                        // 传递类型
+                        navigationToShipSelectActivity(value.get(position).getShipType());
                     } else {
                         Toast.makeText(getContext(), "该日期不能修改计划, 请重新选择", Toast.LENGTH_SHORT).show();
                     }

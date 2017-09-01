@@ -4,13 +4,19 @@ import android.content.Context;
 
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 
+import org.litepal.crud.DataSupport;
+
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -88,20 +94,26 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
      * 1. 提交验收评价
      * 2. 同步数据
      * 3. 更新供砂任务明细
+     *
      * @param SubcontractorInterimApproachPlanID 进场ID
-     * @param time 审核时间
-     * @param itemID 评价ID
-     * @param rbcomplete 材料完整性
-     * @param rbtimely 材料及时性
-     * @param shipnum 船次编号
+     * @param time                               审核时间
+     * @param itemID                             评价ID
+     * @param rbcomplete                         材料完整性
+     * @param rbtimely                           材料及时性
      * @param value
      */
     @Override
     public void commit(final int SubcontractorInterimApproachPlanID,
-                       String time, final int itemID, final int rbcomplete, final int rbtimely, final String shipnum, Acceptance value) {
+                       String time,
+                       final int itemID,
+                       final int rbcomplete,
+                       final int rbtimely,
+                       Acceptance value,
+                       int Status,
+                       String Remark) {
         view.showLoading(true);
         dataRepository
-                .InsertPreAcceptanceEvaluation(itemID, rbcomplete, rbtimely, time, SubcontractorInterimApproachPlanID, value)
+                .InsertPreAcceptanceEvaluation(itemID, rbcomplete, rbtimely, time, SubcontractorInterimApproachPlanID, value, Status, Remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<Integer, Observable<Boolean>>() { // 同步
@@ -112,14 +124,39 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                             return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN),
                                     SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
-                            return null;
+                            return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                                @Override
+                                public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                                    e.onNext(false);
+                                    e.onComplete();
+                                }
+                            });
                         }
+                    }
+                })
+                .map(new Function<Boolean, Boolean>() {
+                    @Override
+                    public Boolean apply(@NonNull Boolean aBoolean) throws Exception {
+                        /** 删除不能进行预验砂的任务 */
+                        DataSupport.deleteAll(WeekTask.class, "IsAllowPreAcceptanceEvaluation = 0");
+                        dataRepository.dataSort(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN));
+                        return aBoolean;
                     }
                 })
                 .flatMap(new Function<Boolean, Observable<Acceptance>>() { // 更新
                     @Override
                     public Observable<Acceptance> apply(Boolean aBoolean) throws Exception {
-                        return dataRepository.getAcceptanceByItemID(SubcontractorInterimApproachPlanID, false);
+                        // 更新供砂明细
+                        if (aBoolean) {
+                            return dataRepository.getAcceptanceByItemID(SubcontractorInterimApproachPlanID, false);
+                        } else {
+                            return Observable.create(new ObservableOnSubscribe<Acceptance>() {
+                                @Override
+                                public void subscribe(@NonNull ObservableEmitter<Acceptance> e) throws Exception {
+                                    e.onError(new Throwable("提交失败"));
+                                }
+                            });
+                        }
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

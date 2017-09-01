@@ -317,6 +317,16 @@
             android:background="?colorPrimary"
             android:text="通过"
             android:textColor="#fff"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:visibility="gone"
+            android:id="@+id/btn_acceptance_return"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#888"
+            android:text="返回"
+            android:textColor="#fff"/>
     </LinearLayout>
 
 </RelativeLayout>

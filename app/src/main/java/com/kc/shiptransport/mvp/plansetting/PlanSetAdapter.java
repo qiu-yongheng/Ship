@@ -33,18 +33,20 @@ import java.util.List;
 public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final int jumpWeek;
+    private final Boolean isAllow;
     private List<Ship> value;
     private String date;
     private OnRecyclerviewItemClickListener listener;
     private int isUpdate = 1;
 
-    public PlanSetAdapter(Context context, List<Ship> value, String date, int jumpWeek) {
+    public PlanSetAdapter(Context context, List<Ship> value, String date, int jumpWeek, Boolean isAllow) {
         this.context = context;
         this.value = value;
         this.date = date;
         this.jumpWeek = jumpWeek;
+        this.isAllow = isAllow;
 
-        isUpdatable();
+        //isUpdatable();
     }
 
     @Override
@@ -106,7 +108,8 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
 
-        if (isUpdate == 1) {
+//        if (isUpdate == 1) {
+        if (isAllow) {
             // 可以修改
             ((NormalHolder) holder).mBtnShipTypeSelect.setText("选择");
             ((NormalHolder) holder).mBtnShipTypeSelect.setBackgroundResource(R.color.red);

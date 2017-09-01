@@ -85,6 +85,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     EditText tvAcceptanceOpinion;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.btn_acceptance_return)
+    AppCompatButton btnAcceptanceReturn;
     private AcceptanceDetailContract.Presenter presenter;
     private AcceptanceDetailActivity activity;
     private int rbcomplete = 0;
@@ -109,7 +111,15 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         btnAcceptanceCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.cancle();
+                // 通过验收时间
+                String time = tvAcceptanceTime.getText().toString().trim();
+                // 预验收意见
+                String opinion = tvAcceptanceOpinion.getText().toString().trim();
+                if (time.equals("") || rbcomplete == 0 || rbtimely == 0) {
+                    Toast.makeText(activity, "验收时间或评价不能为空", Toast.LENGTH_SHORT).show();
+                } else {
+                    presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, -1, opinion);
+                }
             }
         });
 
@@ -117,12 +127,23 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 通过验收时间
                 String time = tvAcceptanceTime.getText().toString().trim();
+                // 预验收意见
+                String opinion = tvAcceptanceOpinion.getText().toString().trim();
                 if (time.equals("") || rbcomplete == 0 || rbtimely == 0) {
                     Toast.makeText(activity, "验收时间或评价不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, shipItemNum, value);
+                    presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, 1, opinion);
                 }
+            }
+        });
+
+        /* 返回 */
+        btnAcceptanceReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
             }
         });
 
@@ -176,7 +197,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         if (activity.isAcceptance) {
             // 已验收
             btnAcceptanceCommit.setVisibility(View.GONE);
-            btnAcceptanceCancel.setText(R.string.btn_return);
+            btnAcceptanceCancel.setVisibility(View.GONE);
+            btnAcceptanceReturn.setVisibility(View.VISIBLE);
 
 
             // 设置只能用来看
@@ -185,6 +207,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         } else {
             // 未验收
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
+            btnAcceptanceCancel.setVisibility(View.VISIBLE);
+            btnAcceptanceReturn.setVisibility(View.GONE);
 
             /* 点击弹出时间选择器 */
             tvAcceptanceTime.setOnClickListener(new View.OnClickListener() {

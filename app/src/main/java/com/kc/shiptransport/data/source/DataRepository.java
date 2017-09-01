@@ -756,31 +756,30 @@ public class DataRepository implements DataSouceImpl {
                 } else if (type == SettingUtil.TYPE_EXIT_APPLICATION) {
                     /** 退场申请 */
                     num = DataSupport.where("IsExit = ?", "0").count(ExitList.class);
-                }
-                else if (type == SettingUtil.TYPE_ACCEPT) {
+                } else if (type == SettingUtil.TYPE_ACCEPT) {
                     /** 验收 1通过, 0保存, -1不通过(不显示) */
                     // TODO
                     num = DataSupport.where("PreAcceptanceEvaluationStatus = ?", "0").count(WeekTask.class);
                 }
-//                else {
-//                    // 1. 获取一周任务
-//                    List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
-//
-//                    // 2. 统计未验收任务
-//                    if (weekTasks != null && !weekTasks.isEmpty()) {
-//                        for (WeekTask weektask : weekTasks) {
-//                            String time = null;
-//                            String time2 = null;
-//                            if (type == SettingUtil.TYPE_ACCEPT) {
-//                                /** 验收 */
-//                                time = weektask.getPreAcceptanceTime();
-//                                if (time == null || time.equals("")) {
-//                                    num++;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
+                //                else {
+                //                    // 1. 获取一周任务
+                //                    List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
+                //
+                //                    // 2. 统计未验收任务
+                //                    if (weekTasks != null && !weekTasks.isEmpty()) {
+                //                        for (WeekTask weektask : weekTasks) {
+                //                            String time = null;
+                //                            String time2 = null;
+                //                            if (type == SettingUtil.TYPE_ACCEPT) {
+                //                                /** 验收 */
+                //                                time = weektask.getPreAcceptanceTime();
+                //                                if (time == null || time.equals("")) {
+                //                                    num++;
+                //                                }
+                //                            }
+                //                        }
+                //                    }
+                //                }
 
                 e.onNext(num);
                 e.onComplete();
@@ -833,9 +832,9 @@ public class DataRepository implements DataSouceImpl {
      * 评价
      *
      * @param ItemID                             评价ID
-     * @param MaterialIntegrity                         材料完整性
-     * @param MaterialTimeliness                           材料及时性
-     * @param PreAcceptanceTime                        时间
+     * @param MaterialIntegrity                  材料完整性
+     * @param MaterialTimeliness                 材料及时性
+     * @param PreAcceptanceTime                  时间
      * @param shipNum                            船次编号
      * @param SubcontractorInterimApproachPlanID 任务ID
      * @param value
@@ -847,7 +846,9 @@ public class DataRepository implements DataSouceImpl {
                                                              final int MaterialTimeliness,
                                                              final String PreAcceptanceTime,
                                                              final int SubcontractorInterimApproachPlanID,
-                                                             final Acceptance value) {
+                                                             final Acceptance value,
+                                                             final int Status,
+                                                             final String Remark) {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
@@ -861,6 +862,8 @@ public class DataRepository implements DataSouceImpl {
                 jsonObject.put("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
                 jsonObject.put("ShipAccount", value.getShipAccount());
                 jsonObject.put("SubcontractorAccount", value.getSubcontractorAccount());
+                jsonObject.put("Status", Status);
+                jsonObject.put("Remark", Remark);
                 jsonArray.put(jsonObject);
 
                 /* 2. 转换成json */
@@ -1727,7 +1730,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean>  getSandSamplingList(final int jumpWeek, final String account) {
+    public Observable<Boolean> getSandSamplingList(final int jumpWeek, final String account) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -3621,6 +3624,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.56 提交分包商航次完善扫描件（用于确认提交）
+     *
      * @param ItemID
      * @param Creator
      * @param SubcontractorInterimApproachPlanID
@@ -3661,6 +3665,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.61 判断是否允许新增或者修改进场计划数据
+     *
      * @param Date
      * @return
      */
