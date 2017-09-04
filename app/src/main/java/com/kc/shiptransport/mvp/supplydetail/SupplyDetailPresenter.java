@@ -93,6 +93,10 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
                 });
     }
 
+    /**
+     * 只更新图片列表
+     * @param itemID
+     */
     @Override
     public void getShipDetailList(int itemID) {
         view.showLoading(true);

@@ -248,7 +248,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
             });
             recyclerviewAdd.setAdapter(adapter);
         } else {
-            adapter.setDates(value, date);
+            adapter.setDates(value, date, isAllow);
             adapter.notifyDataSetChanged();
         }
     }

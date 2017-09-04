@@ -30,6 +30,7 @@ import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.acceptancedetail.AcceptanceDetailActivity;
 import com.kc.shiptransport.util.DividerGridItemDecoration;
+import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 
@@ -283,13 +284,15 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
                     // 如果item有数据, 设置点击事件
                     if (weekTasks != null && !weekTasks.isEmpty()) {
                         // 判断是否验收
-                        String passReceptionSandTime = weekTasks.get(0).getPreAcceptanceTime();
+                        int passReceptionSandTime = weekTasks.get(0).getPreAcceptanceEvaluationStatus();
 
-                        if (passReceptionSandTime != null && !passReceptionSandTime.isEmpty()) {
-                            // 已验收
+                        LogUtil.d("预验收状态: " + passReceptionSandTime);
+
+                        if (passReceptionSandTime == 1) {
+                            // 通过
                             AcceptanceDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), true, weekTasks.get(0).getSandSubcontractorPreAcceptanceEvaluationID());
                         } else {
-                            // 未验收
+                            // 保存或不通过
                             AcceptanceDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), false, weekTasks.get(0).getSandSubcontractorPreAcceptanceEvaluationID());
                         }
                     }

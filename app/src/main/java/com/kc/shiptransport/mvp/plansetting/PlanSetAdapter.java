@@ -33,7 +33,7 @@ import java.util.List;
 public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final int jumpWeek;
-    private final Boolean isAllow;
+    private Boolean isAllow;
     private List<Ship> value;
     private String date;
     private OnRecyclerviewItemClickListener listener;
@@ -130,11 +130,12 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    public void setDates(List<Ship> value, String date) {
+    public void setDates(List<Ship> value, String date, boolean isAllow) {
         this.value = value;
         this.date = date;
+        this.isAllow = isAllow;
 
-        isUpdatable();
+        //isUpdatable();
     }
 
     /**

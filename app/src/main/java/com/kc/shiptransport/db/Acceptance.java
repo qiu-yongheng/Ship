@@ -11,32 +11,41 @@ import org.litepal.crud.DataSupport;
 public class Acceptance extends DataSupport{
 
     /**
-     * ItemID : 3561
-     * SubmitDate : 2017-07-04
-     * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试供应商
-     * PlanDay : 2017-07-05
-     * ShipAccount : bsj618
-     * ShipName : 博石机618
+     * ItemID : 415
+     * SubmitDate : 2017-05-26
+     * SubcontractorAccount : xgyj
+     * SubcontractorName : 香港怡景
+     * PlanDay : 2017-05-26
+     * ShipAccount : yhzh3393
+     * ShipName : 粤惠州货3393
      * ShipType : B类
      * DeadweightTon : 0
      * MaxTakeInWater : null
-     * SandSupplyCount : 0
-     * SystemDate : 2017-07-04T17:37:15.387
+     * SandSupplyCount : 2500
+     * SystemDate : 2017-05-26 00:00:00
      * ReceptionSandTime : null
-     * PreAcceptanceTime : 2017-07-05 08:59:00
+     * PreAcceptanceTime : 2017-06-08 00:00:00
      * MaterialIntegrity : 3
      * MaterialTimeliness : 5
-     * CurrentTide : 0
-     * ShipItemNum : 2017070501
+     * CurrentTide : 1.08
+     * ShipItemNum : 2017083101
      * DefaultCapacity : 1600
      * DefaultDeckGauge : 1400
      * batch : null
-     * TotalCompleteRide : 1
-     * TotalCompleteSquare : 1300
-     * AvgSquare : 1300
+     * TotalCompleteRide : 0
+     * TotalCompleteSquare : 0
+     * AvgSquare : 0
+     * IsAllowUpdatePlan : 0
+     * IsSumbittedPerfectBoat : 0
+     * IsPerfect : 1
+     * IsFinshPerfectBoatScannerAttachment : 0
+     * IsSumbittedPerfectBoatScanner : 0
+     * PreAcceptanceEvaluationStatus : -1
+     * IsAllowPreAcceptanceEvaluation : 0
+     * IsTheAmountOfTime : 1
      * IsReceptionSandTime : 0
-     * IsSandSampling : 0
+     * IsSandSampling : 1
+     * IsOverSand : 1
      */
 
     private int ItemID;
@@ -53,8 +62,8 @@ public class Acceptance extends DataSupport{
     private String SystemDate;
     private String ReceptionSandTime;
     private String PreAcceptanceTime;
-    private Float MaterialIntegrity;
-    private Float MaterialTimeliness;
+    private float MaterialIntegrity;
+    private float MaterialTimeliness;
     private String CurrentTide;
     private String ShipItemNum;
     private String DefaultCapacity;
@@ -63,8 +72,17 @@ public class Acceptance extends DataSupport{
     private int TotalCompleteRide;
     private String TotalCompleteSquare;
     private String AvgSquare;
+    private int IsAllowUpdatePlan;
+    private int IsSumbittedPerfectBoat;
+    private int IsPerfect;
+    private int IsFinshPerfectBoatScannerAttachment;
+    private int IsSumbittedPerfectBoatScanner;
+    private int PreAcceptanceEvaluationStatus;
+    private int IsAllowPreAcceptanceEvaluation;
+    private int IsTheAmountOfTime;
     private int IsReceptionSandTime;
     private int IsSandSampling;
+    private int IsOverSand;
 
     public int getItemID() {
         return ItemID;
@@ -178,19 +196,19 @@ public class Acceptance extends DataSupport{
         this.PreAcceptanceTime = PreAcceptanceTime;
     }
 
-    public Float getMaterialIntegrity() {
+    public float getMaterialIntegrity() {
         return MaterialIntegrity;
     }
 
-    public void setMaterialIntegrity(Float MaterialIntegrity) {
+    public void setMaterialIntegrity(float MaterialIntegrity) {
         this.MaterialIntegrity = MaterialIntegrity;
     }
 
-    public Float getMaterialTimeliness() {
+    public float getMaterialTimeliness() {
         return MaterialTimeliness;
     }
 
-    public void setMaterialTimeliness(Float MaterialTimeliness) {
+    public void setMaterialTimeliness(float MaterialTimeliness) {
         this.MaterialTimeliness = MaterialTimeliness;
     }
 
@@ -258,6 +276,70 @@ public class Acceptance extends DataSupport{
         this.AvgSquare = AvgSquare;
     }
 
+    public int getIsAllowUpdatePlan() {
+        return IsAllowUpdatePlan;
+    }
+
+    public void setIsAllowUpdatePlan(int IsAllowUpdatePlan) {
+        this.IsAllowUpdatePlan = IsAllowUpdatePlan;
+    }
+
+    public int getIsSumbittedPerfectBoat() {
+        return IsSumbittedPerfectBoat;
+    }
+
+    public void setIsSumbittedPerfectBoat(int IsSumbittedPerfectBoat) {
+        this.IsSumbittedPerfectBoat = IsSumbittedPerfectBoat;
+    }
+
+    public int getIsPerfect() {
+        return IsPerfect;
+    }
+
+    public void setIsPerfect(int IsPerfect) {
+        this.IsPerfect = IsPerfect;
+    }
+
+    public int getIsFinshPerfectBoatScannerAttachment() {
+        return IsFinshPerfectBoatScannerAttachment;
+    }
+
+    public void setIsFinshPerfectBoatScannerAttachment(int IsFinshPerfectBoatScannerAttachment) {
+        this.IsFinshPerfectBoatScannerAttachment = IsFinshPerfectBoatScannerAttachment;
+    }
+
+    public int getIsSumbittedPerfectBoatScanner() {
+        return IsSumbittedPerfectBoatScanner;
+    }
+
+    public void setIsSumbittedPerfectBoatScanner(int IsSumbittedPerfectBoatScanner) {
+        this.IsSumbittedPerfectBoatScanner = IsSumbittedPerfectBoatScanner;
+    }
+
+    public int getPreAcceptanceEvaluationStatus() {
+        return PreAcceptanceEvaluationStatus;
+    }
+
+    public void setPreAcceptanceEvaluationStatus(int PreAcceptanceEvaluationStatus) {
+        this.PreAcceptanceEvaluationStatus = PreAcceptanceEvaluationStatus;
+    }
+
+    public int getIsAllowPreAcceptanceEvaluation() {
+        return IsAllowPreAcceptanceEvaluation;
+    }
+
+    public void setIsAllowPreAcceptanceEvaluation(int IsAllowPreAcceptanceEvaluation) {
+        this.IsAllowPreAcceptanceEvaluation = IsAllowPreAcceptanceEvaluation;
+    }
+
+    public int getIsTheAmountOfTime() {
+        return IsTheAmountOfTime;
+    }
+
+    public void setIsTheAmountOfTime(int IsTheAmountOfTime) {
+        this.IsTheAmountOfTime = IsTheAmountOfTime;
+    }
+
     public int getIsReceptionSandTime() {
         return IsReceptionSandTime;
     }
@@ -272,5 +354,13 @@ public class Acceptance extends DataSupport{
 
     public void setIsSandSampling(int IsSandSampling) {
         this.IsSandSampling = IsSandSampling;
+    }
+
+    public int getIsOverSand() {
+        return IsOverSand;
+    }
+
+    public void setIsOverSand(int IsOverSand) {
+        this.IsOverSand = IsOverSand;
     }
 }

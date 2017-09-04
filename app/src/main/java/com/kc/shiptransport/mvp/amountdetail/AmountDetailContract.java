@@ -2,8 +2,11 @@ package com.kc.shiptransport.mvp.amountdetail;
 
 import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.amount.AmountOption;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
+
+import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 
@@ -41,6 +44,9 @@ public interface AmountDetailContract {
         void showDeleteResult(boolean isSuccess);
 
         void showImgList(AmountDetail value);
+
+        // 显示量方人员
+        void showAmountOption(List<AmountOption> list);
     }
 
     interface Presenter extends BasePresenter {
@@ -62,7 +68,7 @@ public interface AmountDetailContract {
                     String Deduction,
                     String Creator,
                     float LaserQuantitySand,
-                    int TheAmountOfPersonnelID,
+                    String TheAmountOfPersonnelID,
                     String TheAmountOfType,
                     int IsSumbitted,
                     String Remark);
@@ -74,5 +80,8 @@ public interface AmountDetailContract {
         void commitImg(CommitImgListBean amountImgListBean);
 
         void deleteImgForItemID(int ItemID);
+
+        // 获取量方人员
+        void getAmountOption();
     }
 }

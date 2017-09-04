@@ -11,6 +11,7 @@ import com.kc.shiptransport.data.bean.ScanCommitBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
+import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.db.Acceptance;
@@ -29,6 +30,7 @@ import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.amount.AmountOption;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.contacts.Contacts;
@@ -193,7 +195,7 @@ public interface DataSouceImpl {
      * @param MaterialIntegrity                         材料完整性
      * @param MaterialTimeliness                           材料及时性
      * @param PreAcceptanceTime                        时间
-     * @param subcontractorInterimApproachPlanID 任务ID
+     * @param SubcontractorInterimApproachPlanID 任务ID
      * @param value
      * @return
      */
@@ -201,8 +203,8 @@ public interface DataSouceImpl {
                                                       int MaterialIntegrity,
                                                       int MaterialTimeliness,
                                                       String PreAcceptanceTime,
-                                                      int subcontractorInterimApproachPlanID,
-                                                      Acceptance value,
+                                                      int SubcontractorInterimApproachPlanID,
+                                                      AcceptanceInfoBean value,
                                                       int Status,
                                                       String Remark);
 
@@ -306,7 +308,7 @@ public interface DataSouceImpl {
                                                     String Deduction,
                                                     String Creator,
                                                     float LaserQuantitySand,
-                                                    int TheAmountOfPersonnelID,
+                                                    String TheAmountOfPersonnelID,
                                                     String TheAmountOfType,
                                                     int IsSumbitted,
                                                     String Remark);
@@ -349,7 +351,7 @@ public interface DataSouceImpl {
      *
      * @return
      */
-    Observable<Boolean> getWeekTaskSort(int jumpWeek);
+    Observable<Boolean> getWeekTaskSort(int typeSupply, int jumpWeek);
 
     /**
      * 获取过砂记录
@@ -849,4 +851,17 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> IsAllowEditPlanData(String Date);
+
+    /**
+     * 1.57 根据进场计划ID获取分包商预验收评价数据
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    Observable<AcceptanceInfoBean> GetSandSubcontractorPreAcceptanceEvaluationBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
+
+    /**
+     * 1.60 获取量方人员信息数据
+     * @return
+     */
+    Observable<List<AmountOption>> GetTheAmountOfPersonnelOptions();
 }

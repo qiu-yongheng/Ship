@@ -32,6 +32,7 @@ import com.kc.shiptransport.data.bean.SubcontractorBean;
 import com.kc.shiptransport.data.bean.SubmitBean;
 import com.kc.shiptransport.data.bean.TaskVolumeBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
+import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
@@ -54,6 +55,7 @@ import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.amount.AmountOption;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.contacts.Contacts;
@@ -835,7 +837,6 @@ public class DataRepository implements DataSouceImpl {
      * @param MaterialIntegrity                  材料完整性
      * @param MaterialTimeliness                 材料及时性
      * @param PreAcceptanceTime                  时间
-     * @param shipNum                            船次编号
      * @param SubcontractorInterimApproachPlanID 任务ID
      * @param value
      * @return
@@ -846,7 +847,7 @@ public class DataRepository implements DataSouceImpl {
                                                              final int MaterialTimeliness,
                                                              final String PreAcceptanceTime,
                                                              final int SubcontractorInterimApproachPlanID,
-                                                             final Acceptance value,
+                                                             final AcceptanceInfoBean value,
                                                              final int Status,
                                                              final String Remark) {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
@@ -1410,14 +1411,15 @@ public class DataRepository implements DataSouceImpl {
     @Override
     public Observable<Boolean> InsertTheAmountOfSideRecord(final int itemID,
                                                            final String TheAmountOfTime,
-                                                           final String subcontractorAccount, final int SubcontractorInterimApproachPlanID,
+                                                           final String subcontractorAccount,
+                                                           final int SubcontractorInterimApproachPlanID,
                                                            final String ShipAccount,
                                                            final String Capacity,
                                                            final String DeckGauge,
                                                            final String Deduction,
                                                            final String Creator,
                                                            final float LaserQuantitySand,
-                                                           final int TheAmountOfPersonnelID,
+                                                           final String TheAmountOfPersonnelID,
                                                            final String TheAmountOfType,
                                                            final int IsSumbitted,
                                                            final String Remark) {
@@ -1437,7 +1439,7 @@ public class DataRepository implements DataSouceImpl {
                 jsonObject.put("Deduction", Deduction);
                 jsonObject.put("Creator", Creator);
                 jsonObject.put("LaserQuantitySand", LaserQuantitySand);
-                jsonObject.put("TheAmountOfPersonnelID", TheAmountOfPersonnelID);
+                jsonObject.put("TheAmountOfPersonnelAccount", TheAmountOfPersonnelID);
                 jsonObject.put("TheAmountOfType", TheAmountOfType);
                 jsonObject.put("IsSumbitted", IsSumbitted);
                 jsonObject.put("Remark", Remark);
@@ -1447,7 +1449,7 @@ public class DataRepository implements DataSouceImpl {
 
 
                 String json = jsonArray.toString();
-                Log.d("==", "量方: " + json);
+                LogUtil.d(SubcontractorInterimApproachPlanID + "量方提交数据: \n" + json);
 
 
                 String result = mRemoteDataSource.InsertTheAmountOfSideRecord(json);
@@ -1619,12 +1621,23 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> getWeekTaskSort(final int jumpWeek) {
+    public Observable<Boolean> getWeekTaskSort(final int typeSupply, final int jumpWeek) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
-                // 1. 删除未验收的数据
-                int i = DataSupport.deleteAll(WeekTask.class, "PreAcceptanceTime IS NULL");
+                String condition = "";
+                switch (typeSupply) {
+                    case SettingUtil.TYPE_AMOUNT:
+                        /** 量方管理, 验收后才能操作 */
+                        condition = "PreAcceptanceEvaluationStatus != 1";
+                        break;
+                    case SettingUtil.TYPE_SUPPLY:
+                        /** 验砂管理, 量方后才能操作*/
+                        condition = "IsTheAmountOfTime != 1";
+                        break;
+                }
+                // 1. 删除未验收的数据 PreAcceptanceEvaluationStatus != 1
+                int i = DataSupport.deleteAll(WeekTask.class, condition);
 
                 dataSort(jumpWeek);
 
@@ -2432,6 +2445,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<List<ScannerImgListByTypeBean>> e) throws Exception {
                 // 发送网络请求
                 String result = mRemoteDataSource.GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID(subID, typeID);
+                LogUtil.d("进场计划ID: " + subID + "\n图片类型ID: " + typeID + "\n图片信息: " + result);
 
                 // 解析数据
                 List<ScannerImgListByTypeBean> list = gson.fromJson(result, new TypeToken<List<ScannerImgListByTypeBean>>() {
@@ -2521,6 +2535,8 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<AmountDetail> e) throws Exception {
                 // 发送网络请求
                 String result = mRemoteDataSource.GetTheAmountOfSideRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                LogUtil.d(SubcontractorInterimApproachPlanID + "\n1.35 获取量方信息数据: \n" + result);
 
                 // 解析数据
                 List<AmountDetail> list = gson.fromJson(result, new TypeToken<List<AmountDetail>>() {
@@ -3677,6 +3693,49 @@ public class DataRepository implements DataSouceImpl {
                 String result = mRemoteDataSource.IsAllowEditPlanData(Date);
                 IsAllowEdit isAllowEdit = gson.fromJson(result, IsAllowEdit.class);
                 e.onNext(isAllowEdit.getReturnValue() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.57 根据进场计划ID获取分包商预验收评价数据
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     */
+    @Override
+    public Observable<AcceptanceInfoBean> GetSandSubcontractorPreAcceptanceEvaluationBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID) {
+        return Observable.create(new ObservableOnSubscribe<AcceptanceInfoBean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<AcceptanceInfoBean> e) throws Exception {
+                String result = mRemoteDataSource.GetSandSubcontractorPreAcceptanceEvaluationBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+                LogUtil.d("1.57 根据进场计划ID获取分包商预验收评价数据: \n进场ID: " + SubcontractorInterimApproachPlanID + "\n" + result);
+
+                List<AcceptanceInfoBean> list = gson.fromJson(result, new TypeToken<List<AcceptanceInfoBean>>() {
+                }.getType());
+
+                e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.60 获取量方人员信息数据
+     * @return
+     */
+    @Override
+    public Observable<List<AmountOption>> GetTheAmountOfPersonnelOptions() {
+        return Observable.create(new ObservableOnSubscribe<List<AmountOption>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<AmountOption>> e) throws Exception {
+                String result = mRemoteDataSource.GetTheAmountOfPersonnelOptions();
+                LogUtil.d("1.60 获取量方人员信息数据: \n" + result);
+                List<AmountOption> list = gson.fromJson(result, new TypeToken<List<AmountOption>>() {
+                }.getType());
+
+                DataSupport.saveAll(list);
+                e.onNext(list);
                 e.onComplete();
             }
         });

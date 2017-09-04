@@ -3,6 +3,7 @@ package com.kc.shiptransport.util;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,9 +23,12 @@ public class SelectUtil<T> {
 
 
     private OptionsPickerView optionsPickerView;
+    public int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
+    public int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     /**
-     * 显示数据选择器
+     * 显示数据选择器 (bigkoo 3D选择器)
+     *
      * @param context
      * @param list
      * @param isDialog

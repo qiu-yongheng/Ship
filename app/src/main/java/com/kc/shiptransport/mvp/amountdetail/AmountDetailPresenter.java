@@ -6,9 +6,12 @@ import android.widget.Toast;
 import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.amount.AmountOption;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
@@ -143,7 +146,7 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                        final String Deduction,
                        final String Creator,
                        final float LaserQuantitySand,
-                       final int TheAmountOfPersonnelID,
+                       final String TheAmountOfPersonnelID,
                        final String TheAmountOfType,
                        final int IsSumbitted,
                        final String Remark) {
@@ -180,7 +183,7 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                     @Override
                     public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
                         // 删除未验收数据后, 进行重新排序
-                        return dataRepository.getWeekTaskSort(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN));
+                        return dataRepository.getWeekTaskSort(SettingUtil.TYPE_AMOUNT, SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN));
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -212,6 +215,7 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
     public void start(int itemID) {
         getShipDetail(itemID);
         getSupplyTime();
+        getAmountOption();
     }
 
     /**
@@ -344,6 +348,43 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                     @Override
                     public void onComplete() {
                         view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 获取量方人员
+     */
+    @Override
+    public void getAmountOption() {
+        dataRepository
+                .GetTheAmountOfPersonnelOptions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<AmountOption>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<AmountOption> list) {
+                        view.showAmountOption(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        List<AmountOption> all = DataSupport.findAll(AmountOption.class);
+                        if (!all.isEmpty()) {
+                            view.showAmountOption(all);
+                        } else {
+                            view.showError("获取量方人员失败");
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

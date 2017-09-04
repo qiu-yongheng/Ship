@@ -10,4 +10,5 @@
         style="@style/text_tag_small"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height_32"/>
+    <include layout="@layout/view_divi"/>
 </LinearLayout>

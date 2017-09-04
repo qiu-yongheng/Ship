@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -29,6 +31,7 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.amount.AmountDetail;
+import com.kc.shiptransport.db.amount.AmountOption;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
@@ -37,9 +40,13 @@ import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.util.SelectUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.ToastUtil;
+import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
+import com.zhy.adapter.recyclerview.CommonAdapter;
+import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import org.litepal.crud.DataSupport;
 
@@ -119,6 +126,12 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     TextView tvCommitMan;
     @BindView(R.id.et_remark)
     EditText etRemark;
+    @BindView(R.id.btn_return)
+    AppCompatButton btnReturn;
+    @BindView(R.id.tv_amount_type)
+    TextView tvAmountType;
+    @BindView(R.id.ll_radio_group)
+    LinearLayout llRadioGroup;
     private AmountDetailContract.Presenter presenter;
     private AmountDetailActivity activity;
     private AmountDetail value;
@@ -127,7 +140,10 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     private final int AMOUNT_MAN = 0;
     private final int AMOUNT_LASER = 1;
     private int radio_type = 0;
-
+    private SelectUtil<AmountOption> selectUtil = new SelectUtil<>();
+    private int width;
+    private CommonPopupWindow pop_sub;
+    private AmountOption amount;
 
     @Nullable
     @Override
@@ -151,11 +167,18 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             }
         });
 
+        // 返回
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
         // 提交
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 activity.showDailog("提交", getText(R.string.commit_tip).toString(), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -180,8 +203,12 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                             LaserQuantitySand = 0;
                         }
 
+                        if (amount == null) {
+                            ToastUtil.tip(getContext(), "请选择量方人员");
+                            return;
+                        }
                         // TODO 量方人员ID
-                        int TheAmountOfPersonnelID = 0;
+                        String TheAmountOfPersonnelID = amount.getUserID();
 
                         //  量方类型
                         String amountType = (radio_type == AMOUNT_MAN) ? "人工量砂" : "激光量砂";
@@ -300,6 +327,9 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         });
     }
 
+    /**
+     * 保存数据
+     */
     private void update() {
         // 量方时间
         String theAmountTime = tvSupplyTime.getText().toString().trim();
@@ -317,17 +347,23 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             ToastUtil.tip(getContext(), "合计方必须填数字");
             return;
         }
+
+        // 如果是人工量砂, 激光量砂 = 0
         if (radio_type == AMOUNT_MAN) {
             LaserQuantitySand = 0;
         }
 
         // TODO 量方人员ID
-        int TheAmountOfPersonnelID = 0;
+        if (amount == null) {
+            ToastUtil.tip(getContext(), "请选择量方人员");
+            return;
+        }
+        String TheAmountOfPersonnelID = amount.getUserID();
 
         //  量方类型
         String amountType = (radio_type == AMOUNT_MAN) ? "人工量砂" : "激光量砂";
 
-        // 是否已提交
+        // 是否已提交 (0 = 保存数据)
         int IsSumbitted = 0;
 
         // 备注说明
@@ -372,13 +408,21 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             etShipVolume.setInputType(InputType.TYPE_NULL);
             etDeckVolume.setInputType(InputType.TYPE_NULL);
             btnCommit.setVisibility(View.GONE);
-            btnCancel.setText(R.string.btn_return);
+            btnCancel.setVisibility(View.GONE);
+            btnReturn.setVisibility(View.VISIBLE);
+
+            etRemark.setFocusable(false);
+            etRemark.setFocusableInTouchMode(false);
         } else {
             // 开启软键盘
             etShipVolume.setInputType(InputType.TYPE_CLASS_TEXT);
             etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
             btnCommit.setVisibility(View.VISIBLE);
-            btnCancel.setText(R.string.btn_save);
+            btnCancel.setVisibility(View.VISIBLE);
+            btnReturn.setVisibility(View.GONE);
+
+            etRemark.setFocusable(true);
+            etRemark.setFocusableInTouchMode(true);
 
             // 选择时间
             tvSupplyTime.setOnClickListener(new View.OnClickListener() {
@@ -511,15 +555,47 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         String avgSquare = value.getAvgSquare();
         // 激光量方
         String laserQuantitySand = value.getLaserQuantitySand();
-        // 量方类型
+        // 量方类型 (切换radio)
         String theAmountOfType = value.getTheAmountOfType();
         // 量方人员账号
         String theAmountOfPersonnelAccount = value.getTheAmountOfPersonnelAccount();
         // 量方人员姓名
         String theAmountOfPersonnelName = value.getTheAmountOfPersonnelName();
+        // 备注
+        String remark = value.getRemark();
         // 是否已提交
         int isSumbitted = value.getIsSumbitted();
 
+
+        // 激光量方
+        etTotalVolume.setText(TextUtils.isEmpty(laserQuantitySand) ? "" : laserQuantitySand);
+        // 量方类型 (切换radio)
+        if (TextUtils.isEmpty(theAmountOfType) || theAmountOfType.contains("人工")) {
+            radioGroup.check(R.id.radio_man);
+            tvAmountType.setText("人工量砂");
+        } else if (theAmountOfType.contains("激光")) {
+            radioGroup.check(R.id.radio_laser);
+            tvAmountType.setText("激光量砂");
+        }
+        if (amount == null) {
+            amount = new AmountOption();
+        }
+        // 量方人员账号
+        amount.setUserID(theAmountOfPersonnelAccount);
+        amount.setUserName(theAmountOfPersonnelName);
+        // 量方人员姓名
+        tvAmountMan.setText(theAmountOfPersonnelName);
+        // 提交人员
+        tvCommitMan.setText(creator);
+        // 备注
+        etRemark.setText(remark);
+        // 是否已提交
+        if (isSumbitted == 1) {
+            // 已提交
+            llRadioGroup.setVisibility(View.GONE);
+        } else {
+            llRadioGroup.setVisibility(View.VISIBLE);
+        }
 
         // 船名
         tvShipName.setText(TextUtils.isEmpty(shipName) ? "" : shipName);
@@ -699,5 +775,76 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             adapter.setDates(list);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * 获取量方人员
+     *
+     * @param list
+     */
+    @Override
+    public void showAmountOption(final List<AmountOption> list) {
+        tvAmountMan.post(new Runnable() {
+            @Override
+            public void run() {
+                width = tvAmountMan.getWidth();
+            }
+        });
+
+        tvAmountMan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (pop_sub != null && pop_sub.isShowing()) {
+                    return;
+                }
+
+                pop_sub = new CommonPopupWindow.Builder(getContext())
+                        .setView(R.layout.popup_down)
+                        .setWidthAndHeight(width, selectUtil.WRAP_CONTENT)
+                        .setAnimationStyle(R.style.AnimDown)
+                        .setBackGroundLevel(0.8f)
+                        .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
+                            @Override
+                            public void getChildView(View view, int layoutResId) {
+
+                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                // 创建适配器
+                                CommonAdapter<AmountOption> adapter = new CommonAdapter<AmountOption>(getContext(), R.layout.item_analysis, list) {
+                                    @Override
+                                    protected void convert(ViewHolder holder, final AmountOption amountOption, int position) {
+                                        holder.setText(R.id.tv, amountOption.getUserName())
+                                                .setOnClickListener(R.id.tv, new View.OnClickListener() {
+
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        amount = amountOption;
+                                                        tvAmountMan.setText(amountOption.getUserName());
+
+                                                        if (pop_sub.isShowing()) {
+                                                            pop_sub.dismiss();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                };
+
+                                recyclerView.setAdapter(adapter);
+                            }
+                        })
+                        .setOutsideTouchable(true)
+                        .create();
+                pop_sub.showAsDropDown(tvAmountMan);
+
+                /** 消失监听 */
+                pop_sub.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+
+                    }
+                });
+            }
+        });
     }
 }

@@ -1,11 +1,13 @@
 package com.kc.shiptransport.mvp.acceptancedetail;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -20,18 +22,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.Acceptance;
+import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
+import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnProgressFinishListener;
+import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.scannerdetail.ScannerDetailActivity;
+import com.kc.shiptransport.mvp.scannerimgselect.ScannerImgSelectAdapter;
 import com.kc.shiptransport.mvp.voyagedetail.VoyageDetailActivity;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.LogUtil;
+import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.ToastUtil;
+import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
+
+import static com.kc.shiptransport.R.id.tv;
 
 /**
  * @author qiuyongheng
@@ -43,7 +61,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     Unbinder unbinder;
     @BindView(R.id.toolbar_supply_detail)
     Toolbar toolbarSupplyDetail;
-    @BindView(R.id.tv)
+    @BindView(tv)
     TextView tvShipName;
     @BindView(R.id.tv_ship_id)
     TextView tvShipId;
@@ -87,12 +105,15 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     RecyclerView recyclerView;
     @BindView(R.id.btn_acceptance_return)
     AppCompatButton btnAcceptanceReturn;
+    @BindView(R.id.tv_status)
+    TextView tvStatus;
     private AcceptanceDetailContract.Presenter presenter;
     private AcceptanceDetailActivity activity;
     private int rbcomplete = 0;
     private int rbtimely = 0;
     private String shipItemNum;
-    private Acceptance value;
+    private AcceptanceInfoBean value;
+    private ScannerImgSelectAdapter adapter;
 
     @Nullable
     @Override
@@ -204,11 +225,20 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
             // 设置只能用来看
             rbComplete.setIsIndicator(true);
             rbTimely.setIsIndicator(true);
+
+            // 不可编辑
+            tvAcceptanceOpinion.setFocusable(false);
+            tvAcceptanceOpinion.setFocusableInTouchMode(false);
+            tvAcceptanceOpinion.setHint("");
         } else {
             // 未验收
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
             btnAcceptanceCancel.setVisibility(View.VISIBLE);
             btnAcceptanceReturn.setVisibility(View.GONE);
+
+            // 可以编辑
+            tvAcceptanceOpinion.setFocusable(true);
+            tvAcceptanceOpinion.setFocusableInTouchMode(true);
 
             /* 点击弹出时间选择器 */
             tvAcceptanceTime.setOnClickListener(new View.OnClickListener() {
@@ -236,6 +266,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         tvScan.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//下划线
         tvScan.setText(R.string.text_scan);
 
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
     }
 
     @Override
@@ -259,7 +290,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
      * @param value
      */
     @Override
-    public void showShipDetail(Acceptance value) {
+    public void showShipDetail(AcceptanceInfoBean value) {
         this.value = value;
 
         String preAcceptanceTime = value.getPreAcceptanceTime();
@@ -271,6 +302,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
         tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
         tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
+        tvStatus.setText(value.getStatus() == 1 ? "通过" : (value.getStatus() == 0 ? "待审核" : "不通过"));
+        tvAcceptanceOpinion.setText(value.getRemark());
 
         String currentTide = value.getCurrentTide();
         tvShipCurrentTide.setText("当前潮水: " + (currentTide == null ? "0" : currentTide));
@@ -338,6 +371,118 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     @Override
     public void showCancle() {
         getActivity().onBackPressed();
+    }
+
+    /**
+     * 显示图片列表
+     *
+     * @param scannerImgListByTypeBeen
+     */
+    @Override
+    public void showImgList(List<ScannerImgListByTypeBean> scannerImgListByTypeBeen) {
+        if (scannerImgListByTypeBeen == null) {
+            LogUtil.d("没有预验砂图片");
+            scannerImgListByTypeBeen = new ArrayList<>();
+        }
+
+        if (adapter == null) {
+            adapter = new ScannerImgSelectAdapter(getContext(), scannerImgListByTypeBeen);
+            adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, int... type) {
+                    final ScannerImgListByTypeBean scannerImgListByTypeBean = adapter.list.get(position);
+                    if (type[0] == 0) {
+                        // 显示图片
+                        ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
+                    } else {
+
+                        if (value.getStatus() != 1) {
+                            activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // 删除图片
+                                    presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getContext(), "验砂已完成, 不可删除", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onItemLongClick(View view, int position) {
+                    if (value.getStatus() != 1) {
+                        // 弹出图片选择器, 设置多选图片张数
+                        //                            int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
+                        int maxSize = SettingUtil.NUM_IMAGE_SELECTION - adapter.list.size();
+                        if (maxSize > 0) {
+                            RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
+                                @Override
+                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                    // 提交图片
+                                    presenter.commitImg(imageMultipleResultEvent, activity.itemID, 2, value.getShipAccount());
+                                }
+
+                                @Override
+                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+                                    // 单选回调
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "已提交, 不能添加图片", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.setDates(scannerImgListByTypeBeen);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void showProgress(int max) {
+        activity.progressDialog("gaga", max, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 取消任务
+                presenter.unsubscribe();
+            }
+        });
+    }
+
+    @Override
+    public void updateProgress() {
+        activity.updataProgress(new OnProgressFinishListener() {
+            @Override
+            public void onFinish() {
+                // TODO 全部上传成功的回调
+                Toast.makeText(getContext(), "上传成功", Toast.LENGTH_SHORT).show();
+                // 同步数据
+                presenter.getShipDetail(activity.itemID);
+                hideProgress();
+            }
+        });
+    }
+
+    @Override
+    public void showDeleteResult(boolean isSuccess) {
+        if (isSuccess) {
+            ToastUtil.tip(getContext(), "删除成功");
+            presenter.updateImgDetail(activity.itemID);
+        } else {
+            ToastUtil.tip(getContext(), "删除失败, 请重试");
+        }
+    }
+
+    @Override
+    public void hideProgress() {
+        activity.hideProgress();
     }
 
     @Override

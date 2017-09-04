@@ -1764,4 +1764,46 @@ public class RemoteDataSource {
 
         return getCallResult(endPoint, soapAction, rpc);
     }
+
+    /**
+     * 1.57 根据进场计划ID获取分包商预验收评价数据
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     * @throws Exception
+     */
+    public String GetSandSubcontractorPreAcceptanceEvaluationBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSandSubcontractorPreAcceptanceEvaluationBySubcontractorInterimApproachPlanID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.60 获取量方人员信息数据
+     * @return
+     * @throws Exception
+     */
+    public String GetTheAmountOfPersonnelOptions() throws Exception {
+        // 调用的方法名称
+        String methodName = "GetTheAmountOfPersonnelOptions";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
 }

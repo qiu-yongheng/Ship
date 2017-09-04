@@ -215,7 +215,7 @@ public class SupplyPresenter implements SupplyContract.Presenter {
                     @Override
                     public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
                         // 删除未验收数据后, 进行重新排序
-                        return dataRepository.getWeekTaskSort(jumpWeek);
+                        return dataRepository.getWeekTaskSort(SettingUtil.TYPE_SUPPLY, jumpWeek);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
