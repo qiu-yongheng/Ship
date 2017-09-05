@@ -680,16 +680,30 @@ public class DataRepository implements DataSouceImpl {
      *
      * @param itemID
      * @param ReceptionSandTime
-     * @return
+     * @param userID
+     *@param status
+     * @param remark @return
      */
     @Override
-    public Observable<Integer> updateForReceptionSandTime(final int itemID, final String ReceptionSandTime) {
+    public Observable<Integer> InsertReceptionSandRecord(final int itemID, final String ReceptionSandTime, final String userID, final int status, final String remark) {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-                Log.d("==", "第一");
-                String result = mRemoteDataSource.UpdateForReceptionSandTime(itemID, ReceptionSandTime);
-                Log.d("==", result);
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ItemID", 0);
+                jsonObject.put("SubcontractorInterimApproachPlanID", itemID);
+                jsonObject.put("ReceptionSandTime", ReceptionSandTime);
+                jsonObject.put("Creator", userID);
+                jsonObject.put("Status", status);
+                jsonObject.put("Remark", remark);
+
+                jsonArray.put(jsonObject);
+                String json = jsonArray.toString();
+                LogUtil.d("提交验砂结果: \n" + json);
+
+
+                String result = mRemoteDataSource.InsertReceptionSandRecord(json);
 
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
 
@@ -2775,6 +2789,8 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<SupplyDetail> e) throws Exception {
                 String result = mRemoteDataSource.GetReceptionSandBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
 
+                LogUtil.d(SubcontractorInterimApproachPlanID + "\n1.40 根据进场计划ID获取验砂数据: \n" + result);
+
                 List<SupplyDetail> list = gson.fromJson(result, new TypeToken<List<SupplyDetail>>() {
                 }.getType());
 
@@ -3119,12 +3135,56 @@ public class DataRepository implements DataSouceImpl {
                 /* 结束时间 */
                 String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
 
-                Log.d("==", "请求日期: " + startDay + "-" + endDay);
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
+
+                JSONArray Column = new JSONArray();
+
+                // 供应商账号
+                JSONObject object1 = new JSONObject();
+                object1.put("Name", "SubcontractorAccount");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", account);
+
+                // 退场时间时间
+                JSONObject object2 = new JSONObject();
+                object2.put("Name", "PlanDay");
+                object2.put("Type", "datetime");
+
+                JSONArray array2 = new JSONArray();
+
+                JSONObject object21 = new JSONObject();
+                object21.put("Min", startDay);
+                JSONObject object22 = new JSONObject();
+                object22.put("Max", endDay);
+
+                array2.put(object21);
+                array2.put(object22);
+
+                object2.put("Value", array2);
+
+                // 保存3个对象到object
+                Column.put(object1);
+                if (!TextUtils.isEmpty(startDay) || !TextUtils.isEmpty(endDay)) {
+                    Column.put(object2);
+                }
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                String json = root.toString();
+
+
+                LogUtil.d(account + "\n1.49 获取可以进行退场申请的数据 json: \n" + json);
 
                 // 发送网络请求
-                String result = mRemoteDataSource.GetExitApplicationList(account, startDay, endDay);
+                String result = mRemoteDataSource.GetExitApplicationList(10000, 1, json);
 
-                Log.d("==", "退场申请数据: " + result);
+                LogUtil.d("退场申请数据: \n" + result);
 
                 // 解析数据
                 List<ExitList> lists = gson.fromJson(result, new TypeToken<List<ExitList>>() {
@@ -3736,6 +3796,47 @@ public class DataRepository implements DataSouceImpl {
 
                 DataSupport.saveAll(list);
                 e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.58 提交验砂管理船名照片(图片信息)
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertReceptionSandBoatNameAttachment(final String json, final String ByteDataStr) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.InsertReceptionSandBoatNameAttachment(json, ByteDataStr);
+
+                LogUtil.d("1.58 提交验砂管理船名照片(图片信息): \n" + result);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.59 删除验砂管理船名照片(图片信息)
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteReceptionSandBoatNameAttachmentByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteReceptionSandBoatNameAttachmentByItemID(ItemID);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+                e.onNext(bean.getMessage() == 1);
                 e.onComplete();
             }
         });

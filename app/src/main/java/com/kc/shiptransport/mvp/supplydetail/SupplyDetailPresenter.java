@@ -59,8 +59,6 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
 
     /**
      * 获取供沙详情
-     * 1. 先从DB获取
-     * 2. 如果没有缓存, 发送网络请求
      */
     @Override
     public void getShipDetail(int itemID) {
@@ -95,6 +93,7 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
 
     /**
      * 只更新图片列表
+     *
      * @param itemID
      */
     @Override
@@ -148,16 +147,18 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
      * 提交
      */
     @Override
-    public void commit(final int itemID, String ReceptionSandTime) {
+    public void commit(final int itemID, String ReceptionSandTime, String userID, int status, String remark) {
         view.showLoading(true);
         dataRepository
-                .updateForReceptionSandTime(itemID, ReceptionSandTime)
+                .InsertReceptionSandRecord(itemID, ReceptionSandTime, userID, status, remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<Integer, Observable<Boolean>>() { // 同步
                     @Override
                     public Observable<Boolean> apply(Integer integer) throws Exception {
+
                         if (integer == success) {
+                            // 刷新进场数据
                             return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN),
                                     SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
@@ -165,9 +166,16 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
                         }
                     }
                 })
+                .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
+                        return dataRepository.getWeekTaskSort(SettingUtil.TYPE_SUPPLY, SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN));
+                    }
+                })
                 .flatMap(new Function<Boolean, Observable<Acceptance>>() { // 更新
                     @Override
                     public Observable<Acceptance> apply(Boolean aBoolean) throws Exception {
+                        // 更新详细信息
                         return dataRepository.getAcceptanceByItemID(itemID, false);
                     }
                 })
@@ -207,12 +215,14 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
 
     /**
      * 提交图片
+     *
      * @param imageMultipleResultEvent
      * @param itemID
      * @param creator
+     * @param type
      */
     @Override
-    public void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator) {
+    public void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator, final int type) {
         view.showLoading(true);
         dataRepository
                 .getImgList(imageMultipleResultEvent, itemID, creator)
@@ -237,7 +247,7 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
                     @Override
                     public Boolean apply(@NonNull CommitImgListBean amountImgListBean) throws Exception {
                         // 提交单张图片
-                        commitImg(amountImgListBean);
+                        commitImg(amountImgListBean, type);
                         return true;
                     }
                 })
@@ -268,12 +278,17 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
 
     /**
      * 提交单张图片
+     *
      * @param amountImgListBean
+     * @param type
      */
     @Override
-    public void commitImg(CommitImgListBean amountImgListBean) {
-        dataRepository
-                .InsertReceptionSandAttachment(amountImgListBean.getJson(), amountImgListBean.getByteDataStr())
+    public void commitImg(CommitImgListBean amountImgListBean, int type) {
+        Observable<Boolean> observable = (type == 0) ?
+                dataRepository.InsertReceptionSandAttachment(amountImgListBean.getJson(), amountImgListBean.getByteDataStr()) :
+                dataRepository.InsertReceptionSandBoatNameAttachment(amountImgListBean.getJson(), amountImgListBean.getByteDataStr());
+
+        observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
@@ -307,13 +322,19 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
 
     /**
      * 删除图片
+     *
      * @param ItemID
+     * @param type
      */
     @Override
-    public void deleteImgForItemID(int ItemID) {
+    public void deleteImgForItemID(int ItemID, int type) {
         view.showLoading(true);
-        dataRepository
-                .DeleteReceptionSandAttachmentByItemID(ItemID)
+        Observable<Boolean> observable = (type == 0) ?
+                dataRepository.DeleteReceptionSandAttachmentByItemID(ItemID) :
+                dataRepository.DeleteReceptionSandBoatNameAttachmentByItemID(ItemID);
+
+
+        observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {

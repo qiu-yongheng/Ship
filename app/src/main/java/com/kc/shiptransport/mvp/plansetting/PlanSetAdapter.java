@@ -113,12 +113,13 @@ public class PlanSetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // 可以修改
             ((NormalHolder) holder).mBtnShipTypeSelect.setText("选择");
             ((NormalHolder) holder).mBtnShipTypeSelect.setBackgroundResource(R.color.red);
+            isUpdate = 1;
         } else{
             // 不可以修改
             ((NormalHolder) holder).mBtnShipTypeSelect.setText("不可修改");
             ((NormalHolder) holder).mBtnShipTypeSelect.setBackgroundResource(R.color.gray);
+            isUpdate = 0;
         }
-
 
         // 设置按钮点击事件
         ((NormalHolder) holder).mBtnShipTypeSelect.setOnClickListener(new View.OnClickListener() {

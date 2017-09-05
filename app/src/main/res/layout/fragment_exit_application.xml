@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
 
     <android.support.v7.widget.Toolbar
@@ -122,9 +122,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:orientation="horizontal">
 
             <TextView
@@ -134,7 +134,7 @@
                 android:text="航次编号: "/>
 
             <TextView
-            android:id="@+id/tv_ship_num"
+                android:id="@+id/tv_ship_num"
                 style="@style/text_title_w"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -142,10 +142,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView
@@ -155,7 +155,7 @@
                 android:text="到达锚地时间: "/>
 
             <TextView
-            android:id="@+id/tv_arrive_anchor_time"
+                android:id="@+id/tv_arrive_anchor_time"
                 style="@style/text_title_w"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,10 +163,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView
@@ -176,7 +176,7 @@
                 android:text="装舱方: "/>
 
             <TextView
-            android:id="@+id/tv_stowage"
+                android:id="@+id/tv_stowage"
                 style="@style/text_title_w"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -185,10 +185,10 @@
 
 
         <LinearLayout
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView
@@ -198,7 +198,7 @@
                 android:text="材料分类: "/>
 
             <TextView
-            android:id="@+id/tv_material"
+                android:id="@+id/tv_material"
                 style="@style/text_title_w"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -245,12 +245,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_quantum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
             android:paddingRight="10dp"
-            android:paddingTop="5dp">
+            android:paddingTop="5dp"
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -276,9 +278,9 @@
 
         <EditText
             android:id="@+id/et_remark"
+            style="@style/et_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/et_remark"
             android:minLines="2"
             android:padding="5dp"/>
 

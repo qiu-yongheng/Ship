@@ -217,6 +217,23 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
+
+            <EditText
+                android:id="@+id/et_remark"
+                style="@style/et_remark"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lines="3"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -237,12 +254,12 @@
             <EditText
                 android:id="@+id/et_batch"
                 android:layout_width="0dp"
-                android:textSize="@dimen/text_15sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:digits="1234567890."
                 android:gravity="center"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:textSize="@dimen/text_15sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -345,6 +362,16 @@
             android:background="?colorPrimary"
             android:text="通过"
             android:textColor="#fff"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_acceptance_return"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#888"
+            android:text="返回"
+            android:textColor="#fff"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </RelativeLayout>

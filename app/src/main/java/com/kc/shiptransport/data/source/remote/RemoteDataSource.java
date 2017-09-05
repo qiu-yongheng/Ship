@@ -2,6 +2,7 @@ package com.kc.shiptransport.data.source.remote;
 
 import com.kc.shiptransport.util.BaseUrl;
 import com.kc.shiptransport.util.FakeX509TrustManager;
+import com.kc.shiptransport.util.LogUtil;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -42,6 +43,7 @@ public class RemoteDataSource {
         // 调用WebService
         transport.call(soapAction, envelope);
 
+        LogUtil.d("envelope.bodyIn: \n" + envelope.bodyIn.toString());
         // 获取返回的数据
         SoapObject object = (SoapObject) envelope.bodyIn;
         // 获取返回的结果
@@ -209,26 +211,25 @@ public class RemoteDataSource {
 
     /**
      * 提交验沙结果
-     * UpdateForReceptionSandTime
+     * InsertReceptionSandRecord
      *
      * @return
      */
-    public String UpdateForReceptionSandTime(int itemID, String ReceptionSandTime) throws Exception {
+    public String InsertReceptionSandRecord(String json) throws Exception {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
-        String methodName = "UpdateForReceptionSandTime";
+        String methodName = "InsertReceptionSandRecord";
         // EndPoint
         String endPoint = EndPoint;
         // SOAP Action
-        String soapAction = "http://tempuri.org/UpdateForReceptionSandTime";
+        String soapAction = "http://tempuri.org/InsertReceptionSandRecord";
 
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
         // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
-        rpc.addProperty("ItemID", itemID);
-        rpc.addProperty("ReceptionSandTime", ReceptionSandTime);
+        rpc.addProperty("json", json);
 
 
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
@@ -1318,12 +1319,12 @@ public class RemoteDataSource {
     /**
      * 1.49 获取可以进行退场申请的数据
      *
-     * @param SubcontractorAccount
-     * @param StartDate
-     * @param EndDate
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
      * @return
      */
-    public String GetExitApplicationList(String SubcontractorAccount, String StartDate, String EndDate) throws Exception {
+    public String GetExitApplicationList(int PageSize, int PageCount, String ConditionJson) throws Exception {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
@@ -1336,9 +1337,9 @@ public class RemoteDataSource {
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
-        rpc.addProperty("SubcontractorAccount", SubcontractorAccount);
-        rpc.addProperty("StartDate", StartDate);
-        rpc.addProperty("EndDate", EndDate);
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
 
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
         return getCallResult(endPoint, soapAction, rpc);
@@ -1802,6 +1803,52 @@ public class RemoteDataSource {
 
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.58 提交验砂管理船名照片(图片信息)
+     * @param json
+     * @param ByteDataStr
+     * @return
+     * @throws Exception
+     */
+    public String InsertReceptionSandBoatNameAttachment(String json, String ByteDataStr) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertReceptionSandBoatNameAttachment";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+        rpc.addProperty("ByteDataStr", ByteDataStr);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.59 删除验砂管理船名照片(图片信息)
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteReceptionSandBoatNameAttachmentByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteReceptionSandBoatNameAttachmentByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
 
         return getCallResult(endPoint, soapAction, rpc);
     }

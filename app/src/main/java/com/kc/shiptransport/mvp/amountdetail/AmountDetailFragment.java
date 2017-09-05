@@ -222,13 +222,11 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                         // creator
                         String creator = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
 
-                        if (!TextUtils.isEmpty(theAmountTime) &&
-                                !TextUtils.isEmpty(deck) &&
-                                !deck.equals("0") &&
-                                !TextUtils.isEmpty(dedu)) {
+                        if ((!TextUtils.isEmpty(theAmountTime) && !TextUtils.isEmpty(deck) && !deck.equals("0") && !TextUtils.isEmpty(dedu) && radio_type == AMOUNT_MAN) ||
+                                (radio_type == AMOUNT_LASER && !TextUtils.isEmpty(etTotalVolume.getText().toString()))) {
 
 
-                            presenter.commit(value.getItemID(),
+                            presenter.commit(TextUtils.isEmpty(value.getItemID()) ? 0 : Integer.valueOf(value.getItemID()),
                                     theAmountTime,
                                     value.getSubcontractorAccount(),
                                     activity.itemID,
@@ -317,14 +315,6 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                 }
             }
         });
-
-        /** 选择量方人员 */
-        tvAmountMan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO 弹出选择框 save = false;
-            }
-        });
     }
 
     /**
@@ -372,7 +362,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         // creator
         String creator = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
 
-        presenter.commit(value.getItemID(),
+        presenter.commit(TextUtils.isEmpty(value.getItemID()) ? 0 : Integer.valueOf(value.getItemID()),
                 theAmountTime,
                 value.getSubcontractorAccount(),
                 activity.itemID,
@@ -526,7 +516,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
 
 
         // 进场ID
-        int itemID = value.getItemID();
+        int itemID = TextUtils.isEmpty(value.getItemID()) ? 0 : Integer.valueOf(value.getItemID());
         // 量方时间
         String theAmountOfTime = value.getTheAmountOfTime();
         // 船账号
@@ -784,67 +774,70 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
      */
     @Override
     public void showAmountOption(final List<AmountOption> list) {
-        tvAmountMan.post(new Runnable() {
-            @Override
-            public void run() {
-                width = tvAmountMan.getWidth();
-            }
-        });
-
-        tvAmountMan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (pop_sub != null && pop_sub.isShowing()) {
-                    return;
+        if (!activity.isAmount) {
+            tvAmountMan.post(new Runnable() {
+                @Override
+                public void run() {
+                    width = tvAmountMan.getWidth();
                 }
+            });
 
-                pop_sub = new CommonPopupWindow.Builder(getContext())
-                        .setView(R.layout.popup_down)
-                        .setWidthAndHeight(width, selectUtil.WRAP_CONTENT)
-                        .setAnimationStyle(R.style.AnimDown)
-                        .setBackGroundLevel(0.8f)
-                        .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
-                            @Override
-                            public void getChildView(View view, int layoutResId) {
-
-                                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                                // 创建适配器
-                                CommonAdapter<AmountOption> adapter = new CommonAdapter<AmountOption>(getContext(), R.layout.item_analysis, list) {
-                                    @Override
-                                    protected void convert(ViewHolder holder, final AmountOption amountOption, int position) {
-                                        holder.setText(R.id.tv, amountOption.getUserName())
-                                                .setOnClickListener(R.id.tv, new View.OnClickListener() {
-
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        amount = amountOption;
-                                                        tvAmountMan.setText(amountOption.getUserName());
-
-                                                        if (pop_sub.isShowing()) {
-                                                            pop_sub.dismiss();
-                                                        }
-                                                    }
-                                                });
-                                    }
-                                };
-
-                                recyclerView.setAdapter(adapter);
-                            }
-                        })
-                        .setOutsideTouchable(true)
-                        .create();
-                pop_sub.showAsDropDown(tvAmountMan);
-
-                /** 消失监听 */
-                pop_sub.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-
+            tvAmountMan.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    save = false;
+                    if (pop_sub != null && pop_sub.isShowing()) {
+                        return;
                     }
-                });
-            }
-        });
+
+                    pop_sub = new CommonPopupWindow.Builder(getContext())
+                            .setView(R.layout.popup_down)
+                            .setWidthAndHeight(width, selectUtil.WRAP_CONTENT)
+                            .setAnimationStyle(R.style.AnimDown)
+                            .setBackGroundLevel(0.8f)
+                            .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
+                                @Override
+                                public void getChildView(View view, int layoutResId) {
+
+                                    RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                    // 创建适配器
+                                    CommonAdapter<AmountOption> adapter = new CommonAdapter<AmountOption>(getContext(), R.layout.item_analysis, list) {
+                                        @Override
+                                        protected void convert(ViewHolder holder, final AmountOption amountOption, int position) {
+                                            holder.setText(R.id.tv, amountOption.getUserName())
+                                                    .setOnClickListener(R.id.tv, new View.OnClickListener() {
+
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            amount = amountOption;
+                                                            tvAmountMan.setText(amountOption.getUserName());
+
+                                                            if (pop_sub.isShowing()) {
+                                                                pop_sub.dismiss();
+                                                            }
+                                                        }
+                                                    });
+                                        }
+                                    };
+
+                                    recyclerView.setAdapter(adapter);
+                                }
+                            })
+                            .setOutsideTouchable(true)
+                            .create();
+                    pop_sub.showAsDropDown(tvAmountMan);
+
+                    /** 消失监听 */
+                    pop_sub.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+
+                        }
+                    });
+                }
+            });
+        }
     }
 }

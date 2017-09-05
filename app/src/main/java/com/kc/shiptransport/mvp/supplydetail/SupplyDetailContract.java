@@ -47,13 +47,13 @@ public interface SupplyDetailContract {
 
         void getSupplyTime();
         void getTotalVolume(String ship, String deck);
-        void commit(int itemID, String ReceptionSandTime);
+        void commit(int itemID, String ReceptionSandTime, String userID, int status, String remark);
         void start(int itemID);
 
-        void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator);
+        void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int itemID, String creator, int type);
 
-        void commitImg(CommitImgListBean amountImgListBean);
+        void commitImg(CommitImgListBean amountImgListBean, int type);
 
-        void deleteImgForItemID(int ItemID);
+        void deleteImgForItemID(int ItemID, int type);
     }
 }

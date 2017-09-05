@@ -36,7 +36,7 @@ public class AmountDetail extends DataSupport{
      * TheAmountOfSideAttachmentList : [{"ItemID":1030,"FileName":"IMG_20170724164913.jpeg","FilePath":"https://cchk3.kingwi.org/Files/20170728/4399f25f-1e5d-4876-affe-49517fb9c5c7.jpeg"},{"ItemID":28,"FileName":"Screenshot_2017-07-13-15-15-36-374_com.kc.shiptransport.clothes.png","FilePath":"https://cchk3.kingwi.org/Files/20170720/283da871-9552-4a53-b846-2daeb134d77c.png"}]
      */
 
-    private int ItemID;
+    private String ItemID;
     private String ShipAccount;
     private String ShipName;
     private String SubcontractorAccount;
@@ -67,11 +67,11 @@ public class AmountDetail extends DataSupport{
         IsSumbitted = isSumbitted;
     }
 
-    public int getItemID() {
+    public String getItemID() {
         return ItemID;
     }
 
-    public void setItemID(int ItemID) {
+    public void setItemID(String ItemID) {
         this.ItemID = ItemID;
     }
 

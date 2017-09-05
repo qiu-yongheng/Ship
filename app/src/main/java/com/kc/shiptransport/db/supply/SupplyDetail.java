@@ -11,6 +11,7 @@ import java.util.List;
  */
 
 public class SupplyDetail extends DataSupport{
+
     /**
      * ItemID : 415
      * ShipAccount : yhzh3393
@@ -23,7 +24,9 @@ public class SupplyDetail extends DataSupport{
      * TotalCompleteRide : 2
      * TotalCompleteSquare : 3200
      * AvgSquare : 1600
+     * Status : 1
      * ReceptionSandAttachmentList : [{"ItemID":1,"FileName":"abc.png","FilePath":"https://cchk3.kingwi.org/Files/20170704/b0d42941-cee8-4a0c-afb9-0c1917f051d4.png"}]
+     * ReceptionSandBoatNameAttachmentList : [{"ItemID":1,"FileName":"abc.png","FilePath":"https://cchk3.kingwi.org/Files/20170704/b0d42941-cee8-4a0c-afb9-0c1917f051d4.png"}]
      */
 
     private int ItemID;
@@ -37,7 +40,9 @@ public class SupplyDetail extends DataSupport{
     private String TotalCompleteRide;
     private String TotalCompleteSquare;
     private String AvgSquare;
+    private String Status;
     private List<ReceptionSandAttachmentListBean> ReceptionSandAttachmentList;
+    private List<ReceptionSandBoatNameAttachmentListBean> ReceptionSandBoatNameAttachmentList;
 
     public int getItemID() {
         return ItemID;
@@ -127,6 +132,14 @@ public class SupplyDetail extends DataSupport{
         this.AvgSquare = AvgSquare;
     }
 
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String Status) {
+        this.Status = Status;
+    }
+
     public List<ReceptionSandAttachmentListBean> getReceptionSandAttachmentList() {
         return ReceptionSandAttachmentList;
     }
@@ -135,7 +148,51 @@ public class SupplyDetail extends DataSupport{
         this.ReceptionSandAttachmentList = ReceptionSandAttachmentList;
     }
 
+    public List<ReceptionSandBoatNameAttachmentListBean> getReceptionSandBoatNameAttachmentList() {
+        return ReceptionSandBoatNameAttachmentList;
+    }
+
+    public void setReceptionSandBoatNameAttachmentList(List<ReceptionSandBoatNameAttachmentListBean> ReceptionSandBoatNameAttachmentList) {
+        this.ReceptionSandBoatNameAttachmentList = ReceptionSandBoatNameAttachmentList;
+    }
+
     public static class ReceptionSandAttachmentListBean {
+        /**
+         * ItemID : 1
+         * FileName : abc.png
+         * FilePath : https://cchk3.kingwi.org/Files/20170704/b0d42941-cee8-4a0c-afb9-0c1917f051d4.png
+         */
+
+        private int ItemID;
+        private String FileName;
+        private String FilePath;
+
+        public int getItemID() {
+            return ItemID;
+        }
+
+        public void setItemID(int ItemID) {
+            this.ItemID = ItemID;
+        }
+
+        public String getFileName() {
+            return FileName;
+        }
+
+        public void setFileName(String FileName) {
+            this.FileName = FileName;
+        }
+
+        public String getFilePath() {
+            return FilePath;
+        }
+
+        public void setFilePath(String FilePath) {
+            this.FilePath = FilePath;
+        }
+    }
+
+    public static class ReceptionSandBoatNameAttachmentListBean {
         /**
          * ItemID : 1
          * FileName : abc.png

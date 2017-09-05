@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.supply.SupplyDetail;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
@@ -90,10 +91,22 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     LinearLayout ll;
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
+    @BindView(R.id.textView2)
+    TextView textView2;
+    @BindView(R.id.recycler_view_ship)
+    RecyclerView recyclerViewShip;
+    @BindView(R.id.btn_acceptance_return)
+    AppCompatButton btnAcceptanceReturn;
+    @BindView(R.id.et_remark)
+    EditText etRemark;
     private Unbinder unbinder;
     private SupplyDetailContract.Presenter presenter;
     private SupplyDetailActivity activity;
     private SupplyDetailAdapter adapter;
+    private SupplyDetailNameAdapter nameAdapter;
+    private int FULLY_PHOTO = 0;
+    private int NAME_PHOTO = 1;
+
 
     @Nullable
     @Override
@@ -123,7 +136,11 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             etDeckVolume.setInputType(InputType.TYPE_NULL);
             etBatch.setInputType(InputType.TYPE_NULL);
             btnAcceptanceCommit.setVisibility(View.GONE);
-            btnAcceptanceCancel.setText(R.string.btn_return);
+            btnAcceptanceCancel.setVisibility(View.GONE);
+            btnAcceptanceReturn.setVisibility(View.VISIBLE);
+
+            etRemark.setFocusableInTouchMode(false);
+            etRemark.setFocusable(false);
 
         } else {
             // 开启软键盘
@@ -131,7 +148,11 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
             etBatch.setInputType(InputType.TYPE_CLASS_TEXT);
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
-            btnAcceptanceCancel.setText("不通过");
+            btnAcceptanceCancel.setVisibility(View.VISIBLE);
+            btnAcceptanceReturn.setVisibility(View.GONE);
+
+            etRemark.setFocusableInTouchMode(true);
+            etRemark.setFocusable(true);
 
             /* 点击弹出时间选择器 */
             tvSupplyTime.setOnClickListener(new View.OnClickListener() {
@@ -152,15 +173,34 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         }
 
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        recyclerViewShip.setLayoutManager(new GridLayoutManager(getContext(), 4));
     }
 
     public void initListener() {
-        /* 提交 */
+        /* 通过 */
         btnAcceptanceCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(tvSupplyTime.getText().toString())) {
-                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString());
+                    String userID = DataSupport.findAll(User.class).get(0).getUserID();
+                    int status = 1;
+                    String remark = "";
+                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+                } else {
+                    Toast.makeText(getContext(), "请选择时间", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        /* 不通过 */
+        btnAcceptanceCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!TextUtils.isEmpty(tvSupplyTime.getText().toString())) {
+                    String userID = DataSupport.findAll(User.class).get(0).getUserID();
+                    int status = -1;
+                    String remark = "";
+                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
                 } else {
                     Toast.makeText(getContext(), "请选择时间", Toast.LENGTH_SHORT).show();
                 }
@@ -168,10 +208,10 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         });
 
         /* 返回 */
-        btnAcceptanceCancel.setOnClickListener(new View.OnClickListener() {
+        btnAcceptanceReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.onBackPressed();
+                getActivity().onBackPressed();
             }
         });
 
@@ -248,15 +288,25 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     public void showShipDetail(final SupplyDetail value) {
 
         int itemID = value.getItemID();
+        // 船舶账号
         String shipAccount = value.getShipAccount();
+        // 船舶名称
         String shipName = value.getShipName();
+        // 分包商账号
         String subcontractorAccount = value.getSubcontractorAccount();
+        // 分包商名称
         String subcontractorName = value.getSubcontractorName();
+        // 船次编号
         String shipItemNum = value.getShipItemNum();
+        // 验砂时间
         String receptionSandTime = value.getReceptionSandTime();
+        // 系统提交时间
         String systemDate = value.getSystemDate();
+        // 累计完成方量
         String totalCompleteRide = value.getTotalCompleteRide();
+        // 累计完成方量
         String totalCompleteSquare = value.getTotalCompleteSquare();
+        // 平均航次方量
         String avgSquare = value.getAvgSquare();
 
 
@@ -272,6 +322,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         tvSupplyTime.setText(TextUtils.isEmpty(receptionSandTime) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : receptionSandTime);
 
 
+        /** 满载照片 */
         List<SupplyDetail.ReceptionSandAttachmentListBean> list = value.getReceptionSandAttachmentList();
         if (list == null) {
             list = new ArrayList<>();
@@ -295,7 +346,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     // 删除
-                                    presenter.deleteImgForItemID(bean.getItemID());
+                                    presenter.deleteImgForItemID(bean.getItemID(), FULLY_PHOTO);
                                 }
                             });
                         }
@@ -316,7 +367,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                                 public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
                                     // 把图片解析成可以上传的任务, 上传
                                     List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-                                    presenter.getCommitImgList(imageMultipleResultEvent, value.getItemID(), all.get(0).getSubcontractorAccount());
+                                    presenter.getCommitImgList(imageMultipleResultEvent, value.getItemID(), all.get(0).getSubcontractorAccount(), FULLY_PHOTO);
                                 }
 
                                 @Override
@@ -335,6 +386,72 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         } else {
             adapter.setDates(list);
             adapter.notifyDataSetChanged();
+        }
+
+
+        /** 船名照片 */
+        List<SupplyDetail.ReceptionSandBoatNameAttachmentListBean> nameList = value.getReceptionSandBoatNameAttachmentList();
+        if (nameList == null) {
+            nameList = new ArrayList<>();
+        }
+
+        if (nameAdapter == null) {
+            nameAdapter = new SupplyDetailNameAdapter(getContext(), nameList);
+            nameAdapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, int... type) {
+                    final SupplyDetail.ReceptionSandBoatNameAttachmentListBean bean = nameAdapter.list.get(position);
+                    if (type[0] == 0) {
+                        // 预览
+                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+                    } else {
+                        if (activity.isSupply) {
+                            Toast.makeText(getContext(), "验砂已完成, 不能删除图片", Toast.LENGTH_SHORT).show();
+                        } else {
+                            activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // 删除
+                                    presenter.deleteImgForItemID(bean.getItemID(), NAME_PHOTO);
+                                }
+                            });
+                        }
+                    }
+                }
+
+                @Override
+                public void onItemLongClick(View view, int position) {
+                    if (activity.isSupply) {
+                        Toast.makeText(getContext(), "验砂已完成, 不能新增图片", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // 弹出图片选择器
+                        int size = nameAdapter.list.size();
+                        int max = SettingUtil.NUM_IMAGE_SELECTION - size;
+                        if (max > 0) {
+                            RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
+                                @Override
+                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                    // 把图片解析成可以上传的任务, 上传
+                                    List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                                    presenter.getCommitImgList(imageMultipleResultEvent, value.getItemID(), all.get(0).getSubcontractorAccount(), NAME_PHOTO);
+                                }
+
+                                @Override
+                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+
+            recyclerViewShip.setAdapter(nameAdapter);
+        } else {
+            nameAdapter.setDates(nameList);
+            nameAdapter.notifyDataSetChanged();
         }
     }
 
@@ -427,6 +544,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
 
     @Override
     public void showImgList(SupplyDetail value) {
+        /** 满载照片 */
         List<SupplyDetail.ReceptionSandAttachmentListBean> list = value.getReceptionSandAttachmentList();
         if (list == null) {
             list = new ArrayList<>();
@@ -436,7 +554,16 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             adapter.setDates(list);
             adapter.notifyDataSetChanged();
         }
+
+        /** 船名照片 */
+        List<SupplyDetail.ReceptionSandBoatNameAttachmentListBean> nameList = value.getReceptionSandBoatNameAttachmentList();
+        if (nameList == null) {
+            nameList = new ArrayList<>();
+        }
+
+        if (nameAdapter != null) {
+            nameAdapter.setDates(nameList);
+            nameAdapter.notifyDataSetChanged();
+        }
     }
-
-
 }

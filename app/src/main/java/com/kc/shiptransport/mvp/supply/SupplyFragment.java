@@ -278,8 +278,8 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
                 public void onItemClick(View view, int position, int... type) {
                     List<WeekTask> weekTasks = DataSupport.where("position = ?", position + "").find(WeekTask.class);
                     if (weekTasks != null && !weekTasks.isEmpty()) {
-                        String receptionSandTime = weekTasks.get(0).getReceptionSandTime();
-                        if (receptionSandTime != null && !receptionSandTime.isEmpty()) {
+                        int isReceptionSandTime = weekTasks.get(0).getIsReceptionSandTime();
+                        if (isReceptionSandTime == 1) {
                             // 已验收
                             SupplyDetailActivity.startActivity(activity, weekTasks.get(0).getItemID(), true);
                         } else {

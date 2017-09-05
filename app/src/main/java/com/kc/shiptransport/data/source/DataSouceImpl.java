@@ -151,9 +151,11 @@ public interface DataSouceImpl {
      *
      * @param itemID
      * @param ReceptionSandTime
-     * @return
+     * @param userID
+     *@param status
+     * @param remark @return
      */
-    Observable<Integer> updateForReceptionSandTime(int itemID, String ReceptionSandTime);
+    Observable<Integer> InsertReceptionSandRecord(int itemID, String ReceptionSandTime, String userID, int status, String remark);
 
     //    /**
     //     * 提交验收审核结果
@@ -864,4 +866,19 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<AmountOption>> GetTheAmountOfPersonnelOptions();
+
+    /**
+     * 1.58 提交验砂管理船名照片(图片信息)
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    Observable<Boolean> InsertReceptionSandBoatNameAttachment(String json, String ByteDataStr);
+
+    /**
+     * 1.59 删除验砂管理船名照片(图片信息)
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteReceptionSandBoatNameAttachmentByItemID(int ItemID);
 }
