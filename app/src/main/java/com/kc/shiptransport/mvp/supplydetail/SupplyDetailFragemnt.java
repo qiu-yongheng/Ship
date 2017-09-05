@@ -367,7 +367,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                                 public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
                                     // 把图片解析成可以上传的任务, 上传
                                     List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-                                    presenter.getCommitImgList(imageMultipleResultEvent, value.getItemID(), all.get(0).getSubcontractorAccount(), FULLY_PHOTO);
+                                    presenter.getCommitImgList(imageMultipleResultEvent, value.getSubcontractorInterimApproachPlanID(), all.get(0).getSubcontractorAccount(), FULLY_PHOTO);
                                 }
 
                                 @Override
@@ -433,7 +433,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                                 public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
                                     // 把图片解析成可以上传的任务, 上传
                                     List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-                                    presenter.getCommitImgList(imageMultipleResultEvent, value.getItemID(), all.get(0).getSubcontractorAccount(), NAME_PHOTO);
+                                    presenter.getCommitImgList(imageMultipleResultEvent, value.getSubcontractorInterimApproachPlanID(), all.get(0).getSubcontractorAccount(), NAME_PHOTO);
                                 }
 
                                 @Override

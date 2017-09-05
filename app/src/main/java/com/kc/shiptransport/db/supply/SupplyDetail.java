@@ -30,6 +30,7 @@ public class SupplyDetail extends DataSupport{
      */
 
     private int ItemID;
+    private int SubcontractorInterimApproachPlanID;
     private String ShipAccount;
     private String ShipName;
     private String SubcontractorAccount;
@@ -50,6 +51,14 @@ public class SupplyDetail extends DataSupport{
 
     public void setItemID(int ItemID) {
         this.ItemID = ItemID;
+    }
+
+    public int getSubcontractorInterimApproachPlanID() {
+        return SubcontractorInterimApproachPlanID;
+    }
+
+    public void setSubcontractorInterimApproachPlanID(int subcontractorInterimApproachPlanID) {
+        SubcontractorInterimApproachPlanID = subcontractorInterimApproachPlanID;
     }
 
     public String getShipAccount() {
