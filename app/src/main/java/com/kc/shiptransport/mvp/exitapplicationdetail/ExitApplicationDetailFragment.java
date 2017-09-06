@@ -31,6 +31,7 @@ import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import org.litepal.crud.DataSupport;
@@ -60,8 +61,6 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
     TextView tvSub;
     @BindView(R.id.tv_captain)
     TextView tvCaptain;
-    @BindView(R.id.tv_captain_phone)
-    TextView tvCaptainPhone;
     @BindView(R.id.tv_ship_num)
     TextView tvShipNum;
     @BindView(R.id.tv_arrive_anchor_time)
@@ -89,9 +88,18 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
     AppCompatButton btnCommit;
     @BindView(R.id.et_remark)
     EditText etRemark;
+    @BindView(R.id.tv_nation_phone)
+    TextView tvNationPhone;
+    @BindView(R.id.tv_internal_phone)
+    TextView tvInternalPhone;
+    @BindView(R.id.ll_quantum)
+    LinearLayout llQuantum;
+    @BindView(R.id.btn_return)
+    AppCompatButton btnReturn;
     private ExitApplicationDetailContract.Presenter presenter;
     private ExitApplicationDetailActivity activity;
     private ExitApplicationDetailAdapter adapter;
+    private ExitDetail bean;
 
     @Nullable
     @Override
@@ -103,14 +111,24 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
         /** 如果已完善, 不能修改 */
         if (activity.isExit == 1) {
             // 已完善
-            btnCommit.setVisibility(View.GONE);
             etQuantum.setFocusable(false);
             etQuantum.setFocusableInTouchMode(false);
+            btnCommit.setVisibility(View.GONE);
+            btnCancel.setVisibility(View.GONE);
+            btnReturn.setVisibility(View.VISIBLE);
+
+            etRemark.setFocusable(false);
+            etRemark.setFocusableInTouchMode(false);
         } else {
             // 未完善
-            btnCommit.setVisibility(View.VISIBLE);
             etQuantum.setFocusable(true);
             etQuantum.setFocusableInTouchMode(true);
+            btnCommit.setVisibility(View.VISIBLE);
+            btnCancel.setVisibility(View.VISIBLE);
+            btnReturn.setVisibility(View.GONE);
+
+            etRemark.setFocusable(true);
+            etRemark.setFocusableInTouchMode(true);
 
             tvSupplyTime.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -150,11 +168,28 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
 
     @Override
     public void initListener() {
-        /** 取消 */
+        /** 保存 */
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                if (bean == null) {
+                    ToastUtil.tip(getContext(), "退场数据获取失败, 请退出界面重试");
+                    return;
+                }
+                int itemID = TextUtils.isEmpty(bean.getItemID()) ? 0 : Integer.valueOf(bean.getItemID());
+                String time = tvSupplyTime.getText().toString();
+                String creator = DataSupport.findAll(User.class).get(0).getUserID();
+                String remark = etRemark.getText().toString();
+                String RemnantAmount = TextUtils.isEmpty(etQuantum.getText().toString()) ? "0" : etQuantum.getText().toString();
+                int SubcontractorInterimApproachPlanID = activity.itemID;
+                int IsSumbitted = 0;
+                int Status = 0;
+
+                if (TextUtils.isEmpty(time)) {
+                    Toast.makeText(getContext(), "请填写退场时间", Toast.LENGTH_SHORT).show();
+                } else {
+                    presenter.commit(itemID, time, creator, remark, RemnantAmount, SubcontractorInterimApproachPlanID, IsSumbitted, Status);
+                }
             }
         });
 
@@ -162,16 +197,32 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String userID = DataSupport.findAll(User.class).get(0).getUserID();
-                String time = tvSupplyTime.getText().toString();
-                String quantum = etQuantum.getText().toString();
-                String remark = etRemark.getText().toString();
-
-                if (TextUtils.isEmpty(quantum)) {
-                    Toast.makeText(getContext(), "请填写残余方量", Toast.LENGTH_SHORT).show();
-                } else {
-                    presenter.commit(0, time, userID, remark, quantum, activity.itemID);
+                if (bean == null) {
+                    ToastUtil.tip(getContext(), "退场数据获取失败, 请退出界面重试");
+                    return;
                 }
+                int itemID = TextUtils.isEmpty(bean.getItemID()) ? 0 : Integer.valueOf(bean.getItemID());
+                String time = tvSupplyTime.getText().toString();
+                String creator = DataSupport.findAll(User.class).get(0).getUserID();
+                String remark = etRemark.getText().toString();
+                String RemnantAmount = TextUtils.isEmpty(etQuantum.getText().toString()) ? "0" : etQuantum.getText().toString();
+                int SubcontractorInterimApproachPlanID = activity.itemID;
+                int IsSumbitted = 1;
+                int Status = 0;
+
+                if (TextUtils.isEmpty(time)) {
+                    Toast.makeText(getContext(), "请填写退场时间", Toast.LENGTH_SHORT).show();
+                } else {
+                    presenter.commit(itemID, time, creator, remark, RemnantAmount, SubcontractorInterimApproachPlanID, IsSumbitted, Status);
+                }
+            }
+        });
+
+        /** 返回 */
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
             }
         });
     }
@@ -231,14 +282,17 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
      */
     @Override
     public void showDates(ExitDetail bean) {
+        this.bean = bean;
         // 船名
         String shipName = bean.getShipName();
         // 供应商
         String subcontractorName = bean.getSubcontractorName();
         // 船长
         String captain = bean.getCaptain();
-        // 手机
-        String captainPhone = bean.getCaptainPhone();
+        // 国内电话
+        String nationPhone = bean.getNationPhone();
+        // 国外电话
+        String internalPhone = bean.getInternalPhone();
         // 航次编号
         String shipItemNum = bean.getShipItemNum();
         // 到达锚地时间
@@ -251,18 +305,22 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
         String exitTime = bean.getExitTime();
         // 残余方量
         String remnantAmount = bean.getRemnantAmount();
+        // 备注
+        String remark = bean.getRemark();
 
         /** 设置数据 */
         tvShipName.setText(TextUtils.isEmpty(shipName) ? "" : shipName);
         tvSub.setText(TextUtils.isEmpty(subcontractorName) ? "" : subcontractorName);
         tvCaptain.setText(TextUtils.isEmpty(captain) ? "" : captain);
-        tvCaptainPhone.setText(TextUtils.isEmpty(captainPhone) ? "" : captainPhone);
+        tvNationPhone.setText(TextUtils.isEmpty(nationPhone) ? "" : nationPhone);
+        tvInternalPhone.setText(TextUtils.isEmpty(internalPhone) ? "" : internalPhone);
         tvShipNum.setText(TextUtils.isEmpty(shipItemNum) ? "" : shipItemNum);
         tvArriveAnchorTime.setText(TextUtils.isEmpty(arrivaOfAnchorageTime) ? "" : arrivaOfAnchorageTime);
         tvStowage.setText(TextUtils.isEmpty(compartmentQuantity) ? "" : compartmentQuantity);
         tvMaterial.setText(TextUtils.isEmpty(materialClassification) ? "" : materialClassification);
         tvSupplyTime.setText(TextUtils.isEmpty(exitTime) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : exitTime);
         etQuantum.setText(TextUtils.isEmpty(remnantAmount) ? "" : remnantAmount);
+        etRemark.setText(TextUtils.isEmpty(remark) ? "" : remark);
 
 
         /** 获取图片列表 */

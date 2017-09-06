@@ -50,12 +50,11 @@ public class ExitApplicationDetailPresenter implements ExitApplicationDetailCont
         compositeDisposable.clear();
     }
 
-
     @Override
     public void getDates(int SubcontractorInterimApproachPlanID, final int type) {
         view.showLoading(true);
         dataRepository
-                .GetExitApplicationRecordByItemID(SubcontractorInterimApproachPlanID)
+                .GetExitApplicationRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ExitDetail>() {
@@ -89,10 +88,10 @@ public class ExitApplicationDetailPresenter implements ExitApplicationDetailCont
     }
 
     @Override
-    public void commit(int ItemID, String ExitTime, String Creator, String Remark, String RemnantAmount, int SubcontractorInterimApproachPlanID) {
+    public void commit(int ItemID, String ExitTime, String Creator, String Remark, String RemnantAmount, int SubcontractorInterimApproachPlanID, int isSumbitted, int status) {
         view.showLoading(true);
         dataRepository
-                .InsertExitApplicationRecord(ItemID, ExitTime, Creator, Remark, RemnantAmount, SubcontractorInterimApproachPlanID)
+                .InsertExitApplicationRecord(ItemID, ExitTime, Creator, Remark, RemnantAmount, SubcontractorInterimApproachPlanID, isSumbitted, status)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {

@@ -36,6 +36,7 @@ import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
+import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
@@ -699,7 +700,7 @@ public interface DataSouceImpl {
      *
      * @return
      */
-    Observable<Boolean> GetExitApplicationList(int jumpWeek, String account);
+    Observable<Boolean> GetExitApplyPendingApplicationList(int jumpWeek, String account);
 
     /**
      * 3.1 修改密码
@@ -717,7 +718,7 @@ public interface DataSouceImpl {
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
-    Observable<ExitDetail> GetExitApplicationRecordByItemID(int SubcontractorInterimApproachPlanID);
+    Observable<ExitDetail> GetExitApplicationRecordBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
 
     /**
      * 1.53 删除退场申请图片数据
@@ -741,7 +742,7 @@ public interface DataSouceImpl {
      *
      * @return
      */
-    Observable<Boolean> InsertExitApplicationRecord(int ItemID, String ExitTime, String Creator, String Remark, String RemnantAmount, int SubcontractorInterimApproachPlanID);
+    Observable<Boolean> InsertExitApplicationRecord(int ItemID, String ExitTime, String Creator, String Remark, String RemnantAmount, int SubcontractorInterimApproachPlanID, int isSumbitted, int status);
 
     /**
      * 3.2 修改用户信息
@@ -881,4 +882,13 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> DeleteReceptionSandBoatNameAttachmentByItemID(int ItemID);
+
+    /**
+     * 1.63 获取可以进行退场审核的数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     */
+    Observable<List<ExitAssessor>> GetExitAuditPendingApplicationRecords(int PageSize, int PageCount, String ConditionJson);
 }

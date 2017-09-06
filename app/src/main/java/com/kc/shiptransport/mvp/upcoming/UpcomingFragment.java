@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
-import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.mvp.exitassessor.ExitAssessorActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +36,8 @@ public class UpcomingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // TODO 测试专用
-                AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_ACCEPTANCE_EVALUATION);
+                //AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_ACCEPTANCE_EVALUATION);
+                ExitAssessorActivity.startActivity(getContext());
             }
         });
         return view;

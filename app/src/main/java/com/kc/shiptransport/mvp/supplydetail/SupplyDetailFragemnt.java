@@ -107,7 +107,6 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     private int FULLY_PHOTO = 0;
     private int NAME_PHOTO = 1;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -286,8 +285,11 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
      */
     @Override
     public void showShipDetail(final SupplyDetail value) {
+        // 条目ID
+        int itemID = TextUtils.isEmpty(value.getItemID()) ? 0 : Integer.valueOf(value.getItemID());
+        // 进场ID
+        final int subID = TextUtils.isEmpty(value.getSubcontractorInterimApproachPlanID()) ? 0 : Integer.valueOf(value.getSubcontractorInterimApproachPlanID());
 
-        int itemID = value.getItemID();
         // 船舶账号
         String shipAccount = value.getShipAccount();
         // 船舶名称
@@ -367,7 +369,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                                 public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
                                     // 把图片解析成可以上传的任务, 上传
                                     List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-                                    presenter.getCommitImgList(imageMultipleResultEvent, value.getSubcontractorInterimApproachPlanID(), all.get(0).getSubcontractorAccount(), FULLY_PHOTO);
+                                    presenter.getCommitImgList(imageMultipleResultEvent, subID, all.get(0).getSubcontractorAccount(), FULLY_PHOTO);
                                 }
 
                                 @Override
@@ -433,7 +435,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                                 public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
                                     // 把图片解析成可以上传的任务, 上传
                                     List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-                                    presenter.getCommitImgList(imageMultipleResultEvent, value.getSubcontractorInterimApproachPlanID(), all.get(0).getSubcontractorAccount(), NAME_PHOTO);
+                                    presenter.getCommitImgList(imageMultipleResultEvent, subID, all.get(0).getSubcontractorAccount(), NAME_PHOTO);
                                 }
 
                                 @Override

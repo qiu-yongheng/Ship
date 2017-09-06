@@ -681,8 +681,8 @@ public class DataRepository implements DataSouceImpl {
      * @param itemID
      * @param ReceptionSandTime
      * @param userID
-     *@param status
-     * @param remark @return
+     * @param status
+     * @param remark            @return
      */
     @Override
     public Observable<Integer> InsertReceptionSandRecord(final int itemID, final String ReceptionSandTime, final String userID, final int status, final String remark) {
@@ -3126,7 +3126,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> GetExitApplicationList(final int jumpWeek, final String account) {
+    public Observable<Boolean> GetExitApplyPendingApplicationList(final int jumpWeek, final String account) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -3164,8 +3164,10 @@ public class DataRepository implements DataSouceImpl {
 
                 object2.put("Value", array2);
 
-                // 保存3个对象到object
-                Column.put(object1);
+                // 保存2个对象到object
+                if (!TextUtils.isEmpty(account)) {
+                    Column.put(object1);
+                }
                 if (!TextUtils.isEmpty(startDay) || !TextUtils.isEmpty(endDay)) {
                     Column.put(object2);
                 }
@@ -3182,7 +3184,7 @@ public class DataRepository implements DataSouceImpl {
                 LogUtil.d(account + "\n1.49 获取可以进行退场申请的数据 json: \n" + json);
 
                 // 发送网络请求
-                String result = mRemoteDataSource.GetExitApplicationList(10000, 1, json);
+                String result = mRemoteDataSource.GetExitApplyPendingApplicationList(10000, 1, json);
 
                 LogUtil.d("退场申请数据: \n" + result);
 
@@ -3262,11 +3264,13 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<ExitDetail> GetExitApplicationRecordByItemID(final int SubcontractorInterimApproachPlanID) {
+    public Observable<ExitDetail> GetExitApplicationRecordBySubcontractorInterimApproachPlanID(final int SubcontractorInterimApproachPlanID) {
         return Observable.create(new ObservableOnSubscribe<ExitDetail>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<ExitDetail> e) throws Exception {
-                String result = mRemoteDataSource.GetExitApplicationRecordByItemID(SubcontractorInterimApproachPlanID);
+                String result = mRemoteDataSource.GetExitApplicationRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                LogUtil.d(SubcontractorInterimApproachPlanID + "\n1.51 根据退场ItemID,获取退场申请的数据: \n" + result);
                 List<ExitDetail> list = gson.fromJson(result, new TypeToken<List<ExitDetail>>() {
                 }.getType());
 
@@ -3328,7 +3332,14 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> InsertExitApplicationRecord(final int ItemID, final String ExitTime, final String Creator, final String Remark, final String RemnantAmount, final int SubcontractorInterimApproachPlanID) {
+    public Observable<Boolean> InsertExitApplicationRecord(final int ItemID,
+                                                           final String ExitTime,
+                                                           final String Creator,
+                                                           final String Remark,
+                                                           final String RemnantAmount,
+                                                           final int SubcontractorInterimApproachPlanID,
+                                                           final int isSumbitted,
+                                                           final int status) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -3340,10 +3351,15 @@ public class DataRepository implements DataSouceImpl {
                 jsonObject.put("Remark", Remark);
                 jsonObject.put("RemnantAmount", RemnantAmount);
                 jsonObject.put("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+                jsonObject.put("IsSumbitted", isSumbitted);
+                jsonObject.put("Status", status);
+
 
                 jsonArray.put(jsonObject);
 
                 String json = jsonArray.toString();
+
+                LogUtil.d(SubcontractorInterimApproachPlanID + "\n1.50 提交退场申请数据json: \n" + json);
 
 
                 String result = mRemoteDataSource.InsertExitApplicationRecord(json);
@@ -3760,6 +3776,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.57 根据进场计划ID获取分包商预验收评价数据
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
@@ -3782,6 +3799,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.60 获取量方人员信息数据
+     *
      * @return
      */
     @Override
@@ -3803,6 +3821,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.58 提交验砂管理船名照片(图片信息)
+     *
      * @param json
      * @param ByteDataStr
      * @return
@@ -3825,6 +3844,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.59 删除验砂管理船名照片(图片信息)
+     *
      * @param ItemID
      * @return
      */

@@ -1,4 +1,4 @@
-package com.kc.shiptransport.mvp.exitapplication;
+package com.kc.shiptransport.mvp.exitassessor;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,15 +9,14 @@ import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.mvp.BaseActivity;
 
 /**
- * @author qiuyongheng
- * @time 2017/7/12  11:40
- * @desc 退场申请
+ * @author 邱永恒
+ * @time 2017/9/6  15:29
+ * @desc ${TODD}
  */
 
-public class ExitApplicationActivity extends BaseActivity{
+public class ExitAssessorActivity extends BaseActivity{
 
-    private ExitApplicationFragment fragment;
-    public int type;
+    private ExitAssessorFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +24,9 @@ public class ExitApplicationActivity extends BaseActivity{
         setContentView(R.layout.activity_plan);
 
         if (savedInstanceState != null) {
-            fragment = (ExitApplicationFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ExitApplicationFragment");
+            fragment = (ExitAssessorFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ExitAssessorFragment");
         } else {
-            fragment = new ExitApplicationFragment();
+            fragment = new ExitAssessorFragment();
         }
 
         if (!fragment.isAdded()) {
@@ -37,21 +36,21 @@ public class ExitApplicationActivity extends BaseActivity{
                     .commit();
         }
 
-        new ExitApplicationPresenter(this, fragment, new DataRepository());
+        new ExitAssessorPresenter(this, fragment, new DataRepository());
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (fragment.isAdded()) {
-
+            getSupportFragmentManager().putFragment(outState, "ExitAssessorFragment", fragment);
         }
     }
 
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, ExitApplicationActivity.class);
+        Intent intent = new Intent(context, ExitAssessorActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

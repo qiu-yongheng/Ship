@@ -257,8 +257,12 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
             case SettingUtil.TYPE_EXIT_APPLICATION:
                 /** 退场申请 */
                 observable = dataRepository
-                        .GetExitApplicationList(jumpWeek, account)
+                        .GetExitApplyPendingApplicationList(jumpWeek, account)
                         .subscribeOn(Schedulers.io());
+                break;
+            case SettingUtil.TYPE_EXIT_ASSESSOR:
+                /** 退场审核 */
+
                 break;
 
         }

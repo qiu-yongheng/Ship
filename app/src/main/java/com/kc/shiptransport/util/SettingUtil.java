@@ -84,7 +84,7 @@ public class SettingUtil {
     public static final int TYPE_STOP = 108;
     /* 抛砂 */
     public static final int TYPE_THREAD = 109;
-    /* 退场申请 */
+    /* 分包商退场申请 */
     public static final int TYPE_EXIT_APPLICATION = 110;
     /* 进场计划跟踪 */
     public static final int TYPE_ANALYSIS = 111;
@@ -92,6 +92,8 @@ public class SettingUtil {
     public static final int TYPE_ACCEPTANCE_EVALUATION = 112;
     /* 查看供应商评价排行 */
     public static final int TYPE_ACCEPTANCE_RANK = 113;
+    /* 项目人员退场审核 */
+    public static final int TYPE_EXIT_ASSESSOR = 114;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 

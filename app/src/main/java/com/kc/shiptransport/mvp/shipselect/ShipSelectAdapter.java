@@ -17,6 +17,7 @@ import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -69,41 +70,52 @@ public class ShipSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
         /* 3. 设置点击事件(选中: select=1 取消选中: select=0) */
-        ((NormalHolder) holder).mCbShipSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    /* 如果任务计划中已经有该船, 设置选中 */
-                    if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", shipList.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {
-                        ContentValues values = new ContentValues();
-                        values.put("isSelected", 1);
-                        DataSupport.updateAll(ShipList.class, values, "ShipID = ?", shipID);
-                    } else {
+        if (!DataSupport.where("ShipAccount = ? and PreAcceptanceEvaluationStatus = ? and PlanDay = ?", shipList.getShipAccount(), String.valueOf(1), currentSelectDate).find(WeekTask.class).isEmpty()) {
+            /** 已经进行验收操作, 不能修改 */
+            ((NormalHolder) holder).mCbShipSelect.setEnabled(false);
+            ((NormalHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ToastUtil.tip(context, "已经进行验收操作, 不能修改");
+                }
+            });
+        } else {
+            ((NormalHolder) holder).mCbShipSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        /** 如果任务计划中已经有该船, 设置选中 */
+                        if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", shipList.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {
+                            ContentValues values = new ContentValues();
+                            values.put("isSelected", 1);
+                            DataSupport.updateAll(ShipList.class, values, "ShipID = ?", shipID);
+                        } else {
 
-                        /* 保存计划到提交缓存中 */
-                        CommitShip commitShip = new CommitShip();
-                        commitShip.setItemID("");
-                        commitShip.setShipAccount(shipList.getShipAccount());
-                        commitShip.setMaxSandSupplyCount(shipList.getMaxSandSupplyCount());
-                        commitShip.setPlanDay(currentSelectDate);
-                        commitShip.setShipType(type);
-                        commitShip.save();
-                        Log.d("==", "选择长度: " + DataSupport.where("PlanDay = ?", currentSelectDate).find(CommitShip.class).size());
-                    }
-                } else {
-                    /* 如果任务计划中有该船, 设置不选中 TODO 如果取消选中后, 退出怎么办? */
-                    if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", shipList.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {
-                        ContentValues values = new ContentValues();
-                        values.put("isSelected", 0);
-                        DataSupport.updateAll(ShipList.class, values, "ShipID = ?", shipID);
+                            /** 保存计划到提交缓存中 */
+                            CommitShip commitShip = new CommitShip();
+                            commitShip.setItemID("");
+                            commitShip.setShipAccount(shipList.getShipAccount());
+                            commitShip.setMaxSandSupplyCount(shipList.getMaxSandSupplyCount());
+                            commitShip.setPlanDay(currentSelectDate);
+                            commitShip.setShipType(type);
+                            commitShip.save();
+                            Log.d("==", "选择长度: " + DataSupport.where("PlanDay = ?", currentSelectDate).find(CommitShip.class).size());
+                        }
                     } else {
-                        /* 从提交缓存中删除 */
-                        DataSupport.deleteAll(CommitShip.class, "ShipAccount = ?", shipList.getShipAccount());
-                        Log.d("==", "选择长度: " + DataSupport.where("PlanDay = ?", currentSelectDate).find(CommitShip.class).size());
+                        /** 如果任务计划中有该船, 设置不选中 TODO 如果取消选中后, 退出怎么办? */
+                        if (!DataSupport.where("ShipAccount = ? and PlanDay = ?", shipList.getShipAccount(), currentSelectDate).find(WeekTask.class).isEmpty()) {
+                            ContentValues values = new ContentValues();
+                            values.put("isSelected", 0);
+                            DataSupport.updateAll(ShipList.class, values, "ShipID = ?", shipID);
+                        } else {
+                            /** 从提交缓存中删除 */
+                            DataSupport.deleteAll(CommitShip.class, "ShipAccount = ?", shipList.getShipAccount());
+                            Log.d("==", "选择长度: " + DataSupport.where("PlanDay = ?", currentSelectDate).find(CommitShip.class).size());
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     class NormalHolder extends RecyclerView.ViewHolder {

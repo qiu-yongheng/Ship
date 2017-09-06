@@ -29,8 +29,8 @@ public class SupplyDetail extends DataSupport{
      * ReceptionSandBoatNameAttachmentList : [{"ItemID":1,"FileName":"abc.png","FilePath":"https://cchk3.kingwi.org/Files/20170704/b0d42941-cee8-4a0c-afb9-0c1917f051d4.png"}]
      */
 
-    private int ItemID;
-    private int SubcontractorInterimApproachPlanID;
+    private String ItemID;
+    private String SubcontractorInterimApproachPlanID;
     private String ShipAccount;
     private String ShipName;
     private String SubcontractorAccount;
@@ -45,19 +45,19 @@ public class SupplyDetail extends DataSupport{
     private List<ReceptionSandAttachmentListBean> ReceptionSandAttachmentList;
     private List<ReceptionSandBoatNameAttachmentListBean> ReceptionSandBoatNameAttachmentList;
 
-    public int getItemID() {
+    public String getItemID() {
         return ItemID;
     }
 
-    public void setItemID(int ItemID) {
+    public void setItemID(String ItemID) {
         this.ItemID = ItemID;
     }
 
-    public int getSubcontractorInterimApproachPlanID() {
+    public String getSubcontractorInterimApproachPlanID() {
         return SubcontractorInterimApproachPlanID;
     }
 
-    public void setSubcontractorInterimApproachPlanID(int subcontractorInterimApproachPlanID) {
+    public void setSubcontractorInterimApproachPlanID(String subcontractorInterimApproachPlanID) {
         SubcontractorInterimApproachPlanID = subcontractorInterimApproachPlanID;
     }
 

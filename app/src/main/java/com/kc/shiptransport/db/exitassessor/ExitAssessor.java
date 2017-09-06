@@ -1,20 +1,18 @@
-package com.kc.shiptransport.db.exitapplication;
+package com.kc.shiptransport.db.exitassessor;
 
 import org.litepal.crud.DataSupport;
 
-import java.util.List;
-
 /**
  * @author 邱永恒
- * @time 2017/7/13  14:12
- * @desc 退场申请详情数据
+ * @time 2017/9/6  17:34
+ * @desc ${TODD}
  */
 
-
-public class ExitDetail extends DataSupport{
+public class ExitAssessor extends DataSupport{
 
     /**
-     * ItemID : 1002
+     * rownumber : 1
+     * ItemID : 3003
      * SubcontractorInterimApproachPlanID : 415
      * SubcontractorAccount : xgyj
      * SubcontractorName : 香港怡景
@@ -26,25 +24,25 @@ public class ExitDetail extends DataSupport{
      * Captain : 陈1
      * NationPhone : 1123
      * InternalPhone : 1123
-     * ArrivaOfAnchorageTime : 2017/6/8 19:30:00
+     * ArrivaOfAnchorageTime : 2017-06-08 19:30:00
      * CompartmentQuantity : 3
      * MaterialClassification : 细砂（0~3mm）
-     * SandSupplyCount : 2500
+     * SandSupplyCount : 2500.0
      * IsPerfect : 1
      * IsOverSand : 1
-     * OverSandTime : 2017/6/28 11:02:12
-     * ExitTime : 2017/7/6 17:00:00
+     * OverSandTime : 2017-06-28T11:02:12.447
+     * ExitTime : 2017-07-06 17:00:00
      * Creator : yflf
      * IsSumbitted : 1
      * IsExit : 0
      * RemnantAmount : 120
-     * Remark :
      * SystemDate : 2017-05-26 00:00:00
-     * AttachmentList : [{"ItemID":1,"FileName":"abc.png","FilePath":"https://cchk3.kingwi.org/Files/20170713/98202811-0e55-41d3-b4ab-82434a4e3608.png"},{"ItemID":2,"FileName":"abc.png","FilePath":"https://cchk3.kingwi.org/Files/20170713/eaf25704-d4c9-4f8f-a936-9d98f90cd05b.png"},{"ItemID":3002,"FileName":"abc.png","FilePath":"https://cchk3.kingwi.org/Files/20170818/902afe9c-d748-4368-b840-f9b927809ccb.png"}]
+     * Remark :
      */
 
-    private String ItemID;
-    private String SubcontractorInterimApproachPlanID;
+    private int rownumber;
+    private int ItemID;
+    private int SubcontractorInterimApproachPlanID;
     private String SubcontractorAccount;
     private String SubcontractorName;
     private String PlanDay;
@@ -56,34 +54,41 @@ public class ExitDetail extends DataSupport{
     private String NationPhone;
     private String InternalPhone;
     private String ArrivaOfAnchorageTime;
-    private String CompartmentQuantity;
+    private int CompartmentQuantity;
     private String MaterialClassification;
-    private String SandSupplyCount;
-    private String IsPerfect;
-    private String IsOverSand;
+    private double SandSupplyCount;
+    private int IsPerfect;
+    private int IsOverSand;
     private String OverSandTime;
     private String ExitTime;
     private String Creator;
-    private String IsSumbitted;
-    private String IsExit;
+    private int IsSumbitted;
+    private int IsExit;
     private String RemnantAmount;
-    private String Remark;
     private String SystemDate;
-    private List<AttachmentListBean> AttachmentList;
+    private String Remark;
 
-    public String getItemID() {
+    public int getRownumber() {
+        return rownumber;
+    }
+
+    public void setRownumber(int rownumber) {
+        this.rownumber = rownumber;
+    }
+
+    public int getItemID() {
         return ItemID;
     }
 
-    public void setItemID(String ItemID) {
+    public void setItemID(int ItemID) {
         this.ItemID = ItemID;
     }
 
-    public String getSubcontractorInterimApproachPlanID() {
+    public int getSubcontractorInterimApproachPlanID() {
         return SubcontractorInterimApproachPlanID;
     }
 
-    public void setSubcontractorInterimApproachPlanID(String SubcontractorInterimApproachPlanID) {
+    public void setSubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID) {
         this.SubcontractorInterimApproachPlanID = SubcontractorInterimApproachPlanID;
     }
 
@@ -175,11 +180,11 @@ public class ExitDetail extends DataSupport{
         this.ArrivaOfAnchorageTime = ArrivaOfAnchorageTime;
     }
 
-    public String getCompartmentQuantity() {
+    public int getCompartmentQuantity() {
         return CompartmentQuantity;
     }
 
-    public void setCompartmentQuantity(String CompartmentQuantity) {
+    public void setCompartmentQuantity(int CompartmentQuantity) {
         this.CompartmentQuantity = CompartmentQuantity;
     }
 
@@ -191,27 +196,27 @@ public class ExitDetail extends DataSupport{
         this.MaterialClassification = MaterialClassification;
     }
 
-    public String getSandSupplyCount() {
+    public double getSandSupplyCount() {
         return SandSupplyCount;
     }
 
-    public void setSandSupplyCount(String SandSupplyCount) {
+    public void setSandSupplyCount(double SandSupplyCount) {
         this.SandSupplyCount = SandSupplyCount;
     }
 
-    public String getIsPerfect() {
+    public int getIsPerfect() {
         return IsPerfect;
     }
 
-    public void setIsPerfect(String IsPerfect) {
+    public void setIsPerfect(int IsPerfect) {
         this.IsPerfect = IsPerfect;
     }
 
-    public String getIsOverSand() {
+    public int getIsOverSand() {
         return IsOverSand;
     }
 
-    public void setIsOverSand(String IsOverSand) {
+    public void setIsOverSand(int IsOverSand) {
         this.IsOverSand = IsOverSand;
     }
 
@@ -239,19 +244,19 @@ public class ExitDetail extends DataSupport{
         this.Creator = Creator;
     }
 
-    public String getIsSumbitted() {
+    public int getIsSumbitted() {
         return IsSumbitted;
     }
 
-    public void setIsSumbitted(String IsSumbitted) {
+    public void setIsSumbitted(int IsSumbitted) {
         this.IsSumbitted = IsSumbitted;
     }
 
-    public String getIsExit() {
+    public int getIsExit() {
         return IsExit;
     }
 
-    public void setIsExit(String IsExit) {
+    public void setIsExit(int IsExit) {
         this.IsExit = IsExit;
     }
 
@@ -263,14 +268,6 @@ public class ExitDetail extends DataSupport{
         this.RemnantAmount = RemnantAmount;
     }
 
-    public String getRemark() {
-        return Remark;
-    }
-
-    public void setRemark(String Remark) {
-        this.Remark = Remark;
-    }
-
     public String getSystemDate() {
         return SystemDate;
     }
@@ -279,47 +276,11 @@ public class ExitDetail extends DataSupport{
         this.SystemDate = SystemDate;
     }
 
-    public List<AttachmentListBean> getAttachmentList() {
-        return AttachmentList;
+    public String getRemark() {
+        return Remark;
     }
 
-    public void setAttachmentList(List<AttachmentListBean> AttachmentList) {
-        this.AttachmentList = AttachmentList;
-    }
-
-    public static class AttachmentListBean {
-        /**
-         * ItemID : 1
-         * FileName : abc.png
-         * FilePath : https://cchk3.kingwi.org/Files/20170713/98202811-0e55-41d3-b4ab-82434a4e3608.png
-         */
-
-        private int ItemID;
-        private String FileName;
-        private String FilePath;
-
-        public int getItemID() {
-            return ItemID;
-        }
-
-        public void setItemID(int ItemID) {
-            this.ItemID = ItemID;
-        }
-
-        public String getFileName() {
-            return FileName;
-        }
-
-        public void setFileName(String FileName) {
-            this.FileName = FileName;
-        }
-
-        public String getFilePath() {
-            return FilePath;
-        }
-
-        public void setFilePath(String FilePath) {
-            this.FilePath = FilePath;
-        }
+    public void setRemark(String Remark) {
+        this.Remark = Remark;
     }
 }

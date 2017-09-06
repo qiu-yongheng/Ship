@@ -1,29 +1,23 @@
-package com.kc.shiptransport.mvp.exitapplication;
+package com.kc.shiptransport.mvp.exitassessor;
 
 import android.app.ProgressDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.basemvp.BaseMvpFragment;
-import com.kc.shiptransport.mvp.exitapplicationdetail.ExitApplicationDetailActivity;
 import com.kc.shiptransport.util.SettingUtil;
 
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
-
 /**
- * @author qiuyongheng
- * @time 2017/7/12  11:45
+ * @author 邱永恒
+ * @time 2017/9/6  15:32
  * @desc ${TODD}
  */
 
-public class ExitApplicationFragment extends BaseMvpFragment {
+public class ExitAssessorFragment extends BaseMvpFragment{
 
-    private ExitApplicationActivity activity;
+    private ExitAssessorActivity activity;
 
     @Override
     public void showLoading(boolean active) {
@@ -44,29 +38,28 @@ public class ExitApplicationFragment extends BaseMvpFragment {
         presenter.subscribe();
         // 显示所有供应商
         presenter.getTime(jumpWeek);
-        presenter.getSubcontractorList();
     }
 
     @Override
     protected int getType() {
-        return SettingUtil.TYPE_EXIT_APPLICATION;
+        return SettingUtil.TYPE_EXIT_ASSESSOR;
     }
 
     @Override
     protected void initToolbar(Toolbar toolbar) {
-        activity = (ExitApplicationActivity) getActivity();
+        activity = (ExitAssessorActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     protected int getRedText() {
-        return R.string.exit_red;
+        return R.string.exit_assessor_red;
     }
 
     @Override
     protected int getBlackText() {
-        return R.string.exit_black;
+        return R.string.exit_assessor_black;
     }
 
     @Override
@@ -76,17 +69,12 @@ public class ExitApplicationFragment extends BaseMvpFragment {
 
     @Override
     protected String abs_showStayInfo(String data) {
-        return "未退场航次: " + data;
+        return "未退场审核航次: " + data;
     }
 
     @Override
     protected void abs_onItemClick(View view, int position) {
-        // 点击查看详情, 传递itemID
-        List<ExitList> exitLists = DataSupport.where("position = ?", String.valueOf(position)).find(ExitList.class);
 
-        if (!exitLists.isEmpty()) {
-            ExitApplicationDetailActivity.startActivity(getContext(), exitLists.get(0).getSubcontractorInterimApproachPlanID(), exitLists.get(0).getIsExit());
-        }
     }
 
     @Override

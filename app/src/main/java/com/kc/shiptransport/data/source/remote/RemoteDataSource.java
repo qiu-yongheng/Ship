@@ -21,6 +21,7 @@ public class RemoteDataSource {
 
     /**
      * 发送网络请求
+     *
      * @param endPoint
      * @param soapAction
      * @param rpc
@@ -43,7 +44,9 @@ public class RemoteDataSource {
         // 调用WebService
         transport.call(soapAction, envelope);
 
-        LogUtil.d("envelope.bodyIn: \n" + envelope.bodyIn.toString());
+        if (envelope.bodyIn.toString().contains("SoapFault")) {
+            LogUtil.e("envelope.bodyIn: \n" + envelope.bodyIn.toString());
+        }
         // 获取返回的数据
         SoapObject object = (SoapObject) envelope.bodyIn;
         // 获取返回的结果
@@ -1324,15 +1327,15 @@ public class RemoteDataSource {
      * @param ConditionJson
      * @return
      */
-    public String GetExitApplicationList(int PageSize, int PageCount, String ConditionJson) throws Exception {
+    public String GetExitApplyPendingApplicationList(int PageSize, int PageCount, String ConditionJson) throws Exception {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
-        String methodName = "GetExitApplicationList";
+        String methodName = "GetExitApplyPendingApplicationList";
         // EndPoint
         String endPoint = EndPoint;
         // SOAP Action
-        String soapAction = "http://tempuri.org/GetExitApplicationList";
+        String soapAction = "http://tempuri.org/GetExitApplyPendingApplicationList";
 
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
@@ -1377,15 +1380,15 @@ public class RemoteDataSource {
      * @param SubcontractorInterimApproachPlanID
      * @return
      */
-    public String GetExitApplicationRecordByItemID(int SubcontractorInterimApproachPlanID) throws Exception {
+    public String GetExitApplicationRecordBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID) throws Exception {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
-        String methodName = "GetExitApplicationRecordByItemID";
+        String methodName = "GetExitApplicationRecordBySubcontractorInterimApproachPlanID";
         // EndPoint
         String endPoint = EndPoint;
         // SOAP Action
-        String soapAction = "http://tempuri.org/GetExitApplicationRecordByItemID";
+        String soapAction = "http://tempuri.org/GetExitApplicationRecordBySubcontractorInterimApproachPlanID";
 
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
@@ -1524,6 +1527,7 @@ public class RemoteDataSource {
 
     /**
      * 3.4 获取部门信息
+     *
      * @return
      * @throws Exception
      */
@@ -1545,6 +1549,7 @@ public class RemoteDataSource {
 
     /**
      * 1.18 获取对应的过砂记录信息明细
+     *
      * @param ItemID
      * @return
      * @throws Exception
@@ -1569,6 +1574,7 @@ public class RemoteDataSource {
 
     /**
      * 2.5 获取供应商进场计划进度跟踪
+     *
      * @param SubcontractorAccount
      * @param ShipName
      * @param StartDate
@@ -1599,6 +1605,7 @@ public class RemoteDataSource {
 
     /**
      * 2.4 根据进场计划ID，获取供砂过程总表
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      * @throws Exception
@@ -1623,6 +1630,7 @@ public class RemoteDataSource {
 
     /**
      * 1.54 获取供应商预验收评价数据
+     *
      * @param PageSize
      * @param PageCount
      * @param ConditionJson
@@ -1651,6 +1659,7 @@ public class RemoteDataSource {
 
     /**
      * 1.55 获取供应商评分排行榜
+     *
      * @param ConditionJson
      * @return
      * @throws Exception
@@ -1675,6 +1684,7 @@ public class RemoteDataSource {
 
     /**
      * 4.1 获取当前app最新版本
+     *
      * @param Version 本地版本
      * @return
      * @throws Exception
@@ -1699,6 +1709,7 @@ public class RemoteDataSource {
 
     /**
      * 3.5 获取所有用户信息(通讯录数据源)
+     *
      * @param PageSize
      * @param PageCount
      * @param ConditionJson
@@ -1725,6 +1736,7 @@ public class RemoteDataSource {
 
     /**
      * 1.56 提交分包商航次完善扫描件(用于确认提交)
+     *
      * @return
      * @throws Exception
      */
@@ -1746,6 +1758,7 @@ public class RemoteDataSource {
 
     /**
      * 1.61 判断是否允许新增或者修改进场计划数据
+     *
      * @param Date
      * @return
      * @throws Exception
@@ -1768,6 +1781,7 @@ public class RemoteDataSource {
 
     /**
      * 1.57 根据进场计划ID获取分包商预验收评价数据
+     *
      * @param SubcontractorInterimApproachPlanID
      * @return
      * @throws Exception
@@ -1790,6 +1804,7 @@ public class RemoteDataSource {
 
     /**
      * 1.60 获取量方人员信息数据
+     *
      * @return
      * @throws Exception
      */
@@ -1809,6 +1824,7 @@ public class RemoteDataSource {
 
     /**
      * 1.58 提交验砂管理船名照片(图片信息)
+     *
      * @param json
      * @param ByteDataStr
      * @return
@@ -1833,6 +1849,7 @@ public class RemoteDataSource {
 
     /**
      * 1.59 删除验砂管理船名照片(图片信息)
+     *
      * @param ItemID
      * @return
      * @throws Exception
@@ -1849,6 +1866,32 @@ public class RemoteDataSource {
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
         rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.63 获取可以进行退场审核的数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetExitAuditPendingApplicationRecords(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetExitAuditPendingApplicationRecords";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
 
         return getCallResult(endPoint, soapAction, rpc);
     }

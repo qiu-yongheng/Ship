@@ -126,7 +126,7 @@
     <string name="title_down_log">停工日志</string>
     <string name="btn_thread_sand_log">抛砂日志</string>
     <string name="title_thread_sand_log">抛砂日志</string>
-    <string name="title_exit_application">退场申请</string>
+    <string name="title_exit_application">供应商退场申请</string>
     <string name="exit_red">红色字体: 已退场</string>
     <string name="exit_black">黑色字体: 未退场</string>
     <string name="text_change_password">修改密码</string>
@@ -162,6 +162,9 @@
     <string name="text_current_version_code">当前版本号</string>
     <string name="btn_save">保存</string>
     <string name="commit_tip">提交数据后, 将不能再次修改, 是否提交?</string>
+    <string name="title_exit_assessor">退场审核</string>
+    <string name="exit_assessor_red">已审核</string>
+    <string name="exit_assessor_black">未审核</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

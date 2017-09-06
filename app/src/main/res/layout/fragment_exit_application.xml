@@ -77,7 +77,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:orientation="horizontal"
-            android:paddingBottom="10dp"
             android:paddingLeft="20dp">
 
             <LinearLayout
@@ -99,26 +98,47 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"/>
             </LinearLayout>
+        </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_title_w"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:orientation="horizontal">
+                android:text="船舶国内电话: "/>
 
-                <TextView
-                    style="@style/text_title_w"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="手机: "/>
+            <TextView
+                android:id="@+id/tv_nation_phone"
+                style="@style/text_title_w"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"/>
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_captain_phone"
-                    style="@style/text_title_w"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"/>
-            </LinearLayout>
+        <LinearLayout
+            android:paddingBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_title_w"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="船舶香港电话: "/>
+
+            <TextView
+                android:id="@+id/tv_internal_phone"
+                style="@style/text_title_w"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"/>
         </LinearLayout>
 
         <LinearLayout
@@ -239,7 +259,6 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="gaga"
                 android:textColor="#000"
                 android:textSize="@dimen/text_15sp"/>
         </LinearLayout>
@@ -252,7 +271,7 @@
             android:paddingBottom="5dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -339,7 +358,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#888"
-            android:text="@string/btn_cancle"
+            android:text="@string/btn_save"
             android:textColor="#fff"/>
 
         <android.support.v7.widget.AppCompatButton
@@ -349,6 +368,16 @@
             android:layout_weight="1"
             android:background="?colorPrimary"
             android:text="提交"
+            android:textColor="#fff"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:visibility="gone"
+            android:id="@+id/btn_return"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#888"
+            android:text="@string/btn_return"
             android:textColor="#fff"/>
     </LinearLayout>
 

@@ -29,7 +29,7 @@ public interface ExitApplicationDetailContract {
 
     interface Presenter extends BasePresenter {
         void getDates(int SubcontractorInterimApproachPlanID, int type);
-        void commit(int ItemID, String ExitTime, String Creator, String Remark, String RemnantAmount, int SubcontractorInterimApproachPlanID);
+        void commit(int ItemID, String ExitTime, String Creator, String Remark, String RemnantAmount, int SubcontractorInterimApproachPlanID, int isSumbitted, int status);
         // 根据图片ID删除图片
         void deleteImgForItemID(int itemID);
         // 把图片解析成上传任务
