@@ -197,24 +197,36 @@ public class ExitApplicationDetailFragment extends Fragment implements ExitAppli
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bean == null) {
-                    ToastUtil.tip(getContext(), "退场数据获取失败, 请退出界面重试");
-                    return;
-                }
-                int itemID = TextUtils.isEmpty(bean.getItemID()) ? 0 : Integer.valueOf(bean.getItemID());
-                String time = tvSupplyTime.getText().toString();
-                String creator = DataSupport.findAll(User.class).get(0).getUserID();
-                String remark = etRemark.getText().toString();
-                String RemnantAmount = TextUtils.isEmpty(etQuantum.getText().toString()) ? "0" : etQuantum.getText().toString();
-                int SubcontractorInterimApproachPlanID = activity.itemID;
-                int IsSumbitted = 1;
-                int Status = 0;
+                activity.showDailog("提交", "提交后, 将不能进行修改, 是否提交?", "取消", "提交", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                if (TextUtils.isEmpty(time)) {
-                    Toast.makeText(getContext(), "请填写退场时间", Toast.LENGTH_SHORT).show();
-                } else {
-                    presenter.commit(itemID, time, creator, remark, RemnantAmount, SubcontractorInterimApproachPlanID, IsSumbitted, Status);
-                }
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        if (bean == null) {
+                            ToastUtil.tip(getContext(), "退场数据获取失败, 请退出界面重试");
+                            return;
+                        }
+                        int itemID = TextUtils.isEmpty(bean.getItemID()) ? 0 : Integer.valueOf(bean.getItemID());
+                        String time = tvSupplyTime.getText().toString();
+                        String creator = DataSupport.findAll(User.class).get(0).getUserID();
+                        String remark = etRemark.getText().toString();
+                        String RemnantAmount = TextUtils.isEmpty(etQuantum.getText().toString()) ? "0" : etQuantum.getText().toString();
+                        int SubcontractorInterimApproachPlanID = activity.itemID;
+                        int IsSumbitted = 1;
+                        int Status = 0;
+
+                        if (TextUtils.isEmpty(time)) {
+                            Toast.makeText(getContext(), "请填写退场时间", Toast.LENGTH_SHORT).show();
+                        } else {
+                            presenter.commit(itemID, time, creator, remark, RemnantAmount, SubcontractorInterimApproachPlanID, IsSumbitted, Status);
+                        }
+                    }
+                });
+
             }
         });
 

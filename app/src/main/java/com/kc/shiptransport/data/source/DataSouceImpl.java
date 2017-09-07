@@ -36,7 +36,6 @@ import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
-import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
@@ -887,8 +886,23 @@ public interface DataSouceImpl {
      * 1.63 获取可以进行退场审核的数据
      * @param PageSize
      * @param PageCount
-     * @param ConditionJson
+     * @param jumpWeek
+     * @param account
      * @return
      */
-    Observable<List<ExitAssessor>> GetExitAuditPendingApplicationRecords(int PageSize, int PageCount, String ConditionJson);
+    Observable<Boolean> GetExitAuditPendingApplicationRecords(int PageSize, int PageCount, int jumpWeek, String account);
+
+    /**
+     * 1.64 提交退场审核数据
+     * @param itemID
+     * @param exitTime
+     * @param creator
+     * @param remark
+     * @param RemnantAmount
+     * @param SubcontractorInterimApproachPlanID
+     * @param IsSumbitted 默认1
+     * @param Status
+     * @return
+     */
+   // Observable<Boolean> InsertExitApplicationRecord(int itemID, String exitTime, String creator, String remark, float RemnantAmount, int SubcontractorInterimApproachPlanID, int IsSumbitted, int Status);
 }

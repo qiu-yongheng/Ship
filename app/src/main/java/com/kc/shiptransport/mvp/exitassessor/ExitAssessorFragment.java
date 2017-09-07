@@ -5,9 +5,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.basemvp.BaseMvpFragment;
+import com.kc.shiptransport.mvp.exitapplicationassessor.ExitApplicationAssessorActivity;
 import com.kc.shiptransport.util.SettingUtil;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 /**
  * @author 邱永恒
@@ -38,6 +44,7 @@ public class ExitAssessorFragment extends BaseMvpFragment{
         presenter.subscribe();
         // 显示所有供应商
         presenter.getTime(jumpWeek);
+        presenter.getSubcontractorList();
     }
 
     @Override
@@ -74,7 +81,10 @@ public class ExitAssessorFragment extends BaseMvpFragment{
 
     @Override
     protected void abs_onItemClick(View view, int position) {
-
+        List<ExitAssessor> list = DataSupport.where("position = ?", String.valueOf(position)).find(ExitAssessor.class);
+        if (!list.isEmpty()) {
+            ExitApplicationAssessorActivity.startActivity(getContext(), list.get(0).getSubcontractorInterimApproachPlanID(), (list.get(0).getIsExit() == 1));
+        }
     }
 
     @Override

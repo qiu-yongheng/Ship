@@ -42,9 +42,7 @@ public class ExitApplicationFragment extends BaseMvpFragment {
     @Override
     protected void initData() {
         presenter.subscribe();
-        // 显示所有供应商
-        presenter.getTime(jumpWeek);
-        presenter.getSubcontractorList();
+        presenter.start(jumpWeek, TYPE, subcontractorAccount);
     }
 
     @Override

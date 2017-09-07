@@ -289,10 +289,58 @@
                 android:background="@drawable/tv_bg"
                 android:clickable="true"
                 android:gravity="center"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:padding="5dp"
                 android:textColor="#000"
                 android:textSize="@dimen/text_15sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/ll_total_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:text="合  计  方: "
+                android:textColor="#000"
+                android:textSize="@dimen/text_15sp"/>
+
+            <TextView
+                android:id="@+id/tv_total_volume"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="5dp"
+                android:textColor="#000"
+                android:textSize="@dimen/text_15sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:text="退场备注: "
+                android:textColor="#000"
+                android:textSize="@dimen/text_15sp"/>
+
         </LinearLayout>
 
         <EditText

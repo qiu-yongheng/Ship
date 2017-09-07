@@ -63,6 +63,7 @@ import com.kc.shiptransport.db.down.StopList;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitapplication.ExitList;
+import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
@@ -376,6 +377,35 @@ public class DataRepository implements DataSouceImpl {
                                 break;
                             case 6:
                                 day_6 += Double.valueOf(sample.getSandSupplyCount());
+                                break;
+                        }
+                    }
+                } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
+                    /** 退场审核 */
+                    List<ExitAssessor> exitList = DataSupport.findAll(ExitAssessor.class);
+
+                    for (ExitAssessor exitAssessor : exitList) {
+                        switch (Integer.valueOf(exitAssessor.getPosition()) % 7) {
+                            case 0:
+                                day_0 += Double.valueOf(exitAssessor.getSandSupplyCount());
+                                break;
+                            case 1:
+                                day_1 += Double.valueOf(exitAssessor.getSandSupplyCount());
+                                break;
+                            case 2:
+                                day_2 += Double.valueOf(exitAssessor.getSandSupplyCount());
+                                break;
+                            case 3:
+                                day_3 += Double.valueOf(exitAssessor.getSandSupplyCount());
+                                break;
+                            case 4:
+                                day_4 += Double.valueOf(exitAssessor.getSandSupplyCount());
+                                break;
+                            case 5:
+                                day_5 += Double.valueOf(exitAssessor.getSandSupplyCount());
+                                break;
+                            case 6:
+                                day_6 += Double.valueOf(exitAssessor.getSandSupplyCount());
                                 break;
                         }
                     }
@@ -772,30 +802,14 @@ public class DataRepository implements DataSouceImpl {
                 } else if (type == SettingUtil.TYPE_EXIT_APPLICATION) {
                     /** 退场申请 */
                     num = DataSupport.where("IsExit = ?", "0").count(ExitList.class);
+                } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
+                    /** 退场审核 */
+                    num = DataSupport.where("IsExit = ?", "0").count(ExitAssessor.class);
                 } else if (type == SettingUtil.TYPE_ACCEPT) {
                     /** 验收 1通过, 0保存, -1不通过(不显示) */
                     // TODO
                     num = DataSupport.where("PreAcceptanceEvaluationStatus = ?", "0").count(WeekTask.class);
                 }
-                //                else {
-                //                    // 1. 获取一周任务
-                //                    List<WeekTask> weekTasks = DataSupport.findAll(WeekTask.class);
-                //
-                //                    // 2. 统计未验收任务
-                //                    if (weekTasks != null && !weekTasks.isEmpty()) {
-                //                        for (WeekTask weektask : weekTasks) {
-                //                            String time = null;
-                //                            String time2 = null;
-                //                            if (type == SettingUtil.TYPE_ACCEPT) {
-                //                                /** 验收 */
-                //                                time = weektask.getPreAcceptanceTime();
-                //                                if (time == null || time.equals("")) {
-                //                                    num++;
-                //                                }
-                //                            }
-                //                        }
-                //                    }
-                //                }
 
                 e.onNext(num);
                 e.onComplete();
@@ -1338,6 +1352,14 @@ public class DataRepository implements DataSouceImpl {
                             break;
                         case 24:
                             // 供应商排行
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 25:
+                            // 退场审核
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        case 26:
+                            // 退场反馈
                             list.setIcon_id(R.mipmap.plan);
                             break;
                     }
@@ -3857,6 +3879,123 @@ public class DataRepository implements DataSouceImpl {
 
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
                 e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.63 获取可以进行退场审核的数据
+     * @param PageSize
+     * @param PageCount
+     * @param jumpWeek
+     * @param account
+     * @return
+     */
+    @Override
+    public Observable<Boolean> GetExitAuditPendingApplicationRecords(final int PageSize, final int PageCount, final int jumpWeek, final String account) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                 /* 开始时间 */
+                String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
+                /* 结束时间 */
+                String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
+
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
+
+                JSONArray Column = new JSONArray();
+
+                // 供应商账号
+                JSONObject object1 = new JSONObject();
+                object1.put("Name", "SubcontractorAccount");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", account);
+
+                // 退场时间时间
+                JSONObject object2 = new JSONObject();
+                object2.put("Name", "PlanDay");
+                object2.put("Type", "datetime");
+
+                JSONArray array2 = new JSONArray();
+
+                JSONObject object21 = new JSONObject();
+                object21.put("Min", startDay);
+                JSONObject object22 = new JSONObject();
+                object22.put("Max", endDay);
+
+                array2.put(object21);
+                array2.put(object22);
+
+                object2.put("Value", array2);
+
+                // 保存2个对象到object
+                if (!TextUtils.isEmpty(account)) {
+                    Column.put(object1);
+                }
+                if (!TextUtils.isEmpty(startDay) || !TextUtils.isEmpty(endDay)) {
+                    Column.put(object2);
+                }
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                String json = root.toString();
+
+                LogUtil.d(account + "\n1.63 获取可以进行退场审核的数据 json: \n" + json);
+
+                String result = mRemoteDataSource.GetExitAuditPendingApplicationRecords(PageSize, PageCount, json);
+
+                LogUtil.d("1.63 获取可以进行退场审核的数据: \n" + result);
+
+                List<ExitAssessor> lists = gson.fromJson(result, new TypeToken<List<ExitAssessor>>() {
+                }.getType());
+
+
+
+
+                /* 3. 初始化数据库 */
+                deleteAll(ExitAssessor.class);
+
+                /* 4. 保存数据到数据库 */
+                DataSupport.saveAll(lists);
+
+                /* 5. 对数据进行排序 */
+
+                // 1. 创建一个二维集合存放分类好的数据
+                List<List<ExitAssessor>> totalLists = new ArrayList<>();
+
+                // 2. 查询数据
+                List<ExitAssessor> recordLists = DataSupport.findAll(ExitAssessor.class);
+
+                // 3. 按照时间进行分类
+                Set set = new HashSet();
+                for (ExitAssessor bean : recordLists) {
+                    String planDay = bean.getPlanDay();
+                    if (set.contains(planDay)) {
+
+                    } else {
+                        set.add(planDay);
+                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(ExitAssessor.class));
+                    }
+                }
+
+                // 4. 更新position
+                for (List<ExitAssessor> list : totalLists) {
+                    for (int i = 1; i <= list.size(); i++) {
+                        // 更新数据
+                        ExitAssessor record = list.get(i - 1);
+                        record.setPosition(String.valueOf(dateToPosition(record.getPlanDay(), i, jumpWeek)));
+                        record.save();
+                    }
+                }
+
+                e.onNext(true);
                 e.onComplete();
             }
         });

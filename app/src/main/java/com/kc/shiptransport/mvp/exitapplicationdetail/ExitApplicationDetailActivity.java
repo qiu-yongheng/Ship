@@ -21,6 +21,7 @@ public class ExitApplicationDetailActivity extends BaseActivity{
     private ExitApplicationDetailFragment fragment;
     public int itemID;
     public int isExit;
+    public int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

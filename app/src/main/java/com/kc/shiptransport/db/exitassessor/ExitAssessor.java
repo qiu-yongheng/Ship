@@ -9,6 +9,7 @@ import org.litepal.crud.DataSupport;
  */
 
 public class ExitAssessor extends DataSupport{
+    private String position;
 
     /**
      * rownumber : 1
@@ -67,6 +68,14 @@ public class ExitAssessor extends DataSupport{
     private String RemnantAmount;
     private String SystemDate;
     private String Remark;
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
 
     public int getRownumber() {
         return rownumber;

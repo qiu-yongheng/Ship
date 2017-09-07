@@ -21,6 +21,7 @@ import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
 import com.kc.shiptransport.mvp.attendance.AttendanceActivity;
 import com.kc.shiptransport.mvp.attendanceaudit.AttendanceAuditActivity;
 import com.kc.shiptransport.mvp.exitapplication.ExitApplicationActivity;
+import com.kc.shiptransport.mvp.exitassessor.ExitAssessorActivity;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
 import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
 import com.kc.shiptransport.mvp.sample.SampleActivity;
@@ -28,6 +29,7 @@ import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
 import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.ToastUtil;
 
 import java.util.List;
 
@@ -165,6 +167,14 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                         case 24:
                             // 供应商排行
                             AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_ACCEPTANCE_RANK);
+                            break;
+                        case 25:
+                            // 退场审核
+                            ExitAssessorActivity.startActivity(getContext());
+                            break;
+                        case 26:
+                            // 退场反馈
+                            ToastUtil.tip(getContext(), "功能待完善");
                             break;
 
                         /** AppPID = 18 考勤管理 */

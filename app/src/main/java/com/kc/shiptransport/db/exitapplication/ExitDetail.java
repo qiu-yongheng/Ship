@@ -69,7 +69,16 @@ public class ExitDetail extends DataSupport{
     private String RemnantAmount;
     private String Remark;
     private String SystemDate;
+    private String TotalAmount;
     private List<AttachmentListBean> AttachmentList;
+
+    public String getTotalAmount() {
+        return TotalAmount;
+    }
+
+    public void setTotalAmount(String totalAmount) {
+        TotalAmount = totalAmount;
+    }
 
     public String getItemID() {
         return ItemID;

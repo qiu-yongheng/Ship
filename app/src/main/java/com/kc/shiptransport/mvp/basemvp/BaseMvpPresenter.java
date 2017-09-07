@@ -135,7 +135,7 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
     }
 
     /**
-     * 根据类型显示 待验收船
+     * 根据类型显示 待验收船 数量
      *
      * @param type
      */
@@ -262,7 +262,9 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
                 break;
             case SettingUtil.TYPE_EXIT_ASSESSOR:
                 /** 退场审核 */
-
+                observable = dataRepository
+                        .GetExitAuditPendingApplicationRecords(10000, 1, jumpWeek, account)
+                        .subscribeOn(Schedulers.io());
                 break;
 
         }
