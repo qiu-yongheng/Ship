@@ -165,6 +165,7 @@
     <string name="title_exit_assessor">退场审核</string>
     <string name="exit_assessor_red">红色字体: 已审核</string>
     <string name="exit_assessor_black">黑色字体: 未审核</string>
+    <string name="title_feedback">退场反馈</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

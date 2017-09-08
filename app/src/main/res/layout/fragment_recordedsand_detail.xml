@@ -200,6 +200,7 @@
                         android:textColorHint="@color/text_gray"/>
 
                     <EditText
+                        android:visibility="gone"
                         android:inputType="number"
                         android:id="@+id/et_before_4"
                         android:layout_width="123dp"
@@ -263,6 +264,7 @@
                         android:textColorHint="@color/text_gray"/>
 
                     <EditText
+                        android:visibility="gone"
                         android:inputType="number"
                         android:id="@+id/et_after_4"
                         android:layout_width="123dp"

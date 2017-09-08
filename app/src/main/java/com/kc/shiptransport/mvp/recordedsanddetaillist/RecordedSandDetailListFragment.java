@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.recordedsanddetaillist;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.recordedsanddetail.RecordedSandDetailActivity;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.ToastUtil;
 
 import java.util.List;
 
@@ -162,6 +164,24 @@ public class RecordedSandDetailListFragment extends Fragment implements Recorded
 
                 @Override
                 public void onItemLongClick(View view, int position) {
+
+                    if (activity.isReadOnly) {
+                        ToastUtil.tip(getContext(), "已完成过砂, 不能删除数据");
+                    } else {
+                        final RecordedSandShowList sandShowList = adapter.list.get(position);
+                        activity.showDailog("施工船: " + sandShowList.getConstructionShipName(), "是否删除此过砂记录?", "取消", "删除", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                /** 删除 */
+                                presenter.deleteRecorded(activity.itemID, sandShowList.getItemID());
+                            }
+                        });
+                    }
 
                 }
             });

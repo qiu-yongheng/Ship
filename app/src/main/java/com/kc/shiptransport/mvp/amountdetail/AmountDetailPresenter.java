@@ -171,6 +171,7 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                 .flatMap(new Function<Boolean, Observable<Boolean>>() {
                     @Override
                     public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
+                        // 提交成功后, 重新加载列表数据, 并过滤未验收的数据
                         if (aBoolean) {
                             return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN),
                                     SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));

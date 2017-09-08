@@ -28,59 +28,60 @@
 
         <meta-data android:value="5958a4c91061d27898001ae3" android:name="UMENG_APPKEY"/>
 
-        <activity android:name=".mvp.login.LoginActivity">
+        <activity android:name=".mvp.login.LoginActivity" android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".mvp.main.MainActivity"/>
-        <activity android:name=".mvp.plan.PlanActivity"/>
-        <activity android:name=".mvp.plansetting.PlanSetActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.shipselect.ShipSelectActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.supply.SupplyActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.acceptance.AcceptanceActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.supplydetail.SupplyDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.acceptancedetail.AcceptanceDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.voyageinfo.VoyageInfoActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.voyagedetail.VoyageDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".view.actiivty.InputActivity"/>
-        <activity android:name=".mvp.scanner.ScannerActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.scannerdetail.ScannerDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.amount.AmountActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.amountdetail.AmountDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.sample.SampleActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.sampledetail.SampleDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.recordedsand.RecordedSandActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.recordedsanddetail.RecordedSandDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.recordedsandshow.RecordedSandShowActivity" android:launchMode="singleTask"/>
-        <activity android:name=".view.actiivty.ImageSelectActivity"/>
-        <activity android:name=".mvp.attendance.AttendanceActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.attendancerecord.AttendanceRecordActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.attendanceaudit.AttendanceAuditActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.homedetail.HomeDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.scannerimgselect.ScannerImgSelectActivity" android:launchMode="singleTask"/>
-        <activity android:name=".view.actiivty.ImageActivity" android:launchMode="singleTask"/>
-        <activity android:name=".view.actiivty.DatesListActivity"/>
-        <activity android:name=".mvp.voyagedetail.VoyageListActivity"/>
-        <activity android:name=".mvp.constructionlog.ConstructionLogActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.downtime.DowntimeActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.threadsand.ThreadSandActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.partition.PartitionActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.downtimelog.DowntimeLogActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.exitapplicationdetail.ExitApplicationDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.exitapplication.ExitApplicationActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.changepassword.ChangePasswordActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.about.AboutActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.recordedsanddetaillist.RecordedSandDetailListActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.analysis.AnalysisActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.analysisdetail.AnalysisDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.acceptanceevaluation.AcceptanceEvaluationActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.contacts.ContactActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.contactsdetail.ContactDetailActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.exitapplicationassessor.ExitApplicationAssessorActivity" android:launchMode="singleTask"/>
-        <activity android:name=".mvp.exitassessor.ExitAssessorActivity" android:launchMode="singleTask"/>
+        <activity android:name=".mvp.main.MainActivity" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.plan.PlanActivity" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.plansetting.PlanSetActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.shipselect.ShipSelectActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.supply.SupplyActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.acceptance.AcceptanceActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.supplydetail.SupplyDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.acceptancedetail.AcceptanceDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.voyageinfo.VoyageInfoActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.voyagedetail.VoyageDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".view.actiivty.InputActivity" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.scanner.ScannerActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.scannerdetail.ScannerDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.amount.AmountActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.amountdetail.AmountDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.sample.SampleActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.sampledetail.SampleDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.recordedsand.RecordedSandActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.recordedsanddetail.RecordedSandDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.recordedsandshow.RecordedSandShowActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".view.actiivty.ImageSelectActivity" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.attendance.AttendanceActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.attendancerecord.AttendanceRecordActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.attendanceaudit.AttendanceAuditActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.homedetail.HomeDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.scannerimgselect.ScannerImgSelectActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".view.actiivty.ImageActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".view.actiivty.DatesListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.voyagedetail.VoyageListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.constructionlog.ConstructionLogActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.downtime.DowntimeActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.threadsand.ThreadSandActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.partition.PartitionActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.downtimelog.DowntimeLogActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.exitapplicationdetail.ExitApplicationDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.exitapplication.ExitApplicationActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.changepassword.ChangePasswordActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.about.AboutActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.recordedsanddetaillist.RecordedSandDetailListActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.analysis.AnalysisActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.analysisdetail.AnalysisDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.acceptanceevaluation.AcceptanceEvaluationActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.contacts.ContactActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.contactsdetail.ContactDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.exitapplicationassessor.ExitApplicationAssessorActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.exitassessor.ExitAssessorActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.upcominglist.UpcomingListActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
 
 
         <activity

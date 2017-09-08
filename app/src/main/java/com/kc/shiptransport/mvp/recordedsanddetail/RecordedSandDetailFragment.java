@@ -220,11 +220,11 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
      */
     private void commit() {
         if (spinner_position == 0 ||
-                tvStartTime.getText().equals(HINT_TAG) ||
-                tvEndTime.getText().equals(HINT_TAG) ||
+                TextUtils.isEmpty(tvStartTime.getText().toString()) ||
+                TextUtils.isEmpty(tvEndTime.getText().toString()) ||
                 etActualAmountSand.getText().toString().equals(HINT_TAG)) {
 
-            Toast.makeText(activity, "还有数据未填写", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "请填写开始时间与结束时间", Toast.LENGTH_SHORT).show();
 
         } else {
             // 数据都填写才能提交

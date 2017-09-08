@@ -67,7 +67,6 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
     public void getShipDetail(final int itemID) {
         view.showLoading(true);
 
-
         dataRepository
                 .GetSandSubcontractorPreAcceptanceEvaluationBySubcontractorInterimApproachPlanID(itemID)
                 .subscribeOn(Schedulers.io())
@@ -121,7 +120,8 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
      * 1. 提交验收评价
      * 2. 同步数据
      * 3. 更新供砂任务明细
-     *  @param SubcontractorInterimApproachPlanID 进场ID
+     *
+     * @param SubcontractorInterimApproachPlanID 进场ID
      * @param time                               审核时间
      * @param itemID                             评价ID
      * @param rbcomplete                         材料完整性
@@ -313,6 +313,7 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
 
     /**
      * 提交图片
+     *
      * @param bean
      */
     @Override
@@ -351,6 +352,7 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
 
     /**
      * 更新图片
+     *
      * @param itemID
      */
     @Override

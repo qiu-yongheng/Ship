@@ -464,7 +464,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                 // TODO 全部上传成功的回调
                 Toast.makeText(getContext(), "上传成功", Toast.LENGTH_SHORT).show();
                 // 同步数据
-                presenter.getShipDetail(activity.itemID);
+                presenter.updateImgDetail(activity.itemID);
                 hideProgress();
             }
         });
@@ -478,6 +478,15 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         } else {
             ToastUtil.tip(getContext(), "删除失败, 请重试");
         }
+    }
+
+    /**
+     * 刷新图片
+     * @param value
+     */
+    @Override
+    public void showImgList(AcceptanceInfoBean value) {
+
     }
 
     @Override

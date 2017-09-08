@@ -53,6 +53,15 @@ class RecordedSandDetailListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 listener.onItemClick(holder.itemView, holder.getLayoutPosition());
             }
         });
+
+        /** 长按删除 */
+        ((NormalHolder)holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
+                return true;
+            }
+        });
     }
 
     class NormalHolder extends RecyclerView.ViewHolder {

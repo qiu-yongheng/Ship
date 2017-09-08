@@ -7,11 +7,13 @@ import com.kc.shiptransport.db.RecordedSandShowList;
 
 import java.util.List;
 
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -20,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public class RecordedSandDetailListPresenter implements RecordedSandDetailListContract.Presenter{
+public class RecordedSandDetailListPresenter implements RecordedSandDetailListContract.Presenter {
 
 
     private final DataRepository dataRepository;
@@ -48,6 +50,7 @@ public class RecordedSandDetailListPresenter implements RecordedSandDetailListCo
 
     /**
      * 获取过砂记录列表
+     *
      * @param itemID
      */
     @Override
@@ -56,6 +59,50 @@ public class RecordedSandDetailListPresenter implements RecordedSandDetailListCo
         dataRepository
                 .GetOverSandRecordBySubcontractorInterimApproachPlanID(itemID)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<RecordedSandShowList>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<RecordedSandShowList> recordedSandShowLists) {
+                        view.showRecordedList(recordedSandShowLists);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 删除过砂记录
+     *
+     * @param subItemID
+     * @param ItemID
+     */
+    @Override
+    public void deleteRecorded(final int subItemID, final int ItemID) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteOverSandRecordByItemID(ItemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<Boolean, ObservableSource<List<RecordedSandShowList>>>() {
+                    @Override
+                    public ObservableSource<List<RecordedSandShowList>> apply(@NonNull Boolean aBoolean) throws Exception {
+                        return dataRepository.GetOverSandRecordBySubcontractorInterimApproachPlanID(subItemID);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<RecordedSandShowList>>() {
                     @Override

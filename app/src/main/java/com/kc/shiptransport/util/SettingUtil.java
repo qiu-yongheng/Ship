@@ -94,6 +94,8 @@ public class SettingUtil {
     public static final int TYPE_ACCEPTANCE_RANK = 113;
     /* 项目人员退场审核 */
     public static final int TYPE_EXIT_ASSESSOR = 114;
+    /* 退场反馈信息 */
+    public static final int TYPE_EXIT_FEEDBACK = 115;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 
@@ -162,6 +164,15 @@ public class SettingUtil {
     /* 新增过砂记录 */
     public static final int TYPE_NEW_RECORDED = 502;
     /*-----------------------------------------------过砂记录类型--------------------------------------------------*/
+
+
+
+
+    /*-----------------------------------------------数据刷新类型--------------------------------------------------*/
+    /* 刷新全部数据 */
+    public static final int REFRYSH_ALL = 601;
+    /* 只刷新图片 */
+    public static final int REFRYSH_IMG = 602;
 
 
 }

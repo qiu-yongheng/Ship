@@ -19,5 +19,6 @@ public interface RecordedSandDetailListContract {
 
     interface Presenter extends BasePresenter {
         void getRecordedList(int itemID);
+        void deleteRecorded(int subItemID, int ItemID);
     }
 }

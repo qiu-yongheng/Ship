@@ -118,6 +118,27 @@ public class ExitApplicationAssessorFragment extends Fragment implements ExitApp
         activity.getSupportActionBar().setTitle(R.string.title_exit_assessor);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 4));
+
+        /**
+         * 根据不同的状态显示不同的布局
+         */
+        if (activity.isExit) {
+            btnCommit.setVisibility(View.GONE);
+            btnCancel.setVisibility(View.GONE);
+            btnReturn.setVisibility(View.VISIBLE);
+            etQuantum.setFocusable(false);
+            etQuantum.setFocusableInTouchMode(false);
+            etRemark.setFocusable(false);
+            etRemark.setFocusableInTouchMode(false);
+        } else {
+            btnCommit.setVisibility(View.VISIBLE);
+            btnCancel.setVisibility(View.VISIBLE);
+            btnReturn.setVisibility(View.GONE);
+            etQuantum.setFocusable(true);
+            etQuantum.setFocusableInTouchMode(true);
+            etRemark.setFocusable(true);
+            etRemark.setFocusableInTouchMode(true);
+        }
     }
 
     @Override

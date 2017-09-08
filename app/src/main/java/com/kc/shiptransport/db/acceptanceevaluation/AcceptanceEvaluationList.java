@@ -12,29 +12,31 @@ public class AcceptanceEvaluationList extends DataSupport{
 
     /**
      * rownumber : 1
-     * ItemID : 4056
-     * PlanDay : 2017-07-30
-     * MaterialIntegrity : 5
-     * MaterialTimeliness : 5
-     * PreAcceptanceTime : 2017-07-28 09:00:00
-     * SubcontractorInterimApproachPlanID : 4564
-     * ShipAccount : tl8988
-     * ShipName : 天力8988
+     * ItemID : 6078
+     * MaterialIntegrity : 2.0
+     * MaterialTimeliness : 2.0
+     * PreAcceptanceTime : 2017-09-06 04:33:00
+     * SubcontractorInterimApproachPlanID : 6585
+     * PlanDay : 2017-09-07
+     * ShipAccount : csgscb
+     * ShipName : 测试供砂船舶
      * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试供应商
+     * SubcontractorName : 测试分包商
+     * StatusRemark : 已阅
      */
 
     private int rownumber;
     private int ItemID;
-    private String PlanDay;
-    private String MaterialIntegrity;
-    private String MaterialTimeliness;
+    private float MaterialIntegrity;
+    private float MaterialTimeliness;
     private String PreAcceptanceTime;
     private int SubcontractorInterimApproachPlanID;
+    private String PlanDay;
     private String ShipAccount;
     private String ShipName;
     private String SubcontractorAccount;
     private String SubcontractorName;
+    private String StatusRemark;
 
     public int getRownumber() {
         return rownumber;
@@ -52,27 +54,19 @@ public class AcceptanceEvaluationList extends DataSupport{
         this.ItemID = ItemID;
     }
 
-    public String getPlanDay() {
-        return PlanDay;
-    }
-
-    public void setPlanDay(String PlanDay) {
-        this.PlanDay = PlanDay;
-    }
-
-    public String getMaterialIntegrity() {
+    public float getMaterialIntegrity() {
         return MaterialIntegrity;
     }
 
-    public void setMaterialIntegrity(String MaterialIntegrity) {
+    public void setMaterialIntegrity(float MaterialIntegrity) {
         this.MaterialIntegrity = MaterialIntegrity;
     }
 
-    public String getMaterialTimeliness() {
+    public float getMaterialTimeliness() {
         return MaterialTimeliness;
     }
 
-    public void setMaterialTimeliness(String MaterialTimeliness) {
+    public void setMaterialTimeliness(float MaterialTimeliness) {
         this.MaterialTimeliness = MaterialTimeliness;
     }
 
@@ -90,6 +84,14 @@ public class AcceptanceEvaluationList extends DataSupport{
 
     public void setSubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID) {
         this.SubcontractorInterimApproachPlanID = SubcontractorInterimApproachPlanID;
+    }
+
+    public String getPlanDay() {
+        return PlanDay;
+    }
+
+    public void setPlanDay(String PlanDay) {
+        this.PlanDay = PlanDay;
     }
 
     public String getShipAccount() {
@@ -122,5 +124,13 @@ public class AcceptanceEvaluationList extends DataSupport{
 
     public void setSubcontractorName(String SubcontractorName) {
         this.SubcontractorName = SubcontractorName;
+    }
+
+    public String getStatusRemark() {
+        return StatusRemark;
+    }
+
+    public void setStatusRemark(String StatusRemark) {
+        this.StatusRemark = StatusRemark;
     }
 }

@@ -25,10 +25,12 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.analysisdetail.AnalysisDetailActivity;
+import com.kc.shiptransport.mvp.exitapplicationassessor.ExitApplicationAssessorActivity;
 import com.kc.shiptransport.mvp.scannerdetail.ScannerDetailActivity;
 import com.kc.shiptransport.mvp.voyagedetail.VoyageDetailActivity;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -85,9 +87,11 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     private CommonAdapter<AcceptanceEvaluationList> evaluationAdapter;
     private int pageCount = 1;
     private ArrayList<AcceptanceEvaluationList> lists = new ArrayList<>();
+    private ArrayList<ExitFeedBack> exitList = new ArrayList<>();
     private LoadmoreWrapper<Object> loadmoreWrapper;
     private CommonAdapter<Rank> rankAdapter;
     private List<String> evaluation = new ArrayList<>();
+    private CommonAdapter<ExitFeedBack> exitAdapter;
 
     @Nullable
     @Override
@@ -97,6 +101,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         initViews(view);
         initListener();
 
+        /**
+         * 根据类型加载不同的数据
+         */
         switch (type) {
             case SettingUtil.TYPE_ANALYSIS: // 计划跟踪
                 presenter.subscribe();
@@ -106,6 +113,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                 break;
             case SettingUtil.TYPE_ACCEPTANCE_RANK: // 评价排行
                 presenter.getRank("", "");
+                break;
+            case SettingUtil.TYPE_EXIT_FEEDBACK: // 退场反馈
+                presenter.getExitFeedBack(20, pageCount, "", "", "", true);
                 break;
         }
         return view;
@@ -120,6 +130,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
 
         recycleView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        /**
+         * 根据不同的类型, 加载不同的布局
+         */
         type = activity.type;
         if (type == SettingUtil.TYPE_ANALYSIS) {
             // 计划跟踪
@@ -133,6 +146,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             selectSub.setVisibility(View.GONE);
             selectShip.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_rank);
+        } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
+            // 退场反馈
+            selectSub.setVisibility(View.GONE);
+            activity.getSupportActionBar().setTitle(R.string.title_feedback);
         }
     }
 
@@ -179,6 +196,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                 } else if (type == SettingUtil.TYPE_ACCEPTANCE_RANK) {
                                     // 供应商评价
                                     stringArray = getResources().getStringArray(R.array.select_acceptance_time);
+                                } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
+                                    // 退场反馈
+                                    stringArray = getResources().getStringArray(R.array.select_acceptance_time);
                                 }
 
 
@@ -197,7 +217,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                         selectTime.setText(s);
 
                                                         if (type == SettingUtil.TYPE_ANALYSIS) {
-                                                            // 计划跟踪
+                                                            /** 计划跟踪 */
                                                             switch (position) {
                                                                 case 0:
                                                                     // 全部
@@ -243,8 +263,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                                 pop_time.dismiss();
                                                             }
 
-                                                        } else if (type == SettingUtil.TYPE_ACCEPTANCE_EVALUATION) {
-                                                            // 预验收评价
+                                                        } else if (type == SettingUtil.TYPE_ACCEPTANCE_EVALUATION ||
+                                                                type == SettingUtil.TYPE_ACCEPTANCE_RANK ||
+                                                                type == SettingUtil.TYPE_EXIT_FEEDBACK) {
+                                                            /** 预验收评价 供应商评价 退场反馈*/
                                                             switch (position) {
                                                                 case 0:
                                                                     // 全部
@@ -279,53 +301,25 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                             }
 
                                                             if (pop_time.isShowing() && position != 5) {
-                                                                pageCount = 1;
-                                                                presenter.getEvaluation(20, pageCount, startTime, endTime, consShip, true);
-
-                                                                pop_time.dismiss();
-                                                            }
-                                                        } else if (type == SettingUtil.TYPE_ACCEPTANCE_RANK) {
-                                                            // 供应商评价
-                                                            switch (position) {
-                                                                case 0:
-                                                                    // 全部
-                                                                    startTime = "";
-                                                                    endTime = "";
-                                                                    break;
-                                                                case 1:
-                                                                    // 上一周
-                                                                    startTime = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, Calendar.DATE, -7);
-                                                                    endTime = CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD);
-                                                                    break;
-                                                                case 2:
-                                                                    // 前一周
-                                                                    startTime = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, Calendar.DATE, -14);
-                                                                    endTime = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, Calendar.DATE, -7);
-                                                                    break;
-                                                                case 3:
-                                                                    // 上一月
-                                                                    startTime = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, Calendar.MONTH, -1);
-                                                                    endTime = CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD);
-                                                                    break;
-                                                                case 4:
-                                                                    // 前一月
-                                                                    startTime = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, Calendar.MONTH, -2);
-                                                                    endTime = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, Calendar.MONTH, -1);
-                                                                    break;
-                                                                case 5:
-                                                                    // 自定义时间
-                                                                    recycle_view.setVisibility(View.GONE);
-                                                                    linearLayout.setVisibility(View.VISIBLE);
-                                                                    break;
-                                                            }
-
-                                                            if (pop_time.isShowing() && position != 5) {
-                                                                presenter.getRank(startTime, endTime);
-
+                                                                switch (type) {
+                                                                    case SettingUtil.TYPE_ACCEPTANCE_EVALUATION:
+                                                                        /** 预验收评价 */
+                                                                        pageCount = 1;
+                                                                        presenter.getEvaluation(20, pageCount, startTime, endTime, consShip, true);
+                                                                        break;
+                                                                    case SettingUtil.TYPE_ACCEPTANCE_RANK:
+                                                                        /** 供应商评价 */
+                                                                        presenter.getRank(startTime, endTime);
+                                                                        break;
+                                                                    case SettingUtil.TYPE_EXIT_FEEDBACK:
+                                                                        /** 退场反馈 */
+                                                                        pageCount = 1;
+                                                                        presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
+                                                                        break;
+                                                                }
                                                                 pop_time.dismiss();
                                                             }
                                                         }
-
                                                     }
                                                 });
                                     }
@@ -390,6 +384,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                         } else if (type == SettingUtil.TYPE_ACCEPTANCE_RANK) {
                                             // 供应商评价排行
                                             presenter.getRank(startTime, endTime);
+                                        } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
+                                            // 退场反馈
+                                            presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
                                         }
 
 
@@ -555,6 +552,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                             // 预验收评价
                                                             pageCount = 1;
                                                             presenter.getEvaluation(20, pageCount, startTime, endTime, consShip, true);
+                                                        } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
+                                                            // 退场反馈
+                                                            pageCount = 1;
+                                                            presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
                                                         }
 
                                                         if (pop_ship.isShowing()) {
@@ -587,6 +588,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                             // 预验收评价
                                             pageCount = 1;
                                             presenter.getEvaluation(20, pageCount, startTime, endTime, consShip, true);
+                                        } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
+                                            // 退场反馈
+                                            pageCount = 1;
+                                            presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
                                         }
                                         if (pop_ship.isShowing()) {
                                             pop_ship.dismiss();
@@ -713,8 +718,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                 protected void convert(ViewHolder holder, final AcceptanceEvaluationList acceptanceEvaluationList, int position) {
                     holder.setText(R.id.tv_ship_name, acceptanceEvaluationList.getShipName())
                             .setText(R.id.tv_acceptance_time, acceptanceEvaluationList.getPreAcceptanceTime())
-                            .setRating(R.id.rb_material_integrity, TextUtils.isEmpty(acceptanceEvaluationList.getMaterialIntegrity()) ? 0 : Float.valueOf(acceptanceEvaluationList.getMaterialIntegrity()))
-                            .setRating(R.id.rb_material_timeliness, TextUtils.isEmpty(acceptanceEvaluationList.getMaterialTimeliness()) ? 0 : Float.valueOf(acceptanceEvaluationList.getMaterialTimeliness()));
+                            .setRating(R.id.rb_material_integrity, acceptanceEvaluationList.getMaterialIntegrity())
+                            .setRating(R.id.rb_material_timeliness, acceptanceEvaluationList.getMaterialTimeliness())
+                            .setText(R.id.tv_acceptance_status, acceptanceEvaluationList.getStatusRemark());
 
                     holder.setOnClickListener(R.id.card_view, new View.OnClickListener() {
                         @Override
@@ -794,5 +800,69 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         EmptyWrapper<Object> emptyWrapper = new EmptyWrapper<>(rankAdapter);
         emptyWrapper.setEmptyView(LayoutInflater.from(getContext()).inflate(R.layout.empty_view, recycleView, false));
         recycleView.setAdapter(emptyWrapper);
+    }
+
+    /**
+     * 显示退场反馈
+     *
+     * @param list
+     */
+    @Override
+    public void showExitFeedBack(List<ExitFeedBack> list) {
+        Log.d("==", "list长度: " + list.size());
+        if (pageCount == 1) {
+            exitList.clear();
+            exitList.addAll(list);
+
+            exitAdapter = new CommonAdapter<ExitFeedBack>(getContext(), R.layout.item_exit_feedback, exitList) {
+                @Override
+                protected void convert(ViewHolder holder, final ExitFeedBack feedBack, int position) {
+                    holder.setText(R.id.tv_ship_name, feedBack.getShipName())
+                            .setText(R.id.tv_exit_time, feedBack.getExitTime())
+                            .setText(R.id.tv_sub_name, feedBack.getSubcontractorName())
+                            .setText(R.id.tv_application_state, feedBack.getIsSumbitted() == 1 ? "已申请退场" : "未申请退场")
+                            .setText(R.id.tv_assessor_state, feedBack.getIsExit() == 1 ? "已同意退场" : "未同意退场");
+
+                    holder.setOnClickListener(R.id.card_view, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // 跳转到退场审核界面, 不能修改界面数据
+                            ExitApplicationAssessorActivity.startActivity(getContext(), feedBack.getSubcontractorInterimApproachPlanID(), true);
+                        }
+                    });
+                }
+            };
+
+            // 添加空数据界面显示
+            EmptyWrapper<Object> emptyWrapper = new EmptyWrapper<>(exitAdapter);
+            emptyWrapper.setEmptyView(LayoutInflater.from(getContext()).inflate(R.layout.empty_view, recycleView, false));
+
+            // 添加加载更多
+            loadmoreWrapper = new LoadmoreWrapper<>(emptyWrapper);
+            loadmoreWrapper.setLoadMoreView(R.layout.item_load);
+            loadmoreWrapper.setNoMoreView(R.layout.item_no_more);
+            loadmoreWrapper.setOnLoadMoreListener(new LoadmoreWrapper.OnLoadMoreListener() {
+                @Override
+                public void onLoadMoreRequested() {
+                    pageCount += 1;
+                    presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, false);
+                }
+            });
+
+            recycleView.setAdapter(loadmoreWrapper);
+
+        } else if (pageCount > 1) {
+            if (list.size() == 0) {
+                // 没有更多数据
+                loadmoreWrapper.setIsMoreDates(false);
+            } else {
+                loadmoreWrapper.setIsMoreDates(true);
+                exitList.addAll(list);
+            }
+
+            if (loadmoreWrapper != null) {
+                loadmoreWrapper.notifyDataSetChanged();
+            }
+        }
     }
 }

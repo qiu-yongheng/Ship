@@ -58,12 +58,14 @@ import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.amount.AmountOption;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.backlog.BackLog;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopList;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
+import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
@@ -2069,7 +2071,7 @@ public class DataRepository implements DataSouceImpl {
 
                 jsonArray.put(jsonObject);
 
-                Log.d("==", "提交过砂记录: " + jsonArray.toString());
+                LogUtil.d("提交过砂记录: \n" + jsonArray.toString());
 
                 String result = mRemoteDataSource.InsertOverSandRecord(jsonArray.toString());
 
@@ -2094,6 +2096,8 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<List<RecordedSandShowList>> e) throws Exception {
                 // 发送网络请求
                 String result = mRemoteDataSource.GetOverSandRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
+
+                LogUtil.d(SubcontractorInterimApproachPlanID + "\n根据进场计划ID获取过砂记录明细（多条）\n" + result);
 
                 // 解析数据
                 List<RecordedSandShowList> lists = gson.fromJson(result, new TypeToken<List<RecordedSandShowList>>() {
@@ -3557,6 +3561,8 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<AnalysisDetail> e) throws Exception {
                 String result = mRemoteDataSource.GetAllDetailBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
 
+                LogUtil.d(SubcontractorInterimApproachPlanID + "供砂进度跟踪: \n" + result);
+
                 List<AnalysisDetail> list = gson.fromJson(result, new TypeToken<List<AnalysisDetail>>() {
                 }.getType());
 
@@ -3581,10 +3587,6 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<List<AcceptanceEvaluationList>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<AcceptanceEvaluationList>> e) throws Exception {
-                String conditionJson = "";
-                //                if (TextUtils.isEmpty(startTime) && TextUtils.isEmpty(endTime) && TextUtils.isEmpty(subShipAccount)) {
-                //
-                //                } else {
                 JSONObject root = new JSONObject();
                 JSONObject Condition = new JSONObject();
 
@@ -3638,8 +3640,7 @@ public class DataRepository implements DataSouceImpl {
                 // 保存到root
                 root.put("Condition", Condition);
 
-                conditionJson = root.toString();
-                //            }
+                String conditionJson = root.toString();
 
                 Log.d("==", "申请获取供应商预验收评价数据json: " + conditionJson);
 
@@ -3996,6 +3997,163 @@ public class DataRepository implements DataSouceImpl {
                 }
 
                 e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.65 获取退场离场反馈信息
+     * @param PageSize
+     * @param PageCount
+     * @param startTime
+     * @param endTime
+     * @param shipAccount
+     * @return
+     */
+    @Override
+    public Observable<List<ExitFeedBack>> GetExitAuditedApplicationRecords(final int PageSize, final int PageCount, final String startTime, final String endTime, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<List<ExitFeedBack>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<ExitFeedBack>> e) throws Exception {
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
+
+                JSONArray Column = new JSONArray();
+
+                // 供应商账号
+                JSONObject object1 = new JSONObject();
+                User user = DataSupport.findAll(User.class).get(0);
+                object1.put("Name", "SubcontractorAccount");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", user.getUserID());
+
+                // 验收时间
+                JSONObject object2 = new JSONObject();
+                object2.put("Name", "PlanDay");
+                object2.put("Type", "datetime");
+
+                JSONArray array2 = new JSONArray();
+
+                JSONObject object21 = new JSONObject();
+                object21.put("Min", startTime);
+                JSONObject object22 = new JSONObject();
+                object22.put("Max", endTime);
+
+                array2.put(object21);
+                array2.put(object22);
+
+                object2.put("Value", array2);
+
+                // 供砂船舶
+                JSONObject object3 = new JSONObject();
+                object3.put("Name", "ShipName"); // TODO 需要修改
+                object3.put("Type", "string");
+                object3.put("Format", "Equal");
+                object3.put("Value", shipAccount);
+
+                // 保存3个对象到object
+                Column.put(object1);
+                if (!TextUtils.isEmpty(startTime) || !TextUtils.isEmpty(endTime)) {
+                    Column.put(object2);
+                }
+
+                if (!TextUtils.isEmpty(shipAccount)) {
+                    Column.put(object3);
+                }
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                String json = root.toString();
+
+                LogUtil.d("pageSize: " + PageSize + ", pageCount: " + PageCount + ", startTime: " + startTime + ", endTime: " + endTime + ", shipAccount: " + shipAccount + "\njson: " + json);
+
+                String result = mRemoteDataSource.GetExitAuditedApplicationRecords(PageSize, PageCount, json);
+
+                LogUtil.d("1.65 获取退场离场反馈信息: " + result);
+
+                List<ExitFeedBack> list = gson.fromJson(result, new TypeToken<List<ExitFeedBack>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.66 获取用户待办信息
+     * @param PageSize
+     * @param PageCount
+     * @return
+     */
+    @Override
+    public Observable<List<BackLog>> GetPendingTaskList(final int PageSize, final int PageCount) {
+        return Observable.create(new ObservableOnSubscribe<List<BackLog>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<BackLog>> e) throws Exception {
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
+
+                JSONArray Column = new JSONArray();
+
+                // 供应商账号
+                JSONObject object1 = new JSONObject();
+                User user = DataSupport.findAll(User.class).get(0);
+                object1.put("Name", "SubcontractorAccount");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", user.getUserID());
+
+
+                // 保存3个对象到object
+                Column.put(object1);
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                String json = root.toString();
+
+                LogUtil.d(user.getUserID() + "\n1.66 获取用户待办信息: \n" + json);
+
+                String result = mRemoteDataSource.GetPendingTaskList(PageSize, PageCount, "", user.getUserID());
+
+                LogUtil.d(user.getUserID() + "\n待办信息详情: \n" + result);
+                List<BackLog> list = gson.fromJson(result, new TypeToken<List<BackLog>>() {
+                }.getType());
+
+                // 保存数据到数据库
+                DataSupport.deleteAll(BackLog.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.67根据ItemID删除过砂记录信息
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteOverSandRecordByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteOverSandRecordByItemID(ItemID);
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
                 e.onComplete();
             }
         });

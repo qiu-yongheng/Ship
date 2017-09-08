@@ -43,7 +43,6 @@
             <include layout="@layout/view_divi"/>
 
             <RelativeLayout
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height_32"
                 android:gravity="center_vertical">
@@ -52,10 +51,10 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="进 场 时 间"/>
+                    android:text="退场日期"/>
 
                 <TextView
-                    android:id="@+id/tv_plan_time"
+                    android:id="@+id/tv_exit_time"
                     style="@style/text_description_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,10 +71,10 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="预验收状态"/>
+                    android:text="分  包  商"/>
 
                 <TextView
-                    android:id="@+id/tv_acceptance_status"
+                    android:id="@+id/tv_sub_name"
                     style="@style/text_description_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -92,10 +91,10 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="预验收时间"/>
+                    android:text="申请状态"/>
 
                 <TextView
-                    android:id="@+id/tv_acceptance_time"
+                    android:id="@+id/tv_application_state"
                     style="@style/text_description_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -112,39 +111,14 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="材料完整性"/>
-
-                <RatingBar
-                    android:id="@+id/rb_material_integrity"
-                    style="@style/MyRatingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:isIndicator="true"
-                    android:numStars="5"
-                    android:stepSize="1"/>
-
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height_32"
-                android:gravity="center_vertical">
+                    android:text="审核状态"/>
 
                 <TextView
-                    style="@style/text_tag_small"
+                    android:id="@+id/tv_assessor_state"
+                    style="@style/text_description_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="材料及时性"/>
-
-                <RatingBar
-                    android:id="@+id/rb_material_timeliness"
-                    style="@style/MyRatingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:isIndicator="true"
-                    android:numStars="5"
-                    android:stepSize="1"/>
+                    android:layout_alignParentRight="true"/>
 
             </RelativeLayout>
 

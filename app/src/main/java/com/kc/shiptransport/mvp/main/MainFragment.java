@@ -5,15 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.mvp.home.HomeFragment;
 import com.kc.shiptransport.mvp.mine.MineFragment;
 import com.kc.shiptransport.mvp.upcoming.UpcomingFragment;
+import com.kc.shiptransport.mvp.upcoming.UpcomingPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,10 +35,29 @@ public class MainFragment extends Fragment {
     TabLayout tabLayout;
     Unbinder unbinder;
     private MineFragment mineFragment;
+    private HomeFragment homeFragment;
+    private UpcomingFragment upcomingFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+            /** 初始化fragment */
+        if (savedInstanceState != null) {
+            //创建管理器, 获取Fragment
+            FragmentManager manager = getChildFragmentManager();
+            homeFragment = (HomeFragment) manager.getFragment(savedInstanceState, "HomeFragment");
+            upcomingFragment = (UpcomingFragment) manager.getFragment(savedInstanceState, "UpcomingFragment");
+            mineFragment = (MineFragment) manager.getFragment(savedInstanceState, "MineFragment");
+        } else {
+            homeFragment = new HomeFragment();
+            upcomingFragment = new UpcomingFragment();
+            mineFragment = new MineFragment();
+        }
+
+        /** 初始化presenter */
+        new UpcomingPresenter(getContext(), upcomingFragment, new DataRepository());
+
     }
 
     @Nullable
@@ -52,8 +74,7 @@ public class MainFragment extends Fragment {
 
     private void initView(View view) {
         // 绑定view
-        mineFragment = new MineFragment();
-        viewpager.setAdapter(new TabAdapter(getActivity().getSupportFragmentManager(), new HomeFragment(), new UpcomingFragment(), mineFragment));
+        viewpager.setAdapter(new TabAdapter(getActivity().getSupportFragmentManager(), homeFragment, upcomingFragment, mineFragment));
         // 缓存3个标签的数据, 不重复加载数据
         viewpager.setOffscreenPageLimit(3);
         // 绑定viewpage
@@ -99,8 +120,6 @@ public class MainFragment extends Fragment {
         tabLayout.getTabAt(1).setIcon(R.mipmap.un_upcoming);
         tabLayout.getTabAt(2).setIcon(R.mipmap.un_mine);
     }
-
-
 
 
     @Override

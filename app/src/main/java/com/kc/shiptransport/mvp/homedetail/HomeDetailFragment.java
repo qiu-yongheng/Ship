@@ -29,7 +29,6 @@ import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
 import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
 import com.kc.shiptransport.util.SettingUtil;
-import com.kc.shiptransport.util.ToastUtil;
 
 import java.util.List;
 
@@ -174,7 +173,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             break;
                         case 26:
                             // 退场反馈
-                            ToastUtil.tip(getContext(), "功能待完善");
+                            AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_EXIT_FEEDBACK);
                             break;
 
                         /** AppPID = 18 考勤管理 */

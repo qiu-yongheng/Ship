@@ -68,9 +68,10 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
 
-                // 判断是否已审核
-                String passReceptionSandTime = weekTask.getPreAcceptanceTime();
-                if (passReceptionSandTime != null && !passReceptionSandTime.equals("")) {
+                // 判断是否已审核通过, 通过, 显示红色
+                int preAcceptanceEvaluationStatus = weekTask.getPreAcceptanceEvaluationStatus();
+                if (preAcceptanceEvaluationStatus == 1) {
+                    // 通过
                     ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
                     ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
 
@@ -78,6 +79,7 @@ public class AcceptanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
                     ((NormalHolder) holder).mLlTask.setVisibility(isAccepted? View.VISIBLE : View.INVISIBLE);
                 } else {
+                    // 保存或不通过
                     ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
                     ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
 

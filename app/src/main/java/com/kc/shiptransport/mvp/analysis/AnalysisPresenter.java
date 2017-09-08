@@ -7,6 +7,7 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
 
 import java.util.List;
 
@@ -182,6 +183,48 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
                     @Override
                     public void onNext(@NonNull List<Rank> list) {
                         view.showRank(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 获取退场反馈
+     * @param pageSize
+     * @param pageCount
+     * @param startTime
+     * @param endTime
+     * @param shipAccount
+     * @param showLoading
+     */
+    @Override
+    public void getExitFeedBack(int pageSize, int pageCount, String startTime, String endTime, String shipAccount, boolean showLoading) {
+        if (showLoading) {
+            view.showLoading(true);
+        }
+        dataRepository
+                .GetExitAuditedApplicationRecords(pageSize, pageCount, startTime, endTime, shipAccount)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<ExitFeedBack>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<ExitFeedBack> list) {
+                        view.showExitFeedBack(list);
                     }
 
                     @Override

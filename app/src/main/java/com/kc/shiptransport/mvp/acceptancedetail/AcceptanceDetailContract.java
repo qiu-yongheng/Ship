@@ -35,6 +35,7 @@ public interface AcceptanceDetailContract {
         void hideProgress();
         void updateProgress();
         void showDeleteResult(boolean isSuccess);
+        void showImgList(AcceptanceInfoBean value);
     }
 
     interface Presenter extends BasePresenter {

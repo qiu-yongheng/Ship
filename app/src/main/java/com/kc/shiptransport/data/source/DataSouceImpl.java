@@ -33,9 +33,11 @@ import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.amount.AmountOption;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.backlog.BackLog;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
+import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
@@ -893,16 +895,26 @@ public interface DataSouceImpl {
     Observable<Boolean> GetExitAuditPendingApplicationRecords(int PageSize, int PageCount, int jumpWeek, String account);
 
     /**
-     * 1.64 提交退场审核数据
-     * @param itemID
-     * @param exitTime
-     * @param creator
-     * @param remark
-     * @param RemnantAmount
-     * @param SubcontractorInterimApproachPlanID
-     * @param IsSumbitted 默认1
-     * @param Status
+     * 1.65 获取退场离场反馈信息
+     * @param PageSize
+     * @param PageCount
+     * @param startTime
+     * @param endTime
+     * @param shipAccount
      * @return
      */
-   // Observable<Boolean> InsertExitApplicationRecord(int itemID, String exitTime, String creator, String remark, float RemnantAmount, int SubcontractorInterimApproachPlanID, int IsSumbitted, int Status);
+    Observable<List<ExitFeedBack>> GetExitAuditedApplicationRecords(int PageSize, int PageCount, String startTime, String endTime, String shipAccount);
+
+    /**
+     * 1.66 获取用户待办信息
+     * @return
+     */
+    Observable<List<BackLog>> GetPendingTaskList(int PageSize, int PageCount);
+
+    /**
+     * 1.67 根据ItemID删除过砂记录信息
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteOverSandRecordByItemID(int ItemID);
 }
