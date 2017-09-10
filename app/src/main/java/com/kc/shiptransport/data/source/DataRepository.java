@@ -59,6 +59,7 @@ import com.kc.shiptransport.db.amount.AmountOption;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.backlog.BackLog;
+import com.kc.shiptransport.db.backlog.ListBean;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopList;
 import com.kc.shiptransport.db.down.StopOption;
@@ -1585,11 +1586,11 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<SandSample> getSampleTaskForPosition(final int position) {
+    public Observable<SandSample> getSampleTaskForItemID(final int position) {
         return Observable.create(new ObservableOnSubscribe<SandSample>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<SandSample> e) throws Exception {
-                List<SandSample> sandSamples = DataSupport.where("position = ?", String.valueOf(position)).find(SandSample.class);
+                List<SandSample> sandSamples = DataSupport.where("ItemID = ?", String.valueOf(position)).find(SandSample.class);
                 if (sandSamples.isEmpty()) {
                     e.onNext(null);
                 } else {
@@ -4132,7 +4133,15 @@ public class DataRepository implements DataSouceImpl {
 
                 // 保存数据到数据库
                 DataSupport.deleteAll(BackLog.class);
-                DataSupport.saveAll(list);
+                DataSupport.deleteAll(ListBean.class);
+
+                for (BackLog backLog : list) {
+                    backLog.save();
+                    List<ListBean> backLogList = backLog.getList();
+                    DataSupport.saveAll(backLogList);
+                }
+
+                List<BackLog> all = DataSupport.findAll(BackLog.class, true);
 
                 e.onNext(list);
                 e.onComplete();
@@ -4154,6 +4163,42 @@ public class DataRepository implements DataSouceImpl {
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
 
                 e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 根据ID, 获取待办任务
+     * @param pendingID
+     * @return
+     */
+    @Override
+    public Observable<BackLog> getUpcomingList(final String pendingID) {
+        return Observable.create(new ObservableOnSubscribe<BackLog>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<BackLog> e) throws Exception {
+                // TODO
+                List<BackLog> backLogs = DataSupport.where("PendingType = ?", pendingID).find(BackLog.class, true);
+
+                e.onNext(backLogs.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 从数据库获取待办数据
+     * @return
+     */
+    @Override
+    public Observable<List<BackLog>> getPendingForDB() {
+        return Observable.create(new ObservableOnSubscribe<List<BackLog>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<BackLog>> e) throws Exception {
+                List<BackLog> all = DataSupport.findAll(BackLog.class, true);
+
+                e.onNext(all);
                 e.onComplete();
             }
         });

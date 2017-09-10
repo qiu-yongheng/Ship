@@ -16,12 +16,17 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class UpcomingListActivity extends BaseActivity{
 
+    private static final String PENDID = "PENDID";
     private UpcomingListFragment fragment;
+    public String pendId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
+
+        Bundle bundle = getIntent().getExtras();
+        pendId = bundle.getString(PENDID);
 
         if (savedInstanceState != null) {
             fragment = (UpcomingListFragment) getSupportFragmentManager().getFragment(savedInstanceState, "UpcomingListFragment");
@@ -42,11 +47,15 @@ public class UpcomingListActivity extends BaseActivity{
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (fragment.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, "UpcomingListFragment", fragment);
+        }
     }
 
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, String id) {
         Intent intent = new Intent(context, UpcomingListActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putString(PENDID, id);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

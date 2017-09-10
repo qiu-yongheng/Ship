@@ -13,14 +13,22 @@ import android.view.ViewGroup;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.source.DataRepository;
+import com.kc.shiptransport.db.backlog.ListBean;
 import com.kc.shiptransport.mvp.home.HomeFragment;
 import com.kc.shiptransport.mvp.mine.MineFragment;
 import com.kc.shiptransport.mvp.upcoming.UpcomingFragment;
 import com.kc.shiptransport.mvp.upcoming.UpcomingPresenter;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import me.leolin.shortcutbadger.ShortcutBadger;
+import q.rorbin.badgeview.Badge;
+import q.rorbin.badgeview.QBadgeView;
 
 /**
  * @author qiuyongheng
@@ -37,6 +45,7 @@ public class MainFragment extends Fragment {
     private MineFragment mineFragment;
     private HomeFragment homeFragment;
     private UpcomingFragment upcomingFragment;
+    private Badge badge;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +80,18 @@ public class MainFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // 更新角标
+        List<ListBean> all = DataSupport.findAll(ListBean.class);
+        badge = new QBadgeView(getContext()).bindTarget(((ViewGroup) tabLayout.getChildAt(0)).getChildAt(1)).setBadgeNumber(all.size());
+        badge.setGravityOffset(20, 0, true);
+
+        // 更新桌面角标
+        ShortcutBadger.applyCount(getContext(), all.size());
+
+    }
 
     private void initView(View view) {
         // 绑定view
@@ -83,6 +104,7 @@ public class MainFragment extends Fragment {
         tabLayout.getTabAt(0).setIcon(R.mipmap.home);
         tabLayout.getTabAt(1).setIcon(R.mipmap.un_upcoming);
         tabLayout.getTabAt(2).setIcon(R.mipmap.un_mine);
+
     }
 
     public void initListener() {

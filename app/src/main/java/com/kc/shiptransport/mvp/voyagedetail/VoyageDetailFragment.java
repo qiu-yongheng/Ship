@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
-import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
@@ -31,10 +30,7 @@ import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.actiivty.InputActivity;
 
-import org.litepal.crud.DataSupport;
-
 import java.text.ParseException;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,17 +87,6 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        WeekTask weekTask = null;
-        if (activity.type == 1) {
-            // 查看数据
-            List<WeekTask> list = DataSupport.where("ItemID = ?", String.valueOf(activity.mPosition)).find(WeekTask.class);
-            if (!list.isEmpty()) {
-                weekTask = list.get(0);
-            }
-        } else {
-            // 编辑数据
-            weekTask = DataSupport.where("position = ?", String.valueOf(activity.mPosition)).find(WeekTask.class).get(0);
-        }
     }
 
     @Override
@@ -271,7 +256,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 btnReturn.setVisibility(View.VISIBLE);
                 llBtn.setVisibility(View.GONE);
                 isChange = false;
-            } else if (Integer.valueOf(isSumbitted) == 0) {
+            } else if (Integer.valueOf(isSumbitted) == 0 || activity.type == 2) {
                 // 保存
                 btnReturn.setVisibility(View.GONE);
                 llBtn.setVisibility(View.VISIBLE);

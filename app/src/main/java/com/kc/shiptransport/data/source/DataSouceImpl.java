@@ -333,7 +333,7 @@ public interface DataSouceImpl {
     /**
      * 根据position获取对应的计划
      */
-    Observable<SandSample> getSampleTaskForPosition(int position);
+    Observable<SandSample> getSampleTaskForItemID(int position);
 
     /**
      * 获取当前登录的供应商
@@ -917,4 +917,17 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> DeleteOverSandRecordByItemID(int ItemID);
+
+    /**
+     * 根据ID, 获取待办任务
+     * @param pendingID
+     * @return
+     */
+    Observable<BackLog> getUpcomingList(String pendingID);
+
+    /**
+     * 从数据库获取数据
+     * @return
+     */
+    Observable<List<BackLog>> getPendingForDB();
 }

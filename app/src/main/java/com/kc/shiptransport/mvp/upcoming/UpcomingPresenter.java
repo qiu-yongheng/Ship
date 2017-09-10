@@ -76,7 +76,35 @@ public class UpcomingPresenter implements UpcomingContract.Presenter {
                     @Override
                     public void onComplete() {
                         view.showLoading(false);
-                        view.showError("刷新成功");
+                    }
+                });
+    }
+
+    @Override
+    public void getPendingForDB() {
+        dataRepository
+                .getPendingForDB()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<BackLog>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<BackLog> backLogs) {
+                        view.showPending(backLogs);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

@@ -73,6 +73,12 @@ public class VoyageDetailPresenter implements VoyageDetailContract.Presenter {
                     .GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(position)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
+        } else if (type == 2) {
+            // 发送的是itemID
+            observable = dataRepository
+                    .GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(position)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
         }
 
         if (observable != null) {

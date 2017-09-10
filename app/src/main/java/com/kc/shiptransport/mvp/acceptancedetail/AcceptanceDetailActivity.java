@@ -60,8 +60,9 @@ public class AcceptanceDetailActivity extends BaseActivity{
     /**
      * 暴露给外界的启动方法
      * @param activity
-     * @param itemID
+     * @param itemID 进场ID
      * @param isAcceptance
+     * @param evaluationID 评价ID
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static void startActivity(Activity activity, int itemID, boolean isAcceptance, int evaluationID) {

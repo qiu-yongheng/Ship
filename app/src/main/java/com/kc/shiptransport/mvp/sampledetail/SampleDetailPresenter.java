@@ -61,7 +61,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
     @Override
     public void getShipInfo(int position) {
         dataRepository
-                .getSampleTaskForPosition(position)
+                .getSampleTaskForItemID(position)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<SandSample>() {
@@ -200,7 +200,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
     public void getDates(int position, final boolean isSandSampling, final boolean isExit) {
         view.showLoading(true);
         dataRepository
-                .getSampleTaskForPosition(position) // 根据进场ID获取数据
+                .getSampleTaskForItemID(position) // 根据进场ID获取数据
                 .subscribeOn(Schedulers.io())
                 .flatMap(new Function<SandSample, ObservableSource<SampleShowDatesBean>>() {
                     @Override

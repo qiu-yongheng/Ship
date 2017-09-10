@@ -6,10 +6,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.basemvp.BaseMvpFragment;
 import com.kc.shiptransport.mvp.sampledetail.SampleDetailActivity;
 import com.kc.shiptransport.util.SettingUtil;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 /**
  * @author qiuyongheng
@@ -90,7 +95,12 @@ public class SampleFragment extends BaseMvpFragment{
 
     @Override
     protected void abs_onItemClick(View view, int position) {
-        SampleDetailActivity.startActivity(getActivity(), position);
+        int itemID = 0;
+        List<SandSample> sandSamples = DataSupport.where("position = ?", String.valueOf(position)).find(SandSample.class);
+        if (!sandSamples.isEmpty()) {
+            itemID = sandSamples.get(0).getItemID();
+        }
+        SampleDetailActivity.startActivity(getActivity(), itemID);
     }
 
     @Override

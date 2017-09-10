@@ -104,7 +104,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
 
     @Override
     public void showImgList(List<ScannerImgListByTypeBean> scannerImgListByTypeBeen) {
-        if (activity.p_type == 0) {
+        if (activity.p_type == 0 || activity.p_type == 2) {
             // 可以修改图片
             if (adapter == null) {
                 adapter = new ScannerImgSelectAdapter(getContext(), scannerImgListByTypeBeen);

@@ -18,6 +18,7 @@ import com.kc.shiptransport.db.backlog.BackLog;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.main.MainActivity;
+import com.kc.shiptransport.mvp.upcominglist.UpcomingListActivity;
 import com.kc.shiptransport.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
@@ -124,8 +125,9 @@ public class UpcomingFragment extends Fragment implements UpcomingContract.View 
            adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
                @Override
                public void onItemClick(View view, int position, int... type) {
-                    /** 跳转界面 */
-
+                   String pendingID = adapter.list.get(position).getPendingType();
+                   /** 跳转界面 */
+                   UpcomingListActivity.startActivity(getContext(), pendingID);
                }
 
                @Override
@@ -139,5 +141,13 @@ public class UpcomingFragment extends Fragment implements UpcomingContract.View 
            adapter.setDates(list);
            adapter.notifyDataSetChanged();
        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            presenter.getPendingForDB();
+        }
     }
 }

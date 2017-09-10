@@ -26,7 +26,6 @@ public class SampleDetailActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
 
-
         Bundle bundle = getIntent().getExtras();
         position = bundle.getInt("SampleDetailActivity_position");
 
@@ -56,10 +55,10 @@ public class SampleDetailActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Activity activity, int position) {
+    public static void startActivity(Activity activity, int itemID) {
         Intent intent = new Intent(activity, SampleDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("SampleDetailActivity_position", position);
+        bundle.putInt("SampleDetailActivity_position", itemID);
         intent.putExtras(bundle);
         activity.startActivity(intent, bundle);
     }

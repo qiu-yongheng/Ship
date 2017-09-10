@@ -80,7 +80,12 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String userID = DataSupport.findAll(User.class).get(0).getUserID();
-                        int itemID = weekTask.getItemID();
+                        int itemID = 0;
+                        if (weekTask == null) {
+                            itemID = activity.position;
+                        } else {
+                            itemID = weekTask.getItemID();
+                        }
                         presenter.commit("", userID, itemID, 1, "");
                     }
                 });

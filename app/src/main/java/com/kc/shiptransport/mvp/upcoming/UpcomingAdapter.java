@@ -45,7 +45,7 @@ public class UpcomingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         BackLog backLog = list.get(position);
         ((ItemHolder) holder).textView.setText(backLog.getPendingType());
-        ((ItemHolder) holder).badge.setBadgeNumber(backLog.getList().size());
+        ((ItemHolder) holder).badge.setBadgeNumber(backLog.getList() == null ? 0 : backLog.getList().size());
         ImageView imageView = (ImageView) ((ItemHolder) holder).badge.getTargetView();
         imageView.setImageResource(R.mipmap.plan);
         ((ItemHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {

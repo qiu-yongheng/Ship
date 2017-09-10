@@ -118,6 +118,17 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter {
                     .getScannerType(position)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
+        } else if (type == 2) {
+            // itemID 编辑
+            List<WeekTask> list = DataSupport.where("ItemID = ?", String.valueOf(position)).find(WeekTask.class);
+            if (!list.isEmpty()) {
+                view.showTitle(list.get(0));
+            }
+
+            observable = dataRepository
+                    .getScannerType(position)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
         }
 
         if (observable != null) {

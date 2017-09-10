@@ -1,6 +1,6 @@
 <litepal>
     <dbname value="ship_db" />
-    <version value="75"/>
+    <version value="78"/>
     <list>
         <mapping class="com.kc.shiptransport.db.ship.Ship"/>
         <mapping class="com.kc.shiptransport.db.ship.ShipList"/>
@@ -44,5 +44,6 @@
         <mapping class="com.kc.shiptransport.db.exitassessor.ExitAssessor"/>
         <mapping class="com.kc.shiptransport.db.exitfeedback.ExitFeedBack"/>
         <mapping class="com.kc.shiptransport.db.backlog.BackLog"/>
+        <mapping class="com.kc.shiptransport.db.backlog.ListBean"/>
     </list>
 </litepal>

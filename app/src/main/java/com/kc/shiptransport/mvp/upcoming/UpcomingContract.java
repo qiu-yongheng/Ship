@@ -19,5 +19,6 @@ public interface UpcomingContract {
 
     interface Presenter extends BasePresenter {
         void getPending(int PageSize, int PageCount);
+        void getPendingForDB();
     }
 }
