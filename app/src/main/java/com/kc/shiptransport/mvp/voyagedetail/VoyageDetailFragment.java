@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +65,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     private VoyageDetailAdapter adapter;
     private boolean save = true;
     private boolean isChange = true;
+    private VoyageDetailBean bean;
 
     @Nullable
     @Override
@@ -89,11 +92,36 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
 
     }
 
+    /**
+     * 加载menu菜单
+     *
+     * @param menu
+     * @param inflater
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.voyage_detail_menu, menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 saveData();
+                break;
+            case R.id.menu_view_comments:
+                String remark = "";
+                if (bean != null && activity != null) {
+                    remark = TextUtils.isEmpty(bean.getPreAcceptanceEvaluationRemark()) ? "暂无退回意见" : bean.getPreAcceptanceEvaluationRemark();
+                }
+
+                activity.showDailog("退回意见", remark, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -247,6 +275,8 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             ToastUtil.tip(getContext(), "获取数据失败");
             return;
         }
+
+        this.bean = bean;
 
         // 1代表已提交，0代表保存
         String isSumbitted = bean.getIsSumbitted();

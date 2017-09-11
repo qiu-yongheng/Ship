@@ -18,6 +18,9 @@ import com.kc.shiptransport.mvp.home.HomeFragment;
 import com.kc.shiptransport.mvp.mine.MineFragment;
 import com.kc.shiptransport.mvp.upcoming.UpcomingFragment;
 import com.kc.shiptransport.mvp.upcoming.UpcomingPresenter;
+import com.kc.shiptransport.badge.BadgeIntentService;
+import com.kc.shiptransport.util.LogUtil;
+import com.kc.shiptransport.util.MIUIUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -51,7 +54,7 @@ public class MainFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-            /** 初始化fragment */
+        /** 初始化fragment */
         if (savedInstanceState != null) {
             //创建管理器, 获取Fragment
             FragmentManager manager = getChildFragmentManager();
@@ -91,6 +94,15 @@ public class MainFragment extends Fragment {
         // 更新桌面角标
         ShortcutBadger.applyCount(getContext(), all.size());
 
+        LogUtil.d("当前手机型号: " + MIUIUtils.getMobileVersion());
+
+        // 小米添加桌面角标
+        if (MIUIUtils.isMIUI()) {
+            LogUtil.d("发送通知");
+            getActivity().startService(
+                    new Intent(getActivity(), BadgeIntentService.class).putExtra("badgeCount", all.size())
+            );
+        }
     }
 
     private void initView(View view) {

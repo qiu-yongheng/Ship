@@ -133,8 +133,8 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
                 .map(new Function<List<WeekTask>, List<WeekTask>>() {
                     @Override
                     public List<WeekTask> apply(@NonNull List<WeekTask> weekTasks) throws Exception {
-                        /** 删除不能进行预验砂的任务 */
-                        DataSupport.deleteAll(WeekTask.class, "IsAllowPreAcceptanceEvaluation = 0");
+                        /** 删除不能进行预验砂的任务 (不允许预验收, 且没有通过验收) */
+                        DataSupport.deleteAll(WeekTask.class, "IsAllowPreAcceptanceEvaluation = 0 and PreAcceptanceEvaluationStatus  != 1");
                         dataRepository.dataSort(jumpWeek);
                         return DataSupport.findAll(WeekTask.class);
                     }

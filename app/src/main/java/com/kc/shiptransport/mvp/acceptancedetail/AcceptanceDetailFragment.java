@@ -133,11 +133,22 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
             @Override
             public void onClick(View view) {
                 // 通过验收时间
-                String time = tvAcceptanceTime.getText().toString().trim();
+                final String time = tvAcceptanceTime.getText().toString().trim();
                 // 预验收意见
-                String opinion = tvAcceptanceOpinion.getText().toString().trim();
-                if (time.equals("") || rbcomplete == 0 || rbtimely == 0) {
-                    Toast.makeText(activity, "验收时间或评价不能为空", Toast.LENGTH_SHORT).show();
+                final String opinion = tvAcceptanceOpinion.getText().toString().trim();
+                // if (time.equals("") || rbcomplete == 0 || rbtimely == 0) {
+                if (TextUtils.isEmpty(opinion)) {
+                    activity.showDailog("不通过", "填入预验收意见可以更好的帮助供应商进行资料完善", "不填写直接审核", "填写预验收意见", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, -1, opinion);
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
                 } else {
                     presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, -1, opinion);
                 }
@@ -152,8 +163,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                 String time = tvAcceptanceTime.getText().toString().trim();
                 // 预验收意见
                 String opinion = tvAcceptanceOpinion.getText().toString().trim();
-                if (time.equals("") || rbcomplete == 0 || rbtimely == 0) {
-                    Toast.makeText(activity, "验收时间或评价不能为空", Toast.LENGTH_SHORT).show();
+                if (time.equals("")) {
+                    Toast.makeText(activity, "验收时间不能为空", Toast.LENGTH_SHORT).show();
                 } else {
                     presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, 1, opinion);
                 }
@@ -482,6 +493,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
 
     /**
      * 刷新图片
+     *
      * @param value
      */
     @Override

@@ -39,8 +39,25 @@ public class VoyageDetailBean extends DataSupport{
     private String PerfectBoatItemCount;
     private String IsPerfect; // 1代表已完善，0代表未完善
     private String IsSumbitted; // 1代表已提交，0代表保存
+    private String PreAcceptanceEvaluationRemark; // 预验收意见
+    private int PreAcceptanceEvaluationStatus; // 审核状态: 1 通过, -1 不通过, 0 保存
     private List<ColumnsBean> Columns;
 
+    public String getPreAcceptanceEvaluationRemark() {
+        return PreAcceptanceEvaluationRemark;
+    }
+
+    public void setPreAcceptanceEvaluationRemark(String preAcceptanceEvaluationRemark) {
+        PreAcceptanceEvaluationRemark = preAcceptanceEvaluationRemark;
+    }
+
+    public int getPreAcceptanceEvaluationStatus() {
+        return PreAcceptanceEvaluationStatus;
+    }
+
+    public void setPreAcceptanceEvaluationStatus(int preAcceptanceEvaluationStatus) {
+        PreAcceptanceEvaluationStatus = preAcceptanceEvaluationStatus;
+    }
 
     public int getSubcontractorInterimApproachPlanID() {
         return SubcontractorInterimApproachPlanID;

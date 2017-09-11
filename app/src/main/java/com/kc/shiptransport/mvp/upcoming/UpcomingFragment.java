@@ -120,33 +120,50 @@ public class UpcomingFragment extends Fragment implements UpcomingContract.View 
      */
     @Override
     public void showPending(List<BackLog> list) {
-       if (adapter == null) {
-           adapter = new UpcomingAdapter(getContext(), list);
-           adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
-               @Override
-               public void onItemClick(View view, int position, int... type) {
-                   String pendingID = adapter.list.get(position).getPendingType();
-                   /** 跳转界面 */
-                   UpcomingListActivity.startActivity(getContext(), pendingID);
-               }
+        if (adapter == null) {
+            adapter = new UpcomingAdapter(getContext(), list);
+            adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position, int... type) {
+                    String pendingID = adapter.list.get(position).getPendingID();
+                    /** 跳转界面 */
+                    UpcomingListActivity.startActivity(getContext(), pendingID);
+                }
 
-               @Override
-               public void onItemLongClick(View view, int position) {
+                @Override
+                public void onItemLongClick(View view, int position) {
 
-               }
-           });
+                }
+            });
 
-           recyclerView.setAdapter(adapter);
-       } else {
-           adapter.setDates(list);
-           adapter.notifyDataSetChanged();
-       }
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.setDates(list);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (adapter != null) {
+            // TODO
+            //            int type = SharePreferenceUtil.getInt(getContext(), SettingUtil.SP_KEY_UPCOMING);
+            //            switch (type) {
+            //                case SettingUtil.UPCOMING_DB:
+            //                    // 从数据库获取数据
+            //                    presenter.getPendingForDB();
+            //                    break;
+            //                case SettingUtil.UPCOMING_NET:
+            //                    // 从网络获取数据
+            //                    presenter.getPending(10000, 1);
+            //                    break;
+            //                default:
+            //                    // 默认从网络获取数据
+            //                    presenter.getPending(10000, 1);
+            //                    break;
+            //            }
+
             presenter.getPendingForDB();
         }
     }

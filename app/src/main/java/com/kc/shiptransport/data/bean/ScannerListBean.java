@@ -31,6 +31,24 @@ public class ScannerListBean {
     private int AttachmentCount;
     private int DefalutAttachmentCount;
     private String SystemDate;
+    private String PreAcceptanceEvaluationRemark;
+    private int PreAcceptanceEvaluationStatus;
+
+    public String getPreAcceptanceEvaluationRemark() {
+        return PreAcceptanceEvaluationRemark;
+    }
+
+    public void setPreAcceptanceEvaluationRemark(String preAcceptanceEvaluationRemark) {
+        PreAcceptanceEvaluationRemark = preAcceptanceEvaluationRemark;
+    }
+
+    public int getPreAcceptanceEvaluationStatus() {
+        return PreAcceptanceEvaluationStatus;
+    }
+
+    public void setPreAcceptanceEvaluationStatus(int preAcceptanceEvaluationStatus) {
+        PreAcceptanceEvaluationStatus = preAcceptanceEvaluationStatus;
+    }
 
     public int getSubcontractorInterimApproachPlanID() {
         return SubcontractorInterimApproachPlanID;

@@ -884,6 +884,8 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                String creator = DataSupport.findAll(User.class).get(0).getUserID();
+
                 /* 1. 创建对象, 封装要提交的数据 */
                 JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
@@ -894,6 +896,7 @@ public class DataRepository implements DataSouceImpl {
                 jsonObject.put("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
                 jsonObject.put("ShipAccount", value.getShipAccount());
                 jsonObject.put("SubcontractorAccount", value.getSubcontractorAccount());
+                jsonObject.put("Creator", creator);
                 jsonObject.put("Status", Status);
                 jsonObject.put("Remark", Remark);
                 jsonArray.put(jsonObject);
@@ -4143,6 +4146,13 @@ public class DataRepository implements DataSouceImpl {
 
                 List<BackLog> all = DataSupport.findAll(BackLog.class, true);
 
+
+
+                /** 网络更新待办数据后, 状态改成从DB获取数据 */
+//                SharePreferenceUtil.saveInt(App.getAppContext(), SettingUtil.SP_KEY_UPCOMING, SettingUtil.UPCOMING_DB);
+//
+//                LogUtil.d("待办数据获取路径: " + SharePreferenceUtil.getInt(App.getAppContext(), SettingUtil.SP_KEY_UPCOMING));
+
                 e.onNext(list);
                 e.onComplete();
             }
@@ -4179,7 +4189,7 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(@NonNull ObservableEmitter<BackLog> e) throws Exception {
                 // TODO
-                List<BackLog> backLogs = DataSupport.where("PendingType = ?", pendingID).find(BackLog.class, true);
+                List<BackLog> backLogs = DataSupport.where("PendingID = ?", pendingID).find(BackLog.class, true);
 
                 e.onNext(backLogs.get(0));
                 e.onComplete();

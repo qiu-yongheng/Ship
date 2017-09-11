@@ -88,6 +88,7 @@ public class UpcomingListPresenter implements UpcomingListContract.Presenter{
                 .flatMap(new Function<List<BackLog>, ObservableSource<BackLog>>() {
                     @Override
                     public ObservableSource<BackLog> apply(@NonNull List<BackLog> backLogs) throws Exception {
+                        //
                         return dataRepository.getUpcomingList(pendingID);
                     }
                 })

@@ -8,6 +8,7 @@
         android:id="@+id/toolbar"
         app:titleTextColor="@color/textcolorPrimary"
         android:background="?colorPrimary"
+        app:theme="@style/ToolbarTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

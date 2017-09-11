@@ -19,8 +19,10 @@
     <color name="red">#E86256</color>
     <color name="blue">#3CAFEB</color>
     <color name="gray">#B3B3B3</color>
-    <color name="black">#525252</color>
+    <!-- <color name="black">#525252</color> -->
+    <color name="black">#000</color>
     <color name="Dividing_line">#EEEDEB</color>
     <color name="bg">#EEEDEB</color>
+    <color name="purple">#f0f</color>
     
 </resources>

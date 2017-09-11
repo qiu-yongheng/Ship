@@ -297,7 +297,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="计划量"/>
+                android:text="计划总量"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="点击日期, 进入新增/修改供砂计划界面"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:text="点击航次计划, 弹出该计划的供砂量"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 

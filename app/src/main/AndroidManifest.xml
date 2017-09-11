@@ -96,6 +96,7 @@
             android:name=".download.DownloadService"
             android:enabled="true"
             android:exported="true" />
+        <service android:name=".badge.BadgeIntentService"/>
 
         <!--
             name:可以直接使用默认的FileProvider，也可以继承做其它操作。

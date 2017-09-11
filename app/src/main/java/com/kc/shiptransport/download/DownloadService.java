@@ -154,8 +154,8 @@ public class DownloadService extends Service {
         /** 实例化通知栏构造器 */
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         /** 对Builder进行配置 */
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+        builder.setSmallIcon(R.mipmap.app_icon);
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.app_icon));
 //        builder.setContentIntent(pi); // 设置点击意图
         builder.setAutoCancel(true);
         builder.setContentTitle(title);

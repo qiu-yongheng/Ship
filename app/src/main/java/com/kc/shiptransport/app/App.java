@@ -23,6 +23,8 @@ public class App extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+        context = getApplicationContext();
+
         LitePalApplication.initialize(this);
 
         // 集成测试
@@ -39,5 +41,9 @@ public class App extends Application{
                 .st(3) // 允许打印深度为3的调用栈信息
                 .build();
         XLog.init(LogLevel.ALL, config);
+    }
+
+    public static Context getAppContext () {
+        return context;
     }
 }

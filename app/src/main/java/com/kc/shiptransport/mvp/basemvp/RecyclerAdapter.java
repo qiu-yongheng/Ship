@@ -159,9 +159,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     ((NormalHolder) holder).mTvQuantum.setText("(" + String.valueOf(weekTask.getPerfectBoatItemCount()) + "/15)");
                     ((NormalHolder) holder).mTvQuantum.setVisibility(View.VISIBLE);
 
-                    // 判断信息是否已完善
-                    if (weekTask.getIsPerfect() == 1) {
-                        // 已过砂
+
+                    if (weekTask.getIsSumbittedPerfectBoat() == 1) {
+                        /** 已提交, 蓝色 */
+                        ((NormalHolder) holder).mTvShip.setTextColor(Color.BLUE);
+                        ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLUE);
+
+                        // 根据单选判断是否显示
+                        boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ALREADY_COMMIT);
+                        ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
+                    } else if (weekTask.getPreAcceptanceEvaluationStatus() == -1) {
+                        /** 未提交, 且预验收不通过, 紫色 */
+                        ((NormalHolder) holder).mTvShip.setTextColor(context.getResources().getColor(R.color.purple));
+                        ((NormalHolder) holder).mTvQuantum.setTextColor(context.getResources().getColor(R.color.purple));
+
+                        // 根据单选判断是否显示
+                        boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.RETURNED);
+                        ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
+                    } else if (weekTask.getIsPerfect() == 1) {
+                        /** 已完善, 红色 */
                         ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
                         ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
 
@@ -169,7 +185,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
                         ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
                     } else if (weekTask.getIsPerfect() == 0) {
-                        // 未过砂
+                        /** 未完善, 黑色 */
                         ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
                         ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
 
@@ -177,6 +193,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.NO_ACCEPTED);
                         ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
                     }
+
+
 
                     // 设置点击事件
                     if (listener != null) {
@@ -206,9 +224,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(weekTask.getSandSupplyCount()));
                     ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
-                    // 判断信息是否已完善
-                    if (weekTask.getIsFinshPerfectBoatScannerAttachment() == 1) {
-                        // 已过砂
+                    if (weekTask.getIsSumbittedPerfectBoatScanner() == 1) {
+                        /** 已提交, 蓝色 */
+                        ((NormalHolder) holder).mTvShip.setTextColor(Color.BLUE);
+                        ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLUE);
+
+                        // 根据单选判断是否显示
+                        boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ALREADY_COMMIT);
+                        ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
+                    } else if (weekTask.getPreAcceptanceEvaluationStatus() == -1) {
+                        /** 未提交, 且预验收不通过, 紫色 */
+                        ((NormalHolder) holder).mTvShip.setTextColor(context.getResources().getColor(R.color.purple));
+                        ((NormalHolder) holder).mTvQuantum.setTextColor(context.getResources().getColor(R.color.purple));
+
+                        // 根据单选判断是否显示
+                        boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.RETURNED);
+                        ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
+                    } else if (weekTask.getIsFinshPerfectBoatScannerAttachment() == 1) {
+                        /** 已过砂, 红色 */
                         ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
                         ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
 
@@ -216,7 +249,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
                         ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
                     } else if (weekTask.getIsFinshPerfectBoatScannerAttachment() == 0) {
-                        // 未过砂
+                        /** 未过砂, 黑色 */
                         ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
                         ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
 

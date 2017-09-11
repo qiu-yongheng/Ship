@@ -12,7 +12,6 @@
         android:layout_marginBottom="45dp"
         android:layout_marginTop="?actionBarSize"/>
 
-
     <LinearLayout
         android:id="@+id/ll_btn"
         android:layout_alignParentBottom="true"

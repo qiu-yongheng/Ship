@@ -8,7 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +60,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     private ScannerDetailAdapter adapter;
     private WeekTask weekTask;
     private int isSumbittedPerfectBoatScanner = 0;
+    private List<ScannerListBean> bean;
 
     @Nullable
     @Override
@@ -113,11 +117,36 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
 
     }
 
+    /**
+     * 加载menu菜单
+     *
+     * @param menu
+     * @param inflater
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.voyage_detail_menu, menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 activity.onBackPressed();
+                break;
+            case R.id.menu_view_comments:
+                String remark = "";
+                if (bean != null && activity != null) {
+                    remark = TextUtils.isEmpty(bean.get(0).getPreAcceptanceEvaluationRemark()) ? "暂无退回意见" : bean.get(0).getPreAcceptanceEvaluationRemark();
+                }
+
+                activity.showDailog("退回意见", remark, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -184,6 +213,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
      */
     @Override
     public void showDatas(List<ScannerListBean> scannerImage) {
+        this.bean = scannerImage;
         if (adapter == null) {
 
             adapter = new ScannerDetailAdapter(getContext(), scannerImage);

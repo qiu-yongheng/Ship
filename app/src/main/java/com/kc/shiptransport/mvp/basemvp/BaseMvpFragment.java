@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,6 +87,12 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
     protected BaseMvpContract.Presenter presenter;
     @BindView(R.id.title_spinner)
     AppCompatSpinner mTitleSpinner;
+    @BindView(R.id.cb_tip_blue)
+    CheckBox cbTipBlue;
+    @BindView(R.id.cb_tip_purple)
+    CheckBox cbTipPurple;
+    @BindView(R.id.ll_status_ext)
+    LinearLayout llStatusExt;
     protected float dowmX;
     protected float upX;
     protected int jumpWeek = 0; // 要显示的week, 默认当周
@@ -95,7 +102,6 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
     protected String subcontractorAccount;
     protected double dowmY;
     protected float upY;
-
 
     @Nullable
     @Override
@@ -204,6 +210,29 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
                 }
             }
         });
+
+        // 已提交
+        cbTipBlue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.ALREADY_COMMIT, b);
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        // 被退回
+        cbTipPurple.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.RETURNED, b);
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -219,9 +248,34 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
         // 添加边框
         recyclerview.addItemDecoration(new DividerGridItemDecoration(getActivity()));
 
+        // 已完善
         cbTipRed.setText(getRedText());
+        // 未完善
         cbTipBlack.setText(getBlackText());
 
+        // 已提交
+        cbTipBlue.setText("蓝色字体: 已提交");
+        // 被退回
+        cbTipPurple.setText("紫色字体: 被退回");
+
+        /** 根据type判断是否显示扩展状态 */
+        switch (TYPE) {
+            case SettingUtil.TYPE_VOYAGEINFO:
+                /** 航次信息完善 */
+                llStatusExt.setVisibility(View.VISIBLE);
+                break;
+            case SettingUtil.TYPE_SCANNER:
+                /** 航次完善扫描件 */
+                llStatusExt.setVisibility(View.VISIBLE);
+                break;
+            default:
+                llStatusExt.setVisibility(View.GONE);
+                break;
+        }
+
+        /** 初始化状态 */
+        SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.ALREADY_COMMIT, true);
+        SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.RETURNED, true);
     }
 
     @Override
@@ -357,6 +411,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
 
     /**
      * 初始化spinner
+     *
      * @param value
      */
     @Override
@@ -379,7 +434,6 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
 
         // 点击后, 筛选供应商的数据
         mTitleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
 
 
             @Override

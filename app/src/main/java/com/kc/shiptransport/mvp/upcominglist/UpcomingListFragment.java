@@ -143,26 +143,32 @@ public class UpcomingListFragment extends Fragment implements UpcomingListContra
                         .setOnClickListener(R.id.card_view, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (backLog.getPendingType().equals("待信息完善")) {
+                                if (backLog.getPendingID().equals("InfomationPerfecting")) {
+                                    /** 待信息完善 */
                                     VoyageDetailActivity.startActivity(getActivity(), listBean.getSubcontractorInterimApproachPlanID(), 2);
-                                } else if (backLog.getPendingType().equals("待填写进场材料")) {
+                                } else if (backLog.getPendingID().equals("PerfectScanning")) {
+                                    /** 待填写进场材料 */
                                     ScannerDetailActivity.startActivity(getActivity(), listBean.getSubcontractorInterimApproachPlanID(), 2);
-                                } else if (backLog.getPendingType().equals("待预验收")) {
-                                    // TODO 缺少最后一个参数: 评价ID
-                                    //ToastUtil.tip(getContext(), "待完善");
+                                } else if (backLog.getPendingID().equals("PreAccepting")) {
+                                    /** 待预验收 */
                                     AcceptanceDetailActivity.startActivity(getActivity(), listBean.getSubcontractorInterimApproachPlanID(), false, listBean.getSandSubcontractorPreAcceptanceEvaluationID());
-                                } else if (backLog.getPendingType().equals("待量方")) {
+                                } else if (backLog.getPendingID().equals("PreAccepting")) {
+                                    /** 待量方 */
                                     AmountDetailActivity.startActivity(getActivity(), listBean.getSubcontractorInterimApproachPlanID(), false);
-                                } else if (backLog.getPendingType().equals("待验砂")) {
+                                } else if (backLog.getPendingID().equals("ReceptionSanding")) {
+                                    /** 待验砂 */
                                     SupplyDetailActivity.startActivity(getActivity(), listBean.getSubcontractorInterimApproachPlanID(), false);
-                                } else if (backLog.getPendingType().equals("待验砂取样")) {
-                                    // TODO 参数position改为itemID
+                                } else if (backLog.getPendingID().equals("SandSampling")) {
+                                    /** 待验砂取样 */
                                     SampleDetailActivity.startActivity(getActivity(), listBean.getSubcontractorInterimApproachPlanID());
-                                } else if (backLog.getPendingType().equals("待过砂")) {
+                                } else if (backLog.getPendingID().equals("Oversanding")) {
+                                    /** 待过砂 */
                                     RecordedSandDetailListActivity.startActivity(getContext(), listBean.getSubcontractorInterimApproachPlanID(), false);
-                                } else if (backLog.getPendingType().equals("待退场申请")) {
+                                } else if (backLog.getPendingID().equals("ExitApplying")) {
+                                    /** 待退场申请 */
                                     ExitApplicationDetailActivity.startActivity(getContext(), listBean.getSubcontractorInterimApproachPlanID(), 0);
-                                } else if (backLog.getPendingType().equals("ExitAuditing")) {
+                                } else if (backLog.getPendingID().equals("ExitAuditing")) {
+                                    /** 待退场审核 */
                                     ExitApplicationAssessorActivity.startActivity(getContext(), listBean.getSubcontractorInterimApproachPlanID(), false);
                                 }
                             }

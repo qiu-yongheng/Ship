@@ -59,6 +59,13 @@ public class SettingUtil {
 
     /* 未验收 */
     public static final String NO_ACCEPTED = "No_Accepted";
+
+    /* 已提交 */
+    public static final String ALREADY_COMMIT = "ALREADY_COMMIT";
+
+    /* 被退回 */
+    public static final String RETURNED = "RETURNED";
+
     /*-----------------------------------------------checkbox单选框--------------------------------------------------*/
 
 
@@ -173,6 +180,16 @@ public class SettingUtil {
     public static final int REFRYSH_ALL = 601;
     /* 只刷新图片 */
     public static final int REFRYSH_IMG = 602;
+    /*-----------------------------------------------数据刷新类型--------------------------------------------------*/
 
 
+
+    /*-----------------------------------------------待办数据更新源--------------------------------------------------*/
+    /* SP KEY */
+    public static final String SP_KEY_UPCOMING = "SP_KEY_UPCOMING";
+    /* 从DB获取 */
+    public static final int UPCOMING_DB = 701;
+    /* 从网络获取 */
+    public static final int UPCOMING_NET = 702;
+    /*-----------------------------------------------待办数据更新源--------------------------------------------------*/
 }
