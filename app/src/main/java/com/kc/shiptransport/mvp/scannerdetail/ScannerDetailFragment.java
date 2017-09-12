@@ -10,17 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.ScannerListBean;
-import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
@@ -44,18 +42,20 @@ import butterknife.Unbinder;
 
 public class ScannerDetailFragment extends Fragment implements ScannerDetailContract.View {
 
-
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.tv_opinion)
+    TextView tvOpinion;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.recyclerview)
-    RecyclerView recyclerview;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     @BindView(R.id.btn_already_commit)
     Button btnAlreadyCommit;
     @BindView(R.id.btn_commit)
     Button btnCommit;
     private ScannerDetailContract.Presenter presenter;
     private ScannerDetailActivity activity;
-    public ScannerImage scannerImage;
     private Unbinder unbinder;
     private ScannerDetailAdapter adapter;
     private WeekTask weekTask;
@@ -104,38 +104,10 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
             }
         });
 
-    }
-
-    @Override
-    public void initViews(View view) {
-        setHasOptionsMenu(true);
-        activity = (ScannerDetailActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-    }
-
-    /**
-     * 加载menu菜单
-     *
-     * @param menu
-     * @param inflater
-     */
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.voyage_detail_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                activity.onBackPressed();
-                break;
-            case R.id.menu_view_comments:
+        /** 查看退回意见 */
+        tvOpinion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 String remark = "";
                 if (bean != null && activity != null) {
                     remark = TextUtils.isEmpty(bean.get(0).getPreAcceptanceEvaluationRemark()) ? "暂无退回意见" : bean.get(0).getPreAcceptanceEvaluationRemark();
@@ -147,6 +119,26 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
 
                     }
                 });
+            }
+        });
+
+    }
+
+    @Override
+    public void initViews(View view) {
+        setHasOptionsMenu(true);
+        activity = (ScannerDetailActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                activity.onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -171,7 +163,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
     @Override
     public void showTitle(WeekTask weekTask) {
         this.weekTask = weekTask;
-        activity.getSupportActionBar().setTitle(weekTask.getShipName());
+        tvTitle.setText(weekTask.getShipName());
 
         /** 如果已提交, 不能修改数据 */
         isSumbittedPerfectBoatScanner = weekTask.getIsSumbittedPerfectBoatScanner();
@@ -213,7 +205,18 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
      */
     @Override
     public void showDatas(List<ScannerListBean> scannerImage) {
+        if (scannerImage.isEmpty()) {
+            ToastUtil.tip(getContext(), "获取数据失败");
+            return;
+        }
         this.bean = scannerImage;
+
+        if (scannerImage.get(0).getPreAcceptanceEvaluationStatus() == -1) {
+            tvOpinion.setVisibility(View.VISIBLE);
+        } else {
+            tvOpinion.setVisibility(View.GONE);
+        }
+
         if (adapter == null) {
 
             adapter = new ScannerDetailAdapter(getContext(), scannerImage);
@@ -238,7 +241,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
 
                 }
             });
-            recyclerview.setAdapter(adapter);
+            recyclerView.setAdapter(adapter);
         } else {
             adapter.setDates(scannerImage);
             adapter.notifyDataSetChanged();

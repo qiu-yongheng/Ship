@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
@@ -117,6 +118,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             case SettingUtil.TYPE_EXIT_FEEDBACK: // 退场反馈
                 presenter.getExitFeedBack(20, pageCount, "", "", "", true);
                 break;
+            case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER: // 施工日志管理
+                // TODO
+                break;
         }
         return view;
     }
@@ -150,6 +154,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             // 退场反馈
             selectSub.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_feedback);
+        } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
+            // 施工日志管理
+            selectSub.setVisibility(View.GONE);
+            activity.getSupportActionBar().setTitle(R.string.title_construction_log_manager);
         }
     }
 
@@ -185,7 +193,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                 Button btnReturn = (Button) view.findViewById(R.id.btn_return);
                                 Button btnOk = (Button) view.findViewById(R.id.btn_ok);
 
-                                // 获取数据
+                                /** 获取数据 */
                                 String[] stringArray = new String[]{};
                                 if (type == SettingUtil.TYPE_ANALYSIS) {
                                     // 计划跟踪
@@ -198,6 +206,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                     stringArray = getResources().getStringArray(R.array.select_acceptance_time);
                                 } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
                                     // 退场反馈
+                                    stringArray = getResources().getStringArray(R.array.select_acceptance_time);
+                                } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
+                                    // 日志管理
                                     stringArray = getResources().getStringArray(R.array.select_acceptance_time);
                                 }
 
@@ -265,7 +276,8 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
 
                                                         } else if (type == SettingUtil.TYPE_ACCEPTANCE_EVALUATION ||
                                                                 type == SettingUtil.TYPE_ACCEPTANCE_RANK ||
-                                                                type == SettingUtil.TYPE_EXIT_FEEDBACK) {
+                                                                type == SettingUtil.TYPE_EXIT_FEEDBACK ||
+                                                                type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                                             /** 预验收评价 供应商评价 退场反馈*/
                                                             switch (position) {
                                                                 case 0:
@@ -315,6 +327,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                                         /** 退场反馈 */
                                                                         pageCount = 1;
                                                                         presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
+                                                                        break;
+                                                                    case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER:
+                                                                        /** 日报管理 */
+                                                                        // TODO
                                                                         break;
                                                                 }
                                                                 pop_time.dismiss();
@@ -387,6 +403,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                         } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
                                             // 退场反馈
                                             presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
+                                        } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
+                                            // 日志管理
+                                            // TODO
                                         }
 
 
@@ -529,77 +548,136 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                 final RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
                                 recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                                // 获取数据
-                                List<ShipList> list = DataSupport.order("ShipID asc").find(ShipList.class);
 
-                                // 创建adapter
-                                CommonAdapter<ShipList> adapter = new CommonAdapter<ShipList>(getContext(), R.layout.item_analysis, list) {
-                                    @Override
-                                    protected void convert(ViewHolder holder, final ShipList ShipList, int position) {
-                                        holder.setText(R.id.tv, ShipList.getShipName())
-                                                .setOnClickListener(R.id.tv, new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        selectShip.setText(ShipList.getShipName());
+                                if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
+                                    /** 日报管理 */
+                                    // 获取数据
+                                    List<ConstructionBoat> boatList = DataSupport.order("ShipNum asc").find(ConstructionBoat.class);
 
-                                                        consShip = ShipList.getShipName();
+                                    // 创建adapter
+                                    CommonAdapter<ConstructionBoat> adapter = new CommonAdapter<ConstructionBoat>(getContext(), R.layout.item_analysis, boatList) {
+                                        @Override
+                                        protected void convert(ViewHolder holder, final ConstructionBoat ShipList, int position) {
+                                            holder.setText(R.id.tv, ShipList.getShipName())
+                                                    .setOnClickListener(R.id.tv, new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            selectShip.setText(ShipList.getShipName());
 
-                                                        // 搜索
-                                                        if (type == SettingUtil.TYPE_ANALYSIS) {
-                                                            // 计划跟踪
-                                                            presenter.search(startTime, endTime, subAccount, consShip);
-                                                        } else if (type == SettingUtil.TYPE_ACCEPTANCE_EVALUATION) {
-                                                            // 预验收评价
-                                                            pageCount = 1;
-                                                            presenter.getEvaluation(20, pageCount, startTime, endTime, consShip, true);
-                                                        } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
-                                                            // 退场反馈
-                                                            pageCount = 1;
-                                                            presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
+                                                            consShip = ShipList.getShipName();
+
+                                                            // TODO 请求数据
+
+                                                            if (pop_ship.isShowing()) {
+                                                                pop_ship.dismiss();
+                                                            }
                                                         }
+                                                    });
+                                        }
+                                    };
 
-                                                        if (pop_ship.isShowing()) {
-                                                            pop_ship.dismiss();
+
+                                    // 添加头
+                                    HeaderAndFooterWrapper<Object> headWrapper = new HeaderAndFooterWrapper<>(adapter);
+                                    View inflate = LayoutInflater.from(getContext()).inflate(R.layout.item_analysis, recycle_view, false);
+                                    TextView v = (TextView) inflate.findViewById(R.id.tv);
+                                    v.setText("全部");
+                                    headWrapper.addHeaderView(inflate);
+
+                                    headWrapper.setHeadAndFootClickListener(new HeaderAndFooterWrapper.OnHeadAndFootClickListener() {
+                                        @Override
+                                        public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                                            selectShip.setText("全部供砂船舶");
+                                            consShip = "";
+
+                                            // TODO 请求数据
+
+
+                                            if (pop_ship.isShowing()) {
+                                                pop_ship.dismiss();
+                                            }
+                                        }
+                                    });
+
+                                    recycle_view.setAdapter(headWrapper);
+
+
+                                } else {
+                                    /** 其他类型都是供砂船舶 */
+                                    // 获取数据
+                                    List<ShipList> list = DataSupport.order("ShipID asc").find(ShipList.class);
+
+                                    // 创建adapter
+                                    CommonAdapter<ShipList> adapter = new CommonAdapter<ShipList>(getContext(), R.layout.item_analysis, list) {
+                                        @Override
+                                        protected void convert(ViewHolder holder, final ShipList ShipList, int position) {
+                                            holder.setText(R.id.tv, ShipList.getShipName())
+                                                    .setOnClickListener(R.id.tv, new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            selectShip.setText(ShipList.getShipName());
+
+                                                            consShip = ShipList.getShipName();
+
+                                                            // 搜索
+                                                            if (type == SettingUtil.TYPE_ANALYSIS) {
+                                                                // 计划跟踪
+                                                                presenter.search(startTime, endTime, subAccount, consShip);
+                                                            } else if (type == SettingUtil.TYPE_ACCEPTANCE_EVALUATION) {
+                                                                // 预验收评价
+                                                                pageCount = 1;
+                                                                presenter.getEvaluation(20, pageCount, startTime, endTime, consShip, true);
+                                                            } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
+                                                                // 退场反馈
+                                                                pageCount = 1;
+                                                                presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
+                                                            }
+
+                                                            if (pop_ship.isShowing()) {
+                                                                pop_ship.dismiss();
+                                                            }
                                                         }
-                                                    }
-                                                });
-                                    }
-                                };
-
-
-                                // 添加头
-                                HeaderAndFooterWrapper<Object> headWrapper = new HeaderAndFooterWrapper<>(adapter);
-                                View inflate = LayoutInflater.from(getContext()).inflate(R.layout.item_analysis, recycle_view, false);
-                                TextView v = (TextView) inflate.findViewById(R.id.tv);
-                                v.setText("全部");
-                                headWrapper.addHeaderView(inflate);
-
-                                headWrapper.setHeadAndFootClickListener(new HeaderAndFooterWrapper.OnHeadAndFootClickListener() {
-                                    @Override
-                                    public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                                        selectShip.setText("全部供砂船舶");
-                                        consShip = "";
-
-                                        // 搜索
-                                        if (type == SettingUtil.TYPE_ANALYSIS) {
-                                            // 计划跟踪
-                                            presenter.search(startTime, endTime, subAccount, consShip);
-                                        } else if (type == SettingUtil.TYPE_ACCEPTANCE_EVALUATION) {
-                                            // 预验收评价
-                                            pageCount = 1;
-                                            presenter.getEvaluation(20, pageCount, startTime, endTime, consShip, true);
-                                        } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
-                                            // 退场反馈
-                                            pageCount = 1;
-                                            presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
+                                                    });
                                         }
-                                        if (pop_ship.isShowing()) {
-                                            pop_ship.dismiss();
-                                        }
-                                    }
-                                });
+                                    };
 
-                                recycle_view.setAdapter(headWrapper);
+
+                                    // 添加头
+                                    HeaderAndFooterWrapper<Object> headWrapper = new HeaderAndFooterWrapper<>(adapter);
+                                    View inflate = LayoutInflater.from(getContext()).inflate(R.layout.item_analysis, recycle_view, false);
+                                    TextView v = (TextView) inflate.findViewById(R.id.tv);
+                                    v.setText("全部");
+                                    headWrapper.addHeaderView(inflate);
+
+                                    headWrapper.setHeadAndFootClickListener(new HeaderAndFooterWrapper.OnHeadAndFootClickListener() {
+                                        @Override
+                                        public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                                            selectShip.setText("全部供砂船舶");
+                                            consShip = "";
+
+                                            // 搜索
+                                            if (type == SettingUtil.TYPE_ANALYSIS) {
+                                                // 计划跟踪
+                                                presenter.search(startTime, endTime, subAccount, consShip);
+                                            } else if (type == SettingUtil.TYPE_ACCEPTANCE_EVALUATION) {
+                                                // 预验收评价
+                                                pageCount = 1;
+                                                presenter.getEvaluation(20, pageCount, startTime, endTime, consShip, true);
+                                            } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
+                                                // 退场反馈
+                                                pageCount = 1;
+                                                presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
+                                            }
+
+
+                                            if (pop_ship.isShowing()) {
+                                                pop_ship.dismiss();
+                                            }
+                                        }
+                                    });
+
+                                    recycle_view.setAdapter(headWrapper);
+                                }
                             }
                         })
                         .setOutsideTouchable(true)

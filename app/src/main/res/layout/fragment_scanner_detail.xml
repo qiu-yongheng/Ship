@@ -9,10 +9,10 @@
         android:layout_marginBottom="@dimen/btn_height"
         android:orientation="vertical">
 
-        <include layout="@layout/view_toolbar"/>
+        <include layout="@layout/view_toolbar_custom"/>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>

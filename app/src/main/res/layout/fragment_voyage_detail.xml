@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <include layout="@layout/view_toolbar"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextColor="@color/textcolorPrimary">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="?actionBarSize"
+                android:gravity="center_vertical"
+                android:text="船次记录表"
+                android:textColor="@color/text_white"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/tv_opinion"
+                android:layout_width="wrap_content"
+                android:layout_height="?actionBarSize"
+                android:gravity="center_vertical"
+                android:layout_marginRight="2dp"
+                android:layout_alignParentRight="true"
+                android:text="退回意见"
+                android:textColor="@color/text_white"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
@@ -14,28 +48,28 @@
 
     <LinearLayout
         android:id="@+id/ll_btn"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_height">
+        android:layout_height="@dimen/btn_height"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
         <Button
-            android:background="@color/red"
             android:id="@+id/btn_save"
             style="@style/text_title_w"
-            android:text="@string/btn_save"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="match_parent"/>
+            android:background="@color/red"
+            android:text="@string/btn_save"/>
 
         <Button
-            android:background="@color/blue"
             android:id="@+id/btn_commit"
             style="@style/text_title_w"
-            android:text="@string/btn_commit"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="match_parent"/>
+            android:background="@color/blue"
+            android:text="@string/btn_commit"/>
     </LinearLayout>
 
     <Button

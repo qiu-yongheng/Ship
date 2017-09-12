@@ -62,6 +62,13 @@
                     android:layout_height="wrap_content"/>
 
             </LinearLayout>
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_log"
+                android:text="日报管理"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <include layout="@layout/view_divi"/>

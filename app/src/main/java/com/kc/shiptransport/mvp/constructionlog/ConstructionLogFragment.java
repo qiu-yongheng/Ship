@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.interfaze.OnSpinnerClickListener;
+import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
 import com.kc.shiptransport.mvp.downtime.DowntimeActivity;
 import com.kc.shiptransport.mvp.threadsand.ThreadSandActivity;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -53,6 +55,8 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
     RelativeLayout rlStop;
     @BindView(R.id.rl_throw_sand)
     RelativeLayout rlThrowSand;
+    @BindView(R.id.btn_log)
+    Button btnLog;
     private ConstructionLogContract.Presenter presenter;
     private ConstructionLogActivity activity;
     private int spinner_position;
@@ -153,6 +157,14 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
                     // 记录position
                     SharePreferenceUtil.saveInt(getContext(), SettingUtil.LOG_SHIP_POSITION, position);
                 }
+            }
+        });
+
+        // TODO 日志管理
+        btnLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER);
             }
         });
     }

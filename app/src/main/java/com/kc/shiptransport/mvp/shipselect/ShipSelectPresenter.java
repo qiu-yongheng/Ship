@@ -7,15 +7,20 @@ import com.google.gson.Gson;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Subcontractor;
+import com.kc.shiptransport.db.backlog.BackLog;
 import com.kc.shiptransport.db.ship.Ship;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -141,10 +146,9 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
                     @Override
                     public Observable<Boolean> apply(String s) throws Exception {
                         if (s.equals("1")) {
-                        // 提交后, 更新船舶列表
-                        String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
-                        return dataRepository.getShip(subcontractorAccount);
-
+                            // 提交后, 更新船舶列表
+                            String subcontractorAccount = DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount();
+                            return dataRepository.getShip(subcontractorAccount);
                         } else {
                             return Observable.create(new ObservableOnSubscribe<Boolean>() {
                                 @Override
@@ -154,6 +158,30 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
                                 }
                             });
                         }
+                    }
+                })
+                .flatMap(new Function<Boolean, ObservableSource<List<BackLog>>>() {
+                    @Override
+                    public ObservableSource<List<BackLog>> apply(@NonNull Boolean aBoolean) throws Exception {
+                        // 更新待办
+                        return dataRepository.GetPendingTaskList(10000, 1);
+                    }
+                })
+                .flatMap(new Function<List<BackLog>, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(@NonNull final List<BackLog> list) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                            @Override
+                            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                                if (list.isEmpty()) {
+                                    e.onNext(false);
+                                } else {
+                                    e.onNext(true);
+                                }
+
+                                e.onComplete();
+                            }
+                        });
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -181,8 +209,8 @@ public class ShipSelectPresenter implements ShipSelectContract.Presenter {
                         // 服务器返回null报错, 暂时屏蔽
                         view.showLoading(false);
                         view.showError();
-//                        view.showCommitSuccess();
-//                        view.changeDailogInfo();
+                        //                        view.showCommitSuccess();
+                        //                        view.changeDailogInfo();
                     }
 
                     @Override

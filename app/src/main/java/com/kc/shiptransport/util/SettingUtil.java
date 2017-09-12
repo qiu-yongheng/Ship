@@ -103,6 +103,8 @@ public class SettingUtil {
     public static final int TYPE_EXIT_ASSESSOR = 114;
     /* 退场反馈信息 */
     public static final int TYPE_EXIT_FEEDBACK = 115;
+    /* 施工日志管理 */
+    public static final int TYPE_CONSTRUCTIONLOG_MANAGER = 116;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 

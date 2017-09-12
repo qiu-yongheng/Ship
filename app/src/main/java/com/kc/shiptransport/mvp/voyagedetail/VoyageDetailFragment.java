@@ -12,13 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -60,6 +59,10 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     Button btnSave;
     @BindView(R.id.ll_btn)
     LinearLayout llBtn;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.tv_opinion)
+    TextView tvOpinion;
     private VoyageDetailActivity activity;
     private VoyageDetailContract.Presenter presenter;
     private VoyageDetailAdapter adapter;
@@ -86,23 +89,21 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         activity = (VoyageDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setTitle(R.string.title_voyage);
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
-
     }
 
-    /**
-     * 加载menu菜单
-     *
-     * @param menu
-     * @param inflater
-     */
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.voyage_detail_menu, menu);
-    }
+//    /**
+//     * 加载menu菜单
+//     *
+//     * @param menu
+//     * @param inflater
+//     */
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.voyage_detail_menu, menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -204,6 +205,24 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                 getActivity().onBackPressed();
             }
         });
+
+        // 查看退回意见
+        tvOpinion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String remark = "";
+                if (bean != null && activity != null) {
+                    remark = TextUtils.isEmpty(bean.getPreAcceptanceEvaluationRemark()) ? "暂无退回意见" : bean.getPreAcceptanceEvaluationRemark();
+                }
+
+                activity.showDailog("退回意见", remark, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -277,6 +296,15 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         }
 
         this.bean = bean;
+
+        if (bean.getPreAcceptanceEvaluationStatus() == -1) {
+            tvOpinion.setVisibility(View.VISIBLE);
+        } else {
+            tvOpinion.setVisibility(View.GONE);
+        }
+
+
+
 
         // 1代表已提交，0代表保存
         String isSumbitted = bean.getIsSumbitted();

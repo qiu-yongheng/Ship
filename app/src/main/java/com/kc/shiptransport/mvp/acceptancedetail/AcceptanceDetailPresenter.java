@@ -9,6 +9,7 @@ import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.WeekTask;
+import com.kc.shiptransport.db.backlog.BackLog;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
@@ -164,9 +165,33 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                     @Override
                     public Boolean apply(@NonNull Boolean aBoolean) throws Exception {
                         /** 删除不能进行预验砂的任务 */
-                        DataSupport.deleteAll(WeekTask.class, "IsAllowPreAcceptanceEvaluation = 0");
+                        DataSupport.deleteAll(WeekTask.class, "IsAllowPreAcceptanceEvaluation = 0 and PreAcceptanceEvaluationStatus  != 1");
                         dataRepository.dataSort(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN));
                         return aBoolean;
+                    }
+                })
+                .flatMap(new Function<Boolean, ObservableSource<List<BackLog>>>() {
+                    @Override
+                    public ObservableSource<List<BackLog>> apply(@NonNull Boolean aBoolean) throws Exception {
+                        // 更新待办
+                        return dataRepository.GetPendingTaskList(10000, 1);
+                    }
+                })
+                .flatMap(new Function<List<BackLog>, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(@NonNull final List<BackLog> list) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                            @Override
+                            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                                if (list.isEmpty()) {
+                                    e.onNext(false);
+                                } else {
+                                    e.onNext(true);
+                                }
+
+                                e.onComplete();
+                            }
+                        });
                     }
                 })
                 .flatMap(new Function<Boolean, Observable<Acceptance>>() { // 更新

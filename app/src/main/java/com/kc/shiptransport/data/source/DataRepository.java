@@ -4144,9 +4144,6 @@ public class DataRepository implements DataSouceImpl {
                     DataSupport.saveAll(backLogList);
                 }
 
-                List<BackLog> all = DataSupport.findAll(BackLog.class, true);
-
-
 
                 /** 网络更新待办数据后, 状态改成从DB获取数据 */
 //                SharePreferenceUtil.saveInt(App.getAppContext(), SettingUtil.SP_KEY_UPCOMING, SettingUtil.UPCOMING_DB);
