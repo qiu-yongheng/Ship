@@ -2,14 +2,17 @@ package com.kc.shiptransport.mvp.scannerimgselect;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,16 +24,25 @@ import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
+import com.kc.shiptransport.view.PopupWindow.CommonUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
+import com.vincent.filepicker.Constant;
+import com.vincent.filepicker.activity.NormalFilePickActivity;
+import com.vincent.filepicker.filter.entity.NormalFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
+
+import static com.kc.shiptransport.R.id.btn_cancel;
 
 /**
  * @author 邱永恒
@@ -48,6 +60,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
     private ScannerImgSelectActivity activity;
     private ScannerImgSelectContract.Presenter presenter;
     private ScannerImgSelectAdapter adapter;
+    private CommonPopupWindow popupWindow;
 
     @Nullable
     @Override
@@ -134,25 +147,94 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                     @Override
                     public void onItemLongClick(View view, int position) {
                         if (activity.isFinshReceptionSandAttachment == 0) {
-                            // 弹出图片选择器, 设置多选图片张数
-//                            int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
-                            int maxSize = SettingUtil.NUM_IMAGE_SELECTION - adapter.list.size();
-                            if (maxSize > 0) {
-                                RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
-                                    @Override
-                                    public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-                                        // 提交图片
-                                        presenter.commit(imageMultipleResultEvent, activity.mSubID, activity.mTypeID, activity.mShipAccount);
-                                    }
+                            if (popupWindow != null && popupWindow.isShowing())
+                                return;
+                            View upView = LayoutInflater.from(getContext()).inflate(R.layout.popup_scanner, null);
+                            //测量View的宽高
+                            CommonUtil.measureWidthAndHeight(upView);
+                            popupWindow = new CommonPopupWindow.Builder(getContext())
+                                    .setView(R.layout.popup_scanner)
+                                    .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, upView.getMeasuredHeight())
+                                    .setBackGroundLevel(0.9f)//取值范围0.0f-1.0f 值越小越暗
+                                    .setAnimationStyle(R.style.AnimFullUp)
+                                    .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
+                                        @Override
+                                        public void getChildView(View view, int layoutResId) {
+                                            Button btnUploadImg = (Button) view.findViewById(R.id.btn_upload_img);
+                                            Button btnUploadPdf = (Button) view.findViewById(R.id.btn_upload_pdf);
+                                            Button btnCancel = (Button) view.findViewById(btn_cancel);
 
-                                    @Override
-                                    public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
-                                        // 单选回调
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
-                            }
+                                            /** 上传图片 */
+                                            btnUploadImg.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    if (popupWindow != null) {
+                                                        popupWindow.dismiss();
+                                                    }
+
+                                                    // 弹出图片选择器, 设置多选图片张数
+                                                    //                            int maxSize = activity.mDefaulAttachmentCount - adapter.list.size();
+                                                    int maxSize = SettingUtil.NUM_IMAGE_SELECTION - adapter.list.size();
+                                                    if (maxSize > 0) {
+                                                        RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
+                                                            @Override
+                                                            public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                                                // 提交图片
+                                                                presenter.commit(imageMultipleResultEvent, activity.mSubID, activity.mTypeID, activity.mShipAccount);
+                                                            }
+
+                                                            @Override
+                                                            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+                                                                // 单选回调
+                                                            }
+                                                        });
+                                                    } else {
+                                                        Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
+                                                    }
+
+                                                }
+                                            });
+
+                                            /** 上传PDF */
+                                            btnUploadPdf.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    if (popupWindow != null) {
+                                                        popupWindow.dismiss();
+                                                    }
+
+                                                    Intent intent4 = new Intent(getActivity(), NormalFilePickActivity.class);
+                                                    intent4.putExtra(Constant.MAX_NUMBER, 8);
+                                                    intent4.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"pdf"});
+                                                    startActivityForResult(intent4, Constant.REQUEST_CODE_PICK_FILE);
+                                                }
+                                            });
+
+                                            /** 取消 */
+                                            btnCancel.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    if (popupWindow != null) {
+                                                        popupWindow.dismiss();
+                                                    }
+                                                }
+                                            });
+
+                                            view.setOnTouchListener(new View.OnTouchListener() {
+                                                @Override
+                                                public boolean onTouch(View v, MotionEvent event) {
+                                                    if (popupWindow != null) {
+                                                        popupWindow.dismiss();
+                                                    }
+                                                    return true;
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .create();
+                            popupWindow.showAtLocation(getActivity().findViewById(android.R.id.content), Gravity.BOTTOM, 0, 0);
+
+
                         } else if (activity.isFinshReceptionSandAttachment == 1) {
                             Toast.makeText(getContext(), "已提交, 不能添加图片", Toast.LENGTH_SHORT).show();
                         }
@@ -242,5 +324,23 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+                switch (requestCode) {
+                    case Constant.REQUEST_CODE_PICK_FILE:
+                        if (resultCode == getActivity().RESULT_OK) {
+                            ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
+                            StringBuilder builder = new StringBuilder();
+                            for (NormalFile file : list) {
+                                String path = file.getPath();
+                                builder.append(path + "\n");
+                            }
+                            LogUtil.d("选择PDF: " + builder.toString());
+                        }
+                        break;
+                }
     }
 }

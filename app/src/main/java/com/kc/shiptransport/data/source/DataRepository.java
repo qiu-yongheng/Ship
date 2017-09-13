@@ -2282,6 +2282,7 @@ public class DataRepository implements DataSouceImpl {
                 sampleUpdataBean.setConstructionBoatAccount(bean.getConstructionBoatAccount());
                 sampleUpdataBean.setCreator(DataSupport.findAll(Subcontractor.class).get(0).getSubcontractorAccount());
                 sampleUpdataBean.setBatch(bean.getBatch());
+                sampleUpdataBean.setNQAA(bean.getNQAA());
                 sampleUpdataBean.setSandSamplingDate(CalendarUtil.getCurrentDate("yyyy-MM-dd HH:mm"));
 
                 // 创建取样编号集合
@@ -2303,6 +2304,8 @@ public class DataRepository implements DataSouceImpl {
                     // 查询position对应的图片数据
                     List<SampleImageList> image_1 = DataSupport.where("position = ? and img_x = ?", String.valueOf(i), String.valueOf(SettingUtil.HOLDER_IMAGE_1)).find(SampleImageList.class);
                     List<SampleImageList> image_2 = DataSupport.where("position = ? and img_x = ?", String.valueOf(i), String.valueOf(SettingUtil.HOLDER_IMAGE_2)).find(SampleImageList.class);
+                    List<SampleImageList> image_3 = DataSupport.where("position = ? and img_x = ?", String.valueOf(i), String.valueOf(SettingUtil.HOLDER_IMAGE_3)).find(SampleImageList.class);
+                    List<SampleImageList> image_4 = DataSupport.where("position = ? and img_x = ?", String.valueOf(i), String.valueOf(SettingUtil.HOLDER_IMAGE_4)).find(SampleImageList.class);
 
                     List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> sandSamplingAttachmentRecordList = sandSamplingNumRecordList.get(i).getSandSamplingAttachmentRecordList();
 
@@ -2334,6 +2337,36 @@ public class DataRepository implements DataSouceImpl {
 
                         // 把图片保存到集合中
                         numRecordListBean.getSandSamplingAttachmentRecordList().add(imageListBean_2);
+                    }
+
+                    if (!image_3.isEmpty()) {
+                        // 图片3
+                        SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean imageListBean_3 = new SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean();
+                        imageListBean_3.setSandSamplingID(String.valueOf(sandSamplingAttachmentRecordList.get(2).getSandSamplingID()));
+                        imageListBean_3.setItemID(String.valueOf(sandSamplingAttachmentRecordList.get(2).getItemID()));
+                        imageListBean_3.setFileName(image_3.get(0).getFileName());
+                        imageListBean_3.setSuffixName(image_3.get(0).getSuffixName());
+                        imageListBean_3.setSandSamplingNumID(String.valueOf(sandSamplingAttachmentRecordList.get(2).getSandSamplingNumID()));
+                        imageListBean_3.setFilePath(image_3.get(0).getNetPath());
+                        imageListBean_3.setConstructionBoatAccount(image_3.get(0).getConstructionBoatAccount());
+
+                        // 把图片保存到集合中
+                        numRecordListBean.getSandSamplingAttachmentRecordList().add(imageListBean_3);
+                    }
+
+                    if (!image_4.isEmpty()) {
+                        // 图片3
+                        SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean imageListBean_4 = new SampleUpdataBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean();
+                        imageListBean_4.setSandSamplingID(String.valueOf(sandSamplingAttachmentRecordList.get(3).getSandSamplingID()));
+                        imageListBean_4.setItemID(String.valueOf(sandSamplingAttachmentRecordList.get(3).getItemID()));
+                        imageListBean_4.setFileName(image_4.get(0).getFileName());
+                        imageListBean_4.setSuffixName(image_4.get(0).getSuffixName());
+                        imageListBean_4.setSandSamplingNumID(String.valueOf(sandSamplingAttachmentRecordList.get(3).getSandSamplingNumID()));
+                        imageListBean_4.setFilePath(image_4.get(0).getNetPath());
+                        imageListBean_4.setConstructionBoatAccount(image_4.get(0).getConstructionBoatAccount());
+
+                        // 把图片保存到集合中
+                        numRecordListBean.getSandSamplingAttachmentRecordList().add(imageListBean_4);
                     }
 
                     // 把验砂取样编号数据保存到集合中
@@ -4128,7 +4161,7 @@ public class DataRepository implements DataSouceImpl {
 
                 LogUtil.d(user.getUserID() + "\n1.66 获取用户待办信息: \n" + json);
 
-                String result = mRemoteDataSource.GetPendingTaskList(PageSize, PageCount, "", user.getUserID());
+                String result = mRemoteDataSource.GetPendingTaskList(PageSize, PageCount, json, user.getUserID());
 
                 LogUtil.d(user.getUserID() + "\n待办信息详情: \n" + result);
                 List<BackLog> list = gson.fromJson(result, new TypeToken<List<BackLog>>() {

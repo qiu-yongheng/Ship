@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:background="@color/text_gray_bg"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/text_gray_bg">
 
     <include layout="@layout/view_toolbar"/>
 
@@ -18,11 +18,11 @@
         android:textSize="@dimen/text_normal_size"/>
 
     <RelativeLayout
-        android:background="@color/text_white"
         android:id="@+id/rl"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@id/tv_time"
+        android:background="@color/text_white"
         android:gravity="center_vertical">
 
         <TextView
@@ -46,28 +46,56 @@
 
     <RelativeLayout
         android:id="@+id/rl_bacth"
-        android:layout_marginTop="1dp"
-        android:background="@color/text_white"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@id/rl"
+        android:layout_marginTop="1dp"
+        android:background="@color/text_white"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_batch"
             android:layout_marginLeft="@dimen/marginleft_14"
+            android:text="@string/text_batch"
             android:textColor="@color/text_tag_gray"
             android:textSize="@dimen/text_13sp"/>
 
         <TextView
             android:id="@+id/text_batch"
-            android:text="@string/hint_fill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/marginleft_14"
+            android:text="@string/hint_fill"
+            android:textColor="@color/text_gray"
+            android:textSize="@dimen/text_13sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_nqaa"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/rl_bacth"
+        android:layout_marginTop="1dp"
+        android:background="@color/text_white"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginleft_14"
+            android:text="NAQQ:"
+            android:textColor="@color/text_tag_gray"
+            android:textSize="@dimen/text_13sp"/>
+
+        <TextView
+            android:id="@+id/text_naqq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/marginleft_14"
+            android:text="@string/hint_fill"
             android:textColor="@color/text_gray"
             android:textSize="@dimen/text_13sp"/>
     </RelativeLayout>
@@ -78,13 +106,14 @@
         android:layout_height="@dimen/btn_height"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/btn_add"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btn_add_sample"
             android:background="?colorPrimary"
+            android:text="@string/btn_add_sample"
             android:textColor="@color/text_white"
             android:textSize="@dimen/text_18sp"/>
 
@@ -98,19 +127,19 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btn_commit"
             android:background="?colorPrimary"
+            android:text="@string/btn_commit"
             android:textColor="@color/text_white"
             android:textSize="@dimen/text_18sp"/>
 
         <Button
-            android:visibility="gone"
             android:id="@+id/btn_return"
             style="@style/text_title_w"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@color/gray"
             android:text="@string/btn_return"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:visibility="gone"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -118,7 +147,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/ll_btn"
-        android:layout_below="@id/rl_bacth"/>
+        android:layout_below="@id/rl_nqaa"/>
 
 
 </RelativeLayout>

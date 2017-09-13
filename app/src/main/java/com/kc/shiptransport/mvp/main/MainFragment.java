@@ -49,6 +49,7 @@ public class MainFragment extends Fragment {
     private HomeFragment homeFragment;
     private UpcomingFragment upcomingFragment;
     private Badge badge;
+    private static View view;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,6 +104,12 @@ public class MainFragment extends Fragment {
                     new Intent(getActivity(), BadgeIntentService.class).putExtra("badgeCount", all.size())
             );
         }
+
+        view = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(1);
+    }
+
+    public static View getBadge() {
+        return view;
     }
 
     private void initView(View view) {

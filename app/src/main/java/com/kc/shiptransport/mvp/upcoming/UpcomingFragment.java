@@ -15,9 +15,11 @@ import android.widget.TextView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.backlog.BackLog;
+import com.kc.shiptransport.db.backlog.ListBean;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.main.MainActivity;
+import com.kc.shiptransport.mvp.main.MainFragment;
 import com.kc.shiptransport.mvp.upcominglist.UpcomingListActivity;
 import com.kc.shiptransport.util.ToastUtil;
 
@@ -28,6 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import q.rorbin.badgeview.QBadgeView;
 
 /**
  * @author 邱永恒
@@ -120,6 +123,12 @@ public class UpcomingFragment extends Fragment implements UpcomingContract.View 
      */
     @Override
     public void showPending(List<BackLog> list) {
+        View badge = MainFragment.getBadge();
+        if (badge != null) {
+            List<ListBean> all = DataSupport.findAll(ListBean.class);
+            new QBadgeView(getContext()).bindTarget(badge).setBadgeNumber(all.size()).setGravityOffset(20, 0, true);
+        }
+
         if (adapter == null) {
             adapter = new UpcomingAdapter(getContext(), list);
             adapter.setOnItemClickListener(new OnRecyclerviewItemClickListener() {

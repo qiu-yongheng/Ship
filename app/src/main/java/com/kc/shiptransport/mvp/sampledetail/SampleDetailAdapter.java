@@ -67,6 +67,14 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (imageList.size() > 1) {
                 RxGalleryUtil.showImage(context, (imageList.get(1).getFilePath() == null ? "" : imageList.get(1).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage2);
             }
+
+            if (imageList.size() > 2) {
+                RxGalleryUtil.showImage(context, (imageList.get(2).getFilePath() == null ? "" : imageList.get(2).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage3);
+            }
+
+            if (imageList.size() > 3) {
+                RxGalleryUtil.showImage(context, (imageList.get(3).getFilePath() == null ? "" : imageList.get(3).getFilePath()), null, null, ((NormalHolder) holder).mBtnImage4);
+            }
         }
 
         // 设置取样编号
@@ -105,6 +113,44 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     if (listener != null) {
                         listener.onItemClick(((NormalHolder) holder).mBtnImage2, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_2);
+                    } else {
+                        Toast.makeText(context, "已进行退场申请, 不能修改数据", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        /* 点击后单选图片 */
+        ((NormalHolder) holder).mBtnImage3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                // 判断取样编号是否填写
+                String str = ((NormalHolder) holder).mTvsamplenum.getText().toString().trim();
+                if (TextUtils.isEmpty(str) || str.equals("请填写")) {
+                    Toast.makeText(context, "请先填写取样编号", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (listener != null) {
+                        listener.onItemClick(((NormalHolder) holder).mBtnImage3, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_3);
+                    } else {
+                        Toast.makeText(context, "已进行退场申请, 不能修改数据", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        /* 点击后单选图片 */
+        ((NormalHolder) holder).mBtnImage4.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                // 判断取样编号是否填写
+                String str = ((NormalHolder) holder).mTvsamplenum.getText().toString().trim();
+                if (TextUtils.isEmpty(str) || str.equals("请填写")) {
+                    Toast.makeText(context, "请先填写取样编号", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (listener != null) {
+                        listener.onItemClick(((NormalHolder) holder).mBtnImage4, holder.getLayoutPosition(), SettingUtil.HOLDER_IMAGE_4);
                     } else {
                         Toast.makeText(context, "已进行退场申请, 不能修改数据", Toast.LENGTH_SHORT).show();
                     }
@@ -151,12 +197,16 @@ public class SampleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private final ImageButton mBtnImage2;
         private final RelativeLayout mRlConsShip;
         private final TextView mTvConsShip;
+        private final ImageButton mBtnImage3;
+        private final ImageButton mBtnImage4;
 
         public NormalHolder(View itemView) {
             super(itemView);
             mTvsamplenum = (TextView) itemView.findViewById(R.id.tv_sample_num);
             mBtnImage1 = (ImageButton) itemView.findViewById(R.id.btn_image_1);
             mBtnImage2 = (ImageButton) itemView.findViewById(R.id.btn_image_2);
+            mBtnImage3 = (ImageButton) itemView.findViewById(R.id.btn_image_3);
+            mBtnImage4 = (ImageButton) itemView.findViewById(R.id.btn_image_4);
             mRlConsShip = (RelativeLayout) itemView.findViewById(R.id.rl_cons_ship);
             mTvConsShip = (TextView) itemView.findViewById(R.id.tv_cons_ship);
         }

@@ -76,6 +76,7 @@ public class UpcomingPresenter implements UpcomingContract.Presenter {
                     @Override
                     public void onComplete() {
                         view.showLoading(false);
+                        view.showError("加载成功");
                     }
                 });
     }

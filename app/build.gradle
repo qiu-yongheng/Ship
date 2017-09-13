@@ -83,4 +83,6 @@ dependencies {
     compile 'com.elvishew:xlog:1.3.0'
     // BRVAH RecyclerView
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.28'
+    // 文件选择器
+    compile project(':filepicker')
 }

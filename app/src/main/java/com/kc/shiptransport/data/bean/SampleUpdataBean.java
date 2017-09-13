@@ -24,8 +24,17 @@ public class SampleUpdataBean {
     private String ConstructionBoatAccount;
     private String Creator;
     private String Batch;
+    private String NQAA;
     private String SandSamplingDate;
     private List<SandSamplingNumRecordListBean> SandSamplingNumRecordList;
+
+    public String getNQAA() {
+        return NQAA;
+    }
+
+    public void setNQAA(String NQAA) {
+        this.NQAA = NQAA;
+    }
 
     public String getBatch() {
         return Batch;
