@@ -17,9 +17,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import zlc.season.rxdownload2.RxDownload;
+import zlc.season.rxdownload2.entity.DownloadStatus;
 
 /**
  * @author 邱永恒
@@ -207,6 +210,80 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
                     @Override
                     public void onComplete() {
                         view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 提交PDF
+     * @param path
+     * @param subID
+     * @param typeID
+     * @param shipAccount
+     */
+    @Override
+    public void commitPDF(String path, int subID, int typeID, String shipAccount) {
+        view.showLoading(true);
+        dataRepository
+                .getPDFCommit(path, subID, typeID, shipAccount)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<ScanCommitBean, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(@NonNull ScanCommitBean scanCommitBean) throws Exception {
+                        return dataRepository.InsertSubcontractorPerfectBoatScannerAttachment(scanCommitBean);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showCommitPDFResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    @Override
+    public void downloadPDF(final String url) {
+        view.showLoading(true);
+        Disposable disposable = RxDownload.getInstance(context)
+                .download(url)                       //只传url即可
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<DownloadStatus>() {
+                    @Override
+                    public void accept(DownloadStatus status) throws Exception {
+                        //DownloadStatus为下载进度
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        //下载失败
+                        view.showLoading(false);
+                        view.showError("下载失败, 请重试");
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        //下载成功
+                        view.showLoading(false);
+                        view.showPDF(url);
                     }
                 });
     }

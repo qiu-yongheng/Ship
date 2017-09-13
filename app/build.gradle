@@ -85,4 +85,7 @@ dependencies {
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.28'
     // 文件选择器
     compile project(':filepicker')
+    // RxDownload
+    compile 'zlc.season:rxdownload2:2.0.4'
+
 }

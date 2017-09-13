@@ -2436,7 +2436,7 @@ public class DataRepository implements DataSouceImpl {
 
                 jsonArray.put(jsonObject);
 
-                Log.d("==", "提交扫描件图片: " + jsonArray.toString());
+                LogUtil.d("提交扫描件图片: " + jsonArray.toString());
 
                 String json = jsonArray.toString();
 
@@ -2494,6 +2494,8 @@ public class DataRepository implements DataSouceImpl {
                     commitBean.setFileName(title + "." + suffixName);
                     commitBean.setSuffixName(suffixName);
                     commitBean.setCreator(subcontractor.getSubcontractorAccount());
+
+                    LogUtil.d("扫描件图片路径: " + bean.getOriginalPath());
 
                     File file = new File(bean.getOriginalPath());
                     byte[] bytes = FileUtil.File2byte(file);
@@ -3924,6 +3926,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.63 获取可以进行退场审核的数据
+     *
      * @param PageSize
      * @param PageCount
      * @param jumpWeek
@@ -4041,6 +4044,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.65 获取退场离场反馈信息
+     *
      * @param PageSize
      * @param PageCount
      * @param startTime
@@ -4125,6 +4129,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.66 获取用户待办信息
+     *
      * @param PageSize
      * @param PageCount
      * @return
@@ -4179,9 +4184,9 @@ public class DataRepository implements DataSouceImpl {
 
 
                 /** 网络更新待办数据后, 状态改成从DB获取数据 */
-//                SharePreferenceUtil.saveInt(App.getAppContext(), SettingUtil.SP_KEY_UPCOMING, SettingUtil.UPCOMING_DB);
-//
-//                LogUtil.d("待办数据获取路径: " + SharePreferenceUtil.getInt(App.getAppContext(), SettingUtil.SP_KEY_UPCOMING));
+                //                SharePreferenceUtil.saveInt(App.getAppContext(), SettingUtil.SP_KEY_UPCOMING, SettingUtil.UPCOMING_DB);
+                //
+                //                LogUtil.d("待办数据获取路径: " + SharePreferenceUtil.getInt(App.getAppContext(), SettingUtil.SP_KEY_UPCOMING));
 
                 e.onNext(list);
                 e.onComplete();
@@ -4191,6 +4196,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.67根据ItemID删除过砂记录信息
+     *
      * @param ItemID
      * @return
      */
@@ -4210,6 +4216,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 根据ID, 获取待办任务
+     *
      * @param pendingID
      * @return
      */
@@ -4229,6 +4236,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 从数据库获取待办数据
+     *
      * @return
      */
     @Override
@@ -4239,6 +4247,58 @@ public class DataRepository implements DataSouceImpl {
                 List<BackLog> all = DataSupport.findAll(BackLog.class, true);
 
                 e.onNext(all);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 获取PDF提交数据
+     *
+     * @param path
+     * @param subID
+     * @param typeID
+     * @param shipAccount
+     * @return
+     */
+    @Override
+    public Observable<ScanCommitBean> getPDFCommit(final String path, final int subID, final int typeID, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<ScanCommitBean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<ScanCommitBean> e) throws Exception {
+                // 获取供应商账号
+                Subcontractor subcontractor = DataSupport.findAll(Subcontractor.class).get(0);
+
+                ScanCommitBean commitBean = new ScanCommitBean();
+                // 条目ID, 默认0
+                commitBean.setItemID(0);
+                // 进场ID
+                commitBean.setSubcontractorInterimApproachPlanID(subID);
+                // 类型ID
+                commitBean.setSubcontractorPerfectBoatScannerAttachmentTypeID(typeID);
+                // 供应商账号
+                commitBean.setSubcontractorAccount(subcontractor.getSubcontractorAccount());
+                // 船舶账号
+                commitBean.setConstructionBoatAccount(shipAccount);
+
+                // 文件名
+                String[] fileNames = path.split("/");
+                String fileName = fileNames[fileNames.length - 1];
+
+                // 文件类型
+                String[] split = fileName.split("\\.");
+                String suffixName = split[split.length - 1];
+
+                commitBean.setFileName(fileName);
+                commitBean.setSuffixName(suffixName);
+                commitBean.setCreator(subcontractor.getSubcontractorAccount());
+
+                File file = new File(path);
+                byte[] bytes = FileUtil.File2byte(file);
+                LogUtil.d("扫描件上传文件大小: " + (bytes.length / 1024) + "KB");
+                commitBean.setBase64img(new String(Base64.encode(bytes, Base64.DEFAULT)));
+
+                e.onNext(commitBean);
                 e.onComplete();
             }
         });

@@ -2,6 +2,7 @@ package com.kc.shiptransport.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
 
 import com.elvishew.xlog.LogConfiguration;
 import com.elvishew.xlog.LogLevel;
@@ -9,6 +10,8 @@ import com.elvishew.xlog.XLog;
 import com.umeng.analytics.MobclickAgent;
 
 import org.litepal.LitePalApplication;
+
+import zlc.season.rxdownload2.RxDownload;
 
 /**
  * @author qiuyongheng
@@ -41,6 +44,11 @@ public class App extends Application{
                 .st(3) // 允许打印深度为3的调用栈信息
                 .build();
         XLog.init(LogLevel.ALL, config);
+
+        // 初始化下载
+        RxDownload.getInstance(context)
+                .defaultSavePath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()) //设置默认的下载路径
+                .maxThread(3);
     }
 
     public static Context getAppContext () {

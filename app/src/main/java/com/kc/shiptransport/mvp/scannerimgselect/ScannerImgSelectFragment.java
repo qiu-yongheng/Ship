@@ -1,8 +1,10 @@
 package com.kc.shiptransport.mvp.scannerimgselect;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +29,7 @@ import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 import com.kc.shiptransport.view.PopupWindow.CommonUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
@@ -34,6 +37,7 @@ import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.NormalFilePickActivity;
 import com.vincent.filepicker.filter.entity.NormalFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
+import zlc.season.rxdownload2.RxDownload;
 
 import static com.kc.shiptransport.R.id.btn_cancel;
 
@@ -61,6 +66,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
     private ScannerImgSelectContract.Presenter presenter;
     private ScannerImgSelectAdapter adapter;
     private CommonPopupWindow popupWindow;
+    private RxDownload rxDownload;
 
     @Nullable
     @Override
@@ -128,6 +134,18 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                         if (type[0] == 0) {
                             // 显示图片
                             ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
+                        } else if (type[0] == 1) {
+                            // 下载预览PDF
+                            if (rxDownload == null) {
+                                rxDownload = RxDownload.getInstance(getContext());
+                            }
+                            File[] files = rxDownload.getRealFiles(scannerImgListByTypeBean.getFilePath());
+                            if (files != null) {
+                                showPDF(scannerImgListByTypeBean.getFilePath());
+                            } else {
+                                presenter.downloadPDF(scannerImgListByTypeBean.getFilePath());
+                            }
+
                         } else {
 
                             if (activity.isFinshReceptionSandAttachment == 0) {
@@ -205,7 +223,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
 
                                                     Intent intent4 = new Intent(getActivity(), NormalFilePickActivity.class);
                                                     intent4.putExtra(Constant.MAX_NUMBER, 8);
-                                                    intent4.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"pdf"});
+                                                    intent4.putExtra(NormalFilePickActivity.SUFFIX, new String[]{"pdf"});
                                                     startActivityForResult(intent4, Constant.REQUEST_CODE_PICK_FILE);
                                                 }
                                             });
@@ -317,6 +335,47 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
     }
 
     @Override
+    public void showCommitPDFResult(boolean isSuccess) {
+        if (isSuccess) {
+            // 全部上传成功的回调
+            presenter.getImgList(activity.mSubID, activity.mTypeID);
+        } else {
+            ToastUtil.tip(getContext(), "提交失败, 请重试");
+        }
+    }
+
+    /**
+     * 查看PDF
+     *
+     * @param url
+     */
+    @Override
+    public void showPDF(String url) {
+        if (rxDownload == null) {
+            rxDownload = RxDownload.getInstance(getContext());
+        }
+        //利用url获取
+        File[] files = rxDownload.getRealFiles(url);
+        if (files != null) {
+            File file = files[0];
+
+            Intent target = new Intent(Intent.ACTION_VIEW);
+            target.setDataAndType(Uri.fromFile(file), "application/pdf");
+            target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+            Intent intent = Intent.createChooser(target, "Open File");
+            try {
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                // Instruct the user to install a PDF reader here, or something
+                ToastUtil.tip(getContext(), "手机没有下载PDF查看软件, 请到应用市场下载");
+            }
+        } else {
+            ToastUtil.tip(getContext(), "打开PDF文件失败, 请重试");
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -329,18 +388,21 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-                switch (requestCode) {
-                    case Constant.REQUEST_CODE_PICK_FILE:
-                        if (resultCode == getActivity().RESULT_OK) {
-                            ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
-                            StringBuilder builder = new StringBuilder();
-                            for (NormalFile file : list) {
-                                String path = file.getPath();
-                                builder.append(path + "\n");
-                            }
-                            LogUtil.d("选择PDF: " + builder.toString());
-                        }
-                        break;
+        switch (requestCode) {
+            case Constant.REQUEST_CODE_PICK_FILE:
+                if (resultCode == getActivity().RESULT_OK) {
+                    ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
+                    StringBuilder builder = new StringBuilder();
+                    for (NormalFile file : list) {
+                        String path = file.getPath();
+                        builder.append(path);
+                    }
+                    LogUtil.d("选择PDF: " + builder.toString());
+
+                    /** 上传PDF */
+                    presenter.commitPDF(builder.toString(), activity.mSubID, activity.mTypeID, activity.mShipAccount);
                 }
+                break;
+        }
     }
 }

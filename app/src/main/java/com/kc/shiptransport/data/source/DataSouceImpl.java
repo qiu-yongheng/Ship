@@ -930,4 +930,14 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<BackLog>> getPendingForDB();
+
+    /**
+     * 获取PDF提交数据
+     * @param path
+     * @param subID
+     * @param typeID
+     * @param shipAccount
+     * @return
+     */
+    Observable<ScanCommitBean> getPDFCommit(String path, int subID, int typeID, String shipAccount);
 }

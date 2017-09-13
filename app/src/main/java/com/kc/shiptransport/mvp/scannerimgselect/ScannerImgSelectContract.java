@@ -22,6 +22,8 @@ public interface ScannerImgSelectContract {
         void updateProgress();
         void hideProgress();
         void showDeleteResult(boolean isSuccess);
+        void showCommitPDFResult(boolean isSuccess);
+        void showPDF(String url);
     }
 
     interface Presenter extends BasePresenter {
@@ -30,5 +32,7 @@ public interface ScannerImgSelectContract {
         void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent);
         void commitImg(ScanCommitBean bean);
         void deleteImg(int itemID);
+        void commitPDF(String path, int subID, int typeID, String shipAccount);
+        void downloadPDF(String url);
     }
 }

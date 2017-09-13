@@ -130,7 +130,7 @@ public class RxGalleryUtil {
      * @param errorDrawable 错误显示的图片
      * @param imageView 图片空间
      */
-    public static void showImage(Context context, String path, Drawable defaultDrawable, Drawable errorDrawable, ImageView imageView) {
+    public static void showImage(Context context, Object path, Drawable defaultDrawable, Drawable errorDrawable, ImageView imageView) {
         //网络请求获取图片并设置
         Glide.with(context)
                 .load(path) //图片地址

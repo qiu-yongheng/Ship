@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
 
@@ -59,17 +60,43 @@ public class ScannerImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (holder instanceof NormalHolder) {
             // 获取图片地址, 显示
             ScannerImgListByTypeBean scannerImgListByTypeBean = list.get(position);
-            RxGalleryUtil.showImage(context, scannerImgListByTypeBean.getFilePath(), null, null, ((NormalHolder) holder).mIvNormal);
 
-            // 点击图片, 预览图片
-            ((NormalHolder) holder).mIvNormal.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null) {
-                        listener.onItemClick(holder.itemView, holder.getLayoutPosition(), 0);
+            String fileName = scannerImgListByTypeBean.getFileName();
+
+            String[] split = fileName.split("\\.");
+            String spnme = split[split.length - 1];
+
+            LogUtil.d("扫描件类型: " + fileName);
+
+            if (spnme.equals("pdf") || spnme.equals("PDF")) {
+                //显示PDF图片
+                RxGalleryUtil.showImage(context, R.mipmap.ic_pdf, null, null, ((NormalHolder) holder).mIvNormal);
+
+                // 预览PDF
+                ((NormalHolder) holder).mIvNormal.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (listener != null) {
+                            listener.onItemClick(holder.itemView, holder.getLayoutPosition(), 1);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                // 显示图片
+                RxGalleryUtil.showImage(context, scannerImgListByTypeBean.getFilePath(), null, null, ((NormalHolder) holder).mIvNormal);
+
+
+                // 点击图片, 预览图片
+                ((NormalHolder) holder).mIvNormal.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (listener != null) {
+                            listener.onItemClick(holder.itemView, holder.getLayoutPosition(), 0);
+                        }
+                    }
+                });
+            }
+
 
             // 点击 X 删除图片 (发送网络请求)
             ((NormalHolder) holder).mIvDelete.setOnClickListener(new View.OnClickListener() {
