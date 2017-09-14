@@ -19,8 +19,12 @@ import com.kc.shiptransport.mvp.BaseActivity;
 public class ThreadSandActivity extends BaseActivity{
 
     private static final String CURRENTDATE = "CURRENTDATE";
+    private static final String ITEMID = "ITEMID";
+    private static final String TYPE = "TYPE";
     private ThreadSandFragment fragment;
     public String currentDate;
+    public int itemID;
+    public int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,8 @@ public class ThreadSandActivity extends BaseActivity{
 
         Bundle bundle = getIntent().getExtras();
         currentDate = bundle.getString(CURRENTDATE);
+        itemID = bundle.getInt(ITEMID);
+        type = bundle.getInt(TYPE);
 
         if (savedInstanceState  != null) {
             fragment = (ThreadSandFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ThreadSandFragment");
@@ -55,10 +61,12 @@ public class ThreadSandActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, String currentDate) {
+    public static void startActivity(Context context, String currentDate, int itemID, int type) {
         Intent intent = new Intent(context, ThreadSandActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(CURRENTDATE, currentDate);
+        bundle.putInt(ITEMID, itemID);
+        bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

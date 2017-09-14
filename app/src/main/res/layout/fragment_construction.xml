@@ -4,7 +4,23 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <include layout="@layout/view_toolbar"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize">
+
+        <include layout="@layout/view_toolbar"/>
+
+        <Button
+            android:id="@+id/btn_log"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/colorPrimary"
+            android:text="日报管理"
+            android:textColor="@color/text_white"
+            android:textSize="15sp"
+            android:visibility="visible"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,22 +69,15 @@
                     android:text="日期 : "/>
 
                 <TextView
-                    android:padding="8dp"
-                    android:background="@drawable/et_bg"
-                    android:text="asdfasdfasdfasdf"
                     android:id="@+id/text_time"
                     style="@style/text_40"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/et_bg"
+                    android:padding="8dp"
+                    android:text="asdfasdfasdfasdf"/>
 
             </LinearLayout>
-
-            <Button
-                android:visibility="gone"
-                android:id="@+id/btn_log"
-                android:text="日报管理"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <include layout="@layout/view_divi"/>

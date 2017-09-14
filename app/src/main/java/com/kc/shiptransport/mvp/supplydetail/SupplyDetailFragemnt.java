@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.Subcontractor;
@@ -34,6 +33,7 @@ import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
 
 import org.litepal.crud.DataSupport;
@@ -106,6 +106,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     private SupplyDetailNameAdapter nameAdapter;
     private int FULLY_PHOTO = 0;
     private int NAME_PHOTO = 1;
+    private SupplyDetail value;
 
     @Nullable
     @Override
@@ -181,12 +182,22 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(tvSupplyTime.getText().toString())) {
-                    String userID = DataSupport.findAll(User.class).get(0).getUserID();
-                    int status = 1;
-                    String remark = "";
-                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+                    if (value != null &&
+                            value.getReceptionSandAttachmentList() != null &&
+                            value.getReceptionSandBoatNameAttachmentList() != null &&
+                            !value.getReceptionSandBoatNameAttachmentList().isEmpty() &&
+                            !value.getReceptionSandAttachmentList().isEmpty()) {
+
+                        String userID = DataSupport.findAll(User.class).get(0).getUserID();
+                        int status = 1;
+                        String remark = "";
+                        presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+                    } else {
+                        ToastUtil.tip(getContext(), "满载照片与船名照片上传后才能通过");
+                    }
+
                 } else {
-                    Toast.makeText(getContext(), "请选择时间", Toast.LENGTH_SHORT).show();
+                    ToastUtil.tip(getContext(), "请选择时间");
                 }
             }
         });
@@ -196,12 +207,17 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(tvSupplyTime.getText().toString())) {
-                    String userID = DataSupport.findAll(User.class).get(0).getUserID();
-                    int status = -1;
-                    String remark = "";
-                    presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+                    activity.showDailog("不通过", "确定验砂不通过吗?", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String userID = DataSupport.findAll(User.class).get(0).getUserID();
+                            int status = -1;
+                            String remark = "";
+                            presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+                        }
+                    });
                 } else {
-                    Toast.makeText(getContext(), "请选择时间", Toast.LENGTH_SHORT).show();
+                    ToastUtil.tip(getContext(), "请选择时间");
                 }
             }
         });
@@ -285,6 +301,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
      */
     @Override
     public void showShipDetail(final SupplyDetail value) {
+        this.value = value;
         // 条目ID
         int itemID = TextUtils.isEmpty(value.getItemID()) ? 0 : Integer.valueOf(value.getItemID());
         // 进场ID
@@ -342,7 +359,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                         ImageActivity.startActivity(getContext(), bean.getFilePath());
                     } else {
                         if (activity.isSupply) {
-                            Toast.makeText(getContext(), "验砂已完成, 不能删除图片", Toast.LENGTH_SHORT).show();
+                            ToastUtil.tip(getContext(), "验砂已完成, 不能删除图片");
                         } else {
                             activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
                                 @Override
@@ -358,7 +375,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                 @Override
                 public void onItemLongClick(View view, int position) {
                     if (activity.isSupply) {
-                        Toast.makeText(getContext(), "验砂已完成, 不能新增图片", Toast.LENGTH_SHORT).show();
+                        ToastUtil.tip(getContext(), "验砂已完成, 不能新增图片");
                     } else {
                         // 弹出图片选择器
                         int size = adapter.list.size();
@@ -378,7 +395,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                                 }
                             });
                         } else {
-                            Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                            ToastUtil.tip(getContext(), "已到达图片选择上限");
                         }
                     }
                 }
@@ -408,7 +425,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                         ImageActivity.startActivity(getContext(), bean.getFilePath());
                     } else {
                         if (activity.isSupply) {
-                            Toast.makeText(getContext(), "验砂已完成, 不能删除图片", Toast.LENGTH_SHORT).show();
+                            ToastUtil.tip(getContext(), "验砂已完成, 不能删除图片");
                         } else {
                             activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
                                 @Override
@@ -424,7 +441,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                 @Override
                 public void onItemLongClick(View view, int position) {
                     if (activity.isSupply) {
-                        Toast.makeText(getContext(), "验砂已完成, 不能新增图片", Toast.LENGTH_SHORT).show();
+                        ToastUtil.tip(getContext(), "验砂已完成, 不能新增图片");
                     } else {
                         // 弹出图片选择器
                         int size = nameAdapter.list.size();
@@ -444,7 +461,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                                 }
                             });
                         } else {
-                            Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                            ToastUtil.tip(getContext(), "已到达图片选择上限");
                         }
                     }
                 }
@@ -483,27 +500,27 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
 
     @Override
     public void showError(String msg) {
-        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        ToastUtil.tip(getContext(), msg);
     }
 
     @Override
     public void showError() {
-        Toast.makeText(activity, "数据获取失败", Toast.LENGTH_SHORT).show();
+        ToastUtil.tip(getContext(), "数据获取失败");
     }
 
     @Override
     public void showCommitError() {
-        Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+        ToastUtil.tip(getContext(), "提交失败, 请重试");
     }
 
     @Override
     public void showCommitResult(boolean active) {
         if (active) {
-            Toast.makeText(activity, "提交成功!", Toast.LENGTH_SHORT).show();
+            ToastUtil.tip(getContext(), "提交成功!");
             btnAcceptanceCancel.setText(R.string.btn_return);
             getActivity().onBackPressed();
         } else {
-            Toast.makeText(activity, "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+            ToastUtil.tip(getContext(), "提交失败, 请重试");
         }
     }
 
@@ -546,6 +563,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
 
     @Override
     public void showImgList(SupplyDetail value) {
+        this.value = value;
         /** 满载照片 */
         List<SupplyDetail.ReceptionSandAttachmentListBean> list = value.getReceptionSandAttachmentList();
         if (list == null) {

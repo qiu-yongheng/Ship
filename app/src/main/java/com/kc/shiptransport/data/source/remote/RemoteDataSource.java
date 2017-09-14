@@ -1971,4 +1971,74 @@ public class RemoteDataSource {
         return getCallResult(endPoint, soapAction, rpc);
     }
 
+    /**
+     * 1.68 获取施工船舶明细数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetConstructionBoatDailyList(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetConstructionBoatDailyList";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.69 删除船舶日志停工数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteConstructionBoatStopDailyByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteConstructionBoatStopDailyByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.70 删除船舶抛砂数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteConstructionBoatThrowingSandRecordsByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteConstructionBoatThrowingSandRecordsByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
 }

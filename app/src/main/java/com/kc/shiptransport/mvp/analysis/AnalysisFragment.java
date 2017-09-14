@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.analysis;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,16 +28,20 @@ import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
+import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.analysisdetail.AnalysisDetailActivity;
+import com.kc.shiptransport.mvp.downtime.DowntimeActivity;
 import com.kc.shiptransport.mvp.exitapplicationassessor.ExitApplicationAssessorActivity;
 import com.kc.shiptransport.mvp.scannerdetail.ScannerDetailActivity;
+import com.kc.shiptransport.mvp.threadsand.ThreadSandActivity;
 import com.kc.shiptransport.mvp.voyagedetail.VoyageDetailActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SelectUtil;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
@@ -93,6 +98,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     private CommonAdapter<Rank> rankAdapter;
     private List<String> evaluation = new ArrayList<>();
     private CommonAdapter<ExitFeedBack> exitAdapter;
+    private CommonAdapter<LogManagerList> logAdapter;
 
     @Nullable
     @Override
@@ -119,7 +125,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                 presenter.getExitFeedBack(20, pageCount, "", "", "", true);
                 break;
             case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER: // 施工日志管理
-                // TODO
+                presenter.getLogManager(100, 1, "", "", "");
                 break;
         }
         return view;
@@ -278,7 +284,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                                 type == SettingUtil.TYPE_ACCEPTANCE_RANK ||
                                                                 type == SettingUtil.TYPE_EXIT_FEEDBACK ||
                                                                 type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
-                                                            /** 预验收评价 供应商评价 退场反馈*/
+                                                            /** 预验收评价 供应商评价 退场反馈 日报管理*/
                                                             switch (position) {
                                                                 case 0:
                                                                     // 全部
@@ -330,7 +336,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                                         break;
                                                                     case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER:
                                                                         /** 日报管理 */
-                                                                        // TODO
+                                                                        presenter.getLogManager(100, 1, startTime, endTime, consShip);
                                                                         break;
                                                                 }
                                                                 pop_time.dismiss();
@@ -405,7 +411,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                             presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
                                         } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                             // 日志管理
-                                            // TODO
+                                            presenter.getLogManager(100, 1, startTime, endTime, consShip);
                                         }
 
 
@@ -567,6 +573,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                             consShip = ShipList.getShipName();
 
                                                             // TODO 请求数据
+                                                            presenter.getLogManager(100, 1, startTime, endTime, consShip);
 
                                                             if (pop_ship.isShowing()) {
                                                                 pop_ship.dismiss();
@@ -591,6 +598,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                             consShip = "";
 
                                             // TODO 请求数据
+                                            presenter.getLogManager(100, 1, startTime, endTime, consShip);
 
 
                                             if (pop_ship.isShowing()) {
@@ -941,6 +949,107 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             if (loadmoreWrapper != null) {
                 loadmoreWrapper.notifyDataSetChanged();
             }
+        }
+    }
+
+    /**
+     * 显示日志管理
+     *
+     * @param list
+     */
+    @Override
+    public void showLogManager(List<LogManagerList> list) {
+        logAdapter = new CommonAdapter<LogManagerList>(getContext(), R.layout.item_log_manager, list) {
+            @Override
+            protected void convert(ViewHolder holder, final LogManagerList logManagerList, int position) {
+                holder.setText(R.id.tv_ship_name, logManagerList.getShipName())
+                        .setText(R.id.tv_start_time, logManagerList.getStartTime())
+                        .setText(R.id.tv_end_time, logManagerList.getEndTime())
+                        .setText(R.id.tv_stop_type, TextUtils.isEmpty(logManagerList.getStopTypeName()) ? "" : logManagerList.getStopTypeName())
+                        .setText(R.id.tv_construction_type, logManagerList.getConstructionType())
+                        .setText(R.id.tv_creator, logManagerList.getCreatorName())
+                        .setOnClickListener(R.id.btn_update, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // 修改
+                                if (TextUtils.isEmpty(logManagerList.getConstructionType())) {
+                                    ToastUtil.tip(getContext(), "没有施工类型, 不能修改");
+                                } else if (logManagerList.getConstructionType().equals("停工")) {
+                                    DowntimeActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE);
+                                } else if (logManagerList.getConstructionType().equals("抛砂")) {
+                                    ThreadSandActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE);
+                                }
+                            }
+                        })
+                        .setOnClickListener(R.id.btn_delete, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                activity.showDailog(logManagerList.getShipName(), "是否删除此数据?", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        // 删除
+                                        if (TextUtils.isEmpty(logManagerList.getConstructionType())) {
+                                            ToastUtil.tip(getContext(), "没有施工类型, 不能删除");
+                                        } else if (logManagerList.getConstructionType().equals("停工")) {
+                                            presenter.deleteStopLog(logManagerList.getItemID());
+                                        } else if (logManagerList.getConstructionType().equals("抛砂")) {
+                                            presenter.deleteThreadLog(logManagerList.getItemID());
+                                        }
+                                    }
+                                });
+                            }
+                        });
+
+                if (logManagerList.getConstructionType() == null || logManagerList.getConstructionType().equals("抛砂")) {
+                    holder.setVisible(R.id.rl_stop_type, false);
+                } else {
+                    holder.setVisible(R.id.rl_stop_type, true);
+                }
+
+                if (logManagerList.getIsAllowEdit() == 1) {
+                    holder.setVisible(R.id.ll_btn, true);
+                } else {
+                    holder.setVisible(R.id.ll_btn, false);
+                }
+
+            }
+        };
+
+        // 添加空数据界面显示
+        EmptyWrapper<Object> emptyWrapper = new EmptyWrapper<>(logAdapter);
+        emptyWrapper.setEmptyView(LayoutInflater.from(getContext()).inflate(R.layout.empty_view, recycleView, false));
+        recycleView.setAdapter(emptyWrapper);
+    }
+
+    @Override
+    public void showDeleteLogResult(boolean isSuccess) {
+        if (isSuccess) {
+            ToastUtil.tip(getContext(), "删除成功");
+
+            presenter.getLogManager(100, 1, startTime, endTime, consShip);
+        } else {
+            ToastUtil.tip(getContext(), "删除失败, 请重试");
+        }
+    }
+
+    /**
+     * 更新列表
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        switch (activity.type) {
+            case SettingUtil.TYPE_ANALYSIS: // 计划跟踪
+                break;
+            case SettingUtil.TYPE_ACCEPTANCE_EVALUATION: // 评价
+                break;
+            case SettingUtil.TYPE_ACCEPTANCE_RANK: // 评价排行
+                break;
+            case SettingUtil.TYPE_EXIT_FEEDBACK: // 退场反馈
+                break;
+            case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER: // 施工日志管理
+                presenter.getLogManager(100, 1, startTime, endTime, consShip);
+                break;
         }
     }
 }

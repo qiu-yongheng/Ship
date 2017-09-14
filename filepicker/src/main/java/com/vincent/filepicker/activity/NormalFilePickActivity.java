@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.DividerListItemDecoration;
@@ -42,6 +43,7 @@ public class NormalFilePickActivity extends BaseActivity {
     private ArrayList<NormalFile> mSelectedList = new ArrayList<>();
     private ProgressBar mProgressBar;
     private String[] mSuffix;
+    private TextView mTvEmpty;
 
     @Override
     void permissionGranted() {
@@ -103,6 +105,8 @@ public class NormalFilePickActivity extends BaseActivity {
         });
 
         mProgressBar = (ProgressBar) findViewById(R.id.pb_file_pick);
+
+        mTvEmpty = (TextView) findViewById(R.id.tv_empty);
     }
 
     private void loadData() {
@@ -110,6 +114,10 @@ public class NormalFilePickActivity extends BaseActivity {
             @Override
             public void onResult(List<Directory<NormalFile>> directories) {
                 mProgressBar.setVisibility(View.GONE);
+                if (directories.isEmpty()) {
+                    mTvEmpty.setVisibility(View.VISIBLE);
+                }
+
                 List<NormalFile> list = new ArrayList<>();
                 for (Directory<NormalFile> directory : directories) {
                     list.addAll(directory.getFiles());

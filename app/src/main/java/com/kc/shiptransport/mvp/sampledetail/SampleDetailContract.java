@@ -27,6 +27,7 @@ public interface SampleDetailContract {
         void showImageUpdataResult();
         void showDeleteResult(boolean isSuccess);
         void showCommitReturn();
+        void startCommit();
     }
 
     interface Presenter extends BasePresenter {
@@ -41,5 +42,6 @@ public interface SampleDetailContract {
         void getDates(int position, boolean isSandSampling, boolean isExit);
         void commitJson(SampleShowDatesBean sampleShowDates);
         void deleteItem(int ItemID);
+
     }
 }

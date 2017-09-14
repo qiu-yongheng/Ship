@@ -4,6 +4,7 @@ import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
+import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
@@ -21,6 +22,8 @@ public interface AnalysisContract {
         void showEvaluation(List<AcceptanceEvaluationList> list);
         void showRank(List<Rank> list);
         void showExitFeedBack(List<ExitFeedBack> list);
+        void showLogManager(List<LogManagerList> list);
+        void showDeleteLogResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {
@@ -28,5 +31,8 @@ public interface AnalysisContract {
         void getEvaluation(int pageSize, int pageCount, String startTime, String endTime, String subShipAccount, boolean showLoading);
         void getRank(String startTime, String endTime);
         void getExitFeedBack(int pageSize, int pageCount, String startTime, String endTime, String shipAccount, boolean showLoading);
+        void getLogManager(int pageSize, int pageCount, String startTime, String endTime, String shipAccount);
+        void deleteStopLog(int itemID);
+        void deleteThreadLog(int itemID);
     }
 }

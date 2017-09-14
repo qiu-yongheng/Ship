@@ -18,9 +18,13 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class DowntimeActivity extends BaseActivity{
 
+    private static final String TYPE = "TYPE";
+    private static final String ITEMID = "ITEMID";
     private static String CURRENTDATE = "CURRENTDATE";
     private DowntimeFragment fragment;
     public String currentDate;
+    public int type;
+    public int itemID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,8 @@ public class DowntimeActivity extends BaseActivity{
 
         Bundle bundle = getIntent().getExtras();
         currentDate = bundle.getString(CURRENTDATE);
+        type = bundle.getInt(TYPE);
+        itemID = bundle.getInt(ITEMID);
 
         if (savedInstanceState != null) {
             fragment = (DowntimeFragment) getSupportFragmentManager().getFragment(savedInstanceState, "DowntimeFragment");
@@ -55,10 +61,12 @@ public class DowntimeActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, String currentDate) {
+    public static void startActivity(Context context, String currentDate, int itemID, int type) {
         Intent intent = new Intent(context, DowntimeActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(CURRENTDATE, currentDate);
+        bundle.putInt(TYPE, type);
+        bundle.putInt(ITEMID, itemID);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

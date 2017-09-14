@@ -752,6 +752,13 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void startCommit() {
+        String string = SharePreferenceUtil.getString(getContext(), String.valueOf(itemID), "");
+        SampleShowDatesBean showDatesBean = new Gson().fromJson(string, SampleShowDatesBean.class);
+        presenter.commitJson(showDatesBean);
+    }
+
     /**
      * 当界面不显示时, 缓存数据到sp中
      */

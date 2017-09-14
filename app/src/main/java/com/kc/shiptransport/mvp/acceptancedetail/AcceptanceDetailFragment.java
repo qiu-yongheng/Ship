@@ -150,7 +150,12 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                         }
                     });
                 } else {
-                    presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, -1, opinion);
+                    activity.showDailog("不通过", "确定预验收审核不通过吗?", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, -1, opinion);
+                        }
+                    });
                 }
             }
         });
@@ -160,13 +165,18 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
             @Override
             public void onClick(View view) {
                 // 通过验收时间
-                String time = tvAcceptanceTime.getText().toString().trim();
+                final String time = tvAcceptanceTime.getText().toString().trim();
                 // 预验收意见
-                String opinion = tvAcceptanceOpinion.getText().toString().trim();
+                final String opinion = tvAcceptanceOpinion.getText().toString().trim();
                 if (time.equals("")) {
                     Toast.makeText(activity, "验收时间不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, 1, opinion);
+                    activity.showDailog("通过", "确定预验收审核通过吗?", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, 1, opinion);
+                        }
+                    });
                 }
             }
         });

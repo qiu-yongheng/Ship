@@ -124,7 +124,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
                 if (spinner_position == 0) {
                     Toast.makeText(getContext(), "请选择施工船舶", Toast.LENGTH_SHORT).show();
                 } else {
-                    DowntimeActivity.startActivity(getContext(), textTime.getText().toString());
+                    DowntimeActivity.startActivity(getContext(), textTime.getText().toString(), 0, SettingUtil.TYPE_DATA_NEW);
                 }
             }
         });
@@ -136,7 +136,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
                 if (spinner_position == 0) {
                     Toast.makeText(getContext(), "请选择施工船舶", Toast.LENGTH_SHORT).show();
                 } else {
-                    ThreadSandActivity.startActivity(getContext(), textTime.getText().toString());
+                    ThreadSandActivity.startActivity(getContext(), textTime.getText().toString(), 0, SettingUtil.TYPE_DATA_NEW);
                 }
             }
         });

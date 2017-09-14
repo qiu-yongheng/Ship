@@ -38,6 +38,7 @@ import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
+import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
@@ -940,4 +941,30 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<ScanCommitBean> getPDFCommit(String path, int subID, int typeID, String shipAccount);
+
+    /**
+     * 1.68 获取施工船舶明细数据
+     * @param PageSize
+     * @param PageCount
+     * @param startTime
+     * @param endTime
+     * @param shipAccount
+     * @param Creator
+     * @return
+     */
+    Observable<List<LogManagerList>> GetConstructionBoatDailyList(int PageSize, int PageCount, String startTime, String endTime, String shipAccount, String Creator);
+
+    /**
+     * 1.69 删除船舶日志停工数据
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteConstructionBoatStopDailyByItemID(int ItemID);
+
+    /**
+     * 1.70 删除船舶抛砂数据
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteConstructionBoatThrowingSandRecordsByItemID(int ItemID);
 }

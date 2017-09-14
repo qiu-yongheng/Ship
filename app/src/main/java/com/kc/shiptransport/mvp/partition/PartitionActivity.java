@@ -18,12 +18,20 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class PartitionActivity extends BaseActivity{
 
+    private static final String ITEMID = "ITEMID";
+    private static final String TYPE = "TYPE";
     private PartitionFragment fragment;
+    public int itemID;
+    public int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
+
+        Bundle bundle = getIntent().getExtras();
+        itemID = bundle.getInt(ITEMID);
+        type = bundle.getInt(TYPE);
 
         if (savedInstanceState != null) {
             fragment = (PartitionFragment) getSupportFragmentManager().getFragment(savedInstanceState, "PartitionFragment");
@@ -50,9 +58,11 @@ public class PartitionActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, int itemID, int type) {
         Intent intent = new Intent(context, PartitionActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putInt(ITEMID, itemID);
+        bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
         context.startActivity(intent, bundle);
     }

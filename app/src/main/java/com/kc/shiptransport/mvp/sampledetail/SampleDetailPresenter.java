@@ -56,6 +56,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
     /**
      * 根据position获取进场计划数据
+     *
      * @param position
      */
     @Override
@@ -97,6 +98,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
     /**
      * 提交
+     *
      * @param sandSample
      */
     @Override
@@ -108,8 +110,13 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                 .doOnNext(new Consumer<List<SampleImageList>>() {
                     @Override
                     public void accept(@NonNull List<SampleImageList> sampleCommitLists) throws Exception {
-                        // 设置最大进度
-                        view.showProgress(sampleCommitLists.size());
+                        if (sampleCommitLists.isEmpty()) {
+                            // 直接提交json
+                            view.startCommit();
+                        } else {
+                            // 设置最大进度
+                            view.showProgress(sampleCommitLists.size());
+                        }
                     }
                 })
                 .flatMap(new Function<List<SampleImageList>, ObservableSource<SampleImageList>>() {
@@ -157,6 +164,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
     /**
      * 上传图片
+     *
      * @param sampleImageList
      */
     @Override
@@ -192,6 +200,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
     /**
      * 获取要显示的数据
+     *
      * @param position
      * @param isSandSampling
      * @param isExit
@@ -236,6 +245,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
     /**
      * 图片提交完后, 提交json
+     *
      * @param sampleShowDates
      */
     @Override

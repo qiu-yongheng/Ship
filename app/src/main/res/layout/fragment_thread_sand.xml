@@ -330,7 +330,7 @@
                     android:layout_weight="1"
                     android:background="@color/et_bg"
                     android:gravity="center"
-                    android:hint="@string/tv_hint"
+                    android:hint="请填写"
                     android:inputType="number"
                     android:textColorHint="@color/gray"/>
 

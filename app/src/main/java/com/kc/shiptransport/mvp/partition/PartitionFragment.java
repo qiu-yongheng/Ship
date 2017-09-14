@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.ConstructionBoat;
+import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
@@ -60,11 +61,6 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         initViews(view);
         initListener();
 
-        // 设置当前施工船舶
-        List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
-        int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
-        boat = all.get(position - 1);
-
         presenter.getList(boat.getShipNum());
         return view;
     }
@@ -78,8 +74,24 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setTitle(R.string.title_partition);
 
-
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // 设置当前施工船舶
+        if (activity.type == SettingUtil.TYPE_DATA_NEW) {
+            List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+            int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+            boat = all.get(position - 1);
+        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
+            List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
+            if (!lists.isEmpty()) {
+                String shipAccount = lists.get(0).getShipAccount();
+
+                List<ConstructionBoat> boats = DataSupport.where("ShipNum = ?", shipAccount).find(ConstructionBoat.class);
+                if (!boats.isEmpty()) {
+                    boat = boats.get(0);
+                }
+            }
+        }
     }
 
     @Override

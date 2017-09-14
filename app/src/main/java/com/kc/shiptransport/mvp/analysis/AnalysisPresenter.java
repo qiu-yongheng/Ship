@@ -8,6 +8,7 @@ import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
+import com.kc.shiptransport.db.logmanager.LogManagerList;
 
 import java.util.List;
 
@@ -240,5 +241,112 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
                 });
     }
 
+    /**
+     * 获取日志管理
+     * @param pageSize
+     * @param pageCount
+     * @param startTime
+     * @param endTime
+     * @param shipAccount
+     */
+    @Override
+    public void getLogManager(int pageSize, int pageCount, String startTime, String endTime, String shipAccount) {
+        view.showLoading(true);
+        dataRepository
+                .GetConstructionBoatDailyList(pageSize, pageCount, startTime, endTime, shipAccount, "")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<LogManagerList>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
 
+                    @Override
+                    public void onNext(@NonNull List<LogManagerList> lists) {
+                        view.showLogManager(lists);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 删除停工
+     * @param itemID
+     */
+    @Override
+    public void deleteStopLog(int itemID) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteConstructionBoatStopDailyByItemID(itemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showDeleteLogResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 删除抛砂
+     * @param itemID
+     */
+    @Override
+    public void deleteThreadLog(int itemID) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteConstructionBoatThrowingSandRecordsByItemID(itemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showDeleteLogResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
 }

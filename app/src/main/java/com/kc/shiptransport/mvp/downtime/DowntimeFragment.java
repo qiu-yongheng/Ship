@@ -2,6 +2,7 @@ package com.kc.shiptransport.mvp.downtime;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,6 +25,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.down.StopOption;
+import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
@@ -45,6 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static com.kc.shiptransport.R.id.btn_cancel;
+
 
 /**
  * @author qiuyongheng
@@ -79,6 +82,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     private int stopType = -1;
     private ConstructionBoat boat;
     private CommonPopupWindow popupWindow;
+    private Handler handler = new Handler();
 
     @Nullable
     @Override
@@ -88,11 +92,11 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         initViews(view);
         initListener();
 
-        // 设置当前施工船舶
-        List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
-        int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
-
-        boat = all.get(position - 1);
+//        // 设置当前施工船舶
+//        List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+//        int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+//
+//        boat = all.get(position - 1);
 
         // 获取停工因素
         presenter.getStopOptions();
@@ -104,22 +108,36 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     @Override
     public void initViews(View view) {
 
-        if (boat != null) {
-            tvTitle.setText("施工船舶: " + boat.getShipName());
-        } else {
-            List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
-            int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
-
-            boat = all.get(position - 1);
-            tvTitle.setText("施工船舶: " + boat.getShipName());
-        }
-
         setHasOptionsMenu(true);
         activity = (DowntimeActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+
+        if (activity.type == SettingUtil.TYPE_DATA_NEW) {
+            if (boat != null) {
+                tvTitle.setText("施工船舶: " + boat.getShipName());
+            } else {
+                List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+                int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+
+                boat = all.get(position - 1);
+                tvTitle.setText("施工船舶: " + boat.getShipName());
+            }
+        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
+            List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
+            if (!lists.isEmpty()) {
+                String shipAccount = lists.get(0).getShipAccount();
+
+                List<ConstructionBoat> boats = DataSupport.where("ShipNum = ?", shipAccount).find(ConstructionBoat.class);
+                if (!boats.isEmpty()) {
+                    boat = boats.get(0);
+                    tvTitle.setText("施工船舶: " + boat.getShipName());
+                }
+            }
+        }
     }
 
     @Override
@@ -148,7 +166,12 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                 List<User> users = DataSupport.findAll(User.class);
 
                 if (stopType != -1 && !TextUtils.isEmpty(endTime) && !endTime.equals("请选择时间")) {
-                    presenter.stop(0, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark);
+                    if (activity.type == SettingUtil.TYPE_DATA_NEW) {
+                        presenter.stop(0, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark);
+                    } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
+                        presenter.stop(activity.itemID, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark);
+                    }
+
                 } else {
                     Toast.makeText(getContext(), "停工因素或结束时间未选择", Toast.LENGTH_SHORT).show();
                 }
@@ -160,7 +183,8 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
             @Override
             public void onClick(View view) {
                 /** 添加到当天结束选项 */
-                if (popupWindow != null && popupWindow.isShowing()) return;
+                if (popupWindow != null && popupWindow.isShowing())
+                    return;
                 View upView = LayoutInflater.from(getContext()).inflate(R.layout.popup_up, null);
                 //测量View的宽高
                 CommonUtil.measureWidthAndHeight(upView);
@@ -221,8 +245,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                                         if (popupWindow != null) {
                                             popupWindow.dismiss();
                                         }
-                                        String currentDate = CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD);
-                                        currentDate = currentDate + " 24:00";
+                                        String currentDate = activity.currentDate + " 24:00";
                                         textEndTime.setText(currentDate);
                                     }
                                 });
@@ -299,11 +322,18 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
             adapter = new DowntimeAdapter(getContext(), stopOptions);
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position, int... type) {
-                    // 刷新
-                    adapter.notifyItemChanged(type[0]);
-                    // 保存选中类型
-                    stopType = stopOptions.get(position).getItemID();
+                public void onItemClick(View view, final int position, final int... type) {
+
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            // 刷新
+                            adapter.notifyItemChanged(type[0]);
+                            // 保存选中类型
+                            stopType = stopOptions.get(position).getItemID();
+                        }
+                    };
+                    handler.post(r);
+
                 }
 
                 @Override
@@ -333,10 +363,22 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         if (textStartTime == null) {
             return;
         }
-        if (bean != null) {
-            textStartTime.setText(bean.getStartTime());
-        } else {
-            textStartTime.setText("获取数据失败");
+
+        if (activity.type == SettingUtil.TYPE_DATA_NEW) {
+            if (bean != null) {
+                textStartTime.setText(bean.getStartTime());
+            } else {
+                textStartTime.setText("获取数据失败");
+            }
+        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
+            List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
+            if (!lists.isEmpty()) {
+                String startTime = lists.get(0).getStartTime();
+                textStartTime.setText(startTime);
+            } else {
+                textStartTime.setText("获取数据失败");
+            }
         }
+
     }
 }

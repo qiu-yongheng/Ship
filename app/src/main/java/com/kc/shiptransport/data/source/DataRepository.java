@@ -67,6 +67,7 @@ import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
+import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
@@ -1946,12 +1947,13 @@ public class DataRepository implements DataSouceImpl {
                 // 获取保存的数据
                 List<SampleImageList> all = DataSupport.where("ItemID = ?", String.valueOf(sandSample.getItemID())).find(SampleImageList.class);
 
-                if (all.isEmpty()) {
-                    e.onError(new RuntimeException("没有图片进行提交"));
-                } else {
-                    e.onNext(all);
-                }
+//                if (all.isEmpty()) {
+//                    e.onError(new RuntimeException("没有图片进行提交"));
+//                } else {
+//                    e.onNext(all);
+//                }
 
+                e.onNext(all);
                 e.onComplete();
             }
         });
@@ -2240,7 +2242,7 @@ public class DataRepository implements DataSouceImpl {
                     // 根据进场ID发送网络请求
                     String result = mRemoteDataSource.GetSandSamplingBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
 
-                    Log.d("==", "验砂取样item详细数据: " + result);
+                    LogUtil.d("验砂取样item详细数据: \n" + result);
 
                     // 解析数据
                     List<SampleShowDatesBean> list = gson.fromJson(result, new TypeToken<List<SampleShowDatesBean>>() {
@@ -2376,7 +2378,7 @@ public class DataRepository implements DataSouceImpl {
                 // 把对象解析成json数据
                 String json = gson.toJson(sampleUpdataBean);
 
-                Log.d("==", "提交图片: " + json);
+                LogUtil.d("验砂取样提交总json: " + json);
 
                 // 发送网络请求
                 String result = mRemoteDataSource.InsertSandSampling(json);
@@ -4295,10 +4297,144 @@ public class DataRepository implements DataSouceImpl {
 
                 File file = new File(path);
                 byte[] bytes = FileUtil.File2byte(file);
-                LogUtil.d("扫描件上传文件大小: " + (bytes.length / 1024) + "KB");
+                LogUtil.d("扫描件上传文件原大小: " + (bytes.length / 1024) + "KB");
                 commitBean.setBase64img(new String(Base64.encode(bytes, Base64.DEFAULT)));
+                LogUtil.d("扫描件上传文件转换后大小: " + (commitBean.getBase64img().length() / 1024) + "KB");
 
                 e.onNext(commitBean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.68 获取施工船舶明细数据
+     *
+     * @param PageSize
+     * @param PageCount
+     * @param startTime
+     * @param endTime
+     * @param shipAccount
+     * @param Creator
+     * @return
+     */
+    @Override
+    public Observable<List<LogManagerList>> GetConstructionBoatDailyList(final int PageSize, final int PageCount, final String startTime, final String endTime, final String shipAccount, final String Creator) {
+        return Observable.create(new ObservableOnSubscribe<List<LogManagerList>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<LogManagerList>> e) throws Exception {
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
+
+                JSONArray Column = new JSONArray();
+
+                // 创建者账号
+                JSONObject object1 = new JSONObject();
+                object1.put("Name", "Creator");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", Creator);
+
+                // 日期
+                JSONObject object2 = new JSONObject();
+                object2.put("Name", "Date");
+                object2.put("Type", "datetime");
+
+                JSONArray array2 = new JSONArray();
+
+                JSONObject object21 = new JSONObject();
+                object21.put("Min", startTime);
+                JSONObject object22 = new JSONObject();
+                object22.put("Max", endTime);
+
+                array2.put(object21);
+                array2.put(object22);
+
+                object2.put("Value", array2);
+
+                // 供砂船舶
+                JSONObject object3 = new JSONObject();
+                object3.put("Name", "ShipName"); // TODO 需要修改
+                object3.put("Type", "string");
+                object3.put("Format", "Equal");
+                object3.put("Value", shipAccount);
+
+                // 保存3个对象到object
+                if (!TextUtils.isEmpty(Creator)) {
+                    Column.put(object1);
+                }
+
+                if (!TextUtils.isEmpty(startTime) || !TextUtils.isEmpty(endTime)) {
+                    Column.put(object2);
+                }
+
+                if (!TextUtils.isEmpty(shipAccount)) {
+                    Column.put(object3);
+                }
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                String json = root.toString();
+
+                LogUtil.d("1.68 获取施工船舶明细数据json: \n" + json);
+
+                String result = mRemoteDataSource.GetConstructionBoatDailyList(PageSize, PageCount, json);
+
+                LogUtil.d("1.68 获取施工船舶明细数据result: \n" + result);
+
+                List<LogManagerList> lists = gson.fromJson(result, new TypeToken<List<LogManagerList>>() {
+                }.getType());
+
+                DataSupport.deleteAll(LogManagerList.class);
+                DataSupport.saveAll(lists);
+
+                List<LogManagerList> logManagerLists = DataSupport.order("EndTime desc").find(LogManagerList.class);
+
+                e.onNext(logManagerLists);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.69 删除船舶日志停工数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteConstructionBoatStopDailyByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteConstructionBoatStopDailyByItemID(ItemID);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.70 删除船舶抛砂数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteConstructionBoatThrowingSandRecordsByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteConstructionBoatThrowingSandRecordsByItemID(ItemID);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
                 e.onComplete();
             }
         });
