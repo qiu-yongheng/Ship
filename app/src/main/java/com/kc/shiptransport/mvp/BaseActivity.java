@@ -6,10 +6,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.umeng.analytics.MobclickAgent;
 
@@ -24,6 +29,8 @@ public class BaseActivity extends AppCompatActivity {
     protected Toast mToast;
     private ProgressDialog mProgress;
     private int progress;
+    private AlertDialog.Builder editBuilder;
+    private AlertDialog editDialog;
 
 
     @Override
@@ -71,7 +78,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 进度条
      */
-    public void progressDialog(String title, int max, DialogInterface.OnClickListener listenter){
+    public void progressDialog(String title, int max, DialogInterface.OnClickListener listenter) {
         progress = 0;
         mProgress = new ProgressDialog(BaseActivity.this);
         // 设置图标
@@ -89,27 +96,27 @@ public class BaseActivity extends AppCompatActivity {
         mProgress.setButton(AlertDialog.BUTTON_NEUTRAL, "取消", listenter);
 
         mProgress.show();
-//        new Thread(new Runnable() {
-//            int progress = 0;
-//            @Override
-//            public void run() {
-//                // TODO Auto-generated method stub
-//                while (progress <= max) {
-//                    mProgress.setProgress(progress);
-//                    try {
-//                        Thread.sleep(100);
-//                    } catch (InterruptedException e) {
-//                        // TODO Auto-generated catch block
-//                        e.printStackTrace();
-//                    }
-//                    progress++;
-//                }
-//            }
-//        }).start();
+        //        new Thread(new Runnable() {
+        //            int progress = 0;
+        //            @Override
+        //            public void run() {
+        //                // TODO Auto-generated method stub
+        //                while (progress <= max) {
+        //                    mProgress.setProgress(progress);
+        //                    try {
+        //                        Thread.sleep(100);
+        //                    } catch (InterruptedException e) {
+        //                        // TODO Auto-generated catch block
+        //                        e.printStackTrace();
+        //                    }
+        //                    progress++;
+        //                }
+        //            }
+        //        }).start();
     }
 
     public void updataProgress(OnProgressFinishListener listener) {
-        progress ++;
+        progress++;
         mProgress.setProgress(progress);
 
         if (progress >= mProgress.getMax()) {
@@ -129,6 +136,7 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * 改变进度对话框信息
+     *
      * @param title
      * @param msg
      */
@@ -198,6 +206,49 @@ public class BaseActivity extends AppCompatActivity {
                 alertDialog.dismiss();
             }
         }
+    }
+
+    /**
+     * 显示输入框弹窗
+     * @param view
+     * @param title
+     * @param cancel
+     * @param ok
+     * @param cancelListener
+     * @param okListener
+     */
+    public void showEditDailog(View view, String title, String cancel, String ok, DialogInterface.OnClickListener cancelListener, final OnDailogOKClickListener okListener) {
+        editBuilder = new AlertDialog.Builder(BaseActivity.this);
+
+        if (view == null) {
+            // 如果没有指定布局, 使用默认布局
+            view = LayoutInflater.from(this).inflate(R.layout.dialog_edit, null);
+        }
+
+        // 设置加载的布局
+        editBuilder.setView(view);
+
+        final EditText userInput = (EditText) view.findViewById(R.id.editTextDialogUserInput);
+        final TextView tvTitle = (TextView) view.findViewById(R.id.tv_title);
+
+        tvTitle.setText(title);
+
+        // set dialog message
+        editBuilder.setCancelable(false);
+
+        // create alert dialog
+        editDialog = editBuilder.create();
+
+        editDialog.setButton(AlertDialog.BUTTON_NEUTRAL, cancel, cancelListener);
+        editDialog.setButton(AlertDialog.BUTTON_POSITIVE, ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                okListener.onOK(userInput.getText().toString().trim());
+            }
+        });
+
+        // show it
+        editDialog.show();
     }
 
     /**

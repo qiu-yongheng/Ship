@@ -197,6 +197,7 @@
                         android:background="@color/et_bg"
                         android:gravity="center"
                         android:hint="@string/et_hint"
+                        android:layout_marginBottom="@dimen/paddingtop_18dp"
                         android:textColorHint="@color/text_gray"/>
 
                     <EditText
@@ -279,7 +280,12 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <include layout="@layout/view_divi"/>
+
             <LinearLayout
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@color/text_white"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:gravity="center"

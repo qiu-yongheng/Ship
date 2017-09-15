@@ -66,7 +66,6 @@ import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
-import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
@@ -356,10 +355,10 @@ public class DataRepository implements DataSouceImpl {
                     }
 
                 } else if (type == SettingUtil.TYPE_EXIT_APPLICATION) {
-                    /** 退场申请 */
-                    List<ExitList> sampleList = DataSupport.findAll(ExitList.class);
+                    /** 退场申请 只要获取到的数据, 都可以进行申请 */
+                    List<ExitAssessor> sampleList = DataSupport.findAll(ExitAssessor.class);
 
-                    for (ExitList sample : sampleList) {
+                    for (ExitAssessor sample : sampleList) {
                         switch (Integer.valueOf(sample.getPosition()) % 7) {
                             case 0:
                                 day_0 += Double.valueOf(sample.getSandSupplyCount());
@@ -386,7 +385,7 @@ public class DataRepository implements DataSouceImpl {
                     }
                 } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
                     /** 退场审核 */
-                    List<ExitAssessor> exitList = DataSupport.findAll(ExitAssessor.class);
+                    List<ExitAssessor> exitList = DataSupport.where("IsSumbitted = ?", "1").find(ExitAssessor.class);
 
                     for (ExitAssessor exitAssessor : exitList) {
                         switch (Integer.valueOf(exitAssessor.getPosition()) % 7) {
@@ -804,11 +803,11 @@ public class DataRepository implements DataSouceImpl {
                     /** 扫描件 */
                     num = DataSupport.where("IsFinshReceptionSandAttachment = ?", "0").count(WeekTask.class);
                 } else if (type == SettingUtil.TYPE_EXIT_APPLICATION) {
-                    /** 退场申请 */
-                    num = DataSupport.where("IsExit = ?", "0").count(ExitList.class);
+                    /** 退场申请 IsSumbitted申请提交状态 */
+                    num = DataSupport.where("IsSumbitted = ?", "0").count(ExitAssessor.class);
                 } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
-                    /** 退场审核 */
-                    num = DataSupport.where("IsExit = ?", "0").count(ExitAssessor.class);
+                    /** 退场审核 IsExit审核状态 */
+                    num = DataSupport.where("IsExit = ? and IsSumbitted = ?", "0", "1").count(ExitAssessor.class);
                 } else if (type == SettingUtil.TYPE_ACCEPT) {
                     /** 验收 1通过, 0保存, -1不通过(不显示) */
                     // TODO
@@ -1162,6 +1161,8 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 String loginInfo = mRemoteDataSource.getLoginInfo(username, password);
+                LogUtil.d("当前登录用户信息: " + loginInfo);
+
                 LoginResult loginResult = gson.fromJson(loginInfo, LoginResult.class);
 
                 // 初始化数据库
@@ -4045,7 +4046,7 @@ public class DataRepository implements DataSouceImpl {
     }
 
     /**
-     * 1.65 获取退场离场反馈信息
+     * 替换成: 1.49 获取退场数据(退场申请，退场审核列表)
      *
      * @param PageSize
      * @param PageCount
@@ -4055,10 +4056,10 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<List<ExitFeedBack>> GetExitAuditedApplicationRecords(final int PageSize, final int PageCount, final String startTime, final String endTime, final String shipAccount) {
-        return Observable.create(new ObservableOnSubscribe<List<ExitFeedBack>>() {
+    public Observable<List<ExitAssessor>> GetExitAuditedApplicationRecords(final int PageSize, final int PageCount, final String startTime, final String endTime, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<List<ExitAssessor>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<ExitFeedBack>> e) throws Exception {
+            public void subscribe(@NonNull ObservableEmitter<List<ExitAssessor>> e) throws Exception {
                 JSONObject root = new JSONObject();
                 JSONObject Condition = new JSONObject();
 
@@ -4116,14 +4117,22 @@ public class DataRepository implements DataSouceImpl {
 
                 LogUtil.d("pageSize: " + PageSize + ", pageCount: " + PageCount + ", startTime: " + startTime + ", endTime: " + endTime + ", shipAccount: " + shipAccount + "\njson: " + json);
 
-                String result = mRemoteDataSource.GetExitAuditedApplicationRecords(PageSize, PageCount, json);
+                // 1.49 获取退场数据(退场申请，退场审核列表)
+                String result = mRemoteDataSource.GetExitApplicationList(PageSize, PageCount, json);
 
-                LogUtil.d("1.65 获取退场离场反馈信息: " + result);
+                LogUtil.d("1.49 获取退场数据(退场申请，退场审核列表): " + result);
 
-                List<ExitFeedBack> list = gson.fromJson(result, new TypeToken<List<ExitFeedBack>>() {
+                List<ExitAssessor> list = gson.fromJson(result, new TypeToken<List<ExitAssessor>>() {
                 }.getType());
 
-                e.onNext(list);
+                // 初始化
+                DataSupport.deleteAll(ExitAssessor.class);
+                DataSupport.saveAll(list);
+
+                // 筛选 isExit = 1 的数据
+                List<ExitAssessor> exitAssessorList = DataSupport.where("IsExit = ?", "1").find(ExitAssessor.class);
+
+                e.onNext(exitAssessorList);
                 e.onComplete();
             }
         });
@@ -4435,6 +4444,123 @@ public class DataRepository implements DataSouceImpl {
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
 
                 e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.49 获取退场数据(退场申请，退场审核列表)
+     * @param PageSize
+     * @param PageCount
+     * @param jumpWeek
+     * @param account
+     * @return
+     */
+    @Override
+    public Observable<Boolean> GetExitApplicationList(final int PageSize, final int PageCount, final int jumpWeek, final String account) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                 /* 开始时间 */
+                String startDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SUNDAY, jumpWeek);
+                /* 结束时间 */
+                String endDay = CalendarUtil.getSelectDate("yyyy-MM-dd", Calendar.SATURDAY, jumpWeek);
+
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
+
+                JSONArray Column = new JSONArray();
+
+                // 供应商账号
+                JSONObject object1 = new JSONObject();
+                object1.put("Name", "SubcontractorAccount");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", account);
+
+                // 退场时间时间
+                JSONObject object2 = new JSONObject();
+                object2.put("Name", "PlanDay");
+                object2.put("Type", "datetime");
+
+                JSONArray array2 = new JSONArray();
+
+                JSONObject object21 = new JSONObject();
+                object21.put("Min", startDay);
+                JSONObject object22 = new JSONObject();
+                object22.put("Max", endDay);
+
+                array2.put(object21);
+                array2.put(object22);
+
+                object2.put("Value", array2);
+
+                // 保存2个对象到object
+                if (!TextUtils.isEmpty(account)) {
+                    Column.put(object1);
+                }
+                if (!TextUtils.isEmpty(startDay) || !TextUtils.isEmpty(endDay)) {
+                    Column.put(object2);
+                }
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                String json = root.toString();
+
+                LogUtil.d(account + "\n1.49 获取退场数据(退场申请，退场审核列表) json: \n" + json);
+
+                String result = mRemoteDataSource.GetExitApplicationList(PageSize, PageCount, json);
+
+                LogUtil.d("1.49 获取退场数据(退场申请，退场审核列表): \n" + result);
+
+                List<ExitAssessor> lists = gson.fromJson(result, new TypeToken<List<ExitAssessor>>() {
+                }.getType());
+
+
+
+
+                /* 3. 初始化数据库 */
+                deleteAll(ExitAssessor.class);
+
+                /* 4. 保存数据到数据库 */
+                DataSupport.saveAll(lists);
+
+                /* 5. 对数据进行排序 */
+
+                // 1. 创建一个二维集合存放分类好的数据
+                List<List<ExitAssessor>> totalLists = new ArrayList<>();
+
+                // 2. 查询数据
+                List<ExitAssessor> recordLists = DataSupport.findAll(ExitAssessor.class);
+
+                // 3. 按照时间进行分类
+                Set set = new HashSet();
+                for (ExitAssessor bean : recordLists) {
+                    String planDay = bean.getPlanDay();
+                    if (set.contains(planDay)) {
+
+                    } else {
+                        set.add(planDay);
+                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(ExitAssessor.class));
+                    }
+                }
+
+                // 4. 更新position
+                for (List<ExitAssessor> list : totalLists) {
+                    for (int i = 1; i <= list.size(); i++) {
+                        // 更新数据
+                        ExitAssessor record = list.get(i - 1);
+                        record.setPosition(String.valueOf(dateToPosition(record.getPlanDay(), i, jumpWeek)));
+                        record.save();
+                    }
+                }
+
+                e.onNext(true);
                 e.onComplete();
             }
         });

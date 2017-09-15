@@ -26,6 +26,7 @@ import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
@@ -188,10 +189,16 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                             !value.getReceptionSandBoatNameAttachmentList().isEmpty() &&
                             !value.getReceptionSandAttachmentList().isEmpty()) {
 
-                        String userID = DataSupport.findAll(User.class).get(0).getUserID();
-                        int status = 1;
-                        String remark = "";
-                        presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+                        activity.showDailog("提交", "是否提交验砂审核通过?", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String userID = DataSupport.findAll(User.class).get(0).getUserID();
+                                int status = 1;
+                                String remark = "";
+                                presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+                            }
+                        });
+
                     } else {
                         ToastUtil.tip(getContext(), "满载照片与船名照片上传后才能通过");
                     }
@@ -207,13 +214,21 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(tvSupplyTime.getText().toString())) {
-                    activity.showDailog("不通过", "确定验砂不通过吗?", new DialogInterface.OnClickListener() {
+                    activity.showEditDailog(null, "请输入退回意见", "取消", "确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            String userID = DataSupport.findAll(User.class).get(0).getUserID();
-                            int status = -1;
-                            String remark = "";
-                            presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+
+                        }
+                    }, new OnDailogOKClickListener() {
+                        @Override
+                        public void onOK(String remark) {
+                            if (TextUtils.isEmpty(remark)) {
+                                ToastUtil.tip(getContext(), "请输入退回意见");
+                            } else {
+                                String userID = DataSupport.findAll(User.class).get(0).getUserID();
+                                int status = -1;
+                                presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+                            }
                         }
                     });
                 } else {

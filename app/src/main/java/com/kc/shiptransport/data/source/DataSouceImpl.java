@@ -37,7 +37,7 @@ import com.kc.shiptransport.db.backlog.BackLog;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
-import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
+import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
@@ -904,7 +904,7 @@ public interface DataSouceImpl {
      * @param shipAccount
      * @return
      */
-    Observable<List<ExitFeedBack>> GetExitAuditedApplicationRecords(int PageSize, int PageCount, String startTime, String endTime, String shipAccount);
+    Observable<List<ExitAssessor>> GetExitAuditedApplicationRecords(int PageSize, int PageCount, String startTime, String endTime, String shipAccount);
 
     /**
      * 1.66 获取用户待办信息
@@ -967,4 +967,14 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> DeleteConstructionBoatThrowingSandRecordsByItemID(int ItemID);
+
+    /**
+     * 1.49 获取退场数据(退场申请，退场审核列表)
+     * @param PageSize
+     * @param PageCount
+     * @param jumpWeek
+     * @param account
+     * @return
+     */
+    Observable<Boolean> GetExitApplicationList(int PageSize, int PageCount, int jumpWeek, String account);
 }

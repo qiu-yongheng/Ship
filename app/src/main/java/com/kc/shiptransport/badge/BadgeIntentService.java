@@ -35,6 +35,10 @@ public class BadgeIntentService extends IntentService {
         if (intent != null) {
             int badgeCount = intent.getIntExtra("badgeCount", 0);
 
+            if (mNotificationManager == null) {
+                return;
+            }
+
             mNotificationManager.cancel(notificationId);
             notificationId++;
 

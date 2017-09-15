@@ -37,6 +37,24 @@ public class AcceptanceEvaluationList extends DataSupport{
     private String SubcontractorAccount;
     private String SubcontractorName;
     private String StatusRemark;
+    private String Remark; // 验收备注
+    private String RemarkForReceptionSandReject; // 验砂不通过意见
+
+    public String getRemarkForReceptionSandReject() {
+        return RemarkForReceptionSandReject;
+    }
+
+    public void setRemarkForReceptionSandReject(String remarkForReceptionSandReject) {
+        RemarkForReceptionSandReject = remarkForReceptionSandReject;
+    }
+
+    public String getRemark() {
+        return Remark;
+    }
+
+    public void setRemark(String remark) {
+        Remark = remark;
+    }
 
     public int getRownumber() {
         return rownumber;

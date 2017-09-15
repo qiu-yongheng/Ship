@@ -3,7 +3,7 @@ package com.kc.shiptransport.mvp.analysis;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
-import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
+import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -21,7 +21,7 @@ public interface AnalysisContract {
         void showSearchResult(List<ProgressTrack> list);
         void showEvaluation(List<AcceptanceEvaluationList> list);
         void showRank(List<Rank> list);
-        void showExitFeedBack(List<ExitFeedBack> list);
+        void showExitFeedBack(List<ExitAssessor> list);
         void showLogManager(List<LogManagerList> list);
         void showDeleteLogResult(boolean isSuccess);
     }

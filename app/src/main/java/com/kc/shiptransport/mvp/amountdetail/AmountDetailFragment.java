@@ -531,6 +531,8 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         String deduction = value.getDeduction();
         // 创建者账号
         String creator = value.getCreator();
+        // 创建者名称
+        String creatorName = value.getCreatorName();
         // 供应商
         String subcontractorName = value.getSubcontractorName();
         // 提交时间
@@ -576,7 +578,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         // 量方人员姓名
         tvAmountMan.setText(theAmountOfPersonnelName);
         // 提交人员
-        tvCommitMan.setText(creator);
+        tvCommitMan.setText(TextUtils.isEmpty(creatorName) ? DataSupport.findAll(User.class).get(0).getUserName() : creatorName);
         // 备注
         etRemark.setText(remark);
         // 是否已提交

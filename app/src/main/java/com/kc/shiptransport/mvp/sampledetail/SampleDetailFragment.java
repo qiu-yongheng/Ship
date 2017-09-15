@@ -734,7 +734,6 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
      */
     @Override
     public void showImageUpdataResult() {
-
         mAdapter.notifyDataSetChanged();
     }
 

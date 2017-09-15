@@ -16,7 +16,7 @@ import org.ksoap2.transport.HttpTransportSE;
  */
 public class RemoteDataSource {
     private final String EndPoint = BaseUrl.EndPoint;
-    private final int timeout = 15000;
+    private final int timeout = 10000;
     private final String nameSpace = "http://tempuri.org/";
 
     /**
@@ -2037,6 +2037,32 @@ public class RemoteDataSource {
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
         rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.49 获取退场数据(退场申请，退场审核列表)
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetExitApplicationList(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetExitApplicationList";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
 
         return getCallResult(endPoint, soapAction, rpc);
     }

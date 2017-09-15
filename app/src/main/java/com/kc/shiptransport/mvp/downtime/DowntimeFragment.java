@@ -40,6 +40,7 @@ import com.kc.shiptransport.view.PopupWindow.CommonUtil;
 import org.litepal.crud.DataSupport;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -245,7 +246,13 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                                         if (popupWindow != null) {
                                             popupWindow.dismiss();
                                         }
-                                        String currentDate = activity.currentDate + " 24:00";
+                                        String date = "";
+                                        try {
+                                            date = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, activity.currentDate, Calendar.DATE, 1);
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                        String currentDate = date + " 00:00:00";
                                         textEndTime.setText(currentDate);
                                     }
                                 });

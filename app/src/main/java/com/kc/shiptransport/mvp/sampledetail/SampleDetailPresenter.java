@@ -288,6 +288,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
                     @Override
                     public void onComplete() {
+                        view.showError("提交成功");
                         view.showImageUpdataResult();
                         view.showLoading(false);
                     }

@@ -64,6 +64,25 @@ public class CalendarUtil {
     }
 
     /**
+     * 加载指定日期, 进行偏移
+     * @param format
+     * @param Date
+     * @param dateType
+     * @param num
+     * @return
+     * @throws ParseException
+     */
+    public static String getOffsetDate(String format, String Date, int dateType, int num) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        Date dt=df.parse(Date);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dt);
+        cal.add(dateType, num);
+
+        return df.format(cal.getTime());
+    }
+
+    /**
      * 获取当天日期
      *
      * @param format 自定义格式化格式

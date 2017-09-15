@@ -7,6 +7,7 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 
@@ -217,14 +218,14 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
                 .GetExitAuditedApplicationRecords(pageSize, pageCount, startTime, endTime, shipAccount)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<ExitFeedBack>>() {
+                .subscribe(new Observer<List<ExitAssessor>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(@NonNull List<ExitFeedBack> list) {
+                    public void onNext(@NonNull List<ExitAssessor> list) {
                         view.showExitFeedBack(list);
                     }
 

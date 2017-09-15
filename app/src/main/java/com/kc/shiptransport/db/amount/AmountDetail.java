@@ -47,6 +47,7 @@ public class AmountDetail extends DataSupport{
     private String DeckGauge;
     private String Deduction;
     private String Creator;
+    private String CreatorName;
     private String SystemDate;
     private String TotalCompleteRide;
     private String TotalCompleteSquare;
@@ -58,6 +59,14 @@ public class AmountDetail extends DataSupport{
     private String Remark;
     private int IsSumbitted;
     private List<TheAmountOfSideAttachmentListBean> TheAmountOfSideAttachmentList;
+
+    public String getCreatorName() {
+        return CreatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        CreatorName = creatorName;
+    }
 
     public int getIsSumbitted() {
         return IsSumbitted;

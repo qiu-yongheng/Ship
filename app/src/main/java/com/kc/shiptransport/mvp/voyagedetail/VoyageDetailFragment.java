@@ -93,18 +93,6 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-//    /**
-//     * 加载menu菜单
-//     *
-//     * @param menu
-//     * @param inflater
-//     */
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.voyage_detail_menu, menu);
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

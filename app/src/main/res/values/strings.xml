@@ -127,8 +127,8 @@
     <string name="btn_thread_sand_log">抛砂日报</string>
     <string name="title_thread_sand_log">抛砂日报</string>
     <string name="title_exit_application">供应商退场申请</string>
-    <string name="exit_red">红色字体: 已退场</string>
-    <string name="exit_black">黑色字体: 未退场</string>
+    <string name="exit_red">红色字体: 已申请</string>
+    <string name="exit_black">黑色字体: 未申请</string>
     <string name="text_change_password">修改密码</string>
     <string name="text_sex">性别</string>
     <string name="text_section">部门</string>

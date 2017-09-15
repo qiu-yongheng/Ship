@@ -5,7 +5,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.db.exitapplication.ExitList;
+import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.basemvp.BaseMvpFragment;
 import com.kc.shiptransport.mvp.exitapplicationdetail.ExitApplicationDetailActivity;
@@ -80,7 +80,7 @@ public class ExitApplicationFragment extends BaseMvpFragment {
     @Override
     protected void abs_onItemClick(View view, int position) {
         // 点击查看详情, 传递itemID
-        List<ExitList> exitLists = DataSupport.where("position = ?", String.valueOf(position)).find(ExitList.class);
+        List<ExitAssessor> exitLists = DataSupport.where("position = ?", String.valueOf(position)).find(ExitAssessor.class);
 
         if (!exitLists.isEmpty()) {
             ExitApplicationDetailActivity.startActivity(getContext(), exitLists.get(0).getSubcontractorInterimApproachPlanID(), exitLists.get(0).getIsExit());

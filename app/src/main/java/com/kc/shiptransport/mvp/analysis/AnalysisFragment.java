@@ -27,7 +27,7 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
-import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
+import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
@@ -93,11 +93,11 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     private CommonAdapter<AcceptanceEvaluationList> evaluationAdapter;
     private int pageCount = 1;
     private ArrayList<AcceptanceEvaluationList> lists = new ArrayList<>();
-    private ArrayList<ExitFeedBack> exitList = new ArrayList<>();
+    private ArrayList<ExitAssessor> exitList = new ArrayList<>();
     private LoadmoreWrapper<Object> loadmoreWrapper;
     private CommonAdapter<Rank> rankAdapter;
     private List<String> evaluation = new ArrayList<>();
-    private CommonAdapter<ExitFeedBack> exitAdapter;
+    private CommonAdapter<ExitAssessor> exitAdapter;
     private CommonAdapter<LogManagerList> logAdapter;
 
     @Nullable
@@ -806,7 +806,12 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                             .setText(R.id.tv_acceptance_time, acceptanceEvaluationList.getPreAcceptanceTime())
                             .setRating(R.id.rb_material_integrity, acceptanceEvaluationList.getMaterialIntegrity())
                             .setRating(R.id.rb_material_timeliness, acceptanceEvaluationList.getMaterialTimeliness())
-                            .setText(R.id.tv_acceptance_status, acceptanceEvaluationList.getStatusRemark());
+                            .setText(R.id.tv_acceptance_status, acceptanceEvaluationList.getStatusRemark())
+                            .setText(R.id.tv_acceptance_remark, acceptanceEvaluationList.getRemark())
+                            .setText(R.id.tv_sand_reject, acceptanceEvaluationList.getRemarkForReceptionSandReject());
+
+                    holder.setVisible(R.id.rl_sand_reject, !TextUtils.isEmpty(acceptanceEvaluationList.getRemarkForReceptionSandReject()))
+                            .setVisible(R.id.rl_acceptance_remark, !TextUtils.isEmpty(acceptanceEvaluationList.getRemark()));
 
                     holder.setOnClickListener(R.id.card_view, new View.OnClickListener() {
                         @Override
@@ -894,15 +899,15 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
      * @param list
      */
     @Override
-    public void showExitFeedBack(List<ExitFeedBack> list) {
+    public void showExitFeedBack(List<ExitAssessor> list) {
         Log.d("==", "list长度: " + list.size());
         if (pageCount == 1) {
             exitList.clear();
             exitList.addAll(list);
 
-            exitAdapter = new CommonAdapter<ExitFeedBack>(getContext(), R.layout.item_exit_feedback, exitList) {
+            exitAdapter = new CommonAdapter<ExitAssessor>(getContext(), R.layout.item_exit_feedback, exitList) {
                 @Override
-                protected void convert(ViewHolder holder, final ExitFeedBack feedBack, int position) {
+                protected void convert(ViewHolder holder, final ExitAssessor feedBack, int position) {
                     holder.setText(R.id.tv_ship_name, feedBack.getShipName())
                             .setText(R.id.tv_exit_time, feedBack.getExitTime())
                             .setText(R.id.tv_sub_name, feedBack.getSubcontractorName())

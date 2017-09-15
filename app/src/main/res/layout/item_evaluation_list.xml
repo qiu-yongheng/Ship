@@ -104,6 +104,49 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_acceptance_remark"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="预验收意见"/>
+
+                <TextView
+                    android:id="@+id/tv_acceptance_remark"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_sand_reject"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="验砂退回意见"/>
+
+                <TextView
+                    android:id="@+id/tv_sand_reject"
+                    style="@style/text_description_small"
+                    android:textColor="@color/red"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height_32"
                 android:gravity="center_vertical">

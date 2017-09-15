@@ -13,7 +13,6 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.WeekTask;
-import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.SettingUtil;
@@ -323,27 +322,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } else if (type == SettingUtil.TYPE_EXIT_APPLICATION) {
                 /** 退场申请 */
                 // 根据position查询数据
-                List<ExitList> recordLists = DataSupport.where("position = ?", position + "").find(ExitList.class);
+                List<ExitAssessor> recordLists = DataSupport.where("position = ?", position + "").find(ExitAssessor.class);
 
                 if (!recordLists.isEmpty()) {
-                    ExitList recordList = recordLists.get(0);
+                    ExitAssessor recordList = recordLists.get(0);
                     ((NormalHolder) holder).mTvShip.setText(recordList.getShipName());
                     ((NormalHolder) holder).mTvQuantum.setText(String.valueOf(recordList.getSandSupplyCount()));
                     ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
                     ((NormalHolder) holder).mLlTask.setVisibility(View.VISIBLE);
 
-                    // 判断是否已过砂
-                    if (recordList.getIsExit() == 1) {
-                        // 已退场
+                    // 判断是否已申请
+                    if (recordList.getIsSumbitted() == 1) {
+                        // 已申请
                         ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
                         ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
 
                         // 根据单选判断是否显示
                         boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
                         ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
-                    } else if (recordList.getIsExit() == 0) {
-                        // 未退场
+                    } else if (recordList.getIsSumbitted() == 0) {
+                        // 未申请
                         ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
                         ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);
 
@@ -367,8 +366,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
                 /** 退场审核 */
-                // 根据position查询数据
-                List<ExitAssessor> recordLists = DataSupport.where("position = ?", position + "").find(ExitAssessor.class);
+                // 根据position查询数据(退场已申请)
+                List<ExitAssessor> recordLists = DataSupport.where("position = ? and IsSumbitted = ?", String.valueOf(position), "1").find(ExitAssessor.class);
 
                 if (!recordLists.isEmpty()) {
                     ExitAssessor recordList = recordLists.get(0);
