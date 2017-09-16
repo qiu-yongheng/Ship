@@ -967,9 +967,22 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         logAdapter = new CommonAdapter<LogManagerList>(getContext(), R.layout.item_log_manager, list) {
             @Override
             protected void convert(ViewHolder holder, final LogManagerList logManagerList, int position) {
+                String endTime = logManagerList.getEndTime();
+                String realDate = "";
+                try {
+                    if (endTime.contains("23:59:59")) {
+                        realDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM_SS, endTime, Calendar.SECOND, 1);
+                    } else {
+                        realDate = endTime;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
                 holder.setText(R.id.tv_ship_name, logManagerList.getShipName())
                         .setText(R.id.tv_start_time, logManagerList.getStartTime())
-                        .setText(R.id.tv_end_time, logManagerList.getEndTime())
+                        .setText(R.id.tv_end_time, realDate)
                         .setText(R.id.tv_stop_type, TextUtils.isEmpty(logManagerList.getStopTypeName()) ? "" : logManagerList.getStopTypeName())
                         .setText(R.id.tv_construction_type, logManagerList.getConstructionType())
                         .setText(R.id.tv_creator, logManagerList.getCreatorName())

@@ -84,6 +84,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     private ConstructionBoat boat;
     private CommonPopupWindow popupWindow;
     private Handler handler = new Handler();
+    private String realDate = "";
 
     @Nullable
     @Override
@@ -160,7 +161,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                 // 开始时间
                 String startTime = textStartTime.getText().toString();
                 // 结束时间
-                String endTime = textEndTime.getText().toString();
+                String endTime = realDate;
                 // 备注
                 String remark = etRemark.getText().toString();
 
@@ -222,11 +223,14 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                                                         isLastDate = CalendarUtil.isLastDate(startTime, str);
                                                     } catch (ParseException e) {
                                                         e.printStackTrace();
+                                                        realDate = "";
                                                     }
 
                                                     if (isLastDate) {
                                                         Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
                                                         textEndTime.setText("");
+                                                    } else {
+                                                        realDate = str;
                                                     }
 
 
@@ -252,7 +256,10 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                                         } catch (ParseException e) {
                                             e.printStackTrace();
                                         }
+                                        // 显示的时间
                                         String currentDate = date + " 00:00:00";
+                                        // 实际上传的时间
+                                        realDate = activity.currentDate + " 23:59:59";
                                         textEndTime.setText(currentDate);
                                     }
                                 });

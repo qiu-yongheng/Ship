@@ -105,6 +105,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     private int layoutID;
     private ConstructionBoat boat;
     private boolean flag = false;
+    private String realDate = "";
 
     @Nullable
     @Override
@@ -215,10 +216,13 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                                                         if (isLastDate) {
                                                             Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
                                                             tvEndTime.setText("");
+                                                        } else {
+                                                            realDate = str;
                                                         }
 
                                                     } catch (ParseException e) {
                                                         e.printStackTrace();
+                                                        realDate = "";
                                                     }
                                                 }
                                             }, false);
@@ -242,7 +246,10 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                                         } catch (ParseException e) {
                                             e.printStackTrace();
                                         }
+                                        // 显示的时间
                                         String currentDate = date + " 00:00:00";
+                                        // 实际上传的时间
+                                        realDate = activity.currentDate + " 23:59:59";
                                         tvEndTime.setText(currentDate);
                                     }
                                 });
@@ -378,7 +385,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                 // 开始时间
                 String startTime = tvStartTime.getText().toString();
                 // 结束时间
-                String endTime = tvEndTime.getText().toString();
+                String endTime = realDate;
                 // 供砂航次
                 String sandVoyage = etSandVoyage.getText().toString();
                 // 施工分层

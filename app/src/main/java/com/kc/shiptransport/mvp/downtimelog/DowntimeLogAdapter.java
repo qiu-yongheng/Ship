@@ -10,7 +10,10 @@ import android.widget.TextView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.CalendarUtil;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -40,11 +43,23 @@ public class DowntimeLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         DownLogBean downLogBean = list.get(position);
 
+        String endTime = downLogBean.getEndTime();
+        String realDate = "";
+        try {
+            if (endTime.contains("23:59:59")) {
+                realDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM_SS, endTime, Calendar.SECOND, 1);
+            } else {
+                realDate = endTime;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         ((NormalHolder)holder).mTvShipAccount.setText(downLogBean.getShipName());
         ((NormalHolder)holder).mTvStopType.setText(downLogBean.getStopTypeName());
         ((NormalHolder)holder).mTvCreator.setText(downLogBean.getCreatorName());
         ((NormalHolder)holder).mTvStartTime.setText(downLogBean.getStartTime());
-        ((NormalHolder)holder).mTvEndTime.setText(downLogBean.getEndTime());
+        ((NormalHolder)holder).mTvEndTime.setText(realDate);
         ((NormalHolder)holder).mTvSystemTime.setText(downLogBean.getSystemDate());
         ((NormalHolder)holder).mTvRemark.setText(downLogBean.getRemark());
 

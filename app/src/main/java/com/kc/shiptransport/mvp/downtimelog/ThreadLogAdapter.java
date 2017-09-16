@@ -10,7 +10,10 @@ import android.widget.TextView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.CalendarUtil;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -40,6 +43,18 @@ public class ThreadLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         ThreadSandLogBean logBean = list.get(position);
 
+        String endTime = logBean.getEndTime();
+        String realDate = "";
+        try {
+            if (endTime.contains("23:59:59")) {
+                realDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM_SS, endTime, Calendar.SECOND, 1);
+            } else {
+                realDate = endTime;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         ((NormalHolder)holder).mTvShipAccount.setText(logBean.getShipName());
         ((NormalHolder)holder).mTvShipItemNum.setText(logBean.getShipItemNum());
         ((NormalHolder)holder).mTvPartition.setText(logBean.getPartitionNameArr());
@@ -50,7 +65,7 @@ public class ThreadLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
         ((NormalHolder)holder).mTvStartTime.setText(logBean.getStartTime());
-        ((NormalHolder)holder).mTvEndTime.setText(logBean.getEndTime());
+        ((NormalHolder)holder).mTvEndTime.setText(realDate);
         ((NormalHolder)holder).mTvSystemTime.setText(logBean.getSystemDate());
 
         ((NormalHolder)holder).mTvCreator.setText(logBean.getCreatorName());
