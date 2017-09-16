@@ -185,8 +185,6 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                 if (!TextUtils.isEmpty(tvSupplyTime.getText().toString())) {
                     if (value != null &&
                             value.getReceptionSandAttachmentList() != null &&
-                            value.getReceptionSandBoatNameAttachmentList() != null &&
-                            !value.getReceptionSandBoatNameAttachmentList().isEmpty() &&
                             !value.getReceptionSandAttachmentList().isEmpty()) {
 
                         activity.showDailog("提交", "是否提交验砂审核通过?", new DialogInterface.OnClickListener() {
@@ -200,7 +198,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                         });
 
                     } else {
-                        ToastUtil.tip(getContext(), "满载照片与船名照片上传后才能通过");
+                        ToastUtil.tip(getContext(), "满载照片上传后才能通过");
                     }
 
                 } else {
