@@ -2029,6 +2029,8 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<List<ScannerListBean>> e) throws Exception {
                 // 发送网络请求
                 String result = mRemoteDataSource.GetSubcontractorPerfectBoatScannerAttachmentRecordBySubcontractorInterimApproachPlanID(subID);
+                LogUtil.d("根据进场ID, 获取供应商航次完善扫描件类型数据: \n" + result);
+
                 // 解析数据
                 if (TextUtils.isEmpty(result)) {
                     e.onError(new RuntimeException("服务器异常"));
@@ -2902,7 +2904,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<VoyageDetailBean> e) throws Exception {
                 String result = mRemoteDataSource.GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID);
 
-                LogUtil.d(SubcontractorInterimApproachPlanID + "信息完善: " + result);
+                LogUtil.d(SubcontractorInterimApproachPlanID + " 信息完善: \n" + result);
 
                 List<VoyageDetailBean> list = gson.fromJson(result, new TypeToken<List<VoyageDetailBean>>() {
                 }.getType());

@@ -3,6 +3,7 @@ package com.kc.shiptransport.mvp.scannerdetail;
 import android.content.Context;
 
 import com.kc.shiptransport.data.bean.ScannerListBean;
+import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.WeekTask;
 import com.kc.shiptransport.db.backlog.BackLog;
@@ -22,6 +23,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -172,12 +174,42 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter {
         getScannerType(position, type);
     }
 
+    /**
+     * 提交前, 先判断信息是否已完善
+     * @param ItemID
+     * @param Creator
+     * @param SubcontractorInterimApproachPlanID
+     * @param IsSumbitted
+     * @param Remark
+     */
     @Override
-    public void commit(String ItemID, String Creator, int SubcontractorInterimApproachPlanID, int IsSumbitted, String Remark) {
+    public void commit(final String ItemID, final String Creator, final int SubcontractorInterimApproachPlanID, final int IsSumbitted, final String Remark) {
         view.showLoading(true);
-        dataRepository.InsertSubcontractorPerfectBoatScannerRecord(ItemID, Creator, SubcontractorInterimApproachPlanID, IsSumbitted, Remark)
+        dataRepository
+                .GetPerfectBoatRecordBySubcontractorInterimApproachPlanID(SubcontractorInterimApproachPlanID) // 1.17获取对应的航次完善信息明细
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<VoyageDetailBean>() {
+                    @Override
+                    public void accept(@NonNull VoyageDetailBean bean) throws Exception {
+                        if (Integer.valueOf(bean.getIsSumbitted()) != 1) {
+                            view.showError("必须先提交航次信息完善, 才能进行进场材料提交");
+                        }
+                    }
+                })
                 .observeOn(Schedulers.io())
+                .filter(new Predicate<VoyageDetailBean>() {
+                    @Override
+                    public boolean test(@NonNull VoyageDetailBean bean) throws Exception {
+                        return Integer.valueOf(bean.getIsSumbitted()) == 1;
+                    }
+                })
+                .flatMap(new Function<VoyageDetailBean, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(@NonNull VoyageDetailBean bean) throws Exception {
+                        return dataRepository.InsertSubcontractorPerfectBoatScannerRecord(ItemID, Creator, SubcontractorInterimApproachPlanID, IsSumbitted, Remark);
+                    }
+                })
                 .flatMap(new Function<Boolean, ObservableSource<List<BackLog>>>() {
                     @Override
                     public ObservableSource<List<BackLog>> apply(@NonNull Boolean aBoolean) throws Exception {

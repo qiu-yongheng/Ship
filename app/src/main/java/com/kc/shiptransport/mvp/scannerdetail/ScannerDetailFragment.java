@@ -110,7 +110,17 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
             public void onClick(View view) {
                 String remark = "";
                 if (bean != null && activity != null) {
-                    remark = TextUtils.isEmpty(bean.get(0).getPreAcceptanceEvaluationRemark()) ? "暂无退回意见" : bean.get(0).getPreAcceptanceEvaluationRemark();
+                    // 预验收意见
+                    String preAcceptanceEvaluationRemark = bean.get(0).getPreAcceptanceEvaluationRemark();
+                    // 验砂意见
+                    String receptionSandRemark = bean.get(0).getReceptionSandRemark();
+                    if (!TextUtils.isEmpty(receptionSandRemark)) {
+                        remark = receptionSandRemark;
+                    } else if (!TextUtils.isEmpty(preAcceptanceEvaluationRemark)) {
+                        remark = preAcceptanceEvaluationRemark;
+                    } else {
+                        remark = "暂无退回意见";
+                    }
                 }
 
                 activity.showDailog("退回意见", remark, new DialogInterface.OnClickListener() {

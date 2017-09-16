@@ -31,8 +31,17 @@ public class ScannerListBean {
     private int AttachmentCount;
     private int DefalutAttachmentCount;
     private String SystemDate;
-    private String PreAcceptanceEvaluationRemark;
+    private String PreAcceptanceEvaluationRemark; // 预验收意见
+    private String ReceptionSandRemark; // 验砂意见
     private int PreAcceptanceEvaluationStatus;
+
+    public String getReceptionSandRemark() {
+        return ReceptionSandRemark;
+    }
+
+    public void setReceptionSandRemark(String receptionSandRemark) {
+        ReceptionSandRemark = receptionSandRemark;
+    }
 
     public String getPreAcceptanceEvaluationRemark() {
         return PreAcceptanceEvaluationRemark;

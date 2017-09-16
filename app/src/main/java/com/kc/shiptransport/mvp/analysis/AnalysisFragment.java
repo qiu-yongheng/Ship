@@ -993,8 +993,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                 if (TextUtils.isEmpty(logManagerList.getConstructionType())) {
                                     ToastUtil.tip(getContext(), "没有施工类型, 不能修改");
                                 } else if (logManagerList.getConstructionType().equals("停工")) {
+                                    /** 停工 */
                                     DowntimeActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE);
                                 } else if (logManagerList.getConstructionType().equals("抛砂")) {
+                                    /** 抛砂 */
                                     ThreadSandActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE);
                                 }
                             }

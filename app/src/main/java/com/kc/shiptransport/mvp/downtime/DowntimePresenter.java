@@ -3,6 +3,7 @@ package com.kc.shiptransport.mvp.downtime;
 import android.content.Context;
 
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
+import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.down.StopOption;
 
@@ -125,6 +126,41 @@ public class DowntimePresenter implements DowntimeContract.Presenter{
                     @Override
                     public void onError(@NonNull Throwable e) {
                         view.showLoading(false);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 回显详细数据
+     * @param itemID
+     */
+    @Override
+    public void getDetailData(int itemID) {
+        view.showLoading(true);
+        dataRepository
+                .GetConstructionBoatStopDaily(itemID, "", "", "", "", "")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<DownLogBean>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<DownLogBean> list) {
+                        view.showDetailData(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
                     }
 
                     @Override

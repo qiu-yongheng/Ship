@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
+import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
@@ -32,6 +33,7 @@ import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.downtimelog.DowntimeLogActivity;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
@@ -85,6 +87,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     private CommonPopupWindow popupWindow;
     private Handler handler = new Handler();
     private String realDate = "";
+    private String stopTypeName;
 
     @Nullable
     @Override
@@ -94,16 +97,58 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         initViews(view);
         initListener();
 
-//        // 设置当前施工船舶
-//        List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
-//        int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
-//
-//        boat = all.get(position - 1);
-
         // 获取停工因素
         presenter.getStopOptions();
-        // 获取开始日期
-        presenter.getStartDate(activity.currentDate, boat.getShipNum());
+
+
+        /**
+         * 根据type加载数据
+         */
+        if (activity.type == SettingUtil.TYPE_DATA_NEW) {
+            if (boat != null) {
+                tvTitle.setText("施工船舶: " + boat.getShipName());
+            } else {
+                List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+                int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+
+                boat = all.get(position - 1);
+                tvTitle.setText("施工船舶: " + boat.getShipName());
+            }
+
+            // 获取开始日期
+            presenter.getStartDate(activity.currentDate, boat.getShipNum());
+
+        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
+            // 获取日志管理对应数据
+            List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
+            if (!lists.isEmpty()) {
+                String shipAccount = lists.get(0).getShipAccount();
+
+                // 回显施工船舶
+                List<ConstructionBoat> boats = DataSupport.where("ShipNum = ?", shipAccount).find(ConstructionBoat.class);
+                if (!boats.isEmpty()) {
+                    boat = boats.get(0);
+                    tvTitle.setText("施工船舶: " + boat.getShipName());
+                }
+
+                // 回显开始时间
+                String startTime = lists.get(0).getStartTime();
+                textStartTime.setText(startTime);
+                // 回显结束时间
+                String endTime = lists.get(0).getEndTime();
+                textEndTime.setText(endTime);
+                realDate = endTime;
+                // 回显停工类别
+                stopTypeName = lists.get(0).getStopTypeName();
+                // TODO 回显停工备注
+                presenter.getDetailData(lists.get(0).getItemID());
+
+            } else {
+                textStartTime.setText("获取数据失败");
+            }
+        }
+
+
         return view;
     }
 
@@ -116,30 +161,6 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 3));
-
-
-        if (activity.type == SettingUtil.TYPE_DATA_NEW) {
-            if (boat != null) {
-                tvTitle.setText("施工船舶: " + boat.getShipName());
-            } else {
-                List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
-                int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
-
-                boat = all.get(position - 1);
-                tvTitle.setText("施工船舶: " + boat.getShipName());
-            }
-        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
-            List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
-            if (!lists.isEmpty()) {
-                String shipAccount = lists.get(0).getShipAccount();
-
-                List<ConstructionBoat> boats = DataSupport.where("ShipNum = ?", shipAccount).find(ConstructionBoat.class);
-                if (!boats.isEmpty()) {
-                    boat = boats.get(0);
-                    tvTitle.setText("施工船舶: " + boat.getShipName());
-                }
-            }
-        }
     }
 
     @Override
@@ -332,8 +353,14 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
 
     @Override
     public void showGetStopOptions(final List<StopOption> stopOptions) {
+        /** 回显单选 */
+        if (!TextUtils.isEmpty(stopTypeName)) {
+            // 保存选中类型
+            stopType = DataSupport.where("Name = ?", stopTypeName).find(StopOption.class).get(0).getItemID();
+        }
+
         if (adapter == null) {
-            adapter = new DowntimeAdapter(getContext(), stopOptions);
+            adapter = new DowntimeAdapter(getContext(), stopOptions, stopTypeName);
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, final int position, final int... type) {
@@ -372,27 +399,35 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         }
     }
 
+    /**
+     * 获取服务器时间后, 显示
+     *
+     * @param bean
+     */
     @Override
     public void showStartDate(LogCurrentDateBean bean) {
         if (textStartTime == null) {
             return;
         }
 
-        if (activity.type == SettingUtil.TYPE_DATA_NEW) {
-            if (bean != null) {
-                textStartTime.setText(bean.getStartTime());
-            } else {
-                textStartTime.setText("获取数据失败");
-            }
-        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
-            List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
-            if (!lists.isEmpty()) {
-                String startTime = lists.get(0).getStartTime();
-                textStartTime.setText(startTime);
-            } else {
-                textStartTime.setText("获取数据失败");
-            }
+        if (bean != null) {
+            textStartTime.setText(bean.getStartTime());
+        } else {
+            textStartTime.setText("获取数据失败");
         }
 
+    }
+
+    /**
+     * 回显详细数据
+     *
+     * @param list
+     */
+    @Override
+    public void showDetailData(List<DownLogBean> list) {
+        LogUtil.d("停工回显num: " + list.size());
+        if (!list.isEmpty()) {
+            etRemark.setText(TextUtils.isEmpty(list.get(0).getRemark()) ? "" : list.get(0).getRemark());
+        }
     }
 }

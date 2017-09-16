@@ -282,7 +282,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
 
             /** 判断是否结束过砂, 弹出相应的提示 */
             if (IsFinish == 1) {
-                activity.showDailog("结束过砂", "是否结束过砂, 结束后就不能修改过砂记录了", new DialogInterface.OnClickListener() {
+                activity.showDailog("结束过砂", "请确认该砂船已全部卸砂完成，提交后不可修改！", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         presenter.commit(bean);

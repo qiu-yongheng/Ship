@@ -168,7 +168,7 @@
                         android:textSize="@dimen/text_15sp"/>
 
                     <EditText
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:id="@+id/et_before_1"
                         android:layout_width="123dp"
                         android:layout_height="33dp"
@@ -178,7 +178,7 @@
                         android:textColorHint="@color/text_gray"/>
 
                     <EditText
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:id="@+id/et_before_2"
                         android:layout_width="123dp"
                         android:layout_height="33dp"
@@ -189,7 +189,7 @@
                         android:textColorHint="@color/text_gray"/>
 
                     <EditText
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:id="@+id/et_before_3"
                         android:layout_width="123dp"
                         android:layout_height="33dp"
@@ -202,7 +202,7 @@
 
                     <EditText
                         android:visibility="gone"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:id="@+id/et_before_4"
                         android:layout_width="123dp"
                         android:layout_height="33dp"
@@ -233,7 +233,7 @@
                         android:textSize="@dimen/text_15sp"/>
 
                     <EditText
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:id="@+id/et_after_1"
                         android:layout_width="123dp"
                         android:layout_height="33dp"
@@ -243,7 +243,7 @@
                         android:textColorHint="@color/text_gray"/>
 
                     <EditText
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:id="@+id/et_after_2"
                         android:layout_width="123dp"
                         android:layout_height="33dp"
@@ -254,7 +254,7 @@
                         android:textColorHint="@color/text_gray"/>
 
                     <EditText
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:id="@+id/et_after_3"
                         android:layout_width="123dp"
                         android:layout_height="33dp"
@@ -266,7 +266,7 @@
 
                     <EditText
                         android:visibility="gone"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:id="@+id/et_after_4"
                         android:layout_width="123dp"
                         android:layout_height="33dp"
@@ -298,7 +298,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <EditText
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:id="@+id/et_actual_amount_sand"
                     android:layout_width="123dp"
                     android:layout_height="33dp"

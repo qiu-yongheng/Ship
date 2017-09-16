@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
+import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
@@ -115,6 +116,37 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         initViews(view);
         initListener();
 
+
+        /**
+         * 根据类型加载数据
+         */
+        if (activity.type == SettingUtil.TYPE_DATA_NEW) {
+            List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+            int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+            boat = all.get(position - 1);
+        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
+            List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
+            if (!lists.isEmpty()) {
+                String shipAccount = lists.get(0).getShipAccount();
+                List<ConstructionBoat> boats = DataSupport.where("ShipNum = ?", shipAccount).find(ConstructionBoat.class);
+                if (!boats.isEmpty()) {
+                    boat = boats.get(0);
+                }
+
+                // 回显开始时间
+                String startTime = lists.get(0).getStartTime();
+                tvStartTime.setText(startTime);
+                // 回显结束时间
+                String endTime = lists.get(0).getEndTime();
+                tvEndTime.setText(endTime);
+                realDate = endTime;
+                // 请求 1.48 获取施工日志（抛砂）数据 GetConstructionBoatThrowingSandList
+                presenter.getDetailData(lists.get(0).getItemID());
+            } else {
+                tvStartTime.setText("获取数据失败");
+            }
+        }
+
         // 获取开始时间
         presenter.getDates(activity.currentDate, boat.getShipNum());
 
@@ -133,23 +165,6 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         activity = (ThreadSandActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        if (activity.type == SettingUtil.TYPE_DATA_NEW) {
-            List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
-            int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
-            boat = all.get(position - 1);
-        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
-            List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
-            if (!lists.isEmpty()) {
-                String shipAccount = lists.get(0).getShipAccount();
-
-                List<ConstructionBoat> boats = DataSupport.where("ShipNum = ?", shipAccount).find(ConstructionBoat.class);
-                if (!boats.isEmpty()) {
-                    boat = boats.get(0);
-                }
-            }
-        }
     }
 
     @Override
@@ -290,8 +305,6 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                 measuredHeight = tvConstructionStratification.getMeasuredHeight();
             }
         });
-
-
         // 单选
         tvConstructionStratification.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -480,14 +493,6 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         if (activity.type == SettingUtil.TYPE_DATA_NEW) {
             // 修改开始日期
             tvStartTime.setText(bean.getStartTime());
-        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
-            List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
-            if (!lists.isEmpty()) {
-                String startTime = lists.get(0).getStartTime();
-                tvStartTime.setText(startTime);
-            } else {
-                tvStartTime.setText("获取数据失败");
-            }
         }
 
         // 详细信息
@@ -521,6 +526,38 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             getActivity().onBackPressed();
         } else {
             Toast.makeText(getContext(), "提交失败, 请重试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 回显详细数据
+     * @param threadSandLogBeen
+     */
+    @Override
+    public void showDetailData(List<ThreadSandLogBean> threadSandLogBeen) {
+        if (!threadSandLogBeen.isEmpty()) {
+            ThreadSandLogBean logBean = threadSandLogBeen.get(0);
+            // 回显施工分层
+            layoutID = Integer.valueOf(logBean.getLayerID());
+            tvConstructionStratification.setText(logBean.getLayerName());
+            // 回显施工分区
+            String partitionNameArr = logBean.getPartitionNameArr();
+            tvConstructionDevision.setText(partitionNameArr);
+
+            // 保存施工分区到数据库
+            DataSupport.deleteAll(PartitionNum.class);
+            String[] split = partitionNameArr.split(",");
+            tvDevisionNum.setText(String.valueOf(split.length));
+            for (int i = 0; i < split.length; i++) {
+                PartitionNum partitionNum = new PartitionNum();
+                partitionNum.setUserAccount(boat.getShipNum());
+                partitionNum.setNum(split[i]);
+                partitionNum.save();
+            }
+            // 回显工程量
+            etEngineeringQuantity.setText(logBean.getQuantity());
+            // 回显备注
+            etRemark.setText(logBean.getRemark());
         }
     }
 

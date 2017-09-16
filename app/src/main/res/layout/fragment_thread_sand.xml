@@ -331,7 +331,7 @@
                     android:background="@color/et_bg"
                     android:gravity="center"
                     android:hint="请填写"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:textColorHint="@color/gray"/>
 
                 <TextView

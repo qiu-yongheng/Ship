@@ -2,8 +2,11 @@ package com.kc.shiptransport.mvp.threadsand;
 
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
+import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
+
+import java.util.List;
 
 /**
  * @author qiuyongheng
@@ -16,11 +19,13 @@ public interface ThreadSandContract {
         void showStartDate(LogCurrentDateBean bean);
         void showPartition(PartitionSBBean bean);
         void showCommitResult(boolean isSuccess);
+        void showDetailData(List<ThreadSandLogBean> threadSandLogBeen);
     }
 
     interface Presenter extends BasePresenter {
         void getDates(String CurrentDate, String CurrentBoatAccount);
         void getPartition(String userID);
         void commit(String json);
+        void getDetailData(int itemID);
     }
 }

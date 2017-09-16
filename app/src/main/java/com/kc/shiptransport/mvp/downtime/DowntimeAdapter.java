@@ -3,6 +3,7 @@ package com.kc.shiptransport.mvp.downtime;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.util.List;
 
 public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
+    private String stopTypeName;
     private List<StopOption> list;
     private final LayoutInflater inflate;
 
@@ -32,10 +34,11 @@ public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private OnRecyclerviewItemClickListener listener;
     private int checkedIndex = -1;
 
-    public DowntimeAdapter(Context context, List<StopOption> list) {
+    public DowntimeAdapter(Context context, List<StopOption> list, String stopTypeName) {
         this.context = context;
         this.inflate = LayoutInflater.from(context);
         this.list = list;
+        this.stopTypeName = stopTypeName;
     }
 
     @Override
@@ -52,6 +55,9 @@ public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof NormalHolder) {
             ((NormalHolder) holder).mCheckBox.setText(stopOption.getName());
 
+
+
+
             ((NormalHolder) holder).mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -66,8 +72,10 @@ public class DowntimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
-            if (checkedIndex == position) {
+            /** 回显数据, 或单选 */
+            if (checkedIndex == position || (!TextUtils.isEmpty(stopTypeName) && stopTypeName.equals(stopOption.getName()))) {
                 ((NormalHolder) holder).mCheckBox.setChecked(true);
+                stopTypeName = null;
             } else {
                 ((NormalHolder) holder).mCheckBox.setChecked(false);
             }

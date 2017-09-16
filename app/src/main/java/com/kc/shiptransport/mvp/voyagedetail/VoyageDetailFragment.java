@@ -200,7 +200,18 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             public void onClick(View view) {
                 String remark = "";
                 if (bean != null && activity != null) {
-                    remark = TextUtils.isEmpty(bean.getPreAcceptanceEvaluationRemark()) ? "暂无退回意见" : bean.getPreAcceptanceEvaluationRemark();
+                    // 预验收意见
+                    String preAcceptanceEvaluationRemark = bean.getPreAcceptanceEvaluationRemark();
+                    // 验砂意见
+                    String receptionSandRemark = bean.getReceptionSandRemark();
+
+                    if (!TextUtils.isEmpty(receptionSandRemark)) {
+                        remark = receptionSandRemark;
+                    } else if (!TextUtils.isEmpty(preAcceptanceEvaluationRemark)) {
+                        remark = preAcceptanceEvaluationRemark;
+                    } else {
+                        remark = "暂无退回意见";
+                    }
                 }
 
                 activity.showDailog("退回意见", remark, new DialogInterface.OnClickListener() {
@@ -290,8 +301,6 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         } else {
             tvOpinion.setVisibility(View.GONE);
         }
-
-
 
 
         // 1代表已提交，0代表保存

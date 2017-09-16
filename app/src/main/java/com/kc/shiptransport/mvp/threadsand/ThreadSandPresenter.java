@@ -4,7 +4,10 @@ import android.content.Context;
 
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
+import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.data.source.DataRepository;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -142,6 +145,41 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
                         view.showCommitResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 回显详细数据
+     * @param itemID
+     */
+    @Override
+    public void getDetailData(int itemID) {
+        view.showLoading(true);
+        dataRepository
+                .GetConstructionBoatThrowingSandList(itemID, "", "", "", "")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<ThreadSandLogBean>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<ThreadSandLogBean> threadSandLogBeen) {
+                        view.showDetailData(threadSandLogBeen);
                     }
 
                     @Override
