@@ -90,6 +90,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
                         } else {
                             itemID = weekTask.getItemID();
                         }
+
+                        // 提交前, 先判断信息是否已完善
                         presenter.commit("", userID, itemID, 1, "");
                     }
                 });

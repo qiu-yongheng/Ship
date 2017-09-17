@@ -427,7 +427,11 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                     String name = bundle.getString(VoyageListActivity.NAME);
 
                     // 保存数据
-                    columnsBean.setValue(name + ";" + itemID);
+                    if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(itemID)) {
+                        columnsBean.setValue(name + ";" + itemID);
+                    } else {
+                        columnsBean.setValue("");
+                    }
                     columnsBean.setData(itemID);
                     adapter.bean.setWashStoreAddress(name);
                     break;
