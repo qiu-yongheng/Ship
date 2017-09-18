@@ -1,12 +1,15 @@
 package com.kc.shiptransport.data.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author 邱永恒
  * @time 2017/7/1 17:11
  * @desc 根据类型获取图片
  */
 
-public class ScannerImgListByTypeBean {
+public class ScannerImgListByTypeBean implements Parcelable {
 
     /**
      * ItemID : 2
@@ -33,6 +36,20 @@ public class ScannerImgListByTypeBean {
     private String FileName;
     private String FilePath;
     private String SystemDate;
+
+
+
+    public static final Creator<ScannerImgListByTypeBean> CREATOR = new Creator<ScannerImgListByTypeBean>() {
+        @Override
+        public ScannerImgListByTypeBean createFromParcel(Parcel in) {
+            return new ScannerImgListByTypeBean(in);
+        }
+
+        @Override
+        public ScannerImgListByTypeBean[] newArray(int size) {
+            return new ScannerImgListByTypeBean[size];
+        }
+    };
 
     public int getItemID() {
         return ItemID;
@@ -120,5 +137,39 @@ public class ScannerImgListByTypeBean {
 
     public void setSystemDate(String SystemDate) {
         this.SystemDate = SystemDate;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(this.ItemID);
+        parcel.writeInt(this.SubcontractorInterimApproachPlanID);
+        parcel.writeInt(this.SubcontractorPerfectBoatScannerAttachmentTypeID);
+        parcel.writeString(this.SubcontractorPerfectBoatScannerAttachmentTypeName);
+        parcel.writeString(this.SubcontractorAccount);
+        parcel.writeString(this.SubcontractorName);
+        parcel.writeString(this.ConstructionBoatAccount);
+        parcel.writeString(this.ConstructionBoatName);
+        parcel.writeString(this.FileName);
+        parcel.writeString(this.FilePath);
+        parcel.writeString(this.SystemDate);
+    }
+
+    protected ScannerImgListByTypeBean(Parcel in) {
+        ItemID = in.readInt();
+        SubcontractorInterimApproachPlanID = in.readInt();
+        SubcontractorPerfectBoatScannerAttachmentTypeID = in.readInt();
+        SubcontractorPerfectBoatScannerAttachmentTypeName = in.readString();
+        SubcontractorAccount = in.readString();
+        SubcontractorName = in.readString();
+        ConstructionBoatAccount = in.readString();
+        ConstructionBoatName = in.readString();
+        FileName = in.readString();
+        FilePath = in.readString();
+        SystemDate = in.readString();
     }
 }

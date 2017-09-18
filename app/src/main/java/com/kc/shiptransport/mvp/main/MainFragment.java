@@ -12,13 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.badge.BadgeIntentService;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.backlog.ListBean;
 import com.kc.shiptransport.mvp.home.HomeFragment;
 import com.kc.shiptransport.mvp.mine.MineFragment;
 import com.kc.shiptransport.mvp.upcoming.UpcomingFragment;
 import com.kc.shiptransport.mvp.upcoming.UpcomingPresenter;
-import com.kc.shiptransport.badge.BadgeIntentService;
 import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.MIUIUtils;
 
@@ -89,7 +89,13 @@ public class MainFragment extends Fragment {
         super.onResume();
         // 更新角标
         List<ListBean> all = DataSupport.findAll(ListBean.class);
-        badge = new QBadgeView(getContext()).bindTarget(((ViewGroup) tabLayout.getChildAt(0)).getChildAt(1)).setBadgeNumber(all.size());
+        if (badge == null) {
+            badge = new QBadgeView(getContext()).bindTarget(((ViewGroup) tabLayout.getChildAt(0)).getChildAt(1)).setBadgeNumber(all.size());
+        } else {
+            badge.hide(false);
+            badge.setBadgeNumber(all.size());
+        }
+
         badge.setGravityOffset(20, 0, true);
 
         // 更新桌面角标

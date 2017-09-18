@@ -33,6 +33,7 @@ import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 import com.kc.shiptransport.view.PopupWindow.CommonUtil;
 import com.kc.shiptransport.view.actiivty.ImageActivity;
+import com.kc.shiptransport.view.actiivty.ImgViewPageActivity;
 import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.NormalFilePickActivity;
 import com.vincent.filepicker.filter.entity.NormalFile;
@@ -132,8 +133,8 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                     public void onItemClick(View view, int position, int... type) {
                         final ScannerImgListByTypeBean scannerImgListByTypeBean = adapter.list.get(position);
                         if (type[0] == 0) {
-                            // 显示图片
-                            ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
+                            // TODO 显示图片
+                            ImgViewPageActivity.startActivity(getContext(), (ArrayList<ScannerImgListByTypeBean>) adapter.list, position);
                         } else if (type[0] == 1) {
                             // 下载预览PDF
                             if (rxDownload == null) {
@@ -149,13 +150,25 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                         } else {
 
                             if (activity.isFinshReceptionSandAttachment == 0) {
-                                activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        // 删除图片
-                                        presenter.deleteImg(scannerImgListByTypeBean.getItemID());
-                                    }
-                                });
+                                String fileName = scannerImgListByTypeBean.getFileName();
+                                String[] split = fileName.split("\\.");
+                                if (split.length > 0 && split[1].equals("pdf")) {
+                                    activity.showDailog("删除PDF", "是否删除PDF文件", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            // 删除PDF
+                                            presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                                        }
+                                    });
+                                } else {
+                                    activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            // 删除图片
+                                            presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                                        }
+                                    });
+                                }
                             } else if (activity.isFinshReceptionSandAttachment == 1) {
                                 Toast.makeText(getContext(), "验砂已完成, 不可删除", Toast.LENGTH_SHORT).show();
                             }

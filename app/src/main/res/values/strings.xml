@@ -156,7 +156,7 @@
     <string name="title_analysis">供砂进度跟踪</string>
     <string name="btn_ok">确定</string>
     <string name="title_analysis_detail">供应商进场计划进度跟踪</string>
-    <string name="title_evaluation">预验收评价</string>
+    <string name="title_evaluation">预验收反馈</string>
     <string name="title_rank">供应商排行</string>
     <string name="title_contact">通讯录</string>
     <string name="text_current_version_code">当前版本号</string>

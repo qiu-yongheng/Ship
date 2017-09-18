@@ -180,7 +180,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
         /** 如果已提交, 不能修改数据 */
         isSumbittedPerfectBoatScanner = weekTask.getIsSumbittedPerfectBoatScanner();
 
-        if (isSumbittedPerfectBoatScanner == 1) {
+        /** 已提交或查看模式, 不能修改 */
+        if (isSumbittedPerfectBoatScanner == 1 || activity.type == 1) {
             /** 已提交 */
             btnAlreadyCommit.setVisibility(View.VISIBLE);
             btnCommit.setVisibility(View.GONE);

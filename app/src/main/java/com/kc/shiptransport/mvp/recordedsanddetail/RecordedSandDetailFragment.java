@@ -100,6 +100,8 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
     @BindView(R.id.tv_receive_ship)
     TextView tvReceiveShip;
     Unbinder unbinder;
+    @BindView(R.id.rl_cb)
+    RelativeLayout rlCb;
     private RecordedSandDetailActivity activity;
     private RecordedSandDetailContract.Presenter presenter;
     private int IsFinish = 0;
@@ -316,6 +318,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
             spReceiveShip.setVisibility(View.GONE);
             btnCommit.setVisibility(View.GONE);
             btnReturn.setVisibility(View.VISIBLE);
+            rlCb.setVisibility(View.GONE);
             etAfter1.setFocusable(false);
             etAfter1.setFocusableInTouchMode(false);
 

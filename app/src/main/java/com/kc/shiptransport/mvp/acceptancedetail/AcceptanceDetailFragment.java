@@ -37,7 +37,7 @@ import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.ToastUtil;
-import com.kc.shiptransport.view.actiivty.ImageActivity;
+import com.kc.shiptransport.view.actiivty.ImgViewPageActivity;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -414,7 +414,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                     final ScannerImgListByTypeBean scannerImgListByTypeBean = adapter.list.get(position);
                     if (type[0] == 0) {
                         // 显示图片
-                        ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
+                        //ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
+                        ImgViewPageActivity.startActivity(getContext(), (ArrayList<ScannerImgListByTypeBean>) adapter.list, position);
                     } else {
 
                         if (value.getStatus() != 1) {
