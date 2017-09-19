@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.mvp.search.SearchActivity;
 
 import java.util.List;
 
@@ -58,9 +61,8 @@ public class ContactFragment extends Fragment implements ContactContract.View {
         activity = (ContactActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle(R.string.title_contact);
-
-
     }
 
     @Override
@@ -69,10 +71,19 @@ public class ContactFragment extends Fragment implements ContactContract.View {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.search, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
+                break;
+            case R.id.action_search:
+                SearchActivity.startActivity(getContext());
                 break;
         }
         return super.onOptionsItemSelected(item);

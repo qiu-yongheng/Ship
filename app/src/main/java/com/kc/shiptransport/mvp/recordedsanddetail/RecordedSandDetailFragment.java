@@ -302,6 +302,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         activity = (RecordedSandDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.setTitle(R.string.recorded_title);
 
         /** 根据不同的类型, 改变按钮的描述 */

@@ -82,6 +82,7 @@ public class AttendanceAuditFragment extends Fragment implements AttendanceAudit
         activity = (AttendanceAuditActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle(R.string.attendance_audit);
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));

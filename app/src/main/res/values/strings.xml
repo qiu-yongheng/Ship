@@ -168,6 +168,7 @@
     <string name="title_feedback">退场反馈</string>
     <string name="menu_view_comments">查看退回意见</string>
     <string name="title_construction_log_manager">日报管理</string>
+    <string name="action_search">搜索</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

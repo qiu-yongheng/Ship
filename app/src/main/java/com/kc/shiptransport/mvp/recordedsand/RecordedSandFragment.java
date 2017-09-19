@@ -65,6 +65,7 @@ public class RecordedSandFragment extends BaseMvpFragment {
         activity = (RecordedSandActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
     }
 
     @Override

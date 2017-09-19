@@ -977,4 +977,11 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> GetExitApplicationList(int PageSize, int PageCount, int jumpWeek, String account);
+
+    /**
+     * 搜索联系人
+     * @param keyWords
+     * @return
+     */
+    Observable<List<Contacts>> searchContacts(String keyWords);
 }

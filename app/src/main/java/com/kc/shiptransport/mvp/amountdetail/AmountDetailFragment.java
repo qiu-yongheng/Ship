@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.amount.AmountDetail;
 import com.kc.shiptransport.db.amount.AmountOption;
@@ -44,7 +45,7 @@ import com.kc.shiptransport.util.SelectUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
-import com.kc.shiptransport.view.actiivty.ImageActivity;
+import com.kc.shiptransport.view.actiivty.ImgViewPageActivity;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -144,6 +145,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
     private int width;
     private CommonPopupWindow pop_sub;
     private AmountOption amount;
+    private ArrayList<ImgList> imgLists = new ArrayList<>();
 
     @Nullable
     @Override
@@ -384,6 +386,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         activity = (AmountDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.setTitle(R.string.title_amount_detail);
 
         List<User> all = findAll(User.class);
@@ -622,7 +625,19 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                     final AmountDetail.TheAmountOfSideAttachmentListBean bean = adapter.list.get(position);
                     if (type[0] == 0) {
                         // 预览
-                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+                        //ImageActivity.startActivity(getContext(), bean.getFilePath());
+
+                        imgLists.clear();
+                        for (AmountDetail.TheAmountOfSideAttachmentListBean listBean : adapter.list) {
+                            ImgList imgList = new ImgList();
+                            imgList.setPath(listBean.getFilePath());
+                            imgLists.add(imgList);
+                        }
+
+                        ImgViewPageActivity.startActivity(getContext(), imgLists, position);
+
+
+
                     } else {
                         if (activity.isAmount) {
                             Toast.makeText(getContext(), "量方已完善, 不可删除图片", Toast.LENGTH_SHORT).show();

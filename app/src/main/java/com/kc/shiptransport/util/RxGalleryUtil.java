@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
@@ -131,6 +132,8 @@ public class RxGalleryUtil {
      * @param imageView 图片空间
      */
     public static void showImage(Context context, Object path, Drawable defaultDrawable, Drawable errorDrawable, ImageView imageView) {
+        defaultDrawable = (defaultDrawable == null) ? context.getResources().getDrawable(R.mipmap.load) : defaultDrawable;
+        //errorDrawable = (errorDrawable == null) ? context.getResources().getDrawable(R.mipmap.load_error) : errorDrawable;
         //网络请求获取图片并设置
         Glide.with(context)
                 .load(path) //图片地址

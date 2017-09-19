@@ -149,6 +149,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
         activity = (PlanSetActivity) getActivity();
         activity.setSupportActionBar(toolbarPlanSet);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         //适配器
         ArrayAdapter<String> arr_adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek));

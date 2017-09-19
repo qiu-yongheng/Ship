@@ -41,6 +41,7 @@ public class ImageActivity extends BaseActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         getSupportActionBar().setTitle("图片详情");
 
         // 启动缩放

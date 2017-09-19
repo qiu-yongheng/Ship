@@ -64,6 +64,7 @@ public class ChangePasswordFragment extends Fragment implements ChangePasswordCo
         activity = (ChangePasswordActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle(R.string.title_change_pass);
     }
 

@@ -87,6 +87,7 @@ public class ImageSelectActivity extends BaseActivity {
     private void initView() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         getSupportActionBar().setTitle(title);
 
         recyclerview.setLayoutManager(new GridLayoutManager(this, 4));

@@ -100,6 +100,7 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
         activity = (AttendanceRecordActivity) getActivity();
         activity.setSupportActionBar(mToolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle(R.string.title_attendance);
 
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));

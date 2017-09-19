@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.kc.shiptransport.adapter.ImgViewPageAdapter;
-import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.mvp.BaseActivity;
 import com.kc.shiptransport.view.viewpage.HackyViewPager;
 
@@ -31,7 +31,7 @@ public class ImgViewPageActivity extends BaseActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         Bundle bundle = getIntent().getExtras();
-        ArrayList<ScannerImgListByTypeBean> imgList = bundle.getParcelableArrayList(IMGLIST);
+        ArrayList<ImgList> imgList = bundle.getParcelableArrayList(IMGLIST);
         int position = bundle.getInt(POSITION);
 
 
@@ -43,7 +43,7 @@ public class ImgViewPageActivity extends BaseActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, ArrayList<ScannerImgListByTypeBean> list, int position) {
+    public static void startActivity(Context context, ArrayList<ImgList> list, int position) {
         Intent intent = new Intent(context, ImgViewPageActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(IMGLIST, list);

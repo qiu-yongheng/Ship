@@ -70,6 +70,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
         activity = (HomeDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle(R.string.toolbar_title);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 3));

@@ -1948,11 +1948,11 @@ public class DataRepository implements DataSouceImpl {
                 // 获取保存的数据
                 List<SampleImageList> all = DataSupport.where("ItemID = ?", String.valueOf(sandSample.getItemID())).find(SampleImageList.class);
 
-//                if (all.isEmpty()) {
-//                    e.onError(new RuntimeException("没有图片进行提交"));
-//                } else {
-//                    e.onNext(all);
-//                }
+                //                if (all.isEmpty()) {
+                //                    e.onError(new RuntimeException("没有图片进行提交"));
+                //                } else {
+                //                    e.onNext(all);
+                //                }
 
                 e.onNext(all);
                 e.onComplete();
@@ -4413,6 +4413,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.69 删除船舶日志停工数据
+     *
      * @param ItemID
      * @return
      */
@@ -4433,6 +4434,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.70 删除船舶抛砂数据
+     *
      * @param ItemID
      * @return
      */
@@ -4453,6 +4455,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.49 获取退场数据(退场申请，退场审核列表)
+     *
      * @param PageSize
      * @param PageCount
      * @param jumpWeek
@@ -4563,6 +4566,27 @@ public class DataRepository implements DataSouceImpl {
                 }
 
                 e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 搜索联系人
+     *
+     * @param keyWords
+     * @return
+     */
+    @Override
+    public Observable<List<Contacts>> searchContacts(final String keyWords) {
+        return Observable.create(new ObservableOnSubscribe<List<Contacts>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<Contacts>> e) throws Exception {
+                List<Contacts> list = DataSupport
+                        .where("DisplayName like ? or Department like ?", "%" + keyWords + "%", "%" + keyWords + "%")
+                        .find(Contacts.class);
+
+                e.onNext(list);
                 e.onComplete();
             }
         });

@@ -55,6 +55,7 @@ public class ExitApplicationFragment extends BaseMvpFragment {
         activity = (ExitApplicationActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
     }
 
     @Override

@@ -178,6 +178,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle(R.string.sampledetail_title);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         // 初始化recyclerview
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

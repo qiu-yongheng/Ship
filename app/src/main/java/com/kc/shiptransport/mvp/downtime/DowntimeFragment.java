@@ -159,6 +159,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         activity = (DowntimeActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 3));
     }

@@ -60,6 +60,7 @@ public class SampleFragment extends BaseMvpFragment{
         activity = (SampleActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
     }
 

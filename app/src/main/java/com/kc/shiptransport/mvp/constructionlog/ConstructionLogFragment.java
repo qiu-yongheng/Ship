@@ -78,6 +78,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
         activity = (ConstructionLogActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle(R.string.title_construction);
 
         // 设置船名

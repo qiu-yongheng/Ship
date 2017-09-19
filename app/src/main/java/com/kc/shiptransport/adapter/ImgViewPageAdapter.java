@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.bm.library.PhotoView;
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.util.RxGalleryUtil;
 
 import java.util.ArrayList;
@@ -27,11 +27,11 @@ import java.util.List;
 public class ImgViewPageAdapter extends PagerAdapter {
 
     private Context mContext;
-    private List<ScannerImgListByTypeBean> mData;
+    private List<ImgList> mData;
     private LayoutInflater layoutInflater;
     private View mCurrentView;
 
-    public ImgViewPageAdapter(Context context, ArrayList<ScannerImgListByTypeBean> data) {
+    public ImgViewPageAdapter(Context context, ArrayList<ImgList> data) {
         mContext = context;
         mData = data;
         layoutInflater = LayoutInflater.from(this.mContext);
@@ -53,7 +53,7 @@ public class ImgViewPageAdapter extends PagerAdapter {
 
     @Override
     public View instantiateItem(ViewGroup container, int position) {
-        final String imageUrl = mData.get(position).getFilePath();
+        final String imageUrl = mData.get(position).getPath();
         View view = layoutInflater.inflate(R.layout.activity_image_list, container, false);
         PhotoView imageView = (PhotoView) view.findViewById(R.id.img);
         imageView.enable();

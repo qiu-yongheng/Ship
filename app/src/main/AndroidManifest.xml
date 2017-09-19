@@ -83,6 +83,7 @@
         <activity android:name=".mvp.exitassessor.ExitAssessorActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".mvp.upcominglist.UpcomingListActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".view.actiivty.ImgViewPageActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.search.SearchActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
 
 
         <activity

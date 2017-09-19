@@ -214,6 +214,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
         activity = (SupplyActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         // 添加边框

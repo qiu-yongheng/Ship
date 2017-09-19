@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.user.User;
@@ -35,7 +36,7 @@ import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.ToastUtil;
-import com.kc.shiptransport.view.actiivty.ImageActivity;
+import com.kc.shiptransport.view.actiivty.ImgViewPageActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -108,6 +109,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
     private int FULLY_PHOTO = 0;
     private int NAME_PHOTO = 1;
     private SupplyDetail value;
+    private ArrayList<ImgList> imgLists = new ArrayList<>();
 
     @Nullable
     @Override
@@ -130,6 +132,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         activity.setSupportActionBar(toolbarSupplyDetail);
         activity.getSupportActionBar().setTitle("验砂管理");
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         if (activity.isSupply) {
             // 禁止软键盘
@@ -369,7 +372,16 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                     final SupplyDetail.ReceptionSandAttachmentListBean bean = adapter.list.get(position);
                     if (type[0] == 0) {
                         // 预览
-                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+                        //ImageActivity.startActivity(getContext(), bean.getFilePath());
+
+                        imgLists.clear();
+                        for (SupplyDetail.ReceptionSandAttachmentListBean listBean : adapter.list) {
+                            ImgList imgList = new ImgList();
+                            imgList.setPath(listBean.getFilePath());
+                            imgLists.add(imgList);
+                        }
+
+                        ImgViewPageActivity.startActivity(getContext(), imgLists, position);
                     } else {
                         if (activity.isSupply) {
                             ToastUtil.tip(getContext(), "验砂已完成, 不能删除图片");
@@ -435,7 +447,15 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                     final SupplyDetail.ReceptionSandBoatNameAttachmentListBean bean = nameAdapter.list.get(position);
                     if (type[0] == 0) {
                         // 预览
-                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+//                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+                        imgLists.clear();
+                        for (SupplyDetail.ReceptionSandBoatNameAttachmentListBean listBean : nameAdapter.list) {
+                            ImgList imgList = new ImgList();
+                            imgList.setPath(listBean.getFilePath());
+                            imgLists.add(imgList);
+                        }
+
+                        ImgViewPageActivity.startActivity(getContext(), imgLists, position);
                     } else {
                         if (activity.isSupply) {
                             ToastUtil.tip(getContext(), "验砂已完成, 不能删除图片");

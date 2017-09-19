@@ -142,6 +142,7 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
         activity = (ScannerDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
     }

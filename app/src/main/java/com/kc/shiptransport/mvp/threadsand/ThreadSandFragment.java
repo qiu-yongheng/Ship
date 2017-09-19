@@ -165,6 +165,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         activity = (ThreadSandActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
     }
 
     @Override

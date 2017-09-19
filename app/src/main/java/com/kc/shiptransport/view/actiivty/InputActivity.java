@@ -57,6 +57,7 @@ public class InputActivity extends BaseActivity {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         textTitle.setText(title);
 
         if (!getResources().getString(R.string.text_unfilled).equals(hint)) {

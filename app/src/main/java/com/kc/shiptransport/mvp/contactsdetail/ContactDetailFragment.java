@@ -85,6 +85,7 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
         activity = (ContactDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle("返回");
 
 

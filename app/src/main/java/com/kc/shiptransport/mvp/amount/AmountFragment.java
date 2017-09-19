@@ -206,6 +206,7 @@ public class AmountFragment extends Fragment implements AmountContract.View {
         activity = (AmountActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         // 添加边框

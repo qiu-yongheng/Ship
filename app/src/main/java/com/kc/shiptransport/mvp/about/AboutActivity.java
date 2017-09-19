@@ -78,6 +78,8 @@ public class AboutActivity extends BaseActivity {
     private void initView() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         getSupportActionBar().setTitle("关于综合生产调度管理系统");
 
         String versionName = AppInfoUtils.getVersionName(this);

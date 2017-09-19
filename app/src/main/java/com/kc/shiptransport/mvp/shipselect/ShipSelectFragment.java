@@ -85,6 +85,7 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
         setHasOptionsMenu(true);
         activity.setSupportActionBar(toolbarShipSelect);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle("新增船舶");
 
         recyclerviewShipSelect.setLayoutManager(new GridLayoutManager(activity, 2));

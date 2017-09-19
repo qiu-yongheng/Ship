@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
@@ -114,6 +115,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     private String shipItemNum;
     private AcceptanceInfoBean value;
     private ScannerImgSelectAdapter adapter;
+    private ArrayList<ImgList> imgLists = new ArrayList<>();
 
     @Nullable
     @Override
@@ -235,6 +237,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         activity.setSupportActionBar(toolbarSupplyDetail);
         activity.getSupportActionBar().setTitle("预验收管理");
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         if (activity.isAcceptance) {
             // 已验收
@@ -415,7 +418,14 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                     if (type[0] == 0) {
                         // 显示图片
                         //ImageActivity.startActivity(getContext(), scannerImgListByTypeBean.getFilePath());
-                        ImgViewPageActivity.startActivity(getContext(), (ArrayList<ScannerImgListByTypeBean>) adapter.list, position);
+
+                        imgLists.clear();
+                        for (ScannerImgListByTypeBean bean : adapter.list) {
+                            ImgList imgList = new ImgList();
+                            imgList.setPath(bean.getFilePath());
+                            imgLists.add(imgList);
+                        }
+                        ImgViewPageActivity.startActivity(getContext(), imgLists, position);
                     } else {
 
                         if (value.getStatus() != 1) {

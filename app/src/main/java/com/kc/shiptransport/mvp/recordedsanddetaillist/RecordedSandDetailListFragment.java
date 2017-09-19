@@ -72,6 +72,7 @@ public class RecordedSandDetailListFragment extends Fragment implements Recorded
         activity = (RecordedSandDetailListActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle(R.string.title_recorded_sand_detail_list);
 
         /** 初始化recycler_view */

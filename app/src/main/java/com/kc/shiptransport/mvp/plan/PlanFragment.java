@@ -197,6 +197,7 @@ public class PlanFragment extends Fragment implements PlanContract.View {
         activity = (PlanActivity) getActivity();
         activity.setSupportActionBar(toolbarPlan);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         recyclerviewPlan.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         // 添加边框

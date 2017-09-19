@@ -89,6 +89,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
         activity = (VoyageDetailActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
     }

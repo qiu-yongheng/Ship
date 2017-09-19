@@ -137,6 +137,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         activity = (AnalysisActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         recycleView.setLayoutManager(new LinearLayoutManager(getContext()));
 

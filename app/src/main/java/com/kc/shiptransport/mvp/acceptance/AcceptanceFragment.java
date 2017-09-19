@@ -201,6 +201,7 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
         activity = (AcceptanceActivity) getActivity();
         activity.setSupportActionBar(toolbarAcceptance);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         // 添加边框

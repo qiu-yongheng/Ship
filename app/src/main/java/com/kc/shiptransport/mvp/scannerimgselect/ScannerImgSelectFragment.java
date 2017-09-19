@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
@@ -68,6 +69,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
     private ScannerImgSelectAdapter adapter;
     private CommonPopupWindow popupWindow;
     private RxDownload rxDownload;
+    private ArrayList<ImgList> imgLists = new ArrayList<>();
 
     @Nullable
     @Override
@@ -88,6 +90,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
         activity = (ScannerImgSelectActivity) getActivity();
         activity.setSupportActionBar(mToolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         activity.getSupportActionBar().setTitle(activity.mTitle);
 
         mRecyclerview.setLayoutManager(new GridLayoutManager(getContext(), 4));
@@ -134,7 +137,13 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                         final ScannerImgListByTypeBean scannerImgListByTypeBean = adapter.list.get(position);
                         if (type[0] == 0) {
                             // TODO 显示图片
-                            ImgViewPageActivity.startActivity(getContext(), (ArrayList<ScannerImgListByTypeBean>) adapter.list, position);
+                            imgLists.clear();
+                            for (ScannerImgListByTypeBean bean : adapter.list) {
+                                ImgList imgList = new ImgList();
+                                imgList.setPath(bean.getFilePath());
+                                imgLists.add(imgList);
+                            }
+                            ImgViewPageActivity.startActivity(getContext(), imgLists, position);
                         } else if (type[0] == 1) {
                             // 下载预览PDF
                             if (rxDownload == null) {
