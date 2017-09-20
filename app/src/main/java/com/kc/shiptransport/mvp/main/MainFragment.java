@@ -69,7 +69,9 @@ public class MainFragment extends Fragment {
         }
 
         /** 初始化presenter */
-        new UpcomingPresenter(getContext(), upcomingFragment, new DataRepository());
+        if (upcomingFragment != null) {
+            new UpcomingPresenter(getContext(), upcomingFragment, new DataRepository());
+        }
 
     }
 

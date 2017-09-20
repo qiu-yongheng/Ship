@@ -107,6 +107,8 @@ public class SettingUtil {
     public static final int TYPE_EXIT_FEEDBACK = 115;
     /* 施工日志管理 */
     public static final int TYPE_CONSTRUCTIONLOG_MANAGER = 116;
+    /* 明日来船计划 */
+    public static final int TYPE_TOMORROW_PLAN = 117;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 
@@ -207,5 +209,17 @@ public class SettingUtil {
     /* 查看 */
     public static final int TYPE_DATA_SHOW = 803;
     /*-----------------------------------------------数据操作类型--------------------------------------------------*/
+
+
+
+
+    /*-----------------------------------------------施工分区--------------------------------------------------*/
+    /* 分区前缀 */
+    public static final String SP_KEY_PREFIX = "SP_KEY_PREFIX";
+    /* 开始数 */
+    public static final String SP_KEY_START_NUM = "SP_KEY_START_NUM";
+    /* 结束数 */
+    public static final String SP_KEY_END_NUM = "SP_KEY_END_NUM";
+    /*-----------------------------------------------施工分区--------------------------------------------------*/
 
 }

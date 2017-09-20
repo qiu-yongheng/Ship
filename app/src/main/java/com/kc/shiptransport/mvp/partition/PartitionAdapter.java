@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.LogUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -29,14 +30,16 @@ import java.util.List;
 
 public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final Context context;
+    private final String userAccount;
     public List<PartitionNum> list;
     private final LayoutInflater inflate;
     private OnRecyclerviewItemClickListener listener;
 
-    public PartitionAdapter(Context context, List<PartitionNum> list) {
+    public PartitionAdapter(Context context, List<PartitionNum> list, String shipNum) {
         this.context = context;
         this.inflate = LayoutInflater.from(context);
         this.list = list;
+        this.userAccount = shipNum;
     }
 
     @Override
@@ -46,6 +49,7 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         final PartitionNum num = list.get(position);
 
         ((NormalHolder)holder).mTvTag.setText("分区" + (position + 1));
@@ -60,7 +64,7 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public boolean onLongClick(View view) {
                 listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
-                return false;
+                return true;
             }
         });
 
@@ -77,6 +81,7 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             @Override
             public void afterTextChanged(Editable editable) {
+                LogUtil.d("施工分区adapter EditText 数据改变");
                 String data = editable.toString();
                 data = (TextUtils.isEmpty(data)) ? "" : data;
 
@@ -85,7 +90,6 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 num.save();
             }
         });
-
 
         /** 设置最后一个edittext获取焦点 */
         if (list.size() == (position + 1)) {
@@ -126,7 +130,7 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void add (int pos) {
         // 创建一个新的数据, 保存用户名
         PartitionNum num = new PartitionNum();
-        num.setUserAccount(list.get(0).getUserAccount());
+        num.setUserAccount(userAccount);
 
         List<PartitionNum> all = DataSupport.findAll(PartitionNum.class);
 
@@ -157,12 +161,10 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * @param pos
      */
     public void delete(int pos) {
+        // 从数据库删除
         list.get(pos).delete();
+        // 从列表移除
         list.remove(pos);
-
-
-        List<PartitionNum> all = DataSupport.findAll(PartitionNum.class);
-
         notifyItemRemoved(pos);
     }
 

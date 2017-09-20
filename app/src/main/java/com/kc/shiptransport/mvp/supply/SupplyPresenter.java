@@ -19,6 +19,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -168,6 +169,9 @@ public class SupplyPresenter implements SupplyContract.Presenter {
 
                         // 统计未验收量
                         getStaySupplyShip();
+
+                        // 统计船舶数
+                        getDayShipCount(jumpWeek);
                     }
                 });
     }
@@ -239,6 +243,7 @@ public class SupplyPresenter implements SupplyContract.Presenter {
                     @Override
                     public void onComplete() {
                         getWeekTask(jumpWeek);
+
                     }
                 });
     }
@@ -285,6 +290,35 @@ public class SupplyPresenter implements SupplyContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    @Override
+    public void getDayShipCount(int jumpWeek) {
+        dataRepository
+                .getDemanDayShipCount(jumpWeek)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Integer>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<Integer> list) {
+                        view.showDayShipCount(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
 
                     }
 

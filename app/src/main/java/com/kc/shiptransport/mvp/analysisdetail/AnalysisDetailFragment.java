@@ -583,14 +583,16 @@ public class AnalysisDetailFragment extends Fragment implements AnalysisDetailCo
                                 @Override
                                 protected void convert(ViewHolder holder, final AnalysisDetail.SandSamplingRecordListBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean sandSamplingAttachmentRecordListBean, int position) {
                                     ImageView imageView = holder.getView(R.id.iv_image);
-                                    RxGalleryUtil.showImage(getContext(), sandSamplingAttachmentRecordListBean.getFilePath(), null, null, imageView);
+                                    if (sandSamplingAttachmentRecordListBean != null) {
+                                        RxGalleryUtil.showImage(getContext(), sandSamplingAttachmentRecordListBean.getFilePath(), null, null, imageView);
 
-                                    holder.setOnClickListener(R.id.iv_image, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            ImageActivity.startActivity(getContext(), sandSamplingAttachmentRecordListBean.getFilePath());
-                                        }
-                                    });
+                                        holder.setOnClickListener(R.id.iv_image, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                ImageActivity.startActivity(getContext(), sandSamplingAttachmentRecordListBean.getFilePath());
+                                            }
+                                        });
+                                    }
                                 }
                             };
 

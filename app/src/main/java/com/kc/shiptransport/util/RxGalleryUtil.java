@@ -14,7 +14,7 @@ import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
+import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
@@ -35,7 +35,7 @@ public class RxGalleryUtil {
      * @param listener
      */
     public static void getImagRadio(Activity activity, final OnRxGalleryRadioListener listener) {
-        RxGalleryFinalApi.getInstance(activity).setImageMultipleResultEvent(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+        RxGalleryFinalApi.getInstance(activity).setImageMultipleResultEvent(new RxBusResultDisposable<ImageMultipleResultEvent>() {
             @Override
             protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                 listener.onEvent(imageMultipleResultEvent);
@@ -50,7 +50,7 @@ public class RxGalleryUtil {
      */
     public static void getImagRadioDefault(Activity activity, final OnRxGalleryRadioListener listener) {
         //1.打开单选图片，默认参数
-        RxGalleryFinalApi.getInstance(activity).setImageRadioResultEvent(new RxBusResultSubscriber<ImageRadioResultEvent>() {
+        RxGalleryFinalApi.getInstance(activity).setImageRadioResultEvent(new RxBusResultDisposable<ImageRadioResultEvent>() {
             @Override
             protected void onEvent(ImageRadioResultEvent imageRadioResultEvent) throws Exception {
                 listener.onEvent(imageRadioResultEvent);
@@ -71,7 +71,7 @@ public class RxGalleryUtil {
                 .multiple()
                 .maxSize(maxSize)
                 .imageLoader(ImageLoaderType.GLIDE)
-                .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
+                .subscribe(new RxBusResultDisposable<ImageMultipleResultEvent>() {
 
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {

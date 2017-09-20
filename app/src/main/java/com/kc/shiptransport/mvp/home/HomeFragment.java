@@ -21,6 +21,7 @@ import com.kc.shiptransport.mvp.constructionlog.ConstructionLogActivity;
 import com.kc.shiptransport.mvp.contacts.ContactActivity;
 import com.kc.shiptransport.mvp.homedetail.HomeDetailActivity;
 import com.kc.shiptransport.mvp.main.MainActivity;
+import com.kc.shiptransport.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -112,7 +113,7 @@ public class HomeFragment extends Fragment {
                 public void onItemClick(View view, int position, int... type) {
                     switch (type[0]) {
                         case -1:
-                            tip("功能待开发");
+                            ToastUtil.tip(getContext(), "功能待开发");
                             break;
                         case 1:
                             // 电子海图

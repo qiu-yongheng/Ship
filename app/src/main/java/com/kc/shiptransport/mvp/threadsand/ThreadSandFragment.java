@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.threadsand;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +29,7 @@ import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
+import com.kc.shiptransport.db.thread.ThreadShip;
 import com.kc.shiptransport.db.threadsand.Layered;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
@@ -39,6 +43,8 @@ import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 import com.kc.shiptransport.view.PopupWindow.CommonUtil;
+import com.zhy.adapter.recyclerview.CommonAdapter;
+import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -96,6 +102,10 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     Button mBtnThreadSandLog;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.tv_sand_ship)
+    TextView tvSandShip;
+    @BindView(R.id.cb_already_clear)
+    CheckBox cbAlreadyClear;
     private ThreadSandActivity activity;
     private ThreadSandContract.Presenter presenter;
     private CommonPopupWindow popupWindow;
@@ -107,6 +117,11 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     private ConstructionBoat boat;
     private boolean flag = false;
     private String realDate = "";
+    private CommonPopupWindow sandShipPupWindow;
+    private int sandWidth;
+    private int sandHeight;
+    private int isClear = 0;
+    private String SandHandlingShipID = "";
 
     @Nullable
     @Override
@@ -318,7 +333,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                         .setView(R.layout.popup_down)
                         .setWidthAndHeight(measuredWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
                         .setAnimationStyle(R.style.AnimDown)
-                        .setBackGroundLevel(0.8f)
+                        .setBackGroundLevel(0.9f)
                         .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
                             @Override
                             public void getChildView(View view, int layoutResId) {
@@ -356,6 +371,73 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             }
         });
 
+        /** 供砂船名 */
+        tvSandShip.post(new Runnable() {
+            @Override
+            public void run() {
+                sandWidth = tvSandShip.getMeasuredWidth();
+                sandHeight = tvSandShip.getMeasuredHeight();
+            }
+        });
+        tvSandShip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (sandShipPupWindow != null && sandShipPupWindow.isShowing()) {
+                    return;
+                }
+
+                sandShipPupWindow = new CommonPopupWindow.Builder(getContext())
+                        .setView(R.layout.popup_down)
+                        .setWidthAndHeight(sandWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .setAnimationStyle(R.style.AnimDown)
+                        .setBackGroundLevel(0.9f)
+                        .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
+                            @Override
+                            public void getChildView(View view, int layoutResId) {
+                                // 初始化控件
+                                RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
+
+                                recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+                                // 获取数据
+                                List<ThreadShip> list = DataSupport.order("rownumber asc").find(ThreadShip.class);
+
+                                CommonAdapter<ThreadShip> commonAdapter = new CommonAdapter<ThreadShip>(getContext(), R.layout.item_thread_sand, list) {
+                                    @Override
+                                    protected void convert(ViewHolder holder, final ThreadShip threadShip, int position) {
+                                        holder.setText(R.id.tv, threadShip.getShipName())
+                                                .setOnClickListener(R.id.tv, new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        // 供砂船舶账号
+                                                        SandHandlingShipID = threadShip.getShipAccount();
+                                                        tvSandShip.setText(threadShip.getShipName());
+                                                        etSandVoyage.setText(threadShip.getShipItemNum());
+                                                        if (sandShipPupWindow != null) {
+                                                            sandShipPupWindow.dismiss();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                };
+
+                                recycle_view.setAdapter(commonAdapter);
+                            }
+                        })
+                        .setOutsideTouchable(true)
+                        .create();
+                sandShipPupWindow.showAsDropDown(view);
+            }
+        });
+
+        /** 已清仓 */
+        cbAlreadyClear.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isClear = b ? 1 : 0;
+            }
+        });
+
         /** 施工分区 */
         // 跳转
         tvConstructionDevision.setOnClickListener(new View.OnClickListener() {
@@ -373,90 +455,109 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (boat == null) {
-                    if (activity.type == SettingUtil.TYPE_DATA_NEW) {
-                        List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
-                        int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
-                        boat = all.get(position - 1);
-                    } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
-                        List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
-                        if (!lists.isEmpty()) {
-                            String shipAccount = lists.get(0).getShipAccount();
-
-                            List<ConstructionBoat> boats = DataSupport.where("ShipNum = ?", shipAccount).find(ConstructionBoat.class);
-                            if (!boats.isEmpty()) {
-                                boat = boats.get(0);
-                            }
+                if (isClear == 1) {
+                    activity.showDailog("提交抛砂记录", "是否提交已清仓?", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            commitThread();
                         }
-                    }
-                }
-
-
-                // 账号
-                List<User> all = DataSupport.findAll(User.class);
-                // 施工分区
-                List<PartitionNum> numList = DataSupport.findAll(PartitionNum.class);
-                // 开始时间
-                String startTime = tvStartTime.getText().toString();
-                // 结束时间
-                String endTime = realDate;
-                // 供砂航次
-                String sandVoyage = etSandVoyage.getText().toString();
-                // 施工分层
-                String stratification = tvConstructionStratification.getText().toString();
-                // 工程量
-                String quantity = etEngineeringQuantity.getText().toString();
-                // 备注
-                String remark = etRemark.getText().toString();
-                remark = remark.equals("添加备注") ? "" : remark;
-
-
-                if (!endTime.equals(HINT) &&
-                        !TextUtils.isEmpty(endTime) &&
-                        !stratification.equals(HINT) &&
-                        !TextUtils.isEmpty(stratification) &&
-                        !sandVoyage.equals(HINT) &&
-                        !TextUtils.isEmpty(sandVoyage) &&
-                        !numList.isEmpty() &&
-                        !TextUtils.isEmpty(quantity)) {
-
-                    try {
-
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("ItemID", activity.itemID);
-                        jsonObject.put("ShipAccount", boat.getShipNum());
-                        jsonObject.put("Layered", layoutID);
-                        jsonObject.put("ShipItemNum", sandVoyage);
-                        jsonObject.put("StartTime", startTime);
-                        jsonObject.put("EndTime", endTime);
-                        jsonObject.put("Quantity", quantity);
-                        jsonObject.put("Creator", all.get(0).getUserID());
-                        jsonObject.put("Remark", remark);
-
-                        JSONArray jsonArray = new JSONArray();
-                        for (PartitionNum bean : numList) {
-                            JSONObject object = new JSONObject();
-                            object.put("ItemID", 0);
-                            object.put("PartitionName", bean.getNum());
-                            jsonArray.put(object);
-                        }
-                        jsonObject.put("ThrowingSandPartitionList", jsonArray);
-
-                        String json = jsonObject.toString();
-
-                        LogUtil.d("抛砂提交: " + json);
-
-                        presenter.commit(json);
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    });
                 } else {
-                    Toast.makeText(getContext(), "还有数据未填写", Toast.LENGTH_SHORT).show();
+                    commitThread();
                 }
             }
         });
+    }
+
+    /**
+     * 提交抛砂
+     */
+    private void commitThread() {
+        if (boat == null) {
+            if (activity.type == SettingUtil.TYPE_DATA_NEW) {
+                List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
+                int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+                boat = all.get(position - 1);
+            } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
+                List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
+                if (!lists.isEmpty()) {
+                    String shipAccount = lists.get(0).getShipAccount();
+
+                    List<ConstructionBoat> boats = DataSupport.where("ShipNum = ?", shipAccount).find(ConstructionBoat.class);
+                    if (!boats.isEmpty()) {
+                        boat = boats.get(0);
+                    }
+                }
+            }
+        }
+
+
+        // 账号
+        List<User> all = DataSupport.findAll(User.class);
+        // 施工分区
+        List<PartitionNum> numList = DataSupport.findAll(PartitionNum.class);
+        // 开始时间
+        String startTime = tvStartTime.getText().toString();
+        // 结束时间
+        String endTime = realDate;
+        // 供砂航次
+        String sandVoyage = etSandVoyage.getText().toString();
+        // 施工分层
+        String stratification = tvConstructionStratification.getText().toString();
+        // 工程量
+        String quantity = etEngineeringQuantity.getText().toString();
+        // 备注
+        String remark = etRemark.getText().toString();
+        remark = remark.equals("添加备注") ? "" : remark;
+
+
+        if (!endTime.equals(HINT) &&
+                !TextUtils.isEmpty(endTime) &&
+                !stratification.equals(HINT) &&
+                !TextUtils.isEmpty(stratification) &&
+                !sandVoyage.equals(HINT) &&
+                !TextUtils.isEmpty(sandVoyage) &&
+                !numList.isEmpty() &&
+                !TextUtils.isEmpty(quantity) &&
+                !TextUtils.isEmpty(SandHandlingShipID)) {
+
+            try {
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ItemID", activity.itemID);
+                jsonObject.put("ShipAccount", boat.getShipNum());
+                jsonObject.put("Layered", layoutID);
+                jsonObject.put("ShipItemNum", sandVoyage);
+                jsonObject.put("StartTime", startTime);
+                jsonObject.put("EndTime", endTime);
+                jsonObject.put("Quantity", quantity);
+                jsonObject.put("Creator", all.get(0).getUserID());
+                jsonObject.put("Remark", remark);
+                jsonObject.put("SandHandlingShipID", SandHandlingShipID);
+                jsonObject.put("IsClearance", isClear);
+
+                JSONArray jsonArray = new JSONArray();
+                for (PartitionNum bean : numList) {
+                    JSONObject object = new JSONObject();
+                    object.put("ItemID", 0);
+                    object.put("PartitionName", bean.getNum());
+                    jsonArray.put(object);
+                }
+                jsonObject.put("ThrowingSandPartitionList", jsonArray);
+
+                String json = jsonObject.toString();
+
+                LogUtil.d("抛砂提交: " + json);
+
+                presenter.commit(json);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(getContext(), "还有数据未填写", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -532,6 +633,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
     /**
      * 回显详细数据
+     *
      * @param threadSandLogBeen
      */
     @Override
@@ -541,6 +643,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             // 回显施工分层
             layoutID = Integer.valueOf(logBean.getLayerID());
             tvConstructionStratification.setText(logBean.getLayerName());
+            // TODO: 回显供砂船名
             // 回显施工分区
             String partitionNameArr = logBean.getPartitionNameArr();
             tvConstructionDevision.setText(partitionNameArr);

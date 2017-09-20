@@ -16,6 +16,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -224,6 +225,8 @@ public class AmountPresenter implements AmountContract.Presenter{
                         view.showLoading(false);
 
                         getStayInfo();
+
+                        getDayShipCount(jumpWeek);
                     }
                 });
     }
@@ -271,6 +274,35 @@ public class AmountPresenter implements AmountContract.Presenter{
                     @Override
                     public void onComplete() {
                         view.showLoading(false);
+                    }
+                });
+    }
+
+    @Override
+    public void getDayShipCount(int jumpWeek) {
+        dataRepository
+                .getDemanDayShipCount(jumpWeek)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Integer>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<Integer> list) {
+                        view.showDayShipCount(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

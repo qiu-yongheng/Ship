@@ -9,15 +9,17 @@ import org.litepal.crud.DataSupport;
  */
 
 public class ProgressTrack extends DataSupport{
+
     /**
-     * ItemID : 3564
+     * ItemID : 7635
      * SubcontractorAccount : csfbs
-     * SubcontractorName : 测试供应商
-     * PlanDay : 2017-07-19
-     * ShipAccount : ygzh3966
-     * ShipName : 粤广州货3966
+     * SubcontractorName : 测试分包商
+     * PlanDay : 2017-09-29
+     * ShipAccount : csgscb
+     * ShipName : 测试供砂船舶
      * ShipType : A类
-     * StatusValue : 待信息完善
+     * SandSupplyCount : 3000
+     * StatusValue : 待验砂
      */
 
     private int ItemID;
@@ -27,6 +29,7 @@ public class ProgressTrack extends DataSupport{
     private String ShipAccount;
     private String ShipName;
     private String ShipType;
+    private int SandSupplyCount;
     private String StatusValue;
 
     public int getItemID() {
@@ -83,6 +86,14 @@ public class ProgressTrack extends DataSupport{
 
     public void setShipType(String ShipType) {
         this.ShipType = ShipType;
+    }
+
+    public int getSandSupplyCount() {
+        return SandSupplyCount;
+    }
+
+    public void setSandSupplyCount(int SandSupplyCount) {
+        this.SandSupplyCount = SandSupplyCount;
     }
 
     public String getStatusValue() {

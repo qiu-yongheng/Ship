@@ -8,18 +8,26 @@ import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
-import com.kc.shiptransport.db.exitfeedback.ExitFeedBack;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -336,6 +344,72 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
                         view.showDeleteLogResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 获取明日来船计划量
+     * @param startTime
+     * @param endTime
+     * @param subID
+     * @param shipID
+     */
+    @Override
+    public void getTomorrowPlan(String startTime, String endTime, String subID, String shipID) {
+        view.showLoading(true);
+        dataRepository
+                .GetSubcontractorInterimApproachPlanProgressTracking(subID, shipID, startTime, endTime)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<List<ProgressTrack>, ObservableSource<List<List<ProgressTrack>>>>() {
+                    @Override
+                    public ObservableSource<List<List<ProgressTrack>>> apply(@NonNull List<ProgressTrack> list) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<List<List<ProgressTrack>>>() {
+                            @Override
+                            public void subscribe(@NonNull ObservableEmitter<List<List<ProgressTrack>>> e) throws Exception {
+                                // 对数据进行分组
+                                List<ProgressTrack> progressTracks = DataSupport.order("SubcontractorAccount asc").find(ProgressTrack.class);
+                                ArrayList<List<ProgressTrack>> totalList = new ArrayList<>();
+
+                                Set set = new HashSet();
+                                for (ProgressTrack bean : progressTracks) {
+                                    String account = bean.getSubcontractorAccount();
+                                    if (set.contains(account)) {
+
+                                    } else {
+                                        set.add(account);
+                                        totalList.add(DataSupport.where("SubcontractorAccount = ?", account).find(ProgressTrack.class));
+                                    }
+                                }
+
+                                e.onNext(totalList);
+                                e.onComplete();
+                            }
+                        });
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<List<ProgressTrack>>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<List<ProgressTrack>> progressTracks) {
+                        view.showTomorrowPlan(progressTracks);
                     }
 
                     @Override

@@ -86,6 +86,20 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
     AppCompatButton btnRefresh;
     @BindView(R.id.btn_commit)
     AppCompatButton btnCommit;
+    @BindView(R.id.tv_total_ship_0)
+    AppCompatTextView tvTotalShip0;
+    @BindView(R.id.tv_total_ship_1)
+    AppCompatTextView tvTotalShip1;
+    @BindView(R.id.tv_total_ship_2)
+    AppCompatTextView tvTotalShip2;
+    @BindView(R.id.tv_total_ship_3)
+    AppCompatTextView tvTotalShip3;
+    @BindView(R.id.tv_total_ship_4)
+    AppCompatTextView tvTotalShip4;
+    @BindView(R.id.tv_total_ship_5)
+    AppCompatTextView tvTotalShip5;
+    @BindView(R.id.tv_total_ship_6)
+    AppCompatTextView tvTotalShip6;
 
     private AcceptanceActivity activity;
     private AcceptanceContract.Presenter presenter;
@@ -394,6 +408,17 @@ public class AcceptanceFragment extends Fragment implements AcceptanceContract.V
             }
         });
 
+    }
+
+    @Override
+    public void showDayShipCount(List<Integer> list) {
+        tvTotalShip0.setText(list.get(0) + "艘");
+        tvTotalShip1.setText(list.get(1) + "艘");
+        tvTotalShip2.setText(list.get(2) + "艘");
+        tvTotalShip3.setText(list.get(3) + "艘");
+        tvTotalShip4.setText(list.get(4) + "艘");
+        tvTotalShip5.setText(list.get(5) + "艘");
+        tvTotalShip6.setText(list.get(6) + "艘");
     }
 
     @Override

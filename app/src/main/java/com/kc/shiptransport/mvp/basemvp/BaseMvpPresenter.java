@@ -16,6 +16,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -286,6 +287,8 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
                     public void accept(Boolean aBoolean) throws Exception {
                         // 获取待验收船次
                         getStayInfo(type);
+                        // 获取每日船舶数
+                        getDayShipCount(jumpWeek, type);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -353,6 +356,39 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
                     @Override
                     public void onComplete() {
                         view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 获取每日船舶数
+     * @param jumpWeek
+     */
+    @Override
+    public void getDayShipCount(int jumpWeek, int type) {
+        dataRepository
+                .getBaseDayShipCount(jumpWeek, type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Integer>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<Integer> list) {
+                        view.showDayShipCount(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

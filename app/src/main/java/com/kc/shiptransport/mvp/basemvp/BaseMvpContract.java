@@ -32,6 +32,7 @@ public interface BaseMvpContract {
         void showError(String msg);
         // 初始化spinner
         void showSpinner(List<SubcontractorList> value);
+        void showDayShipCount(List<Integer> list);
     }
 
     interface Presenter extends BasePresenter {
@@ -53,5 +54,7 @@ public interface BaseMvpContract {
         void start(int jumpWeek, int type, String account);
         // 获取所有供应商
         void getSubcontractorList();
+        // 获取每日船舶数统计
+        void getDayShipCount(int jumpWeek, int type);
     }
 }

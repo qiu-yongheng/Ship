@@ -3,9 +3,10 @@ package com.kc.shiptransport.view.actiivty;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.WindowManager;
+import android.view.View;
 
 import com.kc.shiptransport.adapter.ImgViewPageAdapter;
 import com.kc.shiptransport.data.bean.img.ImgList;
@@ -27,8 +28,11 @@ public class ImgViewPageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
 
         Bundle bundle = getIntent().getExtras();
         ArrayList<ImgList> imgList = bundle.getParcelableArrayList(IMGLIST);

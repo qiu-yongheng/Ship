@@ -93,6 +93,38 @@ public class PlanPresenter implements PlanContract.Presenter {
                 });
     }
 
+    /**
+     * 计算每日船舶数
+     * @param jumpWeek
+     */
+    @Override
+    public void getDemanDayShipCount(int jumpWeek) {
+        mDataRepository
+                .getDemanDayShipCount(jumpWeek)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Integer>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<Integer> list) {
+                        view.showDemanDayShipCount(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
     @Override
     public void subscribe() {
 
@@ -255,6 +287,8 @@ public class PlanPresenter implements PlanContract.Presenter {
                     public void accept(List<WeekTask> weekTasks) throws Exception {
                         // 统计每日计划量
                         getDayCount();
+                        // 统计每日船舶
+                        getDemanDayShipCount(jumpWeek);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:background="?colorPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize">
+        android:layout_height="?actionBarSize"
+        android:background="?colorPrimary">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -23,10 +17,10 @@
 
             <TextView
                 android:id="@+id/tv_title"
-                android:paddingLeft="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_10"
                 android:textColor="#fff"
                 android:textSize="@dimen/text_15sp"/>
 
@@ -40,331 +34,393 @@
                 android:textColor="#fff"
                 android:textSize="@dimen/text_15sp"/>
         </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
+    </android.support.v7.widget.Toolbar>
 
+    <ScrollView
+        android:layout_marginTop="?actionBarSize"
+        android:layout_marginBottom="@dimen/btn_height"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="95dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="95dp"
+                android:orientation="vertical">
 
-                <TextView
-                    style="@style/text_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/marginleft_14"
-                    android:text="记        录:"/>
-
-                <TextView
-                    android:id="@+id/tv_record"
-                    style="@style/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/marginleft_28"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/text_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/marginleft_14"
-                    android:text="施工船只:"/>
-
-                <TextView
-                    android:id="@+id/tv"
-                    style="@style/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/marginleft_28"/>
-
-                <TextView
-                    style="@style/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" ("/>
-
-                <TextView
-                    android:id="@+id/tv_ship_type"
-                    style="@style/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    style="@style/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=")"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/text_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/marginleft_14"
-                    android:text="实时潮水:"/>
-
-                <TextView
-                    android:id="@+id/tv_tide_wather"
-                    style="@style/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/marginleft_28"/>
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/margintop_8dp"
-            android:background="@color/et_bg"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_17"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/text_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginleft_14"
-                android:text="开始时间"/>
-
-            <TextView
-                android:id="@+id/tv_start_time"
-                style="@style/text_description"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_height"
-                android:layout_marginLeft="@dimen/margin_12"
-                android:layout_marginRight="@dimen/marginleft_14"
-                android:gravity="center"
-                android:text="@string/tv_hint"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margintop_8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/text_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginleft_14"
-                android:text="结束时间"/>
-
-            <TextView
-                android:id="@+id/tv_end_time"
-                style="@style/text_description_black"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_height"
-                android:layout_marginLeft="@dimen/margin_12"
-                android:layout_marginRight="@dimen/marginleft_14"
-                android:background="@color/et_bg"
-                android:gravity="center"
-                android:text="@string/tv_hint"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margintop_8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/text_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginleft_14"
-                android:text="施工分层"/>
-
-            <TextView
-                android:id="@+id/tv_construction_stratification"
-                style="@style/text_description_black"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_height"
-                android:layout_marginLeft="@dimen/margin_12"
-                android:layout_marginRight="@dimen/marginleft_14"
-                android:background="@color/et_bg"
-                android:gravity="center"
-                android:text="@string/tv_hint"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margintop_8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/text_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginleft_14"
-                android:text="供砂航次"/>
-
-            <EditText
-                android:id="@+id/et_sand_voyage"
-                style="@style/text_description_black"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_height"
-                android:layout_marginLeft="@dimen/margin_12"
-                android:layout_marginRight="@dimen/marginleft_14"
-                android:background="@color/et_bg"
-                android:gravity="center"
-                android:hint="@string/tv_hint"
-                android:textColorHint="@color/gray"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margintop_8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/text_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginleft_14"
-                android:text="施工分区"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_height"
-                android:layout_marginLeft="@dimen/margin_12"
-                android:layout_marginRight="@dimen/marginleft_14"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_construction_devision"
-                    style="@style/text_description_black"
-                    android:singleLine="true"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/tv_height"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/marginleft_14"
+                        android:text="记        录:"/>
+
+                    <TextView
+                        android:id="@+id/tv_record"
+                        style="@style/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/marginleft_28"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/marginleft_14"
+                        android:text="施工船名:"/>
+
+                    <TextView
+                        android:id="@+id/tv"
+                        style="@style/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/marginleft_28"/>
+
+                    <TextView
+                        style="@style/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" ("/>
+
+                    <TextView
+                        android:id="@+id/tv_ship_type"
+                        style="@style/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        style="@style/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=")"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/marginleft_14"
+                        android:text="实时潮水:"/>
+
+                    <TextView
+                        android:id="@+id/tv_tide_wather"
+                        style="@style/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/marginleft_28"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margintop_8dp"
+                android:background="@color/et_bg"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_17"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="开始时间"/>
+
+                <TextView
+                    android:id="@+id/tv_start_time"
+                    style="@style/text_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="结束时间"/>
+
+                <TextView
+                    android:id="@+id/tv_end_time"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
                     android:background="@color/et_bg"
                     android:gravity="center"
                     android:text="@string/tv_hint"/>
 
-                <TextView
-                    android:id="@+id/tv_devision_num"
-                    style="@style/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    style="@style/text_description"
+                    style="@style/text_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="个"/>
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="施工分层"/>
+
+                <TextView
+                    android:id="@+id/tv_construction_stratification"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="供砂船名"/>
+
+                <TextView
+                    android:id="@+id/tv_sand_ship"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="供砂航次"/>
+
+                <EditText
+                    android:id="@+id/et_sand_voyage"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:hint="@string/tv_hint"
+                    android:textColorHint="@color/gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="施工panel"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_construction_devision"
+                        style="@style/text_description_black"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tv_height"
+                        android:layout_weight="1"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="@string/tv_hint"/>
+
+                    <TextView
+                        android:id="@+id/tv_devision_num"
+                        style="@style/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"/>
+
+                    <TextView
+                        style="@style/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="个"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_17"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="工  程  量"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_engineering_quantity"
+                        style="@style/text_description_black"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tv_height"
+                        android:layout_weight="1"
+                        android:background="@color/et_bg"
+                        android:gravity="center"
+                        android:hint="请填写"
+                        android:inputType="numberDecimal"
+                        android:textColorHint="@color/gray"/>
+
+                    <TextView
+                        style="@style/text_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:text="m³"/>
+                </LinearLayout>
 
             </LinearLayout>
 
 
-        </LinearLayout>
+            <include layout="@layout/view_divi"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_17"
-            android:layout_marginTop="@dimen/margintop_8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="已  清  仓"/>
+
+                <CheckBox
+                    android:id="@+id/cb_already_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_12"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/view_divi"/>
 
             <TextView
                 style="@style/text_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginleft_14"
-                android:text="工  程  量"/>
+                android:layout_marginTop="10dp"
+                android:text="备注填写"/>
 
-
-            <LinearLayout
+            <EditText
+                android:id="@+id/et_remark"
+                style="@style/text_description_black"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_height"
-                android:layout_marginLeft="@dimen/margin_12"
-                android:layout_marginRight="@dimen/marginleft_14"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/et_engineering_quantity"
-                    style="@style/text_description_black"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/tv_height"
-                    android:layout_weight="1"
-                    android:background="@color/et_bg"
-                    android:gravity="center"
-                    android:hint="请填写"
-                    android:inputType="numberDecimal"
-                    android:textColorHint="@color/gray"/>
-
-                <TextView
-                    style="@style/text_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:text="m³"/>
-            </LinearLayout>
-
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/et_bg"
+                android:gravity="left|top"
+                android:hint="@string/et_hint_remark"
+                android:minLines="2"
+                android:padding="10dp"/>
         </LinearLayout>
-
-        <include layout="@layout/view_divi"/>
-
-        <TextView
-            style="@style/text_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/marginleft_14"
-            android:text="备注填写"/>
-
-        <EditText
-            android:id="@+id/et_remark"
-            style="@style/text_description_black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@color/et_bg"
-            android:gravity="left|top"
-            android:hint="@string/et_hint_remark"
-            android:minLines="2"
-            android:padding="10dp"/>
-    </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/btn_commit"

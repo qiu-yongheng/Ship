@@ -20,6 +20,7 @@ public interface ThreadSandContract {
         void showPartition(PartitionSBBean bean);
         void showCommitResult(boolean isSuccess);
         void showDetailData(List<ThreadSandLogBean> threadSandLogBeen);
+
     }
 
     interface Presenter extends BasePresenter {
@@ -27,5 +28,6 @@ public interface ThreadSandContract {
         void getPartition(String userID);
         void commit(String json);
         void getDetailData(int itemID);
+        void getConShip();
     }
 }

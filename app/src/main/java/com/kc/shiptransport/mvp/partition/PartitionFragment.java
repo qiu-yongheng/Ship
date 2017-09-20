@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.partition;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,11 +9,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
@@ -23,9 +29,11 @@ import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
+import com.kc.shiptransport.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,7 +43,7 @@ import butterknife.Unbinder;
 /**
  * @author qiuyongheng
  * @time 2017/7/7  10:20
- * @desc ${TODD}
+ * @desc 施工分区
  */
 
 public class PartitionFragment extends Fragment implements PartitionContract.View {
@@ -48,6 +56,12 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     Button btnReturn;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.et_prefix)
+    EditText etPrefix;
+    @BindView(R.id.et_start_num)
+    EditText etStartNum;
+    @BindView(R.id.et_end_num)
+    EditText etEndNum;
     private PartitionActivity activity;
     private PartitionAdapter adapter;
     private PartitionContract.Presenter presenter;
@@ -77,6 +91,11 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
 
         recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        String prefix = SharePreferenceUtil.getString(getContext(), SettingUtil.SP_KEY_PREFIX, "");
+        if (!TextUtils.isEmpty(prefix)) {
+            etPrefix.setText(prefix);
+        }
+
         // 设置当前施工船舶
         if (activity.type == SettingUtil.TYPE_DATA_NEW) {
             List<ConstructionBoat> all = DataSupport.findAll(ConstructionBoat.class);
@@ -96,10 +115,29 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.partition, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
+                break;
+            case R.id.action_delete_all:
+                activity.showDailog("删除所有分区", "确定要删除所有分区吗", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 删除全部分区
+                        DataSupport.deleteAll(PartitionNum.class, "userAccount = ?", boat.getShipNum());
+                        if (adapter != null) {
+                            adapter.setDates(new ArrayList<PartitionNum>());
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -116,11 +154,63 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
             }
         });
 
-        /** 返回 */
+        /** 生成 */
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                final String prefix = etPrefix.getText().toString().trim();
+                final String startNum = etStartNum.getText().toString().trim();
+                final String endNum = etEndNum.getText().toString().trim();
+
+                if (TextUtils.isEmpty(prefix)) {
+                    ToastUtil.tip(getContext(), "请填写分区前缀");
+                } else if (TextUtils.isEmpty(startNum)) {
+                    ToastUtil.tip(getContext(), "请填写开始数");
+                } else if (TextUtils.isEmpty(endNum)) {
+                    ToastUtil.tip(getContext(), "请填写结束数");
+                } else {
+                    activity.showDailog("施工分区生成", "是否一键生成施工分区", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            try {
+                                Integer start = Integer.valueOf(startNum);
+                                Integer end = Integer.valueOf(endNum);
+
+                                // 缓存分区前缀, 开始数, 结束数
+                                SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_PREFIX, prefix);
+
+                                if (start > end) {
+                                    ToastUtil.tip(getContext(), "开始数不能大于结束数");
+                                    return;
+                                }
+
+                                for (int j = start; j <= end; j++) {
+                                    // 创建一个新的数据, 保存用户名
+                                    PartitionNum num = new PartitionNum();
+                                    num.setUserAccount(boat.getShipNum());
+                                    num.setNum(prefix + j);
+                                    num.save();
+                                }
+
+                                List<PartitionNum> numList = DataSupport.where("userAccount = ? and num is not null and num != ?", boat.getShipNum(), "").find(PartitionNum.class);
+                                adapter.setDates(numList);
+                                adapter.notifyDataSetChanged();
+
+                                // 如果输入法在窗口上已经显示，则隐藏，反之则显示
+                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                                ToastUtil.tip(getContext(), "开始数与结束数必须输入数字");
+                            }
+
+
+                        }
+                    });
+                }
+
             }
         });
     }
@@ -158,7 +248,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     @Override
     public void showList(List<PartitionNum> list) {
         if (adapter == null) {
-            adapter = new PartitionAdapter(getActivity(), list);
+            adapter = new PartitionAdapter(getActivity(), list, boat.getShipNum());
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {

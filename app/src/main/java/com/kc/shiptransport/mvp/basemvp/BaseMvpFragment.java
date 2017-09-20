@@ -102,6 +102,20 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
     protected String subcontractorAccount;
     protected double dowmY;
     protected float upY;
+    @BindView(R.id.tv_total_ship_0)
+    AppCompatTextView tvTotalShip0;
+    @BindView(R.id.tv_total_ship_1)
+    AppCompatTextView tvTotalShip1;
+    @BindView(R.id.tv_total_ship_2)
+    AppCompatTextView tvTotalShip2;
+    @BindView(R.id.tv_total_ship_3)
+    AppCompatTextView tvTotalShip3;
+    @BindView(R.id.tv_total_ship_4)
+    AppCompatTextView tvTotalShip4;
+    @BindView(R.id.tv_total_ship_5)
+    AppCompatTextView tvTotalShip5;
+    @BindView(R.id.tv_total_ship_6)
+    AppCompatTextView tvTotalShip6;
 
     @Nullable
     @Override
@@ -458,5 +472,20 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
 
             }
         });
+    }
+
+    /**
+     * 统计每日船舶数
+     * @param list
+     */
+    @Override
+    public void showDayShipCount(List<Integer> list) {
+        tvTotalShip0.setText(list.get(0) + "艘");
+        tvTotalShip1.setText(list.get(1) + "艘");
+        tvTotalShip2.setText(list.get(2) + "艘");
+        tvTotalShip3.setText(list.get(3) + "艘");
+        tvTotalShip4.setText(list.get(4) + "艘");
+        tvTotalShip5.setText(list.get(5) + "艘");
+        tvTotalShip6.setText(list.get(6) + "艘");
     }
 }

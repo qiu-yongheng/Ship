@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +19,10 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.versionupdate.VersionUpdate;
 import com.kc.shiptransport.download.DownloadService;
 import com.kc.shiptransport.mvp.BaseActivity;
+import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
 import com.kc.shiptransport.util.AppInfoUtils;
+import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +42,10 @@ public class AboutActivity extends BaseActivity {
     RelativeLayout rlUpdate;
     @BindView(R.id.tv_version_code)
     TextView tvVersionCode;
+    @BindView(R.id.iv_debug)
+    ImageView ivDebug;
+    private long exitTime = 0;
+    private int clice = 0;
     private AboutPresenter presenter;
 
     private DownloadService.DownloadBinder downloadBinder;
@@ -57,6 +65,7 @@ public class AboutActivity extends BaseActivity {
         }
 
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +106,23 @@ public class AboutActivity extends BaseActivity {
                 Toast.makeText(AboutActivity.this, "正在检查新版本", Toast.LENGTH_SHORT).show();
 
                 presenter.checkVersionCode();
+            }
+        });
+
+        // 调试
+        ivDebug.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if ((System.currentTimeMillis() - exitTime) > 2000) {
+                    exitTime = System.currentTimeMillis();
+                    clice = 0;
+                } else {
+                    clice++;
+                    if (clice > 2) {
+                        ToastUtil.tip(AboutActivity.this, "进入调试模式");
+                        AnalysisActivity.startActivity(AboutActivity.this, SettingUtil.TYPE_TOMORROW_PLAN);
+                    }
+                }
             }
         });
     }

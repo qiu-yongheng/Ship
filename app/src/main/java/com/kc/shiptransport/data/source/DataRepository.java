@@ -71,6 +71,7 @@ import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.db.supply.SupplyDetail;
+import com.kc.shiptransport.db.thread.ThreadShip;
 import com.kc.shiptransport.db.threadsand.Layered;
 import com.kc.shiptransport.db.user.Department;
 import com.kc.shiptransport.db.user.User;
@@ -3034,7 +3035,7 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<List<PartitionNum>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<PartitionNum>> e) throws Exception {
-                List<PartitionNum> numList = DataSupport.where("userAccount = ?", userAccount).find(PartitionNum.class);
+                List<PartitionNum> numList = DataSupport.where("userAccount = ? and num is not null and num != ?", userAccount, "").find(PartitionNum.class);
 
                 if (numList.isEmpty()) {
                     // 如果没有数据, 新增一条
@@ -3066,7 +3067,7 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<PartitionSBBean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<PartitionSBBean> e) throws Exception {
-                List<PartitionNum> numList = DataSupport.where("userAccount = ? and num is not null", account).find(PartitionNum.class);
+                List<PartitionNum> numList = DataSupport.where("userAccount = ? and num is not null and num != ?", account, "").find(PartitionNum.class);
 
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < numList.size(); i++) {
@@ -3585,6 +3586,9 @@ public class DataRepository implements DataSouceImpl {
 
                 List<ProgressTrack> list = gson.fromJson(result, new TypeToken<List<ProgressTrack>>() {
                 }.getType());
+
+                DataSupport.deleteAll(ProgressTrack.class);
+                DataSupport.saveAll(list);
 
                 e.onNext(list);
                 e.onComplete();
@@ -4587,6 +4591,147 @@ public class DataRepository implements DataSouceImpl {
                         .find(Contacts.class);
 
                 e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 统计每日船舶数
+     * @param jumpWeek
+     * @return
+     */
+    @Override
+    public Observable<List<Integer>> getDemanDayShipCount(final int jumpWeek) {
+        return Observable.create(new ObservableOnSubscribe<List<Integer>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<Integer>> e) throws Exception {
+                List<String> dates = CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek);
+                ArrayList<Integer> list = new ArrayList<>();
+
+                for (int i = 0; i < dates.size(); i++) {
+                    List<WeekTask> weekTasks = DataSupport.where("PlanDay like ?", dates.get(i) + "%").find(WeekTask.class);
+                    list.add(weekTasks.size());
+                }
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * base统计每日船舶数
+     * @param jumpWeek
+     * @param type
+     * @return
+     */
+    @Override
+    public Observable<List<Integer>> getBaseDayShipCount(final int jumpWeek, final int type) {
+        return Observable.create(new ObservableOnSubscribe<List<Integer>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<Integer>> e) throws Exception {
+                List<String> dates = CalendarUtil.getdateOfWeek("yyyy-MM-dd", jumpWeek);
+                ArrayList<Integer> list = new ArrayList<>();
+                int num = 0;
+
+                for (int i = 0; i < dates.size(); i++) {
+                    /** 根据类型计算每日船次 */
+                    if (type == SettingUtil.TYPE_RECORDEDSAND) { // 过砂记录
+                        /** 过砂记录 */
+                        num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(RecordList.class);
+                        list.add(num);
+                    } else if (type == SettingUtil.TYPE_VOYAGEINFO) { // 航次信息完善
+                        /** 航次信息完善 */
+                        num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(WeekTask.class);
+                        list.add(num);
+                    } else if (type == SettingUtil.TYPE_SAMPLE) { // 验砂取样
+                        /** 验砂取样 */
+                        num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(SandSample.class);
+                        list.add(num);
+                    } else if (type == SettingUtil.TYPE_SUPPLY) { // 验砂
+                        /** 验砂 */
+                        num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(WeekTask.class);
+                        list.add(num);
+                    } else if (type == SettingUtil.TYPE_AMOUNT) { // 量方
+                        /** 量方 */
+                        num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(WeekTask.class);
+                        list.add(num);
+                    } else if (type == SettingUtil.TYPE_SCANNER) {
+                        /** 扫描件 */
+                        num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(WeekTask.class);
+                        list.add(num);
+                    } else if (type == SettingUtil.TYPE_EXIT_APPLICATION) {
+                        /** 退场申请 IsSumbitted申请提交状态 */
+                        num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(ExitAssessor.class);
+                        list.add(num);
+                    } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
+                        /** 退场审核 IsExit审核状态 */
+                        num = DataSupport.where("PlanDay like ? and IsSumbitted = ?", dates.get(i) + "%", "1").count(ExitAssessor.class);
+                        list.add(num);
+                    } else if (type == SettingUtil.TYPE_ACCEPT) {
+                        /** 验收 1通过, 0保存, -1不通过(不显示) */
+                        // TODO
+                        num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(WeekTask.class);
+                        list.add(num);
+                    }
+                }
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.68 获取供砂船航次信息数据(近7天)
+     * @param PageSize
+     * @param PageCount
+     * @return
+     */
+    @Override
+    public Observable<Boolean> GetBoatShipItemNum(final int PageSize, final int PageCount, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
+
+                JSONArray Column = new JSONArray();
+
+                // 创建者账号
+                JSONObject object1 = new JSONObject();
+                object1.put("Name", "ShipAccount");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", shipAccount);
+
+                // 保存3个对象到object
+                if (!TextUtils.isEmpty(shipAccount)) {
+                    Column.put(object1);
+                }
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                String json = root.toString();
+
+                LogUtil.d("1.68 获取供砂船航次信息数据(近7天)json: \n" + json);
+
+                String result = mRemoteDataSource.GetBoatShipItemNum(PageSize, PageCount, "");
+
+                LogUtil.d("1.68 获取供砂船航次信息数据(近7天): \n" + result);
+
+                List<ThreadShip> list = gson.fromJson(result, new TypeToken<List<ThreadShip>>() {
+                }.getType());
+
+                DataSupport.deleteAll(ThreadShip.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(true);
                 e.onComplete();
             }
         });

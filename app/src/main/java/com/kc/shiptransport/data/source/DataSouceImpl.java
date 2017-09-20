@@ -984,4 +984,27 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<Contacts>> searchContacts(String keyWords);
+
+    /**
+     * 统计每日船舶数
+     * @param jumpWeek
+     * @return
+     */
+    Observable<List<Integer>> getDemanDayShipCount(int jumpWeek);
+
+    /**
+     * base统计每日船舶数
+     * @param jumpWeek
+     * @param type
+     * @return
+     */
+    Observable<List<Integer>> getBaseDayShipCount(int jumpWeek, int type);
+
+    /**
+     * 1.68 获取供砂船航次信息数据(近7天)
+     * @param PageSize
+     * @param PageCount
+     * @return
+     */
+    Observable<Boolean> GetBoatShipItemNum(int PageSize, int PageCount, String shipAccount);
 }

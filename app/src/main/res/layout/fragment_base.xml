@@ -209,6 +209,64 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_ship_0"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0艘"/>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_ship_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0艘"/>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_ship_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0艘"/>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_ship_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0艘"/>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_ship_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0艘"/>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_ship_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0艘"/>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_total_ship_6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0艘"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
             <CheckBox
                 android:id="@+id/cb_tip_red"

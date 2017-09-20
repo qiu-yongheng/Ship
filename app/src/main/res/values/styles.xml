@@ -4,9 +4,12 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <!-- 沉浸式标题栏 -->
+    <style name="ImmersedTheme" parent="AppTheme"/>
 
     <style name="PopupOverlay" parent="AppTheme">
         <item name="android:textColorPrimary">#fff</item>

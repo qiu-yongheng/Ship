@@ -79,6 +79,16 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     @BindView(R.id.recycler_view)
     RecyclerView recycleView;
     Unbinder unbinder;
+    @BindView(R.id.ll_select_btn)
+    LinearLayout llSelectBtn;
+    @BindView(R.id.tv_time)
+    TextView tvTime;
+    @BindView(R.id.tv_ship_count)
+    TextView tvShipCount;
+    @BindView(R.id.tv_total_cube)
+    TextView tvTotalCube;
+    @BindView(R.id.ll_fix_btn)
+    LinearLayout llFixBtn;
     private AnalysisActivity activity;
     private AnalysisContract.Presenter presenter;
     private CommonPopupWindow pop_time;
@@ -99,6 +109,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     private List<String> evaluation = new ArrayList<>();
     private CommonAdapter<ExitAssessor> exitAdapter;
     private CommonAdapter<LogManagerList> logAdapter;
+    private CommonAdapter<List<ProgressTrack>> tomorrowAdapter;
 
     @Nullable
     @Override
@@ -126,6 +137,16 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                 break;
             case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER: // 施工日志管理
                 presenter.getLogManager(100, 1, "", "", "");
+                break;
+            case SettingUtil.TYPE_TOMORROW_PLAN: // 明日来船计划
+                try {
+                    String date = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD), Calendar.DATE, 1);
+                    tvTime.setText(date);
+                    presenter.getTomorrowPlan(date, date, "", "");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    ToastUtil.tip(getContext(), "获取计划失败, 请退出重试");
+                }
                 break;
         }
         return view;
@@ -165,6 +186,11 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             // 施工日志管理
             selectSub.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_construction_log_manager);
+        } else if (type == SettingUtil.TYPE_TOMORROW_PLAN) {
+            // 明日船舶计划数
+            llSelectBtn.setVisibility(View.GONE);
+            llFixBtn.setVisibility(View.VISIBLE);
+            activity.getSupportActionBar().setTitle(R.string.title_tomorrow_plan);
         }
     }
 
@@ -1042,6 +1068,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         recycleView.setAdapter(emptyWrapper);
     }
 
+    /**
+     * 显示删除结果
+     * @param isSuccess
+     */
     @Override
     public void showDeleteLogResult(boolean isSuccess) {
         if (isSuccess) {
@@ -1051,6 +1081,47 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         } else {
             ToastUtil.tip(getContext(), "删除失败, 请重试");
         }
+    }
+
+    /**
+     * 明日计划量
+     * @param list
+     */
+    @Override
+    public void showTomorrowPlan(List<List<ProgressTrack>> list) {
+        int cube = 0;
+        tomorrowAdapter = new CommonAdapter<List<ProgressTrack>>(getContext(), R.layout.item_tommorrow_plan, list) {
+            @Override
+            protected void convert(ViewHolder holder, List<ProgressTrack> list, int position) {
+                holder.setText(R.id.tv_sub_name, list.get(0).getSubcontractorName());
+                RecyclerView recyclerView = holder.getView(R.id.recycler_view);
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                CommonAdapter<ProgressTrack> commonAdapter = new CommonAdapter<ProgressTrack>(getContext(), R.layout.item_tomorrow_plan_detail, list) {
+                    @Override
+                    protected void convert(ViewHolder holder, ProgressTrack progressTrack, int position) {
+                        holder.setText(R.id.tv_ship_name, progressTrack.getShipName())
+                                .setText(R.id.tv_cube, String.valueOf(progressTrack.getSandSupplyCount()));
+                    }
+                };
+
+                recyclerView.setAdapter(commonAdapter);
+            }
+        };
+
+        // 添加空数据界面显示
+        EmptyWrapper<Object> emptyWrapper = new EmptyWrapper<>(tomorrowAdapter);
+        emptyWrapper.setEmptyView(LayoutInflater.from(getContext()).inflate(R.layout.empty_view, recycleView, false));
+        recycleView.setAdapter(emptyWrapper);
+
+        List<ProgressTrack> all = DataSupport.findAll(ProgressTrack.class);
+        for (ProgressTrack track : all) {
+            cube += track.getSandSupplyCount();
+        }
+
+        tvShipCount.setText("共" + all.size() + "艘");
+        tvTotalCube.setText("共" + cube + "方");
     }
 
     /**

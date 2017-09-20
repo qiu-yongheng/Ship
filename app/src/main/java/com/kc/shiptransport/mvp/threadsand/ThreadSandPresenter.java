@@ -15,7 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -61,14 +61,19 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                 .GetConstructionLayerOptions()
                 .subscribeOn(Schedulers.io());
 
+        // 供砂船
+        Observable<Boolean> conship = dataRepository
+                .GetBoatShipItemNum(1000, 1, CurrentBoatAccount)
+                .subscribeOn(Schedulers.io());
+
         // 回显数据
         Observable<LogCurrentDateBean> log = dataRepository
                 .GetConstructionBoatDefaultStartTime(CurrentDate, CurrentBoatAccount)
                 .subscribeOn(Schedulers.io());
 
-        Observable.zip(observable, log, new BiFunction<Boolean, LogCurrentDateBean, LogCurrentDateBean>() {
+        Observable.zip(observable, conship, log, new Function3<Boolean, Boolean, LogCurrentDateBean, LogCurrentDateBean>() {
             @Override
-            public LogCurrentDateBean apply(@NonNull Boolean aBoolean, @NonNull LogCurrentDateBean bean) throws Exception {
+            public LogCurrentDateBean apply(@NonNull Boolean aBoolean, @NonNull Boolean aBoolean2, @NonNull LogCurrentDateBean bean) throws Exception {
                 return bean;
             }
         }).observeOn(AndroidSchedulers.mainThread())
@@ -135,6 +140,7 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
         dataRepository
                 .InsertConstructionBoatThrowingSandRecord(json)
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
                     @Override
@@ -193,5 +199,10 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                         view.showLoading(false);
                     }
                 });
+    }
+
+    @Override
+    public void getConShip() {
+
     }
 }

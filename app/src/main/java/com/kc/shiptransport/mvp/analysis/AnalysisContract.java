@@ -24,6 +24,7 @@ public interface AnalysisContract {
         void showExitFeedBack(List<ExitAssessor> list);
         void showLogManager(List<LogManagerList> list);
         void showDeleteLogResult(boolean isSuccess);
+        void showTomorrowPlan(List<List<ProgressTrack>> list);
     }
 
     interface Presenter extends BasePresenter {
@@ -34,5 +35,6 @@ public interface AnalysisContract {
         void getLogManager(int pageSize, int pageCount, String startTime, String endTime, String shipAccount);
         void deleteStopLog(int itemID);
         void deleteThreadLog(int itemID);
+        void getTomorrowPlan(String startTime, String endTime, String subID, String shipID);
     }
 }

@@ -28,6 +28,7 @@ public interface AmountContract {
         void showError(String msg);
         // 初始化spinner
         void showSpinner(List<SubcontractorList> value);
+        void showDayShipCount(List<Integer> list);
     }
 
     interface Presenter extends BasePresenter {
@@ -45,5 +46,6 @@ public interface AmountContract {
         void start(int jumpWeek, String subcontractorAccount);
         // 获取所有供应商
         void getSubcontractor();
+        void getDayShipCount(int jumpWeek);
     }
 }

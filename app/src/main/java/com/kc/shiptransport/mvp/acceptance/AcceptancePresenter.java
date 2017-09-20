@@ -168,6 +168,9 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
 
                         // 统计未验收量
                         getStayAcceptanceShip();
+
+                        // 统计船舶数
+                        getDayShipCount(jumpWeek);
                     }
                 });
     }
@@ -287,6 +290,35 @@ public class AcceptancePresenter implements AcceptanceContract.Presenter {
                     @Override
                     public void onComplete() {
                         view.showLoading(false);
+                    }
+                });
+    }
+
+    @Override
+    public void getDayShipCount(int jumpWeek) {
+        dataRepository
+                .getDemanDayShipCount(jumpWeek)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Integer>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<Integer> list) {
+                        view.showDayShipCount(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }
