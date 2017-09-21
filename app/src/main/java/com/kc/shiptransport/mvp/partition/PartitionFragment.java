@@ -188,7 +188,8 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                                     // 创建一个新的数据, 保存用户名
                                     PartitionNum num = new PartitionNum();
                                     num.setUserAccount(boat.getShipNum());
-                                    num.setNum(prefix + j);
+                                    String format = String.format("%03d", j);
+                                    num.setNum(prefix + format);
                                     num.save();
                                 }
 

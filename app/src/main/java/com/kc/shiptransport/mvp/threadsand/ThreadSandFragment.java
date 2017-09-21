@@ -506,6 +506,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         String stratification = tvConstructionStratification.getText().toString();
         // 工程量
         String quantity = etEngineeringQuantity.getText().toString();
+        quantity = TextUtils.isEmpty(quantity) ? "0" : quantity;
         // 备注
         String remark = etRemark.getText().toString();
         remark = remark.equals("添加备注") ? "" : remark;

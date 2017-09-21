@@ -170,6 +170,7 @@
     <string name="title_construction_log_manager">日报管理</string>
     <string name="action_search">搜索</string>
     <string name="title_tomorrow_plan">明日来船计划</string>
+    <string name="desc_partition">使用示例: panel012 ~ panel016分区生成规则,\n 分区前缀填panel, 开始数填012, 结束数填016</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

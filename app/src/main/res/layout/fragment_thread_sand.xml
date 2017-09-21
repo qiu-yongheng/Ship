@@ -272,9 +272,11 @@
                     android:layout_height="@dimen/tv_height"
                     android:layout_marginLeft="@dimen/margin_12"
                     android:layout_marginRight="@dimen/marginleft_14"
-                    android:background="@color/et_bg"
+                    android:background="#f9f9f9"
                     android:gravity="center"
-                    android:hint="@string/tv_hint"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="请选择供砂船名"
                     android:textColorHint="@color/gray"/>
 
             </LinearLayout>
@@ -360,7 +362,7 @@
                         android:layout_weight="1"
                         android:background="@color/et_bg"
                         android:gravity="center"
-                        android:hint="请填写"
+                        android:hint="0"
                         android:inputType="numberDecimal"
                         android:textColorHint="@color/gray"/>
 

@@ -84,7 +84,6 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 LogUtil.d("施工分区adapter EditText 数据改变");
                 String data = editable.toString();
                 data = (TextUtils.isEmpty(data)) ? "" : data;
-
                 // 保存num
                 num.setNum(data);
                 num.save();
