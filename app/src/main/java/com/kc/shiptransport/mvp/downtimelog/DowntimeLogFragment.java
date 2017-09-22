@@ -210,7 +210,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
             @Override
             public void onClick(View view) {
                 try {
-                    CalendarUtil.showDatePickerDialog(getContext(), tvStartTime, false);
+                    CalendarUtil.showDatePickerDialog(getContext(), tvStartTime, false, false);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -222,7 +222,7 @@ public class DowntimeLogFragment extends Fragment implements DowntimeLogContract
             @Override
             public void onClick(View view) {
                 try {
-                    CalendarUtil.showDatePickerDialog(getContext(), tvEndTime, false);
+                    CalendarUtil.showDatePickerDialog(getContext(), tvEndTime, false, false);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

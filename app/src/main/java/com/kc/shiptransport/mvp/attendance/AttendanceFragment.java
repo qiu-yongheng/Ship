@@ -103,7 +103,7 @@ public class AttendanceFragment extends Fragment implements AttendanceContract.V
             @Override
             public void onClick(View view) {
                 try {
-                    CalendarUtil.showDatePickerDialog(getContext(), textTime, false);
+                    CalendarUtil.showDatePickerDialog(getContext(), textTime, false, false);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

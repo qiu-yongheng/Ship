@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.PatternUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.kc.shiptransport.util.ToastUtil;
@@ -124,7 +126,8 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getActivity().onBackPressed();
+                warn();
+                //getActivity().onBackPressed();
                 break;
             case R.id.action_delete_all:
                 activity.showDailog("删除所有分区", "确定要删除所有分区吗", new DialogInterface.OnClickListener() {
@@ -136,6 +139,14 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                             adapter.setDates(new ArrayList<PartitionNum>());
                             adapter.notifyDataSetChanged();
                         }
+                    }
+                });
+                break;
+            case R.id.action_remark:
+                activity.showDailog("使用示例", getResources().getString(R.string.desc_partition), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
                     }
                 });
                 break;
@@ -158,39 +169,93 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /** 输入的文字 */
                 final String prefix = etPrefix.getText().toString().trim();
                 final String startNum = etStartNum.getText().toString().trim();
                 final String endNum = etEndNum.getText().toString().trim();
+                Integer start = 0;
+                Integer end = 0;
+                // 标记是否是char
+                boolean isChar = false;
+
 
                 if (TextUtils.isEmpty(prefix)) {
                     ToastUtil.tip(getContext(), "请填写分区前缀");
+                } else if (!prefix.contains("#")) {
+                    ToastUtil.tip(getContext(), "分区前缀需包含至少一个 # 号");
                 } else if (TextUtils.isEmpty(startNum)) {
                     ToastUtil.tip(getContext(), "请填写开始数");
                 } else if (TextUtils.isEmpty(endNum)) {
                     ToastUtil.tip(getContext(), "请填写结束数");
                 } else {
+
+                    /** ---------------------------------------------------------------------------- */
+                    if (PatternUtil.patternNumber(startNum) && PatternUtil.patternNumber(endNum)) {
+                        /** 数字 */
+                        start = Integer.valueOf(startNum);
+                        end = Integer.valueOf(endNum);
+                        if (start > end) {
+                            ToastUtil.tip(getContext(), "开始数不能大于结束数");
+                            return;
+                        }
+                    } else if (startNum.length() != 1 && endNum.length() != 1) {
+                        /** 只能输入一个字符 */
+                        ToastUtil.tip(getContext(), "开始数与结束数只能填写一个字符");
+                        return;
+                    } else if (PatternUtil.patternCharOne(startNum) && PatternUtil.patternCharOne(endNum) && PatternUtil.appearNumber(prefix, "#") != 1) {
+                        ToastUtil.tip(getContext(), "开始数与结束数只能输入一个字符, 请修改分区前缀中的 # 个数为1个");
+                        return;
+                    } else if (PatternUtil.patternCharOne(startNum) && PatternUtil.patternCharOne(endNum) && PatternUtil.appearNumber(prefix, "#") == 1) {
+                        isChar = true;
+                        if ((int) startNum.toCharArray()[0] > (int) endNum.toCharArray()[0]) {
+                            ToastUtil.tip(getContext(), "开始数不能大于结束数");
+                            return;
+                        }
+                    } else {
+                        ToastUtil.tip(getContext(), "开始数与结束数, 只能输入1-9, a-z之间的数");
+                        return;
+                    }
+
+
+                    final boolean finalIsChar = isChar;
+                    final Integer finalStart = start;
+                    final Integer finalEnd = end;
                     activity.showDailog("施工分区生成", "是否一键生成施工分区", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             try {
-                                Integer start = Integer.valueOf(startNum);
-                                Integer end = Integer.valueOf(endNum);
-
-                                // 缓存分区前缀, 开始数, 结束数
+                                // 缓存分区前缀
                                 SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_PREFIX, prefix);
 
-                                if (start > end) {
-                                    ToastUtil.tip(getContext(), "开始数不能大于结束数");
-                                    return;
-                                }
+                                if (finalIsChar) {
+                                    /** 字符 */
+                                    char[] startChars = startNum.toCharArray();
+                                    int startChar = (int) startChars[0];
+                                    char[] endChars = endNum.toCharArray();
+                                    int endChar = (int) endChars[0];
 
-                                for (int j = start; j <= end; j++) {
-                                    // 创建一个新的数据, 保存用户名
-                                    PartitionNum num = new PartitionNum();
-                                    num.setUserAccount(boat.getShipNum());
-                                    String format = String.format("%03d", j);
-                                    num.setNum(prefix + format);
-                                    num.save();
+                                    for (int j = startChar; j <= endChar; j++) {
+                                        PartitionNum num = new PartitionNum();
+                                        num.setUserAccount(boat.getShipNum());
+                                        char c = (char) j;
+                                        num.setNum(prefix.replace('#', c).toLowerCase());
+                                        num.save();
+                                    }
+
+                                } else {
+                                    /** 数字 */
+                                    for (int j = finalStart; j <= finalEnd; j++) {
+                                        // 创建一个新的数据, 保存用户名
+                                        PartitionNum num = new PartitionNum();
+                                        num.setUserAccount(boat.getShipNum());
+                                        String format = String.format("%0" + PatternUtil.appearNumber(prefix, "#") + "d", j);
+                                        StringBuffer sb = new StringBuffer();
+                                        for (int n = 0; n < PatternUtil.appearNumber(prefix, "#"); n++) {
+                                            sb.append("#");
+                                        }
+                                        num.setNum(prefix.replaceAll(sb.toString(), format).toLowerCase());
+                                        num.save();
+                                    }
                                 }
 
                                 List<PartitionNum> numList = DataSupport.where("userAccount = ? and num is not null and num != ?", boat.getShipNum(), "").find(PartitionNum.class);
@@ -272,6 +337,46 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         } else {
             adapter.setDates(list);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getFocus();
+    }
+
+    private void getFocus() {
+        if (getView() != null) {
+            getView().setFocusable(true);
+            getView().setFocusableInTouchMode(true);
+            getView().requestFocus();
+            getView().setOnKeyListener(new View.OnKeyListener() {
+
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
+                        // 监听到返回按钮点击事件
+                        warn();
+                        return true;// 未处理
+                    }
+                    return false;
+                }
+            });
+        }
+    }
+
+    private void warn() {
+        List<PartitionNum> list = DataSupport.where("tag = ? and num is not null and num != ?", "0", "").find(PartitionNum.class);
+        if (!list.isEmpty()) {
+            activity.showDailog("提示", "施工panel长度必须一致才能进行提交, 请修改红色标注的施工panel\n\n当前待修改数: " + list.size() + "个", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+        } else {
+            getActivity().onBackPressed();
         }
     }
 }

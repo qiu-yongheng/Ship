@@ -30,6 +30,7 @@ import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
 import com.kc.shiptransport.util.CalendarUtil;
@@ -145,7 +146,12 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
                             public void onSure(String str) {
 
                             }
-                        }, false);
+                        }, new OnTimePickerLastDateClickListener() {
+                            @Override
+                            public void onLastDate() {
+
+                            }
+                        }, false, false);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -162,7 +168,12 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
                             public void onSure(String str) {
 
                             }
-                        }, false);
+                        }, new OnTimePickerLastDateClickListener() {
+                            @Override
+                            public void onLastDate() {
+
+                            }
+                        }, false, false);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }

@@ -111,7 +111,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
             @Override
             public void onClick(View v) {
                 try {
-                    CalendarUtil.showDatePickerDialog(getContext(), textTime, false);
+                    CalendarUtil.showDatePickerDialog(getContext(), textTime, false, false);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

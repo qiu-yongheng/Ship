@@ -6,7 +6,6 @@ import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
-import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.bean.ScanCommitBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
@@ -20,7 +19,8 @@ import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.RecordedSandShowList;
-import com.kc.shiptransport.db.SampleImageList;
+import com.kc.shiptransport.db.sample.SampleData;
+import com.kc.shiptransport.db.sample.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.StoneSource;
@@ -468,19 +468,16 @@ public interface DataSouceImpl {
      * 1.23根据进场计划ID获取验砂取样信息明细
      *
      * @param SubcontractorInterimApproachPlanID
-     * @param isSandSampling
-     * @param isExit
      * @return
      */
-    Observable<SampleShowDatesBean> GetSandSamplingBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID, boolean isSandSampling, boolean isExit);
+    Observable<SampleData> GetSandSamplingBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID);
 
     /**
      * 提交验砂取样数据
      *
-     * @param bean
      * @return
      */
-    Observable<Boolean> InsertSandSampling(SampleShowDatesBean bean);
+    Observable<Boolean> InsertSandSampling();
 
     /**
      * 根据AppPID获取要显示的图标列表
@@ -1007,4 +1004,17 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> GetBoatShipItemNum(int PageSize, int PageCount, String shipAccount);
+
+    /**
+     * 1.24 删除验砂取样图片数据
+     * @param itemID
+     * @return
+     */
+    Observable<Boolean> DeleteSandSamplingAttachmentByItemID(int itemID);
+
+    /**
+     * 获取验砂取样的图片列表
+     * @return
+     */
+    Observable<List<SampleImageList>> getSampleImgList(ImageMultipleResultEvent imageMultipleResultEvent, int SandSamplingID, int SandSamplingNumID, String ConstructionBoatAccount, int p_position);
 }

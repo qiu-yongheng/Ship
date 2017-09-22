@@ -9,21 +9,24 @@ package com.kc.shiptransport.data.bean.threadsandlog;
 public class ThreadSandLogBean {
 
     /**
-     * ItemID : 9
-     * ShipAccount : jx6
-     * ShipName : 吉星6
-     * ShipItemNum : 2017071008
-     * PartitionNameArr : tgv,tg,t,fhhf,fhfd,fhf
-     * PartitionCount : 6
+     * ItemID : 3032
+     * ShipAccount : jx3
+     * ShipName : 吉星3
+     * ShipItemNum : 2017091810
+     * PartitionNameArr : 干活好尴尬
+     * PartitionCount : 2
      * LayerID : 2
      * LayerName : 第二层
      * Remark :
-     * Creator : cssgcb
-     * CreatorName : 测试施工船舶
-     * Quantity : 250
-     * StartTime : 2017-07-10 13:52:00
-     * EndTime : 2017-07-10 14:35:00
-     * SystemDate : 2017-07-10 14:37:22
+     * Creator : csfbs
+     * CreatorName : 测试分包商
+     * Quantity : 0
+     * StartTime : 2017-09-21 00:00:00
+     * EndTime : 2017-09-21 12:00:00
+     * SystemDate : 2017-09-21 12:01:03
+     * SandHandlingShipID : tl8988
+     * SandHandlingShipName : 天力8988
+     * IsClearance : 0
      */
 
     private int ItemID;
@@ -41,6 +44,9 @@ public class ThreadSandLogBean {
     private String StartTime;
     private String EndTime;
     private String SystemDate;
+    private String SandHandlingShipID;
+    private String SandHandlingShipName;
+    private int IsClearance;
 
     public int getItemID() {
         return ItemID;
@@ -160,5 +166,29 @@ public class ThreadSandLogBean {
 
     public void setSystemDate(String SystemDate) {
         this.SystemDate = SystemDate;
+    }
+
+    public String getSandHandlingShipID() {
+        return SandHandlingShipID;
+    }
+
+    public void setSandHandlingShipID(String SandHandlingShipID) {
+        this.SandHandlingShipID = SandHandlingShipID;
+    }
+
+    public String getSandHandlingShipName() {
+        return SandHandlingShipName;
+    }
+
+    public void setSandHandlingShipName(String SandHandlingShipName) {
+        this.SandHandlingShipName = SandHandlingShipName;
+    }
+
+    public int getIsClearance() {
+        return IsClearance;
+    }
+
+    public void setIsClearance(int IsClearance) {
+        this.IsClearance = IsClearance;
     }
 }

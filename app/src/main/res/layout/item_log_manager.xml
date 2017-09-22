@@ -143,6 +143,48 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/rl_sand_ship"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="供砂船舶"/>
+
+                <TextView
+                    android:id="@+id/tv_sand_ship"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_quantum"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="工  程  量"/>
+
+                <TextView
+                    android:id="@+id/tv_quantum"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
             <LinearLayout
                 android:paddingBottom="2dp"
                 android:id="@+id/ll_btn"

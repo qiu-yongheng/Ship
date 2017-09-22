@@ -19,6 +19,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 
@@ -84,7 +85,12 @@ public class AttendanceRecordFragment extends Fragment implements AttendanceReco
                             // 选择完时间后, 直接搜索
                             presenter.getAttendance(user.getUserID(), str, "");
                         }
-                    }, false);
+                    }, new OnTimePickerLastDateClickListener() {
+                        @Override
+                        public void onLastDate() {
+
+                        }
+                    }, false, false);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

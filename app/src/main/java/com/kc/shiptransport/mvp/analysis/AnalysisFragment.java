@@ -31,6 +31,7 @@ import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.analysisdetail.AnalysisDetailActivity;
 import com.kc.shiptransport.mvp.downtime.DowntimeActivity;
@@ -184,6 +185,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             activity.getSupportActionBar().setTitle(R.string.title_feedback);
         } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
             // 施工日志管理
+            selectShip.setText("全部施工船舶");
             selectSub.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_construction_log_manager);
         } else if (type == SettingUtil.TYPE_TOMORROW_PLAN) {
@@ -386,6 +388,11 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                 public void onSure(String str) {
                                                     startTime = str;
                                                 }
+                                            }, new OnTimePickerLastDateClickListener() {
+                                                @Override
+                                                public void onLastDate() {
+
+                                                }
                                             }, true, false);
                                         } catch (ParseException e) {
                                             e.printStackTrace();
@@ -402,6 +409,11 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                 @Override
                                                 public void onSure(String str) {
                                                     endTime = str;
+                                                }
+                                            }, new OnTimePickerLastDateClickListener() {
+                                                @Override
+                                                public void onLastDate() {
+
                                                 }
                                             }, true, false);
                                         } catch (ParseException e) {
@@ -621,7 +633,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                     headWrapper.setHeadAndFootClickListener(new HeaderAndFooterWrapper.OnHeadAndFootClickListener() {
                                         @Override
                                         public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                                            selectShip.setText("全部供砂船舶");
+                                            selectShip.setText("全部施工船舶");
                                             consShip = "";
 
                                             // TODO 请求数据
@@ -1013,6 +1025,8 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                         .setText(R.id.tv_stop_type, TextUtils.isEmpty(logManagerList.getStopTypeName()) ? "" : logManagerList.getStopTypeName())
                         .setText(R.id.tv_construction_type, logManagerList.getConstructionType())
                         .setText(R.id.tv_creator, logManagerList.getCreatorName())
+                        .setText(R.id.tv_sand_ship, logManagerList.getSandHandlingShipName())
+                        .setText(R.id.tv_quantum, String.valueOf(logManagerList.getQuantity()))
                         .setOnClickListener(R.id.btn_update, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -1048,9 +1062,14 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                         });
 
                 if (logManagerList.getConstructionType() == null || logManagerList.getConstructionType().equals("抛砂")) {
+                    // 抛砂
                     holder.setVisible(R.id.rl_stop_type, false);
+                    holder.setVisible(R.id.rl_sand_ship, true);
+                    holder.setVisible(R.id.rl_quantum, true);
                 } else {
                     holder.setVisible(R.id.rl_stop_type, true);
+                    holder.setVisible(R.id.rl_sand_ship, false);
+                    holder.setVisible(R.id.rl_quantum, false);
                 }
 
                 if (logManagerList.getIsAllowEdit() == 1) {

@@ -371,7 +371,7 @@ public class ExitApplicationAssessorFragment extends Fragment implements ExitApp
                     //                                @Override
                     //                                public void onClick(DialogInterface dialogInterface, int i) {
                     //                                    // 删除
-                    //                                    presenter.deleteImgForItemID(bean.getItemID());
+                    //                                    presenter.deleteNumForItemID(bean.getItemID());
                     //                                }
                     //                            });
                     //                        }

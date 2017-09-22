@@ -38,6 +38,33 @@ public class LogManagerList extends DataSupport{
     private int Num;
     private int IsAllowEdit;
     private String ConstructionType;
+    private float Quantity; // 工程量
+    private String SandHandlingShipID; // 供砂船舶账号
+    private String SandHandlingShipName; // 供砂船舶名称
+
+    public float getQuantity() {
+        return Quantity;
+    }
+
+    public void setQuantity(float quantity) {
+        Quantity = quantity;
+    }
+
+    public String getSandHandlingShipID() {
+        return SandHandlingShipID;
+    }
+
+    public void setSandHandlingShipID(String sandHandlingShipID) {
+        SandHandlingShipID = sandHandlingShipID;
+    }
+
+    public String getSandHandlingShipName() {
+        return SandHandlingShipName;
+    }
+
+    public void setSandHandlingShipName(String sandHandlingShipName) {
+        SandHandlingShipName = sandHandlingShipName;
+    }
 
     public String getConstructionType() {
         return ConstructionType;

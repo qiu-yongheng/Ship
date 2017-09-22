@@ -29,6 +29,7 @@ import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.scannerdetail.ScannerDetailActivity;
 import com.kc.shiptransport.mvp.scannerimgselect.ScannerImgSelectAdapter;
@@ -274,7 +275,12 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                             public void onSure(String str) {
 
                             }
-                        }, false);
+                        }, new OnTimePickerLastDateClickListener() {
+                            @Override
+                            public void onLastDate() {
+
+                            }
+                        }, false, false);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }

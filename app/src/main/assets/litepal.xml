@@ -1,6 +1,6 @@
 <litepal>
     <dbname value="ship_db" />
-    <version value="88"/>
+    <version value="93"/>
     <list>
         <mapping class="com.kc.shiptransport.db.ship.Ship"/>
         <mapping class="com.kc.shiptransport.db.ship.ShipList"/>
@@ -19,7 +19,7 @@
         <mapping class="com.kc.shiptransport.db.RecordedSandShowList"/>
         <mapping class="com.kc.shiptransport.db.AttendanceType"/>
         <mapping class="com.kc.shiptransport.db.AttendanceRecordList"/>
-        <mapping class="com.kc.shiptransport.db.SampleImageList"/>
+        <mapping class="com.kc.shiptransport.db.sample.SampleImageList"/>
         <mapping class="com.kc.shiptransport.db.StoneSource"/>
         <mapping class="com.kc.shiptransport.db.amount.AmountDetail"/>
         <mapping class="com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo"/>
@@ -47,5 +47,7 @@
         <mapping class="com.kc.shiptransport.db.backlog.ListBean"/>
         <mapping class="com.kc.shiptransport.db.logmanager.LogManagerList"/>
         <mapping class="com.kc.shiptransport.db.thread.ThreadShip"/>
+        <mapping class="com.kc.shiptransport.db.sample.SampleData"/>
+        <mapping class="com.kc.shiptransport.db.sample.SandSamplingNumRecordListBean"/>
     </list>
 </litepal>

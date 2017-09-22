@@ -31,6 +31,7 @@ import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
@@ -168,7 +169,12 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                             public void onSure(String str) {
 
                             }
-                        }, false);
+                        }, new OnTimePickerLastDateClickListener() {
+                            @Override
+                            public void onLastDate() {
+
+                            }
+                        }, false, false);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }

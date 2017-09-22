@@ -11,6 +11,15 @@ import org.litepal.crud.DataSupport;
 public class PartitionNum extends DataSupport{
     private String userAccount;
     private String num;
+    private int tag = 0; // 1 正常 0 长度不对
+
+    public int getTag() {
+        return tag;
+    }
+
+    public void setTag(int tag) {
+        this.tag = tag;
+    }
 
     public String getUserAccount() {
         return userAccount;

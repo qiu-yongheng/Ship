@@ -15,9 +15,10 @@
         android:orientation="vertical">
 
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="left"
             android:text="@string/desc_partition"
             android:textColor="@color/red"
             android:textSize="@dimen/text_15sp"/>
@@ -64,7 +65,6 @@
                     android:background="@color/et_bg"
                     android:gravity="center"
                     android:hint="开始数"
-                    android:inputType="number"
                     android:singleLine="true"
                     android:textColorHint="@color/gray"/>
             </LinearLayout>
@@ -90,7 +90,6 @@
                     android:background="@color/et_bg"
                     android:gravity="center"
                     android:hint="结束数"
-                    android:inputType="number"
                     android:singleLine="true"
                     android:textColorHint="@color/gray"/>
             </LinearLayout>

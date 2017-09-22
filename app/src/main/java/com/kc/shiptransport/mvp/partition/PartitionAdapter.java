@@ -1,6 +1,5 @@
 package com.kc.shiptransport.mvp.partition;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -9,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -28,12 +26,13 @@ import java.util.List;
  * @desc ${TODD}
  */
 
-public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final String userAccount;
     public List<PartitionNum> list;
     private final LayoutInflater inflate;
     private OnRecyclerviewItemClickListener listener;
+    private int panelLength = 0;
 
     public PartitionAdapter(Context context, List<PartitionNum> list, String shipNum) {
         this.context = context;
@@ -52,15 +51,34 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.setIsRecyclable(false);
         final PartitionNum num = list.get(position);
 
-        ((NormalHolder)holder).mTvTag.setText("分区" + (position + 1));
+        if (panelLength == 0) {
+            // 记录第一个panel的长度
+            panelLength = TextUtils.isEmpty(num.getNum()) ? 0 : num.getNum().length();
+            ((NormalHolder) holder).mEtNum.setBackgroundColor(context.getResources().getColor(R.color.et_bg));
+            num.setTag(1);
+            num.save();
+        } else {
+            // 判断长度是否跟自动生成的一致
+            if (panelLength != num.getNum().length()) {
+                ((NormalHolder) holder).mEtNum.setBackgroundColor(context.getResources().getColor(R.color.red));
+                num.setTag(0);
+                num.save();
+            } else {
+                ((NormalHolder) holder).mEtNum.setBackgroundColor(context.getResources().getColor(R.color.et_bg));
+                num.setTag(1);
+                num.save();
+            }
+        }
+
+        ((NormalHolder) holder).mTvTag.setText("分区" + (position + 1));
 
         String s = TextUtils.isEmpty(num.getNum()) ? "" : num.getNum();
-        ((NormalHolder)holder).mEtNum.setText(s);
+        ((NormalHolder) holder).mEtNum.setText(s);
 
         // 设置光标位置
-        ((NormalHolder)holder).mEtNum.setSelection(s.length());
+        ((NormalHolder) holder).mEtNum.setSelection(s.length());
 
-        ((NormalHolder)holder).mEtNum.setOnLongClickListener(new View.OnLongClickListener() {
+        ((NormalHolder) holder).mEtNum.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
@@ -68,7 +86,7 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         });
 
-        ((NormalHolder)holder).mEtNum.addTextChangedListener(new TextWatcher() {
+        ((NormalHolder) holder).mEtNum.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -87,16 +105,28 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 // 保存num
                 num.setNum(data);
                 num.save();
+
+                // 更新状态
+                int length = TextUtils.isEmpty(num.getNum()) ? 0 : num.getNum().length();
+                if (length != panelLength) {
+                    ((NormalHolder) holder).mEtNum.setBackgroundColor(context.getResources().getColor(R.color.red));
+                    num.setTag(0);
+                    num.save();
+                } else {
+                    ((NormalHolder) holder).mEtNum.setBackgroundColor(context.getResources().getColor(R.color.et_bg));
+                    num.setTag(1);
+                    num.save();
+                }
             }
         });
 
         /** 设置最后一个edittext获取焦点 */
-        if (list.size() == (position + 1)) {
-            ((NormalHolder)holder).mEtNum.setFocusable(true);
-            ((NormalHolder)holder).mEtNum.setFocusableInTouchMode(true);
-            ((NormalHolder)holder).mEtNum.requestFocus();
-            ((Activity)context).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
+//        if (list.size() == (position + 1)) {
+//            ((NormalHolder) holder).mEtNum.setFocusable(true);
+//            ((NormalHolder) holder).mEtNum.setFocusableInTouchMode(true);
+//            ((NormalHolder) holder).mEtNum.requestFocus();
+//            ((Activity) context).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        }
     }
 
     public void setDates(List<PartitionNum> list) {
@@ -124,9 +154,10 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     /**
      * 添加
+     *
      * @param pos
      */
-    public void add (int pos) {
+    public void add(int pos) {
         // 创建一个新的数据, 保存用户名
         PartitionNum num = new PartitionNum();
         num.setUserAccount(userAccount);
@@ -157,6 +188,7 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     /**
      * 删除
+     *
      * @param pos
      */
     public void delete(int pos) {

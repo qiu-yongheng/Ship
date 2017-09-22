@@ -1,10 +1,12 @@
 package com.kc.shiptransport.mvp.sampledetail;
 
-import com.kc.shiptransport.data.bean.SampleShowDatesBean;
-import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
+import com.kc.shiptransport.db.sample.SampleData;
+import com.kc.shiptransport.db.sample.SampleImageList;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
+
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 
 /**
  * @author qiuyongheng
@@ -23,11 +25,12 @@ public interface SampleDetailContract {
         void showProgress(int max);
         void updateProgress();
         // 获取数据, 显示列表
-        void showDetailList(SampleShowDatesBean bean);
+        void showDetailList(SampleData bean);
         void showImageUpdataResult();
-        void showDeleteResult(boolean isSuccess);
         void showCommitReturn();
         void startCommit();
+        void showDeleteNumForItemID(boolean isSuccess, int p_position);
+        void showDeleteImgResult(boolean isSuccess, int p_position, int position);
     }
 
     interface Presenter extends BasePresenter {
@@ -39,9 +42,12 @@ public interface SampleDetailContract {
         // 提交图片
         void upImage(SampleImageList sampleCommitList);
         // 查看图片
-        void getDates(int position, boolean isSandSampling, boolean isExit);
-        void commitJson(SampleShowDatesBean sampleShowDates);
-        void deleteItem(int ItemID);
+        void getDates(int itemID);
+        void commitJson(int itemID);
+        void deleteNumForItemID(int ItemID, int p_position);
+        void deleteImgForItemID(int itemID, int p_position, int position);
 
+        // 提交图片列表
+        void commitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int SandSamplingID, int SandSamplingNumID, String ConstructionBoatAccount, int p_position);
     }
 }

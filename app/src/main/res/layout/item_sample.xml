@@ -26,6 +26,7 @@
             android:text="@string/item_sample_tag"
             android:textColor="@color/text_tag_gray"
             android:textSize="@dimen/text_15sp"/>
+
         <TextView
             android:id="@+id/tv_sample_num"
             android:layout_width="wrap_content"
@@ -95,33 +96,11 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/btn_image_1"
-            android:layout_width="@dimen/image_size"
-            android:layout_height="@dimen/image_size"
-            android:layout_marginLeft="@dimen/marginleft_14"
-            android:background="@mipmap/icon_add_imag"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"/>
 
-        <ImageButton
-            android:id="@+id/btn_image_2"
-            android:layout_width="@dimen/image_size"
-            android:layout_height="@dimen/image_size"
-            android:layout_marginLeft="@dimen/marginleft_20"
-            android:background="@mipmap/icon_add_imag"/>
-
-        <ImageButton
-            android:id="@+id/btn_image_3"
-            android:layout_width="@dimen/image_size"
-            android:layout_height="@dimen/image_size"
-            android:layout_marginLeft="@dimen/marginleft_20"
-            android:background="@mipmap/icon_add_imag"/>
-
-        <ImageButton
-            android:id="@+id/btn_image_4"
-            android:layout_width="@dimen/image_size"
-            android:layout_height="@dimen/image_size"
-            android:layout_marginLeft="@dimen/marginleft_20"
-            android:background="@mipmap/icon_add_imag"/>
     </LinearLayout>
 
 </LinearLayout>

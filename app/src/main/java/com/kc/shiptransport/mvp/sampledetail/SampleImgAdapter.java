@@ -8,12 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.google.gson.Gson;
 import com.kc.shiptransport.R;
-import com.kc.shiptransport.data.bean.SampleShowDatesBean;
+import com.kc.shiptransport.db.sample.SandSamplingNumRecordListBean;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.RxGalleryUtil;
-import com.kc.shiptransport.util.SettingUtil;
 
 import java.util.List;
 
@@ -34,13 +32,15 @@ public class SampleImgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * item类型: 添加图片
      */
     private static final int TYPE_ADD = 1;
-    public List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> list;
+    public final SandSamplingNumRecordListBean numBean;
+    public List<SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> list;
     private OnRecyclerviewItemClickListener listener;
 
-    public SampleImgAdapter(Context context, List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> list) {
+    public SampleImgAdapter(Context context, List<SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> list, SandSamplingNumRecordListBean listBean) {
         this.context = context;
         this.list = list;
         this.inflater = LayoutInflater.from(context);
+        this.numBean = listBean;
     }
 
     @Override
@@ -58,8 +58,8 @@ public class SampleImgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof NormalHolder) {
             // 获取图片地址, 显示
-            SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean listBean = list.get(position);
-            RxGalleryUtil.showImage(context, listBean.getFilePath(), null, null, ((NormalHolder) holder).mIvNormal);
+            SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean bean = list.get(position);
+            RxGalleryUtil.showImage(context, bean.getFilePath(), null, null, ((NormalHolder) holder).mIvNormal);
 
             // 点击图片, 预览图片
             ((NormalHolder) holder).mIvNormal.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +73,7 @@ public class SampleImgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((NormalHolder) holder).mIvDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), SettingUtil.ITEM_DELETE);
+                    listener.onItemClick(holder.itemView, holder.getLayoutPosition(), 1);
                 }
             });
 
@@ -89,7 +89,7 @@ public class SampleImgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public void setDates(List<SampleShowDatesBean.SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> list) {
+    public void setDates(List<SandSamplingNumRecordListBean.SandSamplingAttachmentRecordListBean> list) {
         this.list = list;
     }
 
@@ -160,9 +160,5 @@ public class SampleImgAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void update(int position, String path) {
 
         notifyDataSetChanged();
-    }
-
-    public String tojson() {
-        return new Gson().toJson(list);
     }
 }

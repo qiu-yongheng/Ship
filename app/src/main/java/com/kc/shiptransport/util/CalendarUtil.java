@@ -7,11 +7,15 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.bigkoo.pickerview.listener.CustomListener;
+import com.kc.shiptransport.R;
+import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 
 import java.text.ParseException;
@@ -312,13 +316,18 @@ public class CalendarUtil {
      * @param context
      * @param view
      */
-    public static void showTimePickerDialog(final Context context, final TextView view, boolean isSystem) throws ParseException {
+    public static void showTimePickerDialog(final Context context, final TextView view, boolean isSystem, boolean isCustom) throws ParseException {
         showTimePickerDialog(context, view, new OnTimePickerSureClickListener() {
             @Override
             public void onSure(String str) {
 
             }
-        }, isSystem);
+        }, new OnTimePickerLastDateClickListener() {
+            @Override
+            public void onLastDate() {
+
+            }
+        }, isSystem, isCustom);
     }
 
     /**
@@ -328,7 +337,7 @@ public class CalendarUtil {
      * @param context
      * @param view
      */
-    public static void showTimePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
+    public static void showTimePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
         if (isSystem) {
             final Calendar now = Calendar.getInstance();
 
@@ -362,7 +371,7 @@ public class CalendarUtil {
 
             datePickerDialog.show();
         } else {
-            showTimePicker(context, view, YYYY_MM_DD_HH_MM, null, listener, new boolean[]{true, true, true, true, true, false}, false);
+            showTimePicker(context, view, YYYY_MM_DD_HH_MM, null, listener, lastDateClickListener, new boolean[]{true, true, true, true, true, false}, false, isCustom);
         }
 
     }
@@ -373,7 +382,7 @@ public class CalendarUtil {
      * @param context
      * @param listener
      */
-    public static void showTimePickerDialog(final Context context, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
+    public static void showTimePickerDialog(final Context context, final OnTimePickerSureClickListener listener, final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
         if (isSystem) {
             final Calendar now = Calendar.getInstance();
             // 显示日期选择器
@@ -405,7 +414,7 @@ public class CalendarUtil {
 
             datePickerDialog.show();
         } else {
-            showTimePicker(context, null, YYYY_MM_DD_HH_MM, null, listener, new boolean[]{true, true, true, true, true, false}, false);
+            showTimePicker(context, null, YYYY_MM_DD_HH_MM, null, listener, lastDateClickListener,  new boolean[]{true, true, true, true, true, false}, false, isCustom);
         }
     }
 
@@ -415,13 +424,18 @@ public class CalendarUtil {
      * @param context
      * @param view
      */
-    public static void showDatePickerDialog(final Context context, final TextView view, boolean isSystem) throws ParseException {
+    public static void showDatePickerDialog(final Context context, final TextView view, boolean isSystem, boolean isCustom) throws ParseException {
         showDatePickerDialog(context, view, new OnTimePickerSureClickListener() {
             @Override
             public void onSure(String str) {
 
             }
-        }, false);
+        }, new OnTimePickerLastDateClickListener() {
+            @Override
+            public void onLastDate() {
+
+            }
+        }, false, isCustom);
     }
 
     /**
@@ -430,7 +444,7 @@ public class CalendarUtil {
      * @param context
      * @param view
      */
-    public static void showDatePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
+    public static void showDatePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
         //        if (isSystem) {
         //            final Calendar now = Calendar.getInstance();
         //
@@ -456,7 +470,7 @@ public class CalendarUtil {
         //            showTimePicker(context, view, YYYY_MM_DD, null, listener, new boolean[]{true, true, true, false, false, false}, false);
         //        }
 
-        showDatePickerDialog(context, view, listener, false, isSystem);
+        showDatePickerDialog(context, view, listener, lastDateClickListener, false, isSystem, isCustom);
     }
 
     /**
@@ -469,7 +483,7 @@ public class CalendarUtil {
      * @param isSystem
      * @throws ParseException
      */
-    public static void showDatePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, boolean isDialog, boolean isSystem) throws ParseException {
+    public static void showDatePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, final OnTimePickerLastDateClickListener lastDateClickListener, boolean isDialog, boolean isSystem, boolean isCustom) throws ParseException {
         if (isSystem) {
             final Calendar now = Calendar.getInstance();
 
@@ -489,10 +503,9 @@ public class CalendarUtil {
                 }
             }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
 
-
             datePickerDialog.show();
         } else {
-            showTimePicker(context, view, YYYY_MM_DD, null, listener, new boolean[]{true, true, true, false, false, false}, isDialog);
+            showTimePicker(context, view, YYYY_MM_DD, null, listener, lastDateClickListener, new boolean[]{true, true, true, false, false, false}, isDialog, isCustom);
         }
     }
 
@@ -503,7 +516,7 @@ public class CalendarUtil {
      * @param context
      * @param view
      */
-    public static void showTimeDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
+    public static void showTimeDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener,final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
         if (isSystem) {
             Calendar calendar = getCalendar(Date);
 
@@ -527,7 +540,7 @@ public class CalendarUtil {
 
             timePickerDialog.show();
         } else {
-            showTimePicker(context, view, format, Date, listener, new boolean[]{false, false, false, true, true, false}, false);
+            showTimePicker(context, view, format, Date, listener, lastDateClickListener, new boolean[]{false, false, false, true, true, false}, false, isCustom);
         }
     }
 
@@ -541,7 +554,7 @@ public class CalendarUtil {
      * @param listener
      * @throws ParseException
      */
-    public static void showDateDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener, boolean isSystem) throws ParseException {
+    public static void showDateDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener,final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
         if (isSystem) {
             Calendar calendar = getCalendar(Date);
 
@@ -564,15 +577,14 @@ public class CalendarUtil {
 
             timePickerDialog.show();
         } else {
-            showTimePicker(context, view, format, Date, listener, new boolean[]{true, true, true, false, false, false}, false);
+            showTimePicker(context, view, format, Date, listener, lastDateClickListener, new boolean[]{true, true, true, false, false, false}, false, isCustom);
         }
 
     }
 
     /**
      * 弹出时间选择器
-     *
-     * @param context  上下文
+     *  @param context  上下文
      * @param view     要赋值的控件
      * @param format   时间格式
      * @param Date     指定日期
@@ -580,7 +592,7 @@ public class CalendarUtil {
      * @param type     显示数据类型
      * @param isDialog 是否以弹窗样式显示
      */
-    public static void showTimePicker(Context context, final View view, final String format, String Date, final OnTimePickerSureClickListener listener, boolean[] type, boolean isDialog) throws ParseException {
+    public static void showTimePicker(Context context, final View view, final String format, String Date, final OnTimePickerSureClickListener listener, final OnTimePickerLastDateClickListener lastDateClickListener, boolean[] type, boolean isDialog, boolean isCustom) throws ParseException {
         //控制时间范围(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
         //因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
 
@@ -603,31 +615,92 @@ public class CalendarUtil {
         endDate.set(2020, 11, 28);
 
         //时间选择器
-        pvTime = new TimePickerView.Builder(context, new TimePickerView.OnTimeSelectListener() {
-            @Override
-            public void onTimeSelect(Date date, View v) {//选中事件回调
-                // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
-                String time = getTime(date, format);
+        /** 判断是否显示自定义布局 */
+        if (!isCustom) {
+            // 默认
+            pvTime = new TimePickerView.Builder(context, new TimePickerView.OnTimeSelectListener() {
+                @Override
+                public void onTimeSelect(Date date, View v) {//选中事件回调
+                    // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
+                    String time = getTime(date, format);
 
-                if (v != null) {
-                    TextView textView = (TextView) v;
-                    textView.setText(time);
+                    if (v != null) {
+                        TextView textView = (TextView) v;
+                        textView.setText(time);
+                    }
+                    listener.onSure(time);
                 }
-                listener.onSure(time);
-            }
-        })
-                //年月日时分秒 的显示与否，不设置则默认全部显示
-                .setType(type)
-                .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
-                .isCenterLabel(false)
-                .setDividerColor(Color.DKGRAY)
-                .setContentSize(21)
-                .isDialog(isDialog)
-                .setDate(selectedDate)
-                .setRangDate(startDate, endDate)
-                .setBackgroundId(0x00FFFFFF) //设置外部遮罩颜色
-                .setDecorView(null)
-                .build();
+            })
+                    //年月日时分秒 的显示与否，不设置则默认全部显示
+                    .setType(type)
+                    .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                    .isCenterLabel(false)
+                    .setDividerColor(Color.DKGRAY)
+                    .setContentSize(21)
+                    .isDialog(isDialog)
+                    .setDate(selectedDate)
+                    .setRangDate(startDate, endDate)
+                    .setBackgroundId(0x00FFFFFF) //设置外部遮罩颜色
+                    .setDecorView(null)
+                    .build();
+        } else {
+            // 自定义
+            pvTime = new TimePickerView.Builder(context, new TimePickerView.OnTimeSelectListener() {
+                @Override
+                public void onTimeSelect(Date date, View v) {//选中事件回调
+                    // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
+                    String time = getTime(date, format);
+
+                    if (v != null) {
+                        TextView textView = (TextView) v;
+                        textView.setText(time);
+                    }
+                    listener.onSure(time);
+                }
+            })
+                    //年月日时分秒 的显示与否，不设置则默认全部显示
+                    .setType(type)
+                    .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                    .isCenterLabel(false)
+                    .setDividerColor(Color.DKGRAY)
+                    .setContentSize(21)
+                    .isDialog(isDialog)
+                    .setDate(selectedDate)
+                    .setRangDate(startDate, endDate)
+                    .setBackgroundId(0x00FFFFFF) //设置外部遮罩颜色
+                    .setDecorView(null)
+                    .setLayoutRes(R.layout.pickerview_custom_time, new CustomListener() {
+
+                        @Override
+                        public void customLayout(View v) {
+                            Button btnCancel = (Button) v.findViewById(R.id.btnCancel);
+                            Button btnSubmit = (Button) v.findViewById(R.id.btnSubmit);
+                            TextView tvLastTime = (TextView) v.findViewById(R.id.tv_last_time);
+                            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    pvTime.returnData();
+                                    pvTime.dismiss();
+                                }
+                            });
+                            btnCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    pvTime.dismiss();
+                                }
+                            });
+                            tvLastTime.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    lastDateClickListener.onLastDate();
+                                    pvTime.dismiss();
+                                }
+                            });
+                        }
+                    })
+                    .build();
+        }
+
 
         pvTime.show(view);
     }

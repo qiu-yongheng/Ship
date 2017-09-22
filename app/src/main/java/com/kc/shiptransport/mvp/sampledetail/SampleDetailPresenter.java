@@ -3,16 +3,16 @@ package com.kc.shiptransport.mvp.sampledetail;
 import android.content.Context;
 import android.util.Log;
 
-import com.kc.shiptransport.data.bean.SampleShowDatesBean;
 import com.kc.shiptransport.data.source.DataRepository;
-import com.kc.shiptransport.db.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
-import com.kc.shiptransport.util.SharePreferenceUtil;
+import com.kc.shiptransport.db.sample.SampleData;
+import com.kc.shiptransport.db.sample.SampleImageList;
 
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
@@ -162,6 +162,177 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                 });
     }
 
+
+
+    /**
+     * 1.23根据进场计划ID获取验砂取样信息明细
+     *  @param itemID
+     *
+     */
+    @Override
+    public void getDates(int itemID) {
+        view.showLoading(true);
+        dataRepository
+                .GetSandSamplingBySubcontractorInterimApproachPlanID(itemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SampleData>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull SampleData sampleShowDatesBean) {
+                        view.showDetailList(sampleShowDatesBean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 删除取样编号
+     * @param ItemID
+     */
+    @Override
+    public void deleteNumForItemID(int ItemID, final int p_position) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteSandSamplingNumRecordByItemID(ItemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showDeleteNumForItemID(aBoolean, p_position);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 删除图片
+     * @param itemID
+     * @param p_position
+     * @param position
+     */
+    @Override
+    public void deleteImgForItemID(int itemID, final int p_position, final int position) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteSandSamplingAttachmentByItemID(itemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showDeleteImgResult(aBoolean, p_position, position);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 提交图片
+     * @param imageMultipleResultEvent
+     * @param SandSamplingID
+     * @param SandSamplingNumID
+     * @param ConstructionBoatAccount
+     * @param p_position
+     */
+    @Override
+    public void commitImgList(ImageMultipleResultEvent imageMultipleResultEvent, int SandSamplingID, int SandSamplingNumID, String ConstructionBoatAccount, int p_position) {
+        view.showLoading(true);
+        dataRepository
+                .getSampleImgList(imageMultipleResultEvent, SandSamplingID, SandSamplingNumID, ConstructionBoatAccount, p_position)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<List<SampleImageList>>() {
+                    @Override
+                    public void accept(@NonNull List<SampleImageList> sampleImageLists) throws Exception {
+                        // 设置最大进度
+                        view.showProgress(sampleImageLists.size());
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<List<SampleImageList>, ObservableSource<SampleImageList>>() {
+                    @Override
+                    public ObservableSource<SampleImageList> apply(@NonNull List<SampleImageList> sampleImageLists) throws Exception {
+                        // 遍历
+                        return Observable.fromIterable(sampleImageLists);
+                    }
+                })
+                .map(new Function<SampleImageList, Boolean>() {
+                    @Override
+                    public Boolean apply(@NonNull SampleImageList sampleImageList) throws Exception {
+                        // 提交单张图片
+                        upImage(sampleImageList);
+                        return true;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
     /**
      * 上传图片
      *
@@ -199,83 +370,36 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
     }
 
     /**
-     * 获取要显示的数据
-     *
-     * @param position
-     * @param isSandSampling
-     * @param isExit
-     */
-    @Override
-    public void getDates(int position, final boolean isSandSampling, final boolean isExit) {
-        view.showLoading(true);
-        dataRepository
-                .getSampleTaskForItemID(position) // 根据进场ID获取数据
-                .subscribeOn(Schedulers.io())
-                .flatMap(new Function<SandSample, ObservableSource<SampleShowDatesBean>>() {
-                    @Override
-                    public ObservableSource<SampleShowDatesBean> apply(@NonNull SandSample sandSample) throws Exception {
-                        // 获取要显示的数据
-                        return dataRepository.GetSandSamplingBySubcontractorInterimApproachPlanID(sandSample.getItemID(), isSandSampling, isExit);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<SampleShowDatesBean>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull SampleShowDatesBean sampleShowDatesBean) {
-                        view.showDetailList(sampleShowDatesBean);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        view.showLoading(false);
-                        view.showError(e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        view.showLoading(false);
-                    }
-                });
-    }
-
-    /**
      * 图片提交完后, 提交json
      *
-     * @param sampleShowDates
      */
     @Override
-    public void commitJson(final SampleShowDatesBean sampleShowDates) {
+    public void commitJson(final int itemID) {
         view.showLoading(true);
         dataRepository
-                .InsertSandSampling(sampleShowDates)
+                .InsertSandSampling()
                 .subscribeOn(Schedulers.io())
-                .flatMap(new Function<Boolean, ObservableSource<SampleShowDatesBean>>() {
+                .flatMap(new Function<Boolean, ObservableSource<SampleData>>() {
                     @Override
-                    public ObservableSource<SampleShowDatesBean> apply(@NonNull Boolean aBoolean) throws Exception {
-                        // 删除缓存
-                        // 成功后, 删除缓存
-                        SharePreferenceUtil.saveString(context, String.valueOf(sampleShowDates.getSubcontractorInterimApproachPlanID()), "");
-
-                        int i = DataSupport.deleteAll(SampleImageList.class, "itemID = ?", String.valueOf(sampleShowDates.getSubcontractorInterimApproachPlanID()));
+                    public ObservableSource<SampleData> apply(@NonNull Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            // 成功后, 删除图片提交缓存
+                            DataSupport.deleteAll(SampleImageList.class);
+                        }
 
                         // 重新获取数据
-                        return dataRepository.GetSandSamplingBySubcontractorInterimApproachPlanID(sampleShowDates.getSubcontractorInterimApproachPlanID(), true, true);
+                        return dataRepository.GetSandSamplingBySubcontractorInterimApproachPlanID(itemID);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<SampleShowDatesBean>() {
+                .subscribe(new Observer<SampleData>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(@NonNull SampleShowDatesBean bean) {
+                    public void onNext(@NonNull SampleData bean) {
                         //view.showDetailList(bean);
                         // 返回
                         view.showCommitReturn();
@@ -284,42 +408,14 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         view.showLoading(false);
+                        // 提交失败, 清空图片提交缓存
+                        DataSupport.deleteAll(SampleImageList.class);
                     }
 
                     @Override
                     public void onComplete() {
                         view.showError("提交成功");
                         view.showImageUpdataResult();
-                        view.showLoading(false);
-                    }
-                });
-    }
-
-    @Override
-    public void deleteItem(int ItemID) {
-        view.showLoading(true);
-        dataRepository
-                .DeleteSandSamplingNumRecordByItemID(ItemID)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Boolean aBoolean) {
-                        view.showDeleteResult(aBoolean);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        view.showLoading(false);
-                    }
-
-                    @Override
-                    public void onComplete() {
                         view.showLoading(false);
                     }
                 });

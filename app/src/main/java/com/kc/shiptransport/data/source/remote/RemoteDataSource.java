@@ -2093,4 +2093,26 @@ public class RemoteDataSource {
         return getCallResult(endPoint, soapAction, rpc);
     }
 
+    /**
+     * 1.24 删除验砂取样图片数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteSandSamplingAttachmentByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteSandSamplingAttachmentByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
 }
