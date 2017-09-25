@@ -52,6 +52,6 @@ public class ExitApplicationActivity extends BaseActivity{
         Intent intent = new Intent(context, ExitApplicationActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

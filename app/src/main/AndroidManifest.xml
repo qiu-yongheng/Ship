@@ -84,6 +84,7 @@
         <activity android:name=".mvp.upcominglist.UpcomingListActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".view.actiivty.ImgViewPageActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".mvp.search.SearchActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.bcf.BCFActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
 
 
         <activity

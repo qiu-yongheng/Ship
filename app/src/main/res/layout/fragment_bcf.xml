@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include layout="@layout/view_toolbar_custom"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop_8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_14"
+                android:text="供砂船舶"/>
+
+            <TextView
+                android:id="@+id/tv_sand_ship"
+                style="@style/text_description_black"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_height"
+                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginRight="@dimen/marginleft_14"
+                android:background="@color/et_bg"
+                android:gravity="center"
+                android:text="@string/tv_hint"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop_8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_14"
+                android:text="供  应  商"/>
+
+            <TextView
+                android:id="@+id/tv_sub"
+                style="@style/text_description_black"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_height"
+                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginRight="@dimen/marginleft_14"
+                android:background="@color/et_bg"
+                android:gravity="center"
+                android:text="@string/tv_hint"/>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop_8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_14"
+                android:text="时        间"/>
+
+            <TextView
+                android:id="@+id/tv_time"
+                style="@style/text_description_black"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_height"
+                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginRight="@dimen/marginleft_14"
+                android:background="@color/et_bg"
+                android:gravity="center"
+                android:text="@string/tv_hint"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop_8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_14"
+                android:text="工  程  量"/>
+
+            <EditText
+                android:inputType="numberDecimal"
+                android:id="@+id/tv_quantum"
+                style="@style/text_description_black"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_height"
+                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginRight="@dimen/marginleft_14"
+                android:background="@color/et_bg"
+                android:gravity="center"
+                android:hint="0"/>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/text_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginleft_14"
+            android:layout_marginTop="10dp"
+            android:text="备注填写"/>
+
+        <EditText
+            android:id="@+id/et_remark"
+            style="@style/text_description_black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/et_bg"
+            android:gravity="left|top"
+            android:hint="@string/et_hint_remark"
+            android:minLines="2"
+            android:padding="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btn_commit"
+            style="@style/text_title_w"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?colorPrimary"
+            android:text="@string/btn_commit"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -64,6 +64,6 @@ public class RecordedSandDetailListActivity extends BaseActivity{
         bundle.putInt(ITEMID, itemID);
         bundle.putBoolean(ISREADONLY, isReadOnly);
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

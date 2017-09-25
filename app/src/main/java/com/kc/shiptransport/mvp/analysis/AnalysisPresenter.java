@@ -7,6 +7,7 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.bcf.BCFLog;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 
@@ -410,6 +411,37 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
                     @Override
                     public void onNext(@NonNull List<List<ProgressTrack>> progressTracks) {
                         view.showTomorrowPlan(progressTracks);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    @Override
+    public void getBCFLog(int pageSize, int pageCount, String startTime, String endTime, String subAccount) {
+        view.showLoading(true);
+        dataRepository
+                .GetBCFToShipRecords(pageSize, pageCount, startTime, endTime, subAccount)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<BCFLog>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<BCFLog> list) {
+                        view.showBCFLog(list);
                     }
 
                     @Override

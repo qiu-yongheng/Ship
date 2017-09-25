@@ -27,6 +27,7 @@ import com.kc.shiptransport.db.SubcontractorList;
 import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
+import com.kc.shiptransport.db.bcf.BCFLog;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.ship.ShipList;
@@ -111,6 +112,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     private CommonAdapter<ExitAssessor> exitAdapter;
     private CommonAdapter<LogManagerList> logAdapter;
     private CommonAdapter<List<ProgressTrack>> tomorrowAdapter;
+    private CommonAdapter<BCFLog> bcfLogAdapter;
 
     @Nullable
     @Override
@@ -148,6 +150,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                     e.printStackTrace();
                     ToastUtil.tip(getContext(), "获取计划失败, 请退出重试");
                 }
+                break;
+            case SettingUtil.TYPE_BCF_LOG: // BCF日志
+                presenter.getBCFLog(100, 1, "", "", "");
                 break;
         }
         return view;
@@ -193,6 +198,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             llSelectBtn.setVisibility(View.GONE);
             llFixBtn.setVisibility(View.VISIBLE);
             activity.getSupportActionBar().setTitle(R.string.title_tomorrow_plan);
+        } else if (type == SettingUtil.TYPE_BCF_LOG) {
+            // BCF日志
+            selectShip.setVisibility(View.GONE);
+            activity.getSupportActionBar().setTitle(R.string.title_bcf_log);
         }
     }
 
@@ -244,6 +253,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                     stringArray = getResources().getStringArray(R.array.select_acceptance_time);
                                 } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                     // 日志管理
+                                    stringArray = getResources().getStringArray(R.array.select_acceptance_time);
+                                } else if (type == SettingUtil.TYPE_BCF_LOG) {
+                                    // BCF日志
                                     stringArray = getResources().getStringArray(R.array.select_acceptance_time);
                                 }
 
@@ -312,7 +324,8 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                         } else if (type == SettingUtil.TYPE_ACCEPTANCE_EVALUATION ||
                                                                 type == SettingUtil.TYPE_ACCEPTANCE_RANK ||
                                                                 type == SettingUtil.TYPE_EXIT_FEEDBACK ||
-                                                                type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
+                                                                type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER ||
+                                                                type == SettingUtil.TYPE_BCF_LOG) {
                                                             /** 预验收评价 供应商评价 退场反馈 日报管理*/
                                                             switch (position) {
                                                                 case 0:
@@ -366,6 +379,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                                     case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER:
                                                                         /** 日报管理 */
                                                                         presenter.getLogManager(100, 1, startTime, endTime, consShip);
+                                                                        break;
+                                                                    case SettingUtil.TYPE_BCF_LOG:
+                                                                        /** BCF LOG */
+                                                                        presenter.getBCFLog(100, 1, startTime, endTime, subAccount);
                                                                         break;
                                                                 }
                                                                 pop_time.dismiss();
@@ -451,6 +468,9 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                         } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                             // 日志管理
                                             presenter.getLogManager(100, 1, startTime, endTime, consShip);
+                                        } else if (type == SettingUtil.TYPE_BCF_LOG) {
+                                            // BCF LOG
+                                            presenter.getBCFLog(100, 1, startTime, endTime, subAccount);
                                         }
 
 
@@ -519,8 +539,13 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                         // 获取账号
                                                         subAccount = subcontractor.getSubcontractorAccount();
 
-                                                        // TODO 搜索
-                                                        presenter.search(startTime, endTime, subAccount, consShip);
+                                                        if (type == SettingUtil.TYPE_ANALYSIS) {
+                                                            // 计划跟踪
+                                                            presenter.search(startTime, endTime, subAccount, consShip);
+                                                        } else if (type == SettingUtil.TYPE_BCF_LOG) {
+                                                            // BCF LOG
+                                                            presenter.getBCFLog(100, 1, startTime, endTime, subAccount);
+                                                        }
 
                                                         // 隐藏pop
                                                         if (pop_sub.isShowing()) {
@@ -1089,6 +1114,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
 
     /**
      * 显示删除结果
+     *
      * @param isSuccess
      */
     @Override
@@ -1104,6 +1130,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
 
     /**
      * 明日计划量
+     *
      * @param list
      */
     @Override
@@ -1112,6 +1139,12 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         tomorrowAdapter = new CommonAdapter<List<ProgressTrack>>(getContext(), R.layout.item_tommorrow_plan, list) {
             @Override
             protected void convert(ViewHolder holder, List<ProgressTrack> list, int position) {
+                int total = 0;
+                for (ProgressTrack bean : list) {
+                    total += bean.getSandSupplyCount();
+                }
+
+                holder.setText(R.id.tv_total_qua, total + "方");
                 holder.setText(R.id.tv_sub_name, list.get(0).getSubcontractorName());
                 RecyclerView recyclerView = holder.getView(R.id.recycler_view);
 
@@ -1141,6 +1174,27 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
 
         tvShipCount.setText("共" + all.size() + "艘");
         tvTotalCube.setText("共" + cube + "方");
+    }
+
+    @Override
+    public void showBCFLog(List<BCFLog> list) {
+        bcfLogAdapter = new CommonAdapter<BCFLog>(getContext(), R.layout.item_bcf_log, list) {
+            @Override
+            protected void convert(ViewHolder holder, BCFLog bcfLog, int position) {
+                holder.setText(R.id.tv_ship_name, bcfLog.getSandHandlingShipName())
+                        .setText(R.id.tv_sub_name, bcfLog.getSubcontractorName())
+                        .setText(R.id.time, bcfLog.getDate())
+                        .setText(R.id.tv_ship_num, bcfLog.getShipItemNum())
+                        .setText(R.id.tv_amount, bcfLog.getTotalAmount())
+                        .setText(R.id.tv_creator, bcfLog.getCreatorName())
+                        .setText(R.id.tv_remark, bcfLog.getRemark());
+            }
+        };
+
+        // 添加空数据界面显示
+        EmptyWrapper<Object> emptyWrapper = new EmptyWrapper<>(bcfLogAdapter);
+        emptyWrapper.setEmptyView(LayoutInflater.from(getContext()).inflate(R.layout.empty_view, recycleView, false));
+        recycleView.setAdapter(emptyWrapper);
     }
 
     /**

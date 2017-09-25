@@ -177,11 +177,12 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 sb.deleteCharAt(sb.length() - 1);
 
                 num.setNum(sb.toString());
+                num.save();
             }
             list.add(pos, num);
         }
 
-        DataSupport.saveAll(list);
+        //DataSupport.saveAll(list);
 
         notifyItemInserted(pos);
     }

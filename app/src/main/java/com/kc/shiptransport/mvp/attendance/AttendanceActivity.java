@@ -54,6 +54,6 @@ public class AttendanceActivity extends BaseActivity{
         Intent intent = new Intent(context, AttendanceActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

@@ -2115,4 +2115,74 @@ public class RemoteDataSource {
         return getCallResult(endPoint, soapAction, rpc);
     }
 
+    /**
+     * 1.69 提交BCF供砂来船数据
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    public String InsertBCFToShipRecord(String json) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertBCFToShipRecord";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.70 提交BCF抛砂数据（施工日志抛砂）
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    public String InsertBCFBoatThrowingSandRecord(String json) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertBCFBoatThrowingSandRecord";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.71 获取BCF来砂船舶的明细数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetBCFToShipRecords(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetBCFToShipRecords";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
 }

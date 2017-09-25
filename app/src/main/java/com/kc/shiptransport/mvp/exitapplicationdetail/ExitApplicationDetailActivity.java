@@ -62,6 +62,6 @@ public class ExitApplicationDetailActivity extends BaseActivity{
         bundle.putInt(ITEMID, itemID);
         bundle.putInt(EXIT, isExit);
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

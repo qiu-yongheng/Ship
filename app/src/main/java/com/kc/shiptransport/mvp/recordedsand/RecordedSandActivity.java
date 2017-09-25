@@ -54,6 +54,6 @@ public class RecordedSandActivity extends BaseActivity{
         Intent intent = new Intent(context, RecordedSandActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

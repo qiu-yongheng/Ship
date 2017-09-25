@@ -109,6 +109,8 @@ public class SettingUtil {
     public static final int TYPE_CONSTRUCTIONLOG_MANAGER = 116;
     /* 明日来船计划 */
     public static final int TYPE_TOMORROW_PLAN = 117;
+    /* BCF记录 */
+    public static final int TYPE_BCF_LOG = 118;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 

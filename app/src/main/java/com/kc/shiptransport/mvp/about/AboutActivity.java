@@ -19,9 +19,8 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.versionupdate.VersionUpdate;
 import com.kc.shiptransport.download.DownloadService;
 import com.kc.shiptransport.mvp.BaseActivity;
-import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
+import com.kc.shiptransport.mvp.bcf.BCFActivity;
 import com.kc.shiptransport.util.AppInfoUtils;
-import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.ToastUtil;
 
 import butterknife.BindView;
@@ -88,7 +87,6 @@ public class AboutActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
-        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
         getSupportActionBar().setTitle("关于综合生产调度管理系统");
 
         String versionName = AppInfoUtils.getVersionName(this);
@@ -120,7 +118,8 @@ public class AboutActivity extends BaseActivity {
                     clice++;
                     if (clice > 2) {
                         ToastUtil.tip(AboutActivity.this, "进入调试模式");
-                        AnalysisActivity.startActivity(AboutActivity.this, SettingUtil.TYPE_TOMORROW_PLAN);
+                        //AnalysisActivity.startActivity(AboutActivity.this, SettingUtil.TYPE_TOMORROW_PLAN);
+                        BCFActivity.startActivity(AboutActivity.this);
                     }
                 }
             }
@@ -157,7 +156,7 @@ public class AboutActivity extends BaseActivity {
         Intent intent = new Intent(context, AboutActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 
     /**

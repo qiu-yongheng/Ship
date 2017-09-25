@@ -121,6 +121,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     private int sandHeight;
     private int isClear = 0;
     private String SandHandlingShipID = "";
+    private String sandShipName;
 
     @Nullable
     @Override
@@ -349,6 +350,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                                                     public void onClick(View view) {
                                                         // 供砂船舶账号
                                                         SandHandlingShipID = threadShip.getShipAccount();
+                                                        sandShipName = threadShip.getShipName();
                                                         tvSandShip.setText(threadShip.getShipName());
                                                         etSandVoyage.setText(threadShip.getShipItemNum());
                                                         if (sandShipPupWindow != null) {
@@ -467,7 +469,6 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             }
 
             try {
-
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("ItemID", activity.itemID);
                 jsonObject.put("ShipAccount", boat.getShipNum());
@@ -494,7 +495,14 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
                 LogUtil.d("抛砂提交: " + json);
 
-                presenter.commit(json);
+
+                /** 判断供砂船舶是否是BCF */
+                if (sandShipName.contains("BCF")) {
+                    // 提交到BCF
+                    presenter.commitBCF(json);
+                } else {
+                    presenter.commit(json);
+                }
 
 
             } catch (JSONException e) {

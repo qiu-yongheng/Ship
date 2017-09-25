@@ -19,6 +19,7 @@ import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.RecordedSandShowList;
+import com.kc.shiptransport.db.bcf.BCFLog;
 import com.kc.shiptransport.db.sample.SampleData;
 import com.kc.shiptransport.db.sample.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
@@ -1017,4 +1018,35 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<SampleImageList>> getSampleImgList(ImageMultipleResultEvent imageMultipleResultEvent, int SandSamplingID, int SandSamplingNumID, String ConstructionBoatAccount, int p_position);
+
+    /**
+     * 1.69 提交BCF供砂来船数据
+     * @param ItemID
+     * @param SandHandlingShipID
+     * @param SubcontractorAccount
+     * @param TotalAmount
+     * @param Remark
+     * @param Creator
+     * @param Date
+     * @return
+     */
+    Observable<Boolean> InsertBCFToShipRecord(int ItemID, String SandHandlingShipID, String SubcontractorAccount, float TotalAmount, String Remark, String Creator, String Date);
+
+    /**
+     * 1.70 提交BCF抛砂数据（施工日志抛砂）
+     * @param json
+     * @return
+     */
+    Observable<Boolean> InsertBCFBoatThrowingSandRecord(String json);
+
+    /**
+     * 1.71 获取BCF来砂船舶的明细数据
+     * @param PageSize
+     * @param PageCount
+     * @param startTime
+     * @param endTime
+     * @param subAccount
+     * @return
+     */
+    Observable<List<BCFLog>> GetBCFToShipRecords(int PageSize, int PageCount, String startTime, String endTime, String subAccount);
 }

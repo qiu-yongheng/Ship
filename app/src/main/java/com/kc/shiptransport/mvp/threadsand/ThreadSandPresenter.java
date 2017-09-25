@@ -166,6 +166,36 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                 });
     }
 
+    @Override
+    public void commitBCF(String json) {
+        dataRepository
+                .InsertBCFBoatThrowingSandRecord(json)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showCommitResult(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
     /**
      * 回显详细数据
      * @param itemID

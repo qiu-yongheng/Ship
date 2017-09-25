@@ -57,7 +57,7 @@ public class DowntimeLogActivity extends BaseActivity{
         Bundle bundle = new Bundle();
         bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }
 

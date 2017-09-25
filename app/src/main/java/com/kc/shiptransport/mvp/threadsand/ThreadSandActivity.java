@@ -68,6 +68,6 @@ public class ThreadSandActivity extends BaseActivity{
         bundle.putInt(ITEMID, itemID);
         bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

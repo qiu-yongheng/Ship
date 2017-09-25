@@ -173,6 +173,7 @@
     <string name="desc_partition">panel012 ~ panel016分区生成规则:\n分区前缀填panel###, 开始数填012, 结束数填016\n\npanela12~panelg12分区生成规则:\n分区前缀填写panel#12，开始数填a，结束数填g
 \n\n说明：#代表变量数，一个#符号代表一个字符
 </string>
+    <string name="title_bcf_log">BCF日志</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

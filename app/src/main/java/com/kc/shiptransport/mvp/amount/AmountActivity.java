@@ -58,6 +58,6 @@ public class AmountActivity extends BaseActivity{
         Intent intent = new Intent(context, AmountActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

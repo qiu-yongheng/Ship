@@ -61,6 +61,6 @@ public class RecordedSandShowActivity extends BaseActivity{
         Bundle bundle = new Bundle();
         bundle.putInt(ITEMID, itemID);
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

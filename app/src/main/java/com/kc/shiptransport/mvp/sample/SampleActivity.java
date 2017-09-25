@@ -58,7 +58,7 @@ public class SampleActivity extends BaseActivity{
         Intent intent = new Intent(context, SampleActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 
     @Override

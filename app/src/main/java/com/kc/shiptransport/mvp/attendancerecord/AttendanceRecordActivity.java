@@ -41,6 +41,6 @@ public class AttendanceRecordActivity extends BaseActivity{
         Intent intent = new Intent(context, AttendanceRecordActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

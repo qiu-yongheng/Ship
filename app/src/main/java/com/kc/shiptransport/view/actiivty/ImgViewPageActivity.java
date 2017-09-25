@@ -53,6 +53,6 @@ public class ImgViewPageActivity extends BaseActivity {
         bundle.putParcelableArrayList(IMGLIST, list);
         bundle.putInt(POSITION, position);
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

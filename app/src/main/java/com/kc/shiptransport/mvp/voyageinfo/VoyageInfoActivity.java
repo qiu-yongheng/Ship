@@ -58,6 +58,6 @@ public class VoyageInfoActivity extends BaseActivity{
         Intent intent = new Intent(context, VoyageInfoActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

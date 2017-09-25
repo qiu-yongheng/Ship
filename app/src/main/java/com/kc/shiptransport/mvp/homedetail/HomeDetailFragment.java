@@ -20,6 +20,7 @@ import com.kc.shiptransport.mvp.amount.AmountActivity;
 import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
 import com.kc.shiptransport.mvp.attendance.AttendanceActivity;
 import com.kc.shiptransport.mvp.attendanceaudit.AttendanceAuditActivity;
+import com.kc.shiptransport.mvp.bcf.BCFActivity;
 import com.kc.shiptransport.mvp.exitapplication.ExitApplicationActivity;
 import com.kc.shiptransport.mvp.exitassessor.ExitAssessorActivity;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
@@ -175,6 +176,14 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                         case 26:
                             // 退场反馈
                             AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_EXIT_FEEDBACK);
+                            break;
+                        case 27:
+                            // 明日来船计划
+                            AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_TOMORROW_PLAN);
+                            break;
+                        case 28:
+                            // BCF来船
+                            BCFActivity.startActivity(getContext());
                             break;
 
                         /** AppPID = 18 考勤管理 */

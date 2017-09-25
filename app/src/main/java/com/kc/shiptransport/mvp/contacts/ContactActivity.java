@@ -51,6 +51,6 @@ public class ContactActivity extends BaseActivity{
         Intent intent = new Intent(context, ContactActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

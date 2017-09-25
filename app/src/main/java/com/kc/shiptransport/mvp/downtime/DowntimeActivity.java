@@ -68,6 +68,6 @@ public class DowntimeActivity extends BaseActivity{
         bundle.putInt(TYPE, type);
         bundle.putInt(ITEMID, itemID);
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

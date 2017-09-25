@@ -52,6 +52,6 @@ public class AcceptanceEvaluationActivity extends BaseActivity{
         Intent intent = new Intent(context, AcceptanceEvaluationActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

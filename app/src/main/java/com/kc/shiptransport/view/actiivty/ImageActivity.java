@@ -73,6 +73,6 @@ public class ImageActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString(IMAGPATH, imgPath);
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 }

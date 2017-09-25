@@ -1,6 +1,6 @@
 <litepal>
     <dbname value="ship_db" />
-    <version value="93"/>
+    <version value="94"/>
     <list>
         <mapping class="com.kc.shiptransport.db.ship.Ship"/>
         <mapping class="com.kc.shiptransport.db.ship.ShipList"/>
@@ -49,5 +49,6 @@
         <mapping class="com.kc.shiptransport.db.thread.ThreadShip"/>
         <mapping class="com.kc.shiptransport.db.sample.SampleData"/>
         <mapping class="com.kc.shiptransport.db.sample.SandSamplingNumRecordListBean"/>
+        <mapping class="com.kc.shiptransport.db.bcf.BCFLog"/>
     </list>
 </litepal>

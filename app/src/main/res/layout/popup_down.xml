@@ -96,9 +96,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_10"
                 android:layout_weight="1"
-                android:background="@drawable/btn_bg"
+                android:background="@drawable/tv_bg"
                 android:text="@string/btn_ok"
-                android:textColor="@color/text_white"
+                android:textColor="?colorPrimary"
                 android:textSize="@dimen/text_15sp"/>
         </LinearLayout>
 

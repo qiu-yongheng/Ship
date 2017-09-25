@@ -1,9 +1,7 @@
-package com.kc.shiptransport.mvp.constructionlog;
+package com.kc.shiptransport.mvp.bcf;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.kc.shiptransport.R;
@@ -11,14 +9,14 @@ import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.mvp.BaseActivity;
 
 /**
- * @author qiuyongheng
- * @time 2017/7/6  15:41
+ * @author 邱永恒
+ * @time 2017/9/25  9:27
  * @desc ${TODD}
  */
 
-public class ConstructionLogActivity extends BaseActivity{
+public class BCFActivity extends BaseActivity{
 
-    private ConstructionLogFragment fragment;
+    private BCFFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +24,9 @@ public class ConstructionLogActivity extends BaseActivity{
         setContentView(R.layout.activity_plan);
 
         if (savedInstanceState != null) {
-            fragment = (ConstructionLogFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ConstructionLogFragment");
+            fragment = (BCFFragment) getSupportFragmentManager().getFragment(savedInstanceState, "BCFFragment");
         } else {
-            fragment = new ConstructionLogFragment();
+            fragment = new BCFFragment();
         }
 
         if (!fragment.isAdded()) {
@@ -38,20 +36,21 @@ public class ConstructionLogActivity extends BaseActivity{
                     .commit();
         }
 
-        new ConstructionLogPresenter(this, fragment, new DataRepository());
+        new BCFPresenter(this, fragment, new DataRepository());
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (fragment.isAdded()) {
-            getSupportFragmentManager().putFragment(outState, "ConstructionLogFragment", fragment);
+        if (outState != null) {
+            if (fragment != null && fragment.isAdded()) {
+                getSupportFragmentManager().putFragment(outState, "BCFFragment", fragment);
+            }
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, ConstructionLogActivity.class);
+        Intent intent = new Intent(context, BCFActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
         context.startActivity(intent);

@@ -27,6 +27,7 @@ public interface ThreadSandContract {
         void getDates(String CurrentDate, String CurrentBoatAccount);
         void getPartition(String userID);
         void commit(String json);
+        void commitBCF(String json);
         void getDetailData(int itemID);
         void getConShip();
     }

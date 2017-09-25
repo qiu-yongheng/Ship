@@ -89,7 +89,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
         bundle.putInt(P_TYPE, p_type);
         bundle.putInt(ISFINSHRECEPTIONSANDATTACHMENT, isFinshReceptionSandAttachment);
         intent.putExtras(bundle);
-        context.startActivity(intent, bundle);
+        context.startActivity(intent);
     }
 
     @Override
