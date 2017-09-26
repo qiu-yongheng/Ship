@@ -20,13 +20,16 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
+import com.kc.shiptransport.db.threadsand.Layered;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
+import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.PatternUtil;
 import com.kc.shiptransport.util.SettingUtil;
@@ -64,10 +67,14 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     EditText etStartNum;
     @BindView(R.id.et_end_num)
     EditText etEndNum;
+    @BindView(R.id.tv_construction_stratification)
+    TextView tvConstructionStratification;
     private PartitionActivity activity;
     private PartitionAdapter adapter;
     private PartitionContract.Presenter presenter;
     private ConstructionBoat boat;
+    private int layoutID = 0;
+    private String layoutName = "";
 
     @Nullable
     @Override
@@ -134,7 +141,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // 删除全部分区
-                        DataSupport.deleteAll(PartitionNum.class, "userAccount = ?", boat.getShipNum());
+                        DataSupport.deleteAll(PartitionNum.class);
                         if (adapter != null) {
                             adapter.setDates(new ArrayList<PartitionNum>());
                             adapter.notifyDataSetChanged();
@@ -165,6 +172,33 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
             }
         });
 
+        /** 施工分层 */
+        tvConstructionStratification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<Layered> arr = DataSupport.order("SortNum asc").find(Layered.class);
+                String[] data = new String[arr.size()];
+                for (int i = 0; i < arr.size(); i++) {
+                    data[i] = arr.get(i).getLayerName();
+                }
+                activity.showSingleDailog(data, "选择施工分区", "取消", "确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }, new OnDailogOKClickListener() {
+                    @Override
+                    public void onOK(Object data) {
+                        // 分层ID
+                        layoutID = arr.get((int) data).getItemID();
+                        layoutName = arr.get((int) data).getLayerName();
+                        tvConstructionStratification.setText(layoutName);
+                    }
+                });
+
+            }
+        });
+
         /** 生成 */
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,6 +221,8 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                     ToastUtil.tip(getContext(), "请填写开始数");
                 } else if (TextUtils.isEmpty(endNum)) {
                     ToastUtil.tip(getContext(), "请填写结束数");
+                } else if (TextUtils.isEmpty(layoutName)) {
+                    ToastUtil.tip(getContext(), "请选择施工分层");
                 } else {
 
                     /** ---------------------------------------------------------------------------- */
@@ -239,6 +275,8 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                                         num.setUserAccount(boat.getShipNum());
                                         char c = (char) j;
                                         num.setNum(prefix.replace('#', c).toLowerCase());
+                                        num.setLayoutID(layoutID);
+                                        num.setLayoutName(layoutName);
                                         num.save();
                                     }
 
@@ -254,6 +292,8 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                                             sb.append("#");
                                         }
                                         num.setNum(prefix.replaceAll(sb.toString(), format).toLowerCase());
+                                        num.setLayoutID(layoutID);
+                                        num.setLayoutName(layoutName);
                                         num.save();
                                     }
                                 }
@@ -311,8 +351,17 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         unbinder.unbind();
     }
 
+    /**
+     * 显示施工分区
+     * @param list
+     */
     @Override
     public void showList(List<PartitionNum> list) {
+        // 回显施工分层
+        tvConstructionStratification.setText(list.get(0).getLayoutName());
+        layoutID = list.get(0).getLayoutID();
+        layoutName = list.get(0).getLayoutName();
+
         if (adapter == null) {
             adapter = new PartitionAdapter(getActivity(), list, boat.getShipNum());
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {

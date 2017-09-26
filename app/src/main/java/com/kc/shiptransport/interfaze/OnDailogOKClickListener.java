@@ -7,5 +7,5 @@ package com.kc.shiptransport.interfaze;
  */
 
 public interface OnDailogOKClickListener {
-    void onOK(String edit);
+    void onOK(Object data);
 }

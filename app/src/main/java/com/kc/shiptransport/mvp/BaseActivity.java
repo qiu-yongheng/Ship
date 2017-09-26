@@ -31,17 +31,20 @@ public class BaseActivity extends AppCompatActivity {
     private int progress;
     private AlertDialog.Builder editBuilder;
     private AlertDialog editDialog;
+    private AlertDialog.Builder singleBuilder;
+    private int singleSelectedId;
+    private AlertDialog singleDialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        // 实现背景图与状态栏融合
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            View decorView = getWindow().getDecorView();
-//            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-//            getWindow().setStatusBarColor(Color.TRANSPARENT);
-//        }
+        //        // 实现背景图与状态栏融合
+        //        if (Build.VERSION.SDK_INT >= 21) {
+        //            View decorView = getWindow().getDecorView();
+        //            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        //            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        //        }
     }
 
     protected void tip(String text) {
@@ -216,6 +219,7 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * 显示输入框弹窗
+     *
      * @param view
      * @param title
      * @param cancel
@@ -255,6 +259,52 @@ public class BaseActivity extends AppCompatActivity {
 
         // show it
         editDialog.show();
+    }
+
+    /**
+     * 显示单选框
+     * @param data
+     * @param title
+     * @param cancel
+     * @param ok
+     * @param cancelListener
+     * @param okListener
+     */
+    public void showSingleDailog(String[] data, String title, String cancel, String ok, DialogInterface.OnClickListener cancelListener, final OnDailogOKClickListener okListener) {
+        singleBuilder = new AlertDialog.Builder(BaseActivity.this);
+        singleSelectedId = -1;
+
+        singleBuilder.setTitle(title);
+        singleBuilder.setSingleChoiceItems(data, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                singleSelectedId = which;
+            }
+        });
+
+
+        // set dialog message
+        singleBuilder.setCancelable(false);
+
+        // create alert dialog
+        singleDialog = singleBuilder.create();
+
+        singleDialog.setButton(AlertDialog.BUTTON_NEUTRAL, cancel, cancelListener);
+        singleDialog.setButton(AlertDialog.BUTTON_POSITIVE, ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (singleSelectedId >= 0) {
+                    okListener.onOK(singleSelectedId);
+                } else {
+                    singleSelectedId = 0;
+                    // 业务逻辑
+                }
+            }
+        });
+
+        // show it
+        singleDialog.show();
     }
 
     /**

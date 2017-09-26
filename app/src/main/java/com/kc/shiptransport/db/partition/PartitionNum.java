@@ -12,6 +12,8 @@ public class PartitionNum extends DataSupport{
     private String userAccount;
     private String num;
     private int tag = 0; // 1 正常 0 长度不对
+    private int layoutID; // 分层ID
+    private String layoutName; // 分层名
 
     public int getTag() {
         return tag;
@@ -35,5 +37,21 @@ public class PartitionNum extends DataSupport{
 
     public void setNum(String num) {
         this.num = num;
+    }
+
+    public int getLayoutID() {
+        return layoutID;
+    }
+
+    public void setLayoutID(int layoutID) {
+        this.layoutID = layoutID;
+    }
+
+    public String getLayoutName() {
+        return layoutName;
+    }
+
+    public void setLayoutName(String layoutName) {
+        this.layoutName = layoutName;
     }
 }

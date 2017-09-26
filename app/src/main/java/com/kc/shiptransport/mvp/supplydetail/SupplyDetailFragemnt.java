@@ -228,13 +228,14 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                         }
                     }, new OnDailogOKClickListener() {
                         @Override
-                        public void onOK(String remark) {
-                            if (TextUtils.isEmpty(remark)) {
+                        public void onOK(Object remark) {
+                            String str = (String) remark;
+                            if (TextUtils.isEmpty(str)) {
                                 ToastUtil.tip(getContext(), "请输入退回意见");
                             } else {
                                 String userID = DataSupport.findAll(User.class).get(0).getUserID();
                                 int status = -1;
-                                presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, remark);
+                                presenter.commit(activity.itemID, tvSupplyTime.getText().toString(), userID, status, str);
                             }
                         }
                     });
@@ -453,7 +454,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                     final SupplyDetail.ReceptionSandBoatNameAttachmentListBean bean = nameAdapter.list.get(position);
                     if (type[0] == 0) {
                         // 预览
-//                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+                        //                        ImageActivity.startActivity(getContext(), bean.getFilePath());
                         imgLists.clear();
                         for (SupplyDetail.ReceptionSandBoatNameAttachmentListBean listBean : nameAdapter.list) {
                             ImgList imgList = new ImgList();

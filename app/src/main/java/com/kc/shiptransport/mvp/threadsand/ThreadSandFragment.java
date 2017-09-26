@@ -571,6 +571,10 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         tvDevisionNum.setText(String.valueOf(bean.getSize()));
     }
 
+    /**
+     * 提交成功
+     * @param isSuccess
+     */
     @Override
     public void showCommitResult(boolean isSuccess) {
         if (isSuccess) {
