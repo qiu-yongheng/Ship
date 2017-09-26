@@ -4,6 +4,7 @@ import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.bcf.BCFLog;
+import com.kc.shiptransport.db.bcf.BCFThread;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.mvp.BasePresenter;
@@ -34,6 +35,8 @@ public interface AnalysisContract {
         void showTomorrowPlan(List<List<ProgressTrack>> list);
 
         void showBCFLog(List<BCFLog> list);
+
+        void showBCFThread(List<BCFThread> list);
     }
 
     interface Presenter extends BasePresenter {
@@ -54,5 +57,7 @@ public interface AnalysisContract {
         void getTomorrowPlan(String startTime, String endTime, String subID, String shipID);
 
         void getBCFLog(int pageSize, int pageCount, String startTime, String endTime, String subAccount);
+
+        void getBCFThread(int pageSize, int pageCount, String startTime, String endTime, String shipAccount);
     }
 }

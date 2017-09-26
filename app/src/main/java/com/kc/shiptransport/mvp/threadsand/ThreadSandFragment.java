@@ -602,6 +602,11 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             // 回显施工分区
             String partitionNameArr = logBean.getPartitionNameArr();
             tvConstructionDevision.setText(partitionNameArr);
+            // 回显是否清仓
+            int isClearance = logBean.getIsClearance();
+            cbAlreadyClear.setChecked(isClearance == 1);
+            isClear = isClearance;
+
 
             // 保存施工分区到数据库
             DataSupport.deleteAll(PartitionNum.class);

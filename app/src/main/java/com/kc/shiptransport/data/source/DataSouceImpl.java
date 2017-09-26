@@ -20,6 +20,7 @@ import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.RecordedSandShowList;
 import com.kc.shiptransport.db.bcf.BCFLog;
+import com.kc.shiptransport.db.bcf.BCFThread;
 import com.kc.shiptransport.db.sample.SampleData;
 import com.kc.shiptransport.db.sample.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
@@ -1049,4 +1050,15 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<BCFLog>> GetBCFToShipRecords(int PageSize, int PageCount, String startTime, String endTime, String subAccount);
+
+    /**
+     * 1.72 获取BCF来砂船舶（抛砂）的明细数据
+     * @param PageSize
+     * @param PageCount
+     * @param startTime
+     * @param endTime
+     * @param shipAccount
+     * @return
+     */
+    Observable<List<BCFThread>> GetGetBCFBoatList(int PageSize, int PageCount, String startTime, String endTime, String shipAccount);
 }

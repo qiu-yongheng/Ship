@@ -2185,4 +2185,30 @@ public class RemoteDataSource {
         return getCallResult(endPoint, soapAction, rpc);
     }
 
+    /**
+     * 1.72 获取BCF来砂船舶（抛砂）的明细数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetGetBCFBoatList(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetGetBCFBoatList";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
 }

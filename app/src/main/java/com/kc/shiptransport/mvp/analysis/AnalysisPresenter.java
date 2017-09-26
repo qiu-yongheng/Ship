@@ -8,6 +8,7 @@ import com.kc.shiptransport.db.acceptanceevaluation.AcceptanceEvaluationList;
 import com.kc.shiptransport.db.acceptancerank.Rank;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.bcf.BCFLog;
+import com.kc.shiptransport.db.bcf.BCFThread;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 
@@ -426,6 +427,14 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
                 });
     }
 
+    /**
+     * 获取BCF日志
+     * @param pageSize
+     * @param pageCount
+     * @param startTime
+     * @param endTime
+     * @param subAccount
+     */
     @Override
     public void getBCFLog(int pageSize, int pageCount, String startTime, String endTime, String subAccount) {
         view.showLoading(true);
@@ -442,6 +451,45 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
                     @Override
                     public void onNext(@NonNull List<BCFLog> list) {
                         view.showBCFLog(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 获取BCF抛砂记录
+     * @param pageSize
+     * @param pageCount
+     * @param startTime
+     * @param endTime
+     * @param shipAccount
+     */
+    @Override
+    public void getBCFThread(int pageSize, int pageCount, String startTime, String endTime, String shipAccount) {
+        view.showLoading(true);
+        dataRepository
+                .GetGetBCFBoatList(pageSize, pageCount, startTime, endTime, shipAccount)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<BCFThread>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<BCFThread> list) {
+                        view.showBCFThread(list);
                     }
 
                     @Override

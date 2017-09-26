@@ -59,6 +59,7 @@ import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.backlog.BackLog;
 import com.kc.shiptransport.db.backlog.ListBean;
 import com.kc.shiptransport.db.bcf.BCFLog;
+import com.kc.shiptransport.db.bcf.BCFThread;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopList;
 import com.kc.shiptransport.db.down.StopOption;
@@ -4920,6 +4921,78 @@ public class DataRepository implements DataSouceImpl {
                 LogUtil.d("1.71 获取BCF来砂船舶的明细数据result: \n" + result);
 
                 List<BCFLog> list = gson.fromJson(result, new TypeToken<List<BCFLog>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.72 获取BCF来砂船舶（抛砂）的明细数据
+     * @param PageSize
+     * @param PageCount
+     * @param startTime
+     * @param endTime
+     * @param shipAccount
+     * @return
+     */
+    @Override
+    public Observable<List<BCFThread>> GetGetBCFBoatList(final int PageSize, final int PageCount, final String startTime, final String endTime, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<List<BCFThread>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<BCFThread>> e) throws Exception {
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
+
+                JSONArray Column = new JSONArray();
+
+                // 供应商账号
+                JSONObject object1 = new JSONObject();
+                object1.put("Name", "ShipName");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", shipAccount);
+
+                // 时间
+                JSONObject object2 = new JSONObject();
+                object2.put("Name", "Date");
+                object2.put("Type", "datetime");
+
+                JSONArray array2 = new JSONArray();
+
+                JSONObject object21 = new JSONObject();
+                object21.put("Min", startTime);
+                JSONObject object22 = new JSONObject();
+                object22.put("Max", endTime);
+
+                array2.put(object21);
+                array2.put(object22);
+
+                object2.put("Value", array2);
+
+                // 保存2个对象到object
+                if (!TextUtils.isEmpty(shipAccount)) {
+                    Column.put(object1);
+                }
+                if (!TextUtils.isEmpty(startTime) || !TextUtils.isEmpty(endTime)) {
+                    Column.put(object2);
+                }
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                String json = root.toString();
+
+                LogUtil.d("1.72 获取BCF来砂船舶（抛砂）的明细数据json: \n" + json);
+
+                String result = mRemoteDataSource.GetGetBCFBoatList(PageSize, PageCount, json);
+
+                List<BCFThread> list = gson.fromJson(result, new TypeToken<List<BCFThread>>() {
                 }.getType());
 
                 e.onNext(list);

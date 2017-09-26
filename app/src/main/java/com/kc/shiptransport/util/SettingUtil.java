@@ -111,6 +111,8 @@ public class SettingUtil {
     public static final int TYPE_TOMORROW_PLAN = 117;
     /* BCF记录 */
     public static final int TYPE_BCF_LOG = 118;
+    /* BCF抛砂记录 */
+    public static final int TYPE_BCF_THREAD = 119;
 
     /*-----------------------------------------------审核类型--------------------------------------------------*/
 
