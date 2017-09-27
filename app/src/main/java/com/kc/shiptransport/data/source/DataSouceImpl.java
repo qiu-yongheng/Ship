@@ -19,10 +19,6 @@ import com.kc.shiptransport.db.AttendanceRecordList;
 import com.kc.shiptransport.db.AttendanceType;
 import com.kc.shiptransport.db.RecordList;
 import com.kc.shiptransport.db.RecordedSandShowList;
-import com.kc.shiptransport.db.bcf.BCFLog;
-import com.kc.shiptransport.db.bcf.BCFThread;
-import com.kc.shiptransport.db.sample.SampleData;
-import com.kc.shiptransport.db.sample.SampleImageList;
 import com.kc.shiptransport.db.SandSample;
 import com.kc.shiptransport.db.ScannerImage;
 import com.kc.shiptransport.db.StoneSource;
@@ -36,12 +32,16 @@ import com.kc.shiptransport.db.amount.AmountOption;
 import com.kc.shiptransport.db.analysis.AnalysisDetail;
 import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.backlog.BackLog;
+import com.kc.shiptransport.db.bcf.BCFLog;
+import com.kc.shiptransport.db.bcf.BCFThread;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
+import com.kc.shiptransport.db.sample.SampleData;
+import com.kc.shiptransport.db.sample.SampleImageList;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.versionupdate.VersionUpdate;
@@ -1049,7 +1049,7 @@ public interface DataSouceImpl {
      * @param subAccount
      * @return
      */
-    Observable<List<BCFLog>> GetBCFToShipRecords(int PageSize, int PageCount, String startTime, String endTime, String subAccount);
+    Observable<List<BCFLog>> GetBCFToShipRecords(int PageSize, int PageCount,  String startTime, String endTime, String subAccount);
 
     /**
      * 1.72 获取BCF来砂船舶（抛砂）的明细数据
@@ -1060,5 +1060,28 @@ public interface DataSouceImpl {
      * @param shipAccount
      * @return
      */
-    Observable<List<BCFThread>> GetGetBCFBoatList(int PageSize, int PageCount, String startTime, String endTime, String shipAccount);
+    Observable<List<BCFThread>> GetBCFBoatList(int PageSize, int PageCount, String startTime, String endTime, String shipAccount);
+
+    /**
+     * 1.73 获取BCF来砂船舶数据
+     * @param PageSize
+     * @param PageCount
+     * @param shipAccount
+     * @return
+     */
+    Observable<Boolean> GetBCFToShipInfo(int PageSize, int PageCount, String shipAccount);
+
+    /**
+     * 1.74 删除BCF来砂船舶日志数据
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteBCFToShipRecordsByItemID(int ItemID);
+
+    /**
+     * 1.74 删除BCF船舶日志(抛砂日志)数据
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteBCFBoatThrowingSandRecordsByItemID(int ItemID);
 }

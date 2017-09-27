@@ -132,7 +132,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
 
     public void initListener() {
         /** 判断是否可用修改 */
-        if (activity.isReadOnly) {
+        if (activity.isReadOnly || true) {
             // 不能修改
         } else {
             // 可以修改
@@ -324,7 +324,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         }
 
         /** 判断是否可以修改 */
-        if (activity.isReadOnly) {
+        if (activity.isReadOnly || true) {
             // 不可修改
             tvReceiveShip.setVisibility(View.VISIBLE);
             spReceiveShip.setVisibility(View.GONE);

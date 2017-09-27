@@ -183,7 +183,7 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             break;
                         case 28:
                             // BCF来船
-                            BCFActivity.startActivity(getContext());
+                            BCFActivity.startActivity(getContext(), 0, true);
                             break;
 
                         /** AppPID = 18 考勤管理 */

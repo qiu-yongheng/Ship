@@ -44,6 +44,10 @@ public class SettingUtil {
     /* 施工日志选择船舶position */
     public static final String LOG_SHIP_POSITION = "LOG_SHIP_POSITION";
 
+    /* 施工日志选择泵砂船position */
+    public static final String LOG_PUMP_SHIP_POSITION = "LOG_PUMP_SHIP_POSITION";
+
+
     /*---------------------------------------------------holder控件类型---------------------------------------------------*/
     /* sample */
     public static final int HOLDER_IMAGE_1 = 1;
@@ -225,5 +229,15 @@ public class SettingUtil {
     /* 结束数 */
     public static final String SP_KEY_END_NUM = "SP_KEY_END_NUM";
     /*-----------------------------------------------施工分区--------------------------------------------------*/
+
+
+
+
+    /*-----------------------------------------------bcf--------------------------------------------------*/
+    /* 供应商账号 */
+    public static final String SP_KEY_SUB_ACCOUNT = "SP_KEY_SUB_ACCOUNT";
+    /* 供应商名称 */
+    public static final String SP_KEY_SUB_NAME = "SP_KEY_SUB_NAME";
+    /*-----------------------------------------------bcf--------------------------------------------------*/
 
 }

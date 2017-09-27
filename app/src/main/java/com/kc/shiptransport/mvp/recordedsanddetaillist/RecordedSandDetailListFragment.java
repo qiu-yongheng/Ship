@@ -79,7 +79,8 @@ public class RecordedSandDetailListFragment extends Fragment implements Recorded
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         /** 判断是否能添加过砂记录 */
-        if (activity.isReadOnly) {
+        // TODO: 2017/9/27需求, 以后过砂记录独立出来, 不参与供砂流程, 只提供查看功能
+        if (activity.isReadOnly || true) {
             // 只读
             btnReturn.setVisibility(View.VISIBLE);
             btnAdd.setVisibility(View.GONE);
@@ -160,7 +161,8 @@ public class RecordedSandDetailListFragment extends Fragment implements Recorded
                     RecordedSandShowList sandShowList = adapter.list.get(position);
 
                     /** 跳转到编辑界面(修改) */
-                    RecordedSandDetailActivity.startActivity(getActivity(), activity.itemID, SettingUtil.TYPE_UPDATE_RECORDED, sandShowList.getItemID(), activity.isReadOnly);
+//                    RecordedSandDetailActivity.startActivity(getActivity(), activity.itemID, SettingUtil.TYPE_UPDATE_RECORDED, sandShowList.getItemID(), activity.isReadOnly);
+                    RecordedSandDetailActivity.startActivity(getActivity(), activity.itemID, SettingUtil.TYPE_UPDATE_RECORDED, sandShowList.getItemID(), true);
                 }
 
                 @Override
@@ -179,7 +181,7 @@ public class RecordedSandDetailListFragment extends Fragment implements Recorded
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 /** 删除 */
-                                presenter.deleteRecorded(activity.itemID, sandShowList.getItemID());
+                                //presenter.deleteRecorded(activity.itemID, sandShowList.getItemID());
                             }
                         });
                     }

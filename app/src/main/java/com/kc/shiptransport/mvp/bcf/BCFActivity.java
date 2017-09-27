@@ -16,12 +16,20 @@ import com.kc.shiptransport.mvp.BaseActivity;
 
 public class BCFActivity extends BaseActivity{
 
+    private static final String ITEMID = "ITEMID";
+    private static final String ISALLOW = "ISALLOW";
     private BCFFragment fragment;
+    public int itemID;
+    public boolean isAllow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan);
+
+        Bundle bundle = getIntent().getExtras();
+        itemID = bundle.getInt(ITEMID);
+        isAllow = bundle.getBoolean(ISALLOW);
 
         if (savedInstanceState != null) {
             fragment = (BCFFragment) getSupportFragmentManager().getFragment(savedInstanceState, "BCFFragment");
@@ -49,9 +57,11 @@ public class BCFActivity extends BaseActivity{
         }
     }
 
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, int itemID, boolean isAllowEdit) {
         Intent intent = new Intent(context, BCFActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putInt(ITEMID, itemID);
+        bundle.putBoolean(ISALLOW, isAllowEdit);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

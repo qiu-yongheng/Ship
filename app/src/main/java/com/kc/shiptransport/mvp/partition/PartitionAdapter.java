@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -75,6 +76,8 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         String s = TextUtils.isEmpty(num.getNum()) ? "" : num.getNum();
         ((NormalHolder) holder).mEtNum.setText(s);
 
+        ((NormalHolder) holder).mBtnBed.setText(TextUtils.isEmpty(num.getLayoutName()) ? "施工分层" : num.getLayoutName());
+
         // 设置光标位置
         ((NormalHolder) holder).mEtNum.setSelection(s.length());
 
@@ -83,6 +86,13 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public boolean onLongClick(View view) {
                 listener.onItemLongClick(holder.itemView, holder.getLayoutPosition());
                 return true;
+            }
+        });
+
+        ((NormalHolder) holder).mBtnBed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClick(((NormalHolder) holder).mBtnBed, holder.getLayoutPosition());
             }
         });
 
@@ -138,12 +148,14 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private final TextView mTvTag;
         private final EditText mEtNum;
+        private final Button mBtnBed;
 
         public NormalHolder(View itemView) {
             super(itemView);
 
             mTvTag = (TextView) itemView.findViewById(R.id.tv_tag);
             mEtNum = (EditText) itemView.findViewById(R.id.et_num);
+            mBtnBed = (Button) itemView.findViewById(R.id.btn_bed);
         }
     }
 
@@ -177,6 +189,8 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 sb.deleteCharAt(sb.length() - 1);
 
                 num.setNum(sb.toString());
+                num.setLayoutID(partitionNum.getLayoutID());
+                num.setLayoutName(partitionNum.getLayoutName());
                 num.save();
             }
             list.add(pos, num);

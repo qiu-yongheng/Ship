@@ -18,7 +18,8 @@ import android.widget.TextView;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.SubcontractorList;
-import com.kc.shiptransport.db.thread.ThreadShip;
+import com.kc.shiptransport.db.bcf.BCFLog;
+import com.kc.shiptransport.db.bcf.BCFShip;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
@@ -26,6 +27,7 @@ import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
+import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 import com.zhy.adapter.recyclerview.CommonAdapter;
@@ -34,11 +36,14 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 import org.litepal.crud.DataSupport;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.kc.shiptransport.R.id.tv;
 
 /**
  * @author 邱永恒
@@ -66,6 +71,8 @@ public class BCFFragment extends Fragment implements BCFContract.View {
     TextView tvTitle;
     @BindView(R.id.tv_opinion)
     TextView tvOpinion;
+    @BindView(R.id.btn_return)
+    Button btnReturn;
     private BCFActivity activity;
     private BCFContract.Presenter presenter;
     private int sandWidth;
@@ -87,6 +94,12 @@ public class BCFFragment extends Fragment implements BCFContract.View {
         initListener();
 
         presenter.getSandShip();
+        presenter.getSubList();
+
+        if (activity.itemID != 0) {
+            // 回显数据
+            presenter.getUpdateData();
+        }
         return view;
     }
 
@@ -100,6 +113,11 @@ public class BCFFragment extends Fragment implements BCFContract.View {
         tvTitle.setText("BCF供砂来船");
         tvOpinion.setVisibility(View.VISIBLE);
         tvOpinion.setText("查看BCF记录");
+
+
+        // 回显
+        SandHandlingShipID = SharePreferenceUtil.getString(getContext(), SettingUtil.SP_KEY_SUB_ACCOUNT, "");
+        tvSub.setText(SharePreferenceUtil.getString(getContext(), SettingUtil.SP_KEY_SUB_NAME, "请选择"));
     }
 
     @Override
@@ -114,6 +132,14 @@ public class BCFFragment extends Fragment implements BCFContract.View {
 
     @Override
     public void initListener() {
+        /** 返回 */
+        btnReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
         /** 供砂船舶 */
         tvSandShip.post(new Runnable() {
             @Override
@@ -122,6 +148,7 @@ public class BCFFragment extends Fragment implements BCFContract.View {
                 sandHeight = tvSandShip.getMeasuredHeight();
             }
         });
+
         tvSandShip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,18 +170,18 @@ public class BCFFragment extends Fragment implements BCFContract.View {
                                 recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
                                 // 获取数据
-                                List<ThreadShip> list = DataSupport.order("rownumber asc").find(ThreadShip.class);
+                                List<BCFShip> list = DataSupport.order("rownumber asc").find(BCFShip.class);
 
-                                CommonAdapter<ThreadShip> commonAdapter = new CommonAdapter<ThreadShip>(getContext(), R.layout.item_thread_sand, list) {
+                                CommonAdapter<BCFShip> commonAdapter = new CommonAdapter<BCFShip>(getContext(), R.layout.item_thread_sand, list) {
                                     @Override
-                                    protected void convert(ViewHolder holder, final ThreadShip threadShip, int position) {
-                                        holder.setText(R.id.tv, threadShip.getShipName())
-                                                .setOnClickListener(R.id.tv, new View.OnClickListener() {
+                                    protected void convert(ViewHolder holder, final BCFShip bcfShip, int position) {
+                                        holder.setText(tv, bcfShip.getShipName())
+                                                .setOnClickListener(tv, new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View view) {
                                                         // 供砂船舶账号
-                                                        SandHandlingShipID = threadShip.getShipAccount();
-                                                        tvSandShip.setText(threadShip.getShipName());
+                                                        SandHandlingShipID = bcfShip.getShipAccount();
+                                                        tvSandShip.setText(bcfShip.getShipName());
                                                         if (sandShipPupWindow != null) {
                                                             sandShipPupWindow.dismiss();
                                                         }
@@ -206,13 +233,17 @@ public class BCFFragment extends Fragment implements BCFContract.View {
                                 CommonAdapter<SubcontractorList> commonAdapter = new CommonAdapter<SubcontractorList>(getContext(), R.layout.item_thread_sand, list) {
                                     @Override
                                     protected void convert(ViewHolder holder, final SubcontractorList sub, int position) {
-                                        holder.setText(R.id.tv, sub.getSubcontractorName())
-                                                .setOnClickListener(R.id.tv, new View.OnClickListener() {
+                                        holder.setText(tv, sub.getSubcontractorName())
+                                                .setOnClickListener(tv, new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View view) {
                                                         // 分包商账号
                                                         subAccount = sub.getSubcontractorAccount();
                                                         tvSub.setText(sub.getSubcontractorName());
+
+                                                        // 记忆选择的分包商
+                                                        SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_SUB_ACCOUNT, subAccount);
+                                                        SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_SUB_NAME, sub.getSubcontractorName());
                                                         if (subPupWindow != null) {
                                                             subPupWindow.dismiss();
                                                         }
@@ -235,10 +266,13 @@ public class BCFFragment extends Fragment implements BCFContract.View {
             @Override
             public void onClick(View view) {
                 try {
-                    CalendarUtil.showTimePickerDialog(getContext(), tvTime, new OnTimePickerSureClickListener() {
+                    String offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, Calendar.DAY_OF_YEAR, 1);
+                    CalendarUtil.showDateDialog(getContext(), tvTime, CalendarUtil.YYYY_MM_DD, offsetDate, new OnTimePickerSureClickListener() {
                         @Override
                         public void onSure(String str) {
                             time = str;
+                            // 判断是否允许提交
+                            presenter.isAllowCommit(time);
                         }
                     }, new OnTimePickerLastDateClickListener() {
                         @Override
@@ -270,7 +304,7 @@ public class BCFFragment extends Fragment implements BCFContract.View {
                     // creator
                     String userID = DataSupport.findAll(User.class).get(0).getUserID();
 
-                    presenter.commit(0, SandHandlingShipID, subAccount, quan, remark, userID, time);
+                    presenter.commit(activity.itemID, SandHandlingShipID, subAccount, quan, remark, userID, time);
                 }
             }
         });
@@ -327,5 +361,51 @@ public class BCFFragment extends Fragment implements BCFContract.View {
         } else {
             ToastUtil.tip(getContext(), "提交失败, 请重试");
         }
+    }
+
+    @Override
+    public void showIsAllowCommit(boolean isAllow) {
+        if (isAllow) {
+            btnCommit.setVisibility(View.VISIBLE);
+            btnReturn.setVisibility(View.GONE);
+        } else {
+            btnCommit.setVisibility(View.GONE);
+            btnReturn.setVisibility(View.VISIBLE);
+            ToastUtil.tip(getContext(), "当前时间不可修改BCF供砂来船");
+        }
+    }
+
+    /**
+     * 回显数据
+     *
+     * @param list
+     */
+    @Override
+    public void showUpdateData(List<BCFLog> list) {
+        List<BCFLog> logList = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(BCFLog.class);
+        if (logList.isEmpty()) {
+            ToastUtil.tip(getContext(), "加载数据失败, 请重试");
+            return;
+        }
+
+        BCFLog bcfLog = logList.get(0);
+        // 来砂船舶
+        SandHandlingShipID = bcfLog.getSandHandlingShipID();
+        String sandHandlingShipName = bcfLog.getSandHandlingShipName();
+        // 供应商
+        subAccount = bcfLog.getSubcontractorAccount();
+        String subcontractorName = bcfLog.getSubcontractorName();
+        // 时间
+        time = bcfLog.getDate();
+        // 工程量
+        String totalAmount = bcfLog.getTotalAmount();
+        // 备注
+        String remark = bcfLog.getRemark();
+
+        tvSandShip.setText(TextUtils.isEmpty(sandHandlingShipName) ? "请选择" : sandHandlingShipName);
+        tvSub.setText(TextUtils.isEmpty(subcontractorName) ? "请选择" : subcontractorName);
+        tvTime.setText(TextUtils.isEmpty(time) ? "请选择" : time);
+        tvQuantum.setText(TextUtils.isEmpty(totalAmount) ? "0" : totalAmount);
+        etRemark.setText(TextUtils.isEmpty(remark) ? "" : remark);
     }
 }

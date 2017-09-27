@@ -59,6 +59,7 @@ import com.kc.shiptransport.db.analysis.ProgressTrack;
 import com.kc.shiptransport.db.backlog.BackLog;
 import com.kc.shiptransport.db.backlog.ListBean;
 import com.kc.shiptransport.db.bcf.BCFLog;
+import com.kc.shiptransport.db.bcf.BCFShip;
 import com.kc.shiptransport.db.bcf.BCFThread;
 import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopList;
@@ -4672,7 +4673,7 @@ public class DataRepository implements DataSouceImpl {
 
                 JSONArray Column = new JSONArray();
 
-                // 创建者账号
+                // 来砂船账号
                 JSONObject object1 = new JSONObject();
                 object1.put("Name", "ShipAccount");
                 object1.put("Type", "string");
@@ -4895,7 +4896,6 @@ public class DataRepository implements DataSouceImpl {
 
                 array2.put(object21);
                 array2.put(object22);
-
                 object2.put("Value", array2);
 
                 // 保存2个对象到object
@@ -4923,6 +4923,9 @@ public class DataRepository implements DataSouceImpl {
                 List<BCFLog> list = gson.fromJson(result, new TypeToken<List<BCFLog>>() {
                 }.getType());
 
+                DataSupport.deleteAll(BCFLog.class);
+                DataSupport.saveAll(list);
+
                 e.onNext(list);
                 e.onComplete();
             }
@@ -4939,7 +4942,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<List<BCFThread>> GetGetBCFBoatList(final int PageSize, final int PageCount, final String startTime, final String endTime, final String shipAccount) {
+    public Observable<List<BCFThread>> GetBCFBoatList(final int PageSize, final int PageCount, final String startTime, final String endTime, final String shipAccount) {
         return Observable.create(new ObservableOnSubscribe<List<BCFThread>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<BCFThread>> e) throws Exception {
@@ -4990,12 +4993,86 @@ public class DataRepository implements DataSouceImpl {
 
                 LogUtil.d("1.72 获取BCF来砂船舶（抛砂）的明细数据json: \n" + json);
 
-                String result = mRemoteDataSource.GetGetBCFBoatList(PageSize, PageCount, json);
+                String result = mRemoteDataSource.GetBCFBoatList(PageSize, PageCount, json);
+
+                LogUtil.d("1.72 获取BCF来砂船舶（抛砂）的明细数据result: \n" + result);
 
                 List<BCFThread> list = gson.fromJson(result, new TypeToken<List<BCFThread>>() {
                 }.getType());
 
                 e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.73 获取BCF来砂船舶数据
+     * @param PageSize
+     * @param PageCount
+     * @param shipAccount
+     * @return
+     */
+    @Override
+    public Observable<Boolean> GetBCFToShipInfo(final int PageSize, final int PageCount, String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.GetBCFToShipInfo(PageSize, PageCount, "");
+
+                LogUtil.d("1.73 获取BCF来砂船舶数据result: \n" + result);
+
+                List<BCFShip> list = gson.fromJson(result, new TypeToken<List<BCFShip>>() {
+                }.getType());
+
+                DataSupport.deleteAll(BCFShip.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(true);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.74 删除BCF来砂船舶日志数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteBCFToShipRecordsByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteBCFToShipRecordsByItemID(ItemID);
+
+                LogUtil.d(ItemID + "\n1.74 删除BCF来砂船舶日志数据result: \n" + result);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.74 删除BCF船舶日志(抛砂日志)数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteBCFBoatThrowingSandRecordsByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteBCFBoatThrowingSandRecordsByItemID(ItemID);
+
+                LogUtil.d(ItemID + "\n1.74 删除BCF船舶日志(抛砂日志)数据result: \n" + result);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
                 e.onComplete();
             }
         });

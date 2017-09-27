@@ -75,6 +75,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     private ConstructionBoat boat;
     private int layoutID = 0;
     private String layoutName = "";
+    private List<Layered> arr;
 
     @Nullable
     @Override
@@ -176,7 +177,9 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         tvConstructionStratification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final List<Layered> arr = DataSupport.order("SortNum asc").find(Layered.class);
+                if (arr == null || arr.isEmpty()) {
+                    arr = DataSupport.order("SortNum asc").find(Layered.class);
+                }
                 String[] data = new String[arr.size()];
                 for (int i = 0; i < arr.size(); i++) {
                     data[i] = arr.get(i).getLayerName();
@@ -217,6 +220,8 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                     ToastUtil.tip(getContext(), "请填写分区前缀");
                 } else if (!prefix.contains("#")) {
                     ToastUtil.tip(getContext(), "分区前缀需包含至少一个 # 号");
+                } else if (PatternUtil.appearNumber(prefix, "#") > 2) {
+                    ToastUtil.tip(getContext(), "分区前缀至多只能输入两个 # 号");
                 } else if (TextUtils.isEmpty(startNum)) {
                     ToastUtil.tip(getContext(), "请填写开始数");
                 } else if (TextUtils.isEmpty(endNum)) {
@@ -353,6 +358,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
 
     /**
      * 显示施工分区
+     *
      * @param list
      */
     @Override
@@ -366,8 +372,42 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
             adapter = new PartitionAdapter(getActivity(), list, boat.getShipNum());
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position, int... type) {
+                public void onItemClick(final View view, final int position, int... type) {
+                    String num = adapter.list.get(position).getNum();
+                    if (TextUtils.isEmpty(num)) {
+                        ToastUtil.tip(getContext(), "请先填写施工panel");
+                        return;
+                    }
 
+
+                    // 给panel选择施工分层
+                    if (arr == null || arr.isEmpty()) {
+                        arr = DataSupport.order("SortNum asc").find(Layered.class);
+                    }
+                    String[] data = new String[arr.size()];
+                    for (int i = 0; i < arr.size(); i++) {
+                        data[i] = arr.get(i).getLayerName();
+                    }
+                    activity.showSingleDailog(data, "选择施工分区", "取消", "确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }, new OnDailogOKClickListener() {
+                        @Override
+                        public void onOK(Object data) {
+                            PartitionNum partitionNum = adapter.list.get(position);
+                            int layoutID = arr.get((int) data).getItemID();
+                            String layoutName = arr.get((int) data).getLayerName();
+
+                            partitionNum.setLayoutID(layoutID);
+                            partitionNum.setLayoutName(layoutName);
+                            partitionNum.save();
+
+                            Button btnBed = (Button) view;
+                            btnBed.setText(layoutName);
+                        }
+                    });
                 }
 
                 @Override

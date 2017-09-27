@@ -35,6 +35,7 @@ import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
+import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.PopupWindow.CommonPopupWindow;
 
 import org.litepal.crud.DataSupport;
@@ -202,53 +203,58 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    CalendarUtil.showTimeDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
-                        @Override
-                        public void onSure(String str) {
-                            /** 不能选择在开始时间之前的时间 */
-                            // 开始时间
-                            String startTime = textStartTime.getText().toString();
+                if (activity.isAllow) {
+                    try {
+                        CalendarUtil.showTimeDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
+                            @Override
+                            public void onSure(String str) {
+                                /** 不能选择在开始时间之前的时间 */
+                                // 开始时间
+                                String startTime = textStartTime.getText().toString();
 
-                            boolean isLastDate = false;
-                            try {
-                                isLastDate = CalendarUtil.isLastDate(startTime, str);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                                realDate = "";
+                                boolean isLastDate = false;
+                                try {
+                                    isLastDate = CalendarUtil.isLastDate(startTime, str);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                    realDate = "";
+                                }
+
+                                if (isLastDate) {
+                                    Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
+                                    textEndTime.setText("");
+                                } else {
+                                    realDate = str;
+                                }
+
+
                             }
-
-                            if (isLastDate) {
-                                Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
-                                textEndTime.setText("");
-                            } else {
-                                realDate = str;
+                        }, new OnTimePickerLastDateClickListener() {
+                            @Override
+                            public void onLastDate() {
+                                String date = "";
+                                try {
+                                    date = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, activity.currentDate, Calendar.DATE, 1);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                // 显示的时间
+                                String currentDate = date + " 00:00:00";
+                                // 实际上传的时间
+                                realDate = activity.currentDate + " 23:59:59";
+                                textEndTime.setText(currentDate);
                             }
+                        }, false, true);
 
-
-                        }
-                    }, new OnTimePickerLastDateClickListener() {
-                        @Override
-                        public void onLastDate() {
-                            String date = "";
-                            try {
-                                date = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, activity.currentDate, Calendar.DATE, 1);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            // 显示的时间
-                            String currentDate = date + " 00:00:00";
-                            // 实际上传的时间
-                            realDate = activity.currentDate + " 23:59:59";
-                            textEndTime.setText(currentDate);
-                        }
-                    }, false, true);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    ToastUtil.tip(getContext(), "不能修改结束时间");
                 }
             }
         });
+
 
         /** 跳转到停工日志 */
         btnDownLog.setOnClickListener(new View.OnClickListener() {

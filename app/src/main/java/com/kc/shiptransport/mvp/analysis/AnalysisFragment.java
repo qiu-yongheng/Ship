@@ -1099,10 +1099,14 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                     ToastUtil.tip(getContext(), "没有施工类型, 不能修改");
                                 } else if (logManagerList.getConstructionType().equals("停工")) {
                                     /** 停工 */
-                                    DowntimeActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE);
+                                    DowntimeActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE, (logManagerList.getIsAllowEdit() == 1));
                                 } else if (logManagerList.getConstructionType().equals("抛砂")) {
                                     /** 抛砂 */
-                                    ThreadSandActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE);
+                                    ThreadSandActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE, (logManagerList.getIsAllowEdit() == 1));
+                                } else if (logManagerList.getConstructionType().equals("来砂")) {
+                                    /** 来砂 */
+//                                    BCFActivity.startActivity(getContext(), logManagerList.getItemID(), (logManagerList.getIsAllowEdit() == 1));
+                                    ThreadSandActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE, (logManagerList.getIsAllowEdit() == 1));
                                 }
                             }
                         })
@@ -1119,6 +1123,8 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                             presenter.deleteStopLog(logManagerList.getItemID());
                                         } else if (logManagerList.getConstructionType().equals("抛砂")) {
                                             presenter.deleteThreadLog(logManagerList.getItemID());
+                                        } else if (logManagerList.getConstructionType().equals("来砂")) {
+                                            presenter.deleteBCFThread(logManagerList.getItemID());
                                         }
                                     }
                                 });
@@ -1130,16 +1136,22 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                     holder.setVisible(R.id.rl_stop_type, false);
                     holder.setVisible(R.id.rl_sand_ship, true);
                     holder.setVisible(R.id.rl_quantum, true);
-                } else {
+                } else if (logManagerList.getConstructionType().equals("停工")) {
+                    // 停工
                     holder.setVisible(R.id.rl_stop_type, true);
                     holder.setVisible(R.id.rl_sand_ship, false);
                     holder.setVisible(R.id.rl_quantum, false);
+                } else if (logManagerList.getConstructionType().equals("来砂")) {
+                    // 来砂
+                    holder.setVisible(R.id.rl_stop_type, false);
+                    holder.setVisible(R.id.rl_sand_ship, true);
+                    holder.setVisible(R.id.rl_quantum, true);
                 }
 
                 if (logManagerList.getIsAllowEdit() == 1) {
-                    holder.setVisible(R.id.ll_btn, true);
+                    holder.setVisible(R.id.btn_delete, true);
                 } else {
-                    holder.setVisible(R.id.ll_btn, false);
+                    holder.setVisible(R.id.btn_delete, false);
                 }
 
             }
@@ -1273,7 +1285,19 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                         .setOnClickListener(R.id.btn_update, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                ToastUtil.tip(getContext(), "修改");
+                                //BCFActivity.startActivity(getContext(), bcfThread.getItemID(), (logManagerList.getIsAllowEdit() == 1));
+                            }
+                        })
+                        .setOnClickListener(R.id.btn_delete, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // 删除
+                                activity.showDailog("删除", "是否删除此BCF抛砂记录?", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        presenter.deleteBCFThread(bcfThread.getItemID());
+                                    }
+                                });
                             }
                         });
 
@@ -1289,6 +1313,22 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         EmptyWrapper<Object> emptyWrapper = new EmptyWrapper<>(bcfThreadAdapter);
         emptyWrapper.setEmptyView(LayoutInflater.from(getContext()).inflate(R.layout.empty_view, recycleView, false));
         recycleView.setAdapter(emptyWrapper);
+    }
+
+    /**
+     * 删除BCF抛砂
+     *
+     * @param isSuccess
+     */
+    @Override
+    public void showDeleteBCFThreadResult(boolean isSuccess) {
+        if (isSuccess) {
+            ToastUtil.tip(getContext(), "删除成功");
+
+            presenter.getBCFThread(100, 1, startTime, endTime, consShip);
+        } else {
+            ToastUtil.tip(getContext(), "删除失败, 请重试");
+        }
     }
 
     /**

@@ -298,6 +298,7 @@ public class BaseActivity extends AppCompatActivity {
                     okListener.onOK(singleSelectedId);
                 } else {
                     singleSelectedId = 0;
+                    okListener.onOK(singleSelectedId);
                     // 业务逻辑
                 }
             }

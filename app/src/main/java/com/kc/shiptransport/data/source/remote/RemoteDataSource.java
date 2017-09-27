@@ -2193,9 +2193,9 @@ public class RemoteDataSource {
      * @return
      * @throws Exception
      */
-    public String GetGetBCFBoatList(int PageSize, int PageCount, String ConditionJson) throws Exception {
+    public String GetBCFBoatList(int PageSize, int PageCount, String ConditionJson) throws Exception {
         // 调用的方法名称
-        String methodName = "GetGetBCFBoatList";
+        String methodName = "GetBCFBoatList";
         // EndPoint
         String endPoint = EndPoint;
         // SOAP Action
@@ -2211,4 +2211,73 @@ public class RemoteDataSource {
         return getCallResult(endPoint, soapAction, rpc);
     }
 
+    /**
+     * 1.73 获取BCF来砂船舶数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetBCFToShipInfo(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetBCFToShipInfo";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.73 删除BCF来砂船舶日志数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteBCFToShipRecordsByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteBCFToShipRecordsByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.74 删除BCF船舶日志(抛砂日志)数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteBCFBoatThrowingSandRecordsByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteBCFBoatThrowingSandRecordsByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
 }

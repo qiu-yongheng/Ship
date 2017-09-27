@@ -267,7 +267,6 @@ public abstract class BaseMvpPresenter implements BaseMvpContract.Presenter {
                         .GetExitApplicationList(10000, 1, jumpWeek, account)
                         .subscribeOn(Schedulers.io());
                 break;
-
         }
 
         /*  */

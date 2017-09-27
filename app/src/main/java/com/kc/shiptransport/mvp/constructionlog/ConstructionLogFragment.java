@@ -57,9 +57,12 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
     RelativeLayout rlThrowSand;
     @BindView(R.id.btn_log)
     Button btnLog;
+    @BindView(R.id.text_pump_ship_name)
+    Spinner textPumpShipName;
     private ConstructionLogContract.Presenter presenter;
     private ConstructionLogActivity activity;
-    private int spinner_position;
+    private int spinner_position = 0;
+    private int pump_position = 0;
 
     @Nullable
     @Override
@@ -92,6 +95,9 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
 
         // 获取上次选择施工船舶的position
         spinner_position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
+
+        // 获取上次选择泵砂船的position
+//        pump_position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_PUMP_SHIP_POSITION);
     }
 
     @Override
@@ -125,7 +131,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
                 if (spinner_position == 0) {
                     Toast.makeText(getContext(), "请选择施工船舶", Toast.LENGTH_SHORT).show();
                 } else {
-                    DowntimeActivity.startActivity(getContext(), textTime.getText().toString(), 0, SettingUtil.TYPE_DATA_NEW);
+                    DowntimeActivity.startActivity(getContext(), textTime.getText().toString(), 0, SettingUtil.TYPE_DATA_NEW, true);
                 }
             }
         });
@@ -137,7 +143,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
                 if (spinner_position == 0) {
                     Toast.makeText(getContext(), "请选择施工船舶", Toast.LENGTH_SHORT).show();
                 } else {
-                    ThreadSandActivity.startActivity(getContext(), textTime.getText().toString(), 0, SettingUtil.TYPE_DATA_NEW);
+                    ThreadSandActivity.startActivity(getContext(), textTime.getText().toString(), 0, SettingUtil.TYPE_DATA_NEW, true);
                 }
             }
         });
@@ -161,13 +167,30 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
             }
         });
 
-        // TODO 日志管理
+        /** 日志管理 */
         btnLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AnalysisActivity.startActivity(getContext(), SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER);
             }
         });
+
+        /** TODO: 初始化泵砂船选择器 */
+        ArrayList<String> pumpList = new ArrayList<>();
+        pumpList.add("请选择泵砂船");
+
+
+        SpinnerUtil.showSpinner(getContext(), pumpList, textPumpShipName, pump_position, new OnSpinnerClickListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position != 0) {
+                    pump_position = position;
+                    SharePreferenceUtil.saveInt(getContext(), SettingUtil.LOG_PUMP_SHIP_POSITION, position);
+                }
+            }
+        });
+
+
     }
 
     @Override

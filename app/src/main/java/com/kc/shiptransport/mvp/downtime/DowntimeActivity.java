@@ -20,11 +20,13 @@ public class DowntimeActivity extends BaseActivity{
 
     private static final String TYPE = "TYPE";
     private static final String ITEMID = "ITEMID";
+    private static final String ISALLOW = "ISALLOW";
     private static String CURRENTDATE = "CURRENTDATE";
     private DowntimeFragment fragment;
     public String currentDate;
     public int type;
     public int itemID;
+    public boolean isAllow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class DowntimeActivity extends BaseActivity{
         currentDate = bundle.getString(CURRENTDATE);
         type = bundle.getInt(TYPE);
         itemID = bundle.getInt(ITEMID);
+        isAllow = bundle.getBoolean(ISALLOW);
 
         if (savedInstanceState != null) {
             fragment = (DowntimeFragment) getSupportFragmentManager().getFragment(savedInstanceState, "DowntimeFragment");
@@ -61,12 +64,13 @@ public class DowntimeActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, String currentDate, int itemID, int type) {
+    public static void startActivity(Context context, String currentDate, int itemID, int type, boolean b) {
         Intent intent = new Intent(context, DowntimeActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(CURRENTDATE, currentDate);
         bundle.putInt(TYPE, type);
         bundle.putInt(ITEMID, itemID);
+        bundle.putBoolean(ISALLOW, b);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

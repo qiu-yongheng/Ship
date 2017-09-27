@@ -198,6 +198,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margintop_8dp"
@@ -344,7 +345,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/marginleft_14"
-                    android:text="工  程  量"/>
+                    android:text="预估工作量"/>
 
 
                 <LinearLayout

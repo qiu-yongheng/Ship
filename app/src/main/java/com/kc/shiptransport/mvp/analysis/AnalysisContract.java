@@ -37,6 +37,8 @@ public interface AnalysisContract {
         void showBCFLog(List<BCFLog> list);
 
         void showBCFThread(List<BCFThread> list);
+
+        void showDeleteBCFThreadResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {
@@ -59,5 +61,7 @@ public interface AnalysisContract {
         void getBCFLog(int pageSize, int pageCount, String startTime, String endTime, String subAccount);
 
         void getBCFThread(int pageSize, int pageCount, String startTime, String endTime, String shipAccount);
+
+        void deleteBCFThread(int itemID);
     }
 }

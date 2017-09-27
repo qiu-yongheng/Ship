@@ -133,7 +133,7 @@ public class RxGalleryUtil {
      */
     public static void showImage(Context context, Object path, Drawable defaultDrawable, Drawable errorDrawable, ImageView imageView) {
         defaultDrawable = (defaultDrawable == null) ? context.getResources().getDrawable(R.mipmap.load) : defaultDrawable;
-        //errorDrawable = (errorDrawable == null) ? context.getResources().getDrawable(R.mipmap.load_error) : errorDrawable;
+        errorDrawable = (errorDrawable == null) ? context.getResources().getDrawable(R.mipmap.load_error) : errorDrawable;
         //网络请求获取图片并设置
         Glide.with(context)
                 .load(path) //图片地址

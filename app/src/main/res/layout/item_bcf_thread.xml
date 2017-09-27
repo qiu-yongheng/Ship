@@ -132,7 +132,7 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="供砂船舶"/>
+                    android:text="来砂船舶"/>
 
                 <TextView
                     android:id="@+id/tv_sand_ship"
@@ -201,7 +201,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"/>
                 <Button
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:id="@+id/btn_delete"
                     android:background="@color/red"
                     style="@style/text_title_w"

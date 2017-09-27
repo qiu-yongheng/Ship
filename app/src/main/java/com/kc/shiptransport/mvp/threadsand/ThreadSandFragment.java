@@ -208,46 +208,50 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         tvEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    CalendarUtil.showTimeDialog(getContext(), tvEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
-                        @Override
-                        public void onSure(String str) {
-                            /** 不能选择在开始时间之前的时间 */
-                            // 开始时间
-                            String startTime = tvStartTime.getText().toString();
-                            try {
-                                boolean isLastDate = CalendarUtil.isLastDate(startTime, str);
+                if (activity.isAllow) {
+                    try {
+                        CalendarUtil.showTimeDialog(getContext(), tvEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
+                            @Override
+                            public void onSure(String str) {
+                                /** 不能选择在开始时间之前的时间 */
+                                // 开始时间
+                                String startTime = tvStartTime.getText().toString();
+                                try {
+                                    boolean isLastDate = CalendarUtil.isLastDate(startTime, str);
 
-                                if (isLastDate) {
-                                    Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
-                                    tvEndTime.setText("");
-                                } else {
-                                    realDate = str;
+                                    if (isLastDate) {
+                                        Toast.makeText(getContext(), "结束时间不能在开始时间之前", Toast.LENGTH_SHORT).show();
+                                        tvEndTime.setText("");
+                                    } else {
+                                        realDate = str;
+                                    }
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                    realDate = "";
                                 }
-
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                                realDate = "";
                             }
-                        }
-                    }, new OnTimePickerLastDateClickListener() {
-                        @Override
-                        public void onLastDate() {
-                            String date = "";
-                            try {
-                                date = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, activity.currentDate, Calendar.DATE, 1);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                        }, new OnTimePickerLastDateClickListener() {
+                            @Override
+                            public void onLastDate() {
+                                String date = "";
+                                try {
+                                    date = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, activity.currentDate, Calendar.DATE, 1);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                // 显示的时间
+                                String currentDate = date + " 00:00:00";
+                                // 实际上传的时间
+                                realDate = activity.currentDate + " 23:59:59";
+                                tvEndTime.setText(currentDate);
                             }
-                            // 显示的时间
-                            String currentDate = date + " 00:00:00";
-                            // 实际上传的时间
-                            realDate = activity.currentDate + " 23:59:59";
-                            tvEndTime.setText(currentDate);
-                        }
-                    }, false, true);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                        }, false, true);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    ToastUtil.tip(getContext(), "不能修改结束时间");
                 }
             }
         });
@@ -455,8 +459,8 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
         if (!endTime.equals(HINT) &&
                 !TextUtils.isEmpty(endTime) &&
-                !stratification.equals(HINT) &&
-                !TextUtils.isEmpty(stratification) &&
+                //!stratification.equals(HINT) &&
+                //!TextUtils.isEmpty(stratification) &&
                 !sandVoyage.equals(HINT) &&
                 !TextUtils.isEmpty(sandVoyage) &&
                 !numList.isEmpty() &&
@@ -573,6 +577,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
     /**
      * 提交成功
+     *
      * @param isSuccess
      */
     @Override

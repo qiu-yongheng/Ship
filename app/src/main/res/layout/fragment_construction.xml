@@ -56,6 +56,29 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginTop="@dimen/marginleft_20"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_40"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="泵砂船 : "/>
+
+                <Spinner
+                    android:id="@+id/text_pump_ship_name"
+                    style="@style/text_40"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginleft_20"
@@ -74,8 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/et_bg"
-                    android:padding="8dp"
-                    android:text="asdfasdfasdfasdf"/>
+                    android:padding="8dp"/>
 
             </LinearLayout>
         </LinearLayout>

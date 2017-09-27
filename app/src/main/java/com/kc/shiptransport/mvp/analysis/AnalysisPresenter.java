@@ -478,7 +478,7 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
     public void getBCFThread(int pageSize, int pageCount, String startTime, String endTime, String shipAccount) {
         view.showLoading(true);
         dataRepository
-                .GetGetBCFBoatList(pageSize, pageCount, startTime, endTime, shipAccount)
+                .GetBCFBoatList(pageSize, pageCount, startTime, endTime, shipAccount)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<BCFThread>>() {
@@ -490,6 +490,41 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
                     @Override
                     public void onNext(@NonNull List<BCFThread> list) {
                         view.showBCFThread(list);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
+    }
+
+    /**
+     * 删除BCF抛砂记录
+     * @param itemID
+     */
+    @Override
+    public void deleteBCFThread(int itemID) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteBCFBoatThrowingSandRecordsByItemID(itemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        view.showDeleteLogResult(aBoolean);
                     }
 
                     @Override
