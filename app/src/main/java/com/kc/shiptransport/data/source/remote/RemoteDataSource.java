@@ -2280,4 +2280,74 @@ public class RemoteDataSource {
 
         return getCallResult(endPoint, soapAction, rpc);
     }
+
+    /**
+     * 1.75 根据ItemID获取施工日志（抛砂）数据 (BCF来砂)
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String GetBCFBoatThrowingSandRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetBCFBoatThrowingSandRecordByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.76 根据ItemID获取施工日志（抛砂）数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String GetConstructionBoatThrowingSandRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetConstructionBoatThrowingSandRecordByItemID";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.77 获取泵砂船数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetPumpShipInfo(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetPumpShipInfo";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
 }

@@ -50,7 +50,7 @@ public interface AnalysisContract {
 
         void getExitFeedBack(int pageSize, int pageCount, String startTime, String endTime, String shipAccount, boolean showLoading);
 
-        void getLogManager(int pageSize, int pageCount, String startTime, String endTime, String shipAccount);
+        void getLogManager(int pageSize, int pageCount, String startTime, String endTime, String shipAccount, String threadType);
 
         void deleteStopLog(int itemID);
 

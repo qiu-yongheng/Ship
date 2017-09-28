@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/marginleft_14"
-        android:background="@color/et_bg"
+        android:background="@color/red"
         android:gravity="center"
         android:text="施工分层"/>
 </LinearLayout>

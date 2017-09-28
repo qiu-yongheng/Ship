@@ -144,6 +144,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                         // 删除全部分区
                         DataSupport.deleteAll(PartitionNum.class);
                         if (adapter != null) {
+                            adapter.panelLength = 0;
                             adapter.setDates(new ArrayList<PartitionNum>());
                             adapter.notifyDataSetChanged();
                         }
@@ -168,8 +169,12 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter.add(adapter.list.size());
-                recyclerview.smoothScrollToPosition(adapter.list.size());
+                if (layoutID != 0 && !TextUtils.isEmpty(layoutName)) {
+                    adapter.add(adapter.list.size(), layoutID, layoutName);
+                    recyclerview.smoothScrollToPosition(adapter.list.size());
+                } else {
+                    ToastUtil.tip(getContext(), "请先填写施工分层");
+                }
             }
         });
 
@@ -184,7 +189,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                 for (int i = 0; i < arr.size(); i++) {
                     data[i] = arr.get(i).getLayerName();
                 }
-                activity.showSingleDailog(data, "选择施工分区", "取消", "确定", new DialogInterface.OnClickListener() {
+                activity.showSingleDailog(data, "选择施工分层", "取消", "确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -406,6 +411,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
 
                             Button btnBed = (Button) view;
                             btnBed.setText(layoutName);
+                            btnBed.setBackgroundColor(getResources().getColor(R.color.et_bg));
                         }
                     });
                 }
@@ -456,9 +462,22 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     }
 
     private void warn() {
-        List<PartitionNum> list = DataSupport.where("tag = ? and num is not null and num != ?", "0", "").find(PartitionNum.class);
+        // 验证施工panel长度是否一致
+        List<PartitionNum> list = DataSupport.where("tag = ? and num is not null and num != ? and userAccount = ?", "0", "", boat.getShipNum()).find(PartitionNum.class);
+
+        // 验证施工panel是否都填写了施工分层
+        List<PartitionNum> list1 = DataSupport.where("num is not null and num != ? and userAccount = ? and layoutID == ?", "", boat.getShipNum(), String.valueOf(0)).find(PartitionNum.class);
+
+
         if (!list.isEmpty()) {
             activity.showDailog("提示", "施工panel长度必须一致才能进行提交, 请修改红色标注的施工panel\n\n当前待修改数: " + list.size() + "个", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+        } else if (!list1.isEmpty()) {
+            activity.showDailog("提示", "还有" + list1.size() + "个施工panel未填写施工分层", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 

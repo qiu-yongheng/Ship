@@ -1,6 +1,6 @@
 <litepal>
     <dbname value="ship_db" />
-    <version value="97"/>
+    <version value="100"/>
     <list>
         <mapping class="com.kc.shiptransport.db.ship.Ship"/>
         <mapping class="com.kc.shiptransport.db.ship.ShipList"/>
@@ -52,5 +52,7 @@
         <mapping class="com.kc.shiptransport.db.bcf.BCFLog"/>
         <mapping class="com.kc.shiptransport.db.bcf.BCFThread"/>
         <mapping class="com.kc.shiptransport.db.bcf.BCFShip"/>
+        <mapping class="com.kc.shiptransport.db.threadsand.ThreadDetailInfo"/>
+        <mapping class="com.kc.shiptransport.db.pump.PumpShip"/>
     </list>
 </litepal>

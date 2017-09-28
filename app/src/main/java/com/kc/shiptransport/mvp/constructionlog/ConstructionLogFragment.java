@@ -1,5 +1,6 @@
 package com.kc.shiptransport.mvp.constructionlog;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.ConstructionBoat;
+import com.kc.shiptransport.db.pump.PumpShip;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnSpinnerClickListener;
 import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
 import com.kc.shiptransport.mvp.downtime.DowntimeActivity;
@@ -25,6 +28,7 @@ import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.kc.shiptransport.util.SpinnerUtil;
+import com.kc.shiptransport.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 
@@ -71,6 +75,8 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
+
+        presenter.getPumpShip();
         return view;
     }
 
@@ -175,21 +181,6 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
             }
         });
 
-        /** TODO: 初始化泵砂船选择器 */
-        ArrayList<String> pumpList = new ArrayList<>();
-        pumpList.add("请选择泵砂船");
-
-
-        SpinnerUtil.showSpinner(getContext(), pumpList, textPumpShipName, pump_position, new OnSpinnerClickListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position != 0) {
-                    pump_position = position;
-                    SharePreferenceUtil.saveInt(getContext(), SettingUtil.LOG_PUMP_SHIP_POSITION, position);
-                }
-            }
-        });
-
 
     }
 
@@ -200,17 +191,47 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
 
     @Override
     public void showLoading(boolean isShow) {
+        if (isShow) {
+            activity.showProgressDailog("加载", "加载中", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancle(ProgressDialog dialog) {
 
+                }
+            });
+        } else {
+            activity.hideProgressDailog();
+        }
     }
 
     @Override
     public void showError(String msg) {
-
+        ToastUtil.tip(getContext(), msg);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void showPumpShip(List<PumpShip> list) {
+        /** TODO: 初始化泵砂船选择器 */
+        List<PumpShip> pumpShips = DataSupport.findAll(PumpShip.class);
+        ArrayList<String> pumpList = new ArrayList<>();
+        pumpList.add("请选择泵砂船");
+        for (PumpShip ship : pumpShips) {
+            pumpList.add(ship.getShipName());
+        }
+
+        SpinnerUtil.showSpinner(getContext(), pumpList, textPumpShipName, pump_position, new OnSpinnerClickListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position != 0) {
+                    pump_position = position;
+                    SharePreferenceUtil.saveInt(getContext(), SettingUtil.LOG_PUMP_SHIP_POSITION, position);
+                }
+            }
+        });
     }
 }

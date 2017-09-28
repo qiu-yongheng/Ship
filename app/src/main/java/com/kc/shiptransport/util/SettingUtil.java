@@ -216,6 +216,10 @@ public class SettingUtil {
     public static final int TYPE_DATA_UPDATE = 802;
     /* 查看 */
     public static final int TYPE_DATA_SHOW = 803;
+    /* 抛砂修改 */
+    public static final int TYPE_DATA_UPDATE_THREAD = 804;
+    /* BCF修改 */
+    public static final int TYPE_DATA_UPDATE_BCF = 805;
     /*-----------------------------------------------数据操作类型--------------------------------------------------*/
 
 

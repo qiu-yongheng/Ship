@@ -261,10 +261,10 @@ public class AnalysisPresenter implements AnalysisContract.Presenter {
      * @param shipAccount
      */
     @Override
-    public void getLogManager(int pageSize, int pageCount, String startTime, String endTime, String shipAccount) {
+    public void getLogManager(int pageSize, int pageCount, String startTime, String endTime, String shipAccount, String threadType) {
         view.showLoading(true);
         dataRepository
-                .GetConstructionBoatDailyList(pageSize, pageCount, startTime, endTime, shipAccount, "")
+                .GetConstructionBoatDailyList(pageSize, pageCount, startTime, endTime, shipAccount, "", threadType)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<LogManagerList>>() {

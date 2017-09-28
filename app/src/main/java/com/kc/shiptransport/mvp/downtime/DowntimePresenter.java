@@ -106,10 +106,10 @@ public class DowntimePresenter implements DowntimeContract.Presenter{
     }
 
     @Override
-    public void stop(int itemID, String userID, String startTime, String endTime, String id, int type, String remark) {
+    public void stop(int itemID, String userID, String startTime, String endTime, String id, int type, String remark, String pumpShipID) {
         view.showLoading(true);
         dataRepository
-                .InsertConstructionBoatStopDaily(itemID, userID, startTime, endTime, id, type, remark)
+                .InsertConstructionBoatStopDaily(itemID, userID, startTime, endTime, id, type, remark, pumpShipID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {

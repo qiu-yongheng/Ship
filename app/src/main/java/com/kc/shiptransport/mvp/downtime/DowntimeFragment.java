@@ -25,6 +25,7 @@ import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.db.ConstructionBoat;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
+import com.kc.shiptransport.db.pump.PumpShip;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
@@ -85,6 +86,9 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     private Handler handler = new Handler();
     private String realDate = "";
     private String stopTypeName;
+    private String startTime;
+    private String pumpShipID;
+    private String pumpShipName;
 
     @Nullable
     @Override
@@ -129,7 +133,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                 }
 
                 // 回显开始时间
-                String startTime = lists.get(0).getStartTime();
+                startTime = lists.get(0).getStartTime();
                 textStartTime.setText(startTime);
                 // 回显结束时间
                 String endTime = lists.get(0).getEndTime();
@@ -159,6 +163,16 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         activity.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_arrow_back);
 
         recyclerview.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        // 泵砂船账号
+        int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_PUMP_SHIP_POSITION);
+        List<PumpShip> pumpShips = DataSupport.findAll(PumpShip.class);
+        if (position == 0) {
+            pumpShipID = "";
+        } else {
+            PumpShip pumpShip = pumpShips.get(position - 1);
+            pumpShipID = pumpShip.getShipNum();
+        }
     }
 
     @Override
@@ -188,9 +202,9 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
 
                 if (stopType != -1 && !TextUtils.isEmpty(endTime) && !endTime.equals("请选择时间")) {
                     if (activity.type == SettingUtil.TYPE_DATA_NEW) {
-                        presenter.stop(0, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark);
+                        presenter.stop(0, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark, pumpShipID);
                     } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
-                        presenter.stop(activity.itemID, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark);
+                        presenter.stop(activity.itemID, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark, pumpShipID);
                     }
 
                 } else {
@@ -205,7 +219,15 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
             public void onClick(View view) {
                 if (activity.isAllow) {
                     try {
-                        CalendarUtil.showTimeDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, activity.currentDate, new OnTimePickerSureClickListener() {
+                        if (TextUtils.isEmpty(startTime)) {
+                            ToastUtil.tip(getContext(), "开始时间不能为空");
+                            return;
+                        }
+
+                        String offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM, startTime, Calendar.HOUR, 1);
+
+
+                        CalendarUtil.showTimeDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, offsetDate, new OnTimePickerSureClickListener() {
                             @Override
                             public void onSure(String str) {
                                 /** 不能选择在开始时间之前的时间 */
@@ -357,6 +379,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
 
         if (bean != null) {
             textStartTime.setText(bean.getStartTime());
+            startTime = bean.getStartTime();
         } else {
             textStartTime.setText("获取数据失败");
         }
@@ -374,5 +397,9 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         if (!list.isEmpty()) {
             etRemark.setText(TextUtils.isEmpty(list.get(0).getRemark()) ? "" : list.get(0).getRemark());
         }
+
+        // 回显泵砂船
+        pumpShipID = TextUtils.isEmpty(list.get(0).getPumpShipID()) ? "" : list.get(0).getPumpShipID();
+        pumpShipName = TextUtils.isEmpty(list.get(0).getPumpShipName()) ? "" : list.get(0).getPumpShipName();
     }
 }

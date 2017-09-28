@@ -513,12 +513,14 @@ public class CalendarUtil {
      * 弹出时间选择器
      * DateFormat.is24HourFormat(context) 判断
      *
+     * 只修改指定日期时间, 不修改日期
+     *
      * @param context
      * @param view
      */
     public static void showTimeDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener,final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
         if (isSystem) {
-            Calendar calendar = getCalendar(Date);
+            Calendar calendar = getCalendar(Date, format);
 
             // 只修改当前的日期, 时间不修改
             final Calendar now = Calendar.getInstance();
@@ -556,7 +558,7 @@ public class CalendarUtil {
      */
     public static void showDateDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener,final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
         if (isSystem) {
-            Calendar calendar = getCalendar(Date);
+            Calendar calendar = getCalendar(Date, format);
 
             // 只修改当前的日期, 时间不修改
             final Calendar now = Calendar.getInstance();
@@ -599,13 +601,20 @@ public class CalendarUtil {
         Calendar selectedDate = Calendar.getInstance();
         // 如果有指定日期, 设置当前默认选中时间为指定时间
         if (!TextUtils.isEmpty(Date)) {
-            Calendar now = getCalendar(Date);
+            Calendar now = getCalendar(Date, format);
+
             // 设置年
             selectedDate.set(Calendar.YEAR, now.get(Calendar.YEAR));
             // 设置月
             selectedDate.set(Calendar.MONTH, now.get(Calendar.MONTH));
             // 设置日
             selectedDate.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
+            // 设置时
+            selectedDate.set(Calendar.HOUR_OF_DAY, now.get(Calendar.HOUR_OF_DAY));
+            // 设置分
+            selectedDate.set(Calendar.MINUTE, now.get(Calendar.MINUTE));
+            // 设置秒
+            selectedDate.set(Calendar.SECOND, now.get(Calendar.SECOND));
         }
 
 
@@ -722,12 +731,13 @@ public class CalendarUtil {
      * 根据传入的时间, 获取calendar
      *
      * @param Date
+     * @param format
      * @return
      * @throws ParseException
      */
     @NonNull
-    private static Calendar getCalendar(String Date) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat(YYYY_MM_DD);
+    private static Calendar getCalendar(String Date, String format) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
         java.util.Date d = sdf.parse(Date);
         // 公历
         Calendar calendar = Calendar.getInstance();

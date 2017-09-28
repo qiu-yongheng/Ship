@@ -213,6 +213,12 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                         // TODO 量方人员ID
                         String TheAmountOfPersonnelID = amount.getUserID();
 
+                        // 量方图片必填
+                        if (value == null || value.getTheAmountOfSideAttachmentList() == null || value.getTheAmountOfSideAttachmentList().isEmpty()) {
+                            ToastUtil.tip(getContext(), "量方纸照片必填");
+                            return;
+                        }
+
                         //  量方类型
                         String amountType = (radio_type == AMOUNT_MAN) ? "人工量砂" : "激光量砂";
 
@@ -352,6 +358,12 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             return;
         }
         String TheAmountOfPersonnelID = amount.getUserID();
+
+        // 量方图片必填
+        if (value == null || value.getTheAmountOfSideAttachmentList() == null || value.getTheAmountOfSideAttachmentList().isEmpty()) {
+            ToastUtil.tip(getContext(), "量方纸照片必填");
+            return;
+        }
 
         //  量方类型
         String amountType = (radio_type == AMOUNT_MAN) ? "人工量砂" : "激光量砂";
@@ -579,13 +591,15 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             tvAmountType.setText("激光量砂");
         }
         if (amount == null) {
-            amount = new AmountOption();
+            if (!TextUtils.isEmpty(theAmountOfPersonnelAccount)) {
+                amount = new AmountOption();
+                // 量方人员账号
+                amount.setUserID(theAmountOfPersonnelAccount);
+                amount.setUserName(theAmountOfPersonnelName);
+            }
         }
-        // 量方人员账号
-        amount.setUserID(theAmountOfPersonnelAccount);
-        amount.setUserName(theAmountOfPersonnelName);
         // 量方人员姓名
-        tvAmountMan.setText(theAmountOfPersonnelName);
+        tvAmountMan.setText(TextUtils.isEmpty(theAmountOfPersonnelName) ? "选择量方人员" : theAmountOfPersonnelName);
         // 提交人员
         tvCommitMan.setText(TextUtils.isEmpty(creatorName) ? DataSupport.findAll(User.class).get(0).getUserName() : creatorName);
         // 备注
@@ -641,7 +655,6 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                         }
 
                         ImgViewPageActivity.startActivity(getContext(), imgLists, position);
-
 
 
                     } else {

@@ -33,7 +33,7 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public List<PartitionNum> list;
     private final LayoutInflater inflate;
     private OnRecyclerviewItemClickListener listener;
-    private int panelLength = 0;
+    public int panelLength = 0;
 
     public PartitionAdapter(Context context, List<PartitionNum> list, String shipNum) {
         this.context = context;
@@ -48,11 +48,11 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         holder.setIsRecyclable(false);
         final PartitionNum num = list.get(position);
 
-        if (panelLength == 0) {
+        if (panelLength == 0 && position == 0) {
             // 记录第一个panel的长度
             panelLength = TextUtils.isEmpty(num.getNum()) ? 0 : num.getNum().length();
             ((NormalHolder) holder).mEtNum.setBackgroundColor(context.getResources().getColor(R.color.et_bg));
@@ -77,6 +77,7 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ((NormalHolder) holder).mEtNum.setText(s);
 
         ((NormalHolder) holder).mBtnBed.setText(TextUtils.isEmpty(num.getLayoutName()) ? "施工分层" : num.getLayoutName());
+        ((NormalHolder) holder).mBtnBed.setBackgroundColor(TextUtils.isEmpty(num.getLayoutName()) ? context.getResources().getColor(R.color.red) : context.getResources().getColor(R.color.et_bg));
 
         // 设置光标位置
         ((NormalHolder) holder).mEtNum.setSelection(s.length());
@@ -118,7 +119,7 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 // 更新状态
                 int length = TextUtils.isEmpty(num.getNum()) ? 0 : num.getNum().length();
-                if (length != panelLength) {
+                if (length != panelLength && position != 0) {
                     ((NormalHolder) holder).mEtNum.setBackgroundColor(context.getResources().getColor(R.color.red));
                     num.setTag(0);
                     num.save();
@@ -168,11 +169,16 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * 添加
      *
      * @param pos
+     * @param layoutID
+     * @param layoutName
      */
-    public void add(int pos) {
+    public void add(int pos, int layoutID, String layoutName) {
         // 创建一个新的数据, 保存用户名
         PartitionNum num = new PartitionNum();
         num.setUserAccount(userAccount);
+        num.setLayoutID(layoutID);
+        num.setLayoutName(layoutName);
+        num.setNum("");
 
         List<PartitionNum> all = DataSupport.findAll(PartitionNum.class);
 
@@ -189,14 +195,12 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 sb.deleteCharAt(sb.length() - 1);
 
                 num.setNum(sb.toString());
-                num.setLayoutID(partitionNum.getLayoutID());
-                num.setLayoutName(partitionNum.getLayoutName());
+//                num.setLayoutID(partitionNum.getLayoutID());
+//                num.setLayoutName(partitionNum.getLayoutName());
                 num.save();
             }
             list.add(pos, num);
         }
-
-        //DataSupport.saveAll(list);
 
         notifyItemInserted(pos);
     }
@@ -211,7 +215,8 @@ public class PartitionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         list.get(pos).delete();
         // 从列表移除
         list.remove(pos);
-        notifyItemRemoved(pos);
+        //notifyItemRemoved(pos);
+        notifyDataSetChanged();
     }
 
     public void setOnRecyclerViewClickListener(OnRecyclerviewItemClickListener listener) {

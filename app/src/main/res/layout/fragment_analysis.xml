@@ -56,6 +56,22 @@
             android:drawableBottom="@mipmap/pull_down"
             android:gravity="center"
             android:text="@string/select_ship"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/Dividing_line"/>
+
+        <TextView
+            android:id="@+id/select_thread"
+            style="@style/text_tag_small"
+            android:layout_width="0dp"
+            android:padding="7dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableBottom="@mipmap/pull_down"
+            android:gravity="center"
+            android:text="@string/select_thread"/>
     </LinearLayout>
 
     <LinearLayout

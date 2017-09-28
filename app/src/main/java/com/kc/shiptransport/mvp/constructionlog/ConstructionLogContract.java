@@ -1,7 +1,10 @@
 package com.kc.shiptransport.mvp.constructionlog;
 
+import com.kc.shiptransport.db.pump.PumpShip;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
+
+import java.util.List;
 
 /**
  * @author qiuyongheng
@@ -11,10 +14,10 @@ import com.kc.shiptransport.mvp.BaseView;
 
 public interface ConstructionLogContract {
     interface View extends BaseView<Presenter> {
-
+        void showPumpShip(List<PumpShip> list);
     }
 
     interface Presenter extends BasePresenter {
-
+        void getPumpShip();
     }
 }

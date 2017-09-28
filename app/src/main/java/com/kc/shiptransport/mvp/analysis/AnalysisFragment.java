@@ -92,6 +92,8 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     TextView tvTotalCube;
     @BindView(R.id.ll_fix_btn)
     LinearLayout llFixBtn;
+    @BindView(R.id.select_thread)
+    TextView selectThread;
     private AnalysisActivity activity;
     private AnalysisContract.Presenter presenter;
     private CommonPopupWindow pop_time;
@@ -115,6 +117,8 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     private CommonAdapter<List<ProgressTrack>> tomorrowAdapter;
     private CommonAdapter<BCFLog> bcfLogAdapter;
     private CommonAdapter<BCFThread> bcfThreadAdapter;
+    private CommonPopupWindow pop_thread;
+    private String threadType;
 
     @Nullable
     @Override
@@ -141,7 +145,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                 presenter.getExitFeedBack(20, pageCount, "", "", "", true);
                 break;
             case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER: // 施工日志管理
-                presenter.getLogManager(100, 1, "", "", "");
+                presenter.getLogManager(100, 1, "", "", "", "");
                 break;
             case SettingUtil.TYPE_TOMORROW_PLAN: // 明日来船计划
                 try {
@@ -180,18 +184,22 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         if (type == SettingUtil.TYPE_ANALYSIS) {
             // 计划跟踪
             activity.getSupportActionBar().setTitle(R.string.title_analysis);
+            selectThread.setVisibility(View.GONE);
         } else if (type == SettingUtil.TYPE_ACCEPTANCE_EVALUATION) {
             // 预验收评价
             selectSub.setVisibility(View.GONE);
+            selectThread.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_evaluation);
         } else if (type == SettingUtil.TYPE_ACCEPTANCE_RANK) {
             // 供应商评价
             selectSub.setVisibility(View.GONE);
             selectShip.setVisibility(View.GONE);
+            selectThread.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_rank);
         } else if (type == SettingUtil.TYPE_EXIT_FEEDBACK) {
             // 退场反馈
             selectSub.setVisibility(View.GONE);
+            selectThread.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_feedback);
         } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
             // 施工日志管理
@@ -202,15 +210,18 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             // 明日船舶计划数
             llSelectBtn.setVisibility(View.GONE);
             llFixBtn.setVisibility(View.VISIBLE);
+            selectThread.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_tomorrow_plan);
         } else if (type == SettingUtil.TYPE_BCF_LOG) {
             // BCF日志
             selectShip.setVisibility(View.GONE);
+            selectThread.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_bcf_log);
         } else if (type == SettingUtil.TYPE_BCF_THREAD) {
             // BCF抛砂
             selectShip.setText("全部施工船舶");
             selectSub.setVisibility(View.GONE);
+            selectThread.setVisibility(View.GONE);
             activity.getSupportActionBar().setTitle(R.string.title_bcf_thread);
         }
     }
@@ -392,7 +403,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                                         break;
                                                                     case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER:
                                                                         /** 日报管理 */
-                                                                        presenter.getLogManager(100, 1, startTime, endTime, consShip);
+                                                                        presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
                                                                         break;
                                                                     case SettingUtil.TYPE_BCF_LOG:
                                                                         /** BCF LOG */
@@ -485,7 +496,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                             presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
                                         } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                             // 日志管理
-                                            presenter.getLogManager(100, 1, startTime, endTime, consShip);
+                                            presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
                                         } else if (type == SettingUtil.TYPE_BCF_LOG) {
                                             // BCF LOG
                                             presenter.getBCFLog(100, 1, startTime, endTime, subAccount);
@@ -666,7 +677,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                             // TODO 请求数据
                                                             if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                                                 /** 日报管理 */
-                                                                presenter.getLogManager(100, 1, startTime, endTime, consShip);
+                                                                presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
                                                             } else if (type == SettingUtil.TYPE_BCF_THREAD) {
                                                                 /** BCF THREAD */
                                                                 presenter.getBCFThread(100, 1, startTime, endTime, consShip);
@@ -697,7 +708,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                             // TODO 请求数据
                                             if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                                 /** 日报管理 */
-                                                presenter.getLogManager(100, 1, startTime, endTime, consShip);
+                                                presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
                                             } else if (type == SettingUtil.TYPE_BCF_THREAD) {
                                                 /** BCF THREAD */
                                                 presenter.getBCFThread(100, 1, startTime, endTime, consShip);
@@ -804,12 +815,94 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                 });
             }
         });
+
+        /** 施工类型 */
+        selectThread.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /** 文字高亮 */
+                initSelectColor();
+                selectThread.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+                if (pop_thread != null && pop_thread.isShowing()) {
+                    return;
+                }
+
+                pop_thread = new CommonPopupWindow.Builder(getContext())
+                        .setView(R.layout.popup_down)
+                        .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .setAnimationStyle(R.style.AnimDown)
+                        .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
+                            @Override
+                            public void getChildView(View view, int layoutResId) {
+                                // 初始化控件
+                                final RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
+                                recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                /** 获取数据 */
+                                String[] stringArray = new String[]{};
+                                if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
+                                    // 日志管理
+                                    stringArray = getResources().getStringArray(R.array.select_thread);
+                                }
+
+
+                                List<String> dates = new ArrayList<String>();
+                                for (int i = 0; i < stringArray.length; i++) {
+                                    dates.add(stringArray[i]);
+                                }
+
+                                CommonAdapter<String> adapter = new CommonAdapter<String>(getContext(), R.layout.item_analysis, dates) {
+                                    @Override
+                                    protected void convert(ViewHolder holder, final String s, final int position) {
+                                        holder.setText(R.id.tv, s)
+                                                .setOnClickListener(R.id.tv, new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        selectThread.setText(s);
+                                                        if (position == 0) {
+                                                            threadType = "";
+                                                        } else {
+                                                            threadType = s;
+                                                        }
+
+                                                        if (pop_thread.isShowing()) {
+                                                            switch (type) {
+                                                                case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER:
+                                                                    /** 日报管理 */
+                                                                    presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
+                                                                    break;
+                                                            }
+                                                            pop_thread.dismiss();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                };
+                                recycle_view.setAdapter(adapter);
+                            }
+                        })
+                        .setOutsideTouchable(true)
+                        .create();
+
+                pop_thread.showAsDropDown(view);
+
+                /** 消失监听 */
+                pop_thread.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        initSelectColor();
+                    }
+                });
+            }
+        });
     }
 
     private void initSelectColor() {
         selectTime.setTextColor(getResources().getColor(R.color.text_tag_gray));
         selectSub.setTextColor(getResources().getColor(R.color.text_tag_gray));
         selectShip.setTextColor(getResources().getColor(R.color.text_tag_gray));
+        selectThread.setTextColor(getResources().getColor(R.color.text_tag_gray));
     }
 
     @Override
@@ -1102,11 +1195,10 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                     DowntimeActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE, (logManagerList.getIsAllowEdit() == 1));
                                 } else if (logManagerList.getConstructionType().equals("抛砂")) {
                                     /** 抛砂 */
-                                    ThreadSandActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE, (logManagerList.getIsAllowEdit() == 1));
+                                    ThreadSandActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE_THREAD, (logManagerList.getIsAllowEdit() == 1));
                                 } else if (logManagerList.getConstructionType().equals("来砂")) {
                                     /** 来砂 */
-//                                    BCFActivity.startActivity(getContext(), logManagerList.getItemID(), (logManagerList.getIsAllowEdit() == 1));
-                                    ThreadSandActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE, (logManagerList.getIsAllowEdit() == 1));
+                                    ThreadSandActivity.startActivity(getContext(), logManagerList.getDate(), logManagerList.getItemID(), SettingUtil.TYPE_DATA_UPDATE_BCF, (logManagerList.getIsAllowEdit() == 1));
                                 }
                             }
                         })
@@ -1173,7 +1265,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         if (isSuccess) {
             ToastUtil.tip(getContext(), "删除成功");
 
-            presenter.getLogManager(100, 1, startTime, endTime, consShip);
+            presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
         } else {
             ToastUtil.tip(getContext(), "删除失败, 请重试");
         }
@@ -1347,7 +1439,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             case SettingUtil.TYPE_EXIT_FEEDBACK: // 退场反馈
                 break;
             case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER: // 施工日志管理
-                presenter.getLogManager(100, 1, startTime, endTime, consShip);
+                presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
                 break;
         }
     }

@@ -175,6 +175,9 @@
 </string>
     <string name="title_bcf_log">BCF日志</string>
     <string name="title_bcf_thread">BCF抛砂</string>
+    <string name="text_quantume_tag">提示:\n当供砂船给第一艘施工船供砂结束，且仍需向第二艘施工船供砂时，请分别填写每艘施工船抛填的预估工程量。
+\n\n当供砂船仅给一艘施工船供砂时无需填写预估工程量。</string>
+    <string name="select_thread">全部类型</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
@@ -215,5 +218,12 @@
         <item>上一月</item>
         <item>前一月</item>
         <item>自定义时间</item>
+    </array>
+
+    <array name="select_thread">
+        <item>全部</item>
+        <item>抛砂</item>
+        <item>来砂</item>
+        <item>停工</item>
     </array>
 </resources>

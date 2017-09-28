@@ -40,10 +40,12 @@ import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
+import com.kc.shiptransport.db.pump.PumpShip;
 import com.kc.shiptransport.db.sample.SampleData;
 import com.kc.shiptransport.db.sample.SampleImageList;
 import com.kc.shiptransport.db.ship.Ship;
 import com.kc.shiptransport.db.supply.SupplyDetail;
+import com.kc.shiptransport.db.threadsand.ThreadDetailInfo;
 import com.kc.shiptransport.db.versionupdate.VersionUpdate;
 import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
@@ -629,7 +631,7 @@ public interface DataSouceImpl {
      *
      * @return
      */
-    Observable<Boolean> InsertConstructionBoatStopDaily(int ItemID, String ShipAccount, String StartTime, String EndTime, String Creator, int StopTypeID, String remark);
+    Observable<Boolean> InsertConstructionBoatStopDaily(int ItemID, String ShipAccount, String StartTime, String EndTime, String Creator, int StopTypeID, String remark, String pumpShipID);
 
     /**
      * 1.45 获取当天施工日志（开始时间默认值）
@@ -951,7 +953,7 @@ public interface DataSouceImpl {
      * @param Creator
      * @return
      */
-    Observable<List<LogManagerList>> GetConstructionBoatDailyList(int PageSize, int PageCount, String startTime, String endTime, String shipAccount, String Creator);
+    Observable<List<LogManagerList>> GetConstructionBoatDailyList(int PageSize, int PageCount, String startTime, String endTime, String shipAccount, String Creator, String threadType);
 
     /**
      * 1.69 删除船舶日志停工数据
@@ -1084,4 +1086,27 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> DeleteBCFBoatThrowingSandRecordsByItemID(int ItemID);
+
+    /**
+     * 1.75 根据ItemID获取施工日志（抛砂）数据 (BCF来砂)
+     * @param itemID
+     * @return
+     */
+    Observable<ThreadDetailInfo> GetBCFBoatThrowingSandRecordByItemID(int itemID);
+
+    /**
+     * 1.76 根据ItemID获取施工日志（抛砂）数据
+     * @param itemID
+     * @return
+     */
+    Observable<ThreadDetailInfo> GetConstructionBoatThrowingSandRecordByItemID(int itemID);
+
+    /**
+     * 1.77 获取泵砂船数据
+     * @param PageSize
+     * @param PageCount
+     * @param shipAccount
+     * @return
+     */
+    Observable<List<PumpShip>> GetPumpShipInfo(int PageSize, int PageCount, String shipAccount);
 }

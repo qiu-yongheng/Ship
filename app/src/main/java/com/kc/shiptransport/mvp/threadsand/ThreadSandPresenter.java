@@ -4,10 +4,8 @@ import android.content.Context;
 
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
-import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.data.source.DataRepository;
-
-import java.util.List;
+import com.kc.shiptransport.db.threadsand.ThreadDetailInfo;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -197,25 +195,25 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
     }
 
     /**
-     * 回显详细数据
+     * 抛砂明细
      * @param itemID
      */
     @Override
-    public void getDetailData(int itemID) {
+    public void getDetailThreadInfo(int itemID) {
         view.showLoading(true);
         dataRepository
-                .GetConstructionBoatThrowingSandList(itemID, "", "", "", "")
+                .GetConstructionBoatThrowingSandRecordByItemID(itemID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<ThreadSandLogBean>>() {
+                .subscribe(new Observer<ThreadDetailInfo>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(@NonNull List<ThreadSandLogBean> threadSandLogBeen) {
-                        view.showDetailData(threadSandLogBeen);
+                    public void onNext(@NonNull ThreadDetailInfo threadDetailInfo) {
+                        view.showDetailInfo(threadDetailInfo);
                     }
 
                     @Override
@@ -231,8 +229,39 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                 });
     }
 
+    /**
+     * BCF明细
+     * @param itemID
+     */
     @Override
-    public void getConShip() {
+    public void getDetailBCFInfo(int itemID) {
+        view.showLoading(true);
+        dataRepository
+                .GetBCFBoatThrowingSandRecordByItemID(itemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ThreadDetailInfo>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        compositeDisposable.add(d);
+                    }
 
+                    @Override
+                    public void onNext(@NonNull ThreadDetailInfo threadDetailInfo) {
+                        view.showDetailInfo(threadDetailInfo);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showLoading(false);
+                        view.showError(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        view.showLoading(false);
+                    }
+                });
     }
+
 }

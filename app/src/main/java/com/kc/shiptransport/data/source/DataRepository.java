@@ -69,6 +69,7 @@ import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
+import com.kc.shiptransport.db.pump.PumpShip;
 import com.kc.shiptransport.db.sample.SampleData;
 import com.kc.shiptransport.db.sample.SampleImageList;
 import com.kc.shiptransport.db.sample.SandSamplingNumRecordListBean;
@@ -77,6 +78,7 @@ import com.kc.shiptransport.db.ship.ShipList;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.thread.ThreadShip;
 import com.kc.shiptransport.db.threadsand.Layered;
+import com.kc.shiptransport.db.threadsand.ThreadDetailInfo;
 import com.kc.shiptransport.db.user.Department;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.db.userinfo.UserInfo;
@@ -2937,7 +2939,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> InsertConstructionBoatStopDaily(final int ItemID, final String ShipAccount, final String StartTime, final String EndTime, final String Creator, final int StopTypeID, final String remark) {
+    public Observable<Boolean> InsertConstructionBoatStopDaily(final int ItemID, final String ShipAccount, final String StartTime, final String EndTime, final String Creator, final int StopTypeID, final String remark, final String pumpShipID) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -2950,10 +2952,13 @@ public class DataRepository implements DataSouceImpl {
                 jsonObject.put("Creator", Creator);
                 jsonObject.put("StopTypeID", StopTypeID);
                 jsonObject.put("Remark", remark);
+                jsonObject.put("PumpShipID", pumpShipID);
 
                 jsonArray.put(jsonObject);
 
                 String json = jsonArray.toString();
+
+                LogUtil.d("1.43 提交施工日志（停工）数据json: \n" + json);
 
                 String result = mRemoteDataSource.InsertConstructionBoatStopDaily(json);
 
@@ -3124,6 +3129,8 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<DownLogBean>> e) throws Exception {
                 String result = mRemoteDataSource.GetConstructionBoatStopDaily(ItemID, ShipAccount, StartTime, EndTime, StopTypeID, Creator);
+
+                LogUtil.d("1.44 获取施工日志（停工）数据result: \n" + result);
 
                 List<DownLogBean> list = gson.fromJson(result, new TypeToken<List<DownLogBean>>() {
                 }.getType());
@@ -4305,7 +4312,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<List<LogManagerList>> GetConstructionBoatDailyList(final int PageSize, final int PageCount, final String startTime, final String endTime, final String shipAccount, final String Creator) {
+    public Observable<List<LogManagerList>> GetConstructionBoatDailyList(final int PageSize, final int PageCount, final String startTime, final String endTime, final String shipAccount, final String Creator, final String threadType) {
         return Observable.create(new ObservableOnSubscribe<List<LogManagerList>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<LogManagerList>> e) throws Exception {
@@ -4345,6 +4352,13 @@ public class DataRepository implements DataSouceImpl {
                 object3.put("Format", "Equal");
                 object3.put("Value", shipAccount);
 
+                // 施工类型
+                JSONObject object4 = new JSONObject();
+                object4.put("Name", "ConstructionType");
+                object4.put("Type", "string");
+                object4.put("Format", "Equal");
+                object4.put("Value", threadType);
+
                 // 保存3个对象到object
                 if (!TextUtils.isEmpty(Creator)) {
                     Column.put(object1);
@@ -4356,6 +4370,10 @@ public class DataRepository implements DataSouceImpl {
 
                 if (!TextUtils.isEmpty(shipAccount)) {
                     Column.put(object3);
+                }
+
+                if (!TextUtils.isEmpty(threadType)) {
+                    Column.put(object4);
                 }
 
                 // 保存object到Condition
@@ -5073,6 +5091,106 @@ public class DataRepository implements DataSouceImpl {
                 CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
 
                 e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.75 根据ItemID获取施工日志（抛砂）数据 (BCF来砂)
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<ThreadDetailInfo> GetBCFBoatThrowingSandRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<ThreadDetailInfo>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<ThreadDetailInfo> e) throws Exception {
+                String result = mRemoteDataSource.GetBCFBoatThrowingSandRecordByItemID(itemID);
+
+                LogUtil.d(itemID + "\n1.75 根据ItemID获取施工日志（抛砂）数据 (BCF来砂)json: \n" + result);
+
+                List<ThreadDetailInfo> list = gson.fromJson(result, new TypeToken<List<ThreadDetailInfo>>() {
+                }.getType());
+
+                e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.76 根据ItemID获取施工日志（抛砂）数据
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<ThreadDetailInfo> GetConstructionBoatThrowingSandRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<ThreadDetailInfo>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<ThreadDetailInfo> e) throws Exception {
+                String result = mRemoteDataSource.GetConstructionBoatThrowingSandRecordByItemID(itemID);
+
+                LogUtil.d(itemID + "\n1.76 根据ItemID获取施工日志（抛砂）数据json: \n" + result);
+
+                List<ThreadDetailInfo> list = gson.fromJson(result, new TypeToken<List<ThreadDetailInfo>>() {
+                }.getType());
+
+                e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.77 获取泵砂船数据
+     * @param PageSize
+     * @param PageCount
+     * @param shipAccount
+     * @return
+     */
+    @Override
+    public Observable<List<PumpShip>> GetPumpShipInfo(final int PageSize, final int PageCount, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<List<PumpShip>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<List<PumpShip>> e) throws Exception {
+                JSONObject root = new JSONObject();
+                JSONObject Condition = new JSONObject();
+
+                JSONArray Column = new JSONArray();
+
+                // 泵砂船账号
+                JSONObject object1 = new JSONObject();
+                object1.put("Name", "ShipAccount");
+                object1.put("Type", "string");
+                object1.put("Format", "Equal");
+                object1.put("Value", shipAccount);
+
+                // 保存2个对象到object
+                if (!TextUtils.isEmpty(shipAccount)) {
+                    Column.put(object1);
+                }
+
+                // 保存object到Condition
+                Condition.put("Column", Column);
+
+                // 保存到root
+                root.put("Condition", Condition);
+
+                String json = root.toString();
+
+                LogUtil.d("1.77 获取泵砂船数据json: \n" + json);
+
+                String result = mRemoteDataSource.GetPumpShipInfo(PageSize, PageCount, json);
+
+                LogUtil.d("1.77 获取泵砂船数据result: \n" + result);
+
+                List<PumpShip> list = gson.fromJson(result, new TypeToken<List<PumpShip>>() {}.getType());
+
+                DataSupport.deleteAll(PumpShip.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(list);
                 e.onComplete();
             }
         });

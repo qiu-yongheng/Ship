@@ -32,6 +32,24 @@ public class DownLogBean {
     private String EndTime;
     private String SystemDate;
     private String Remark;
+    private String PumpShipID;
+    private String PumpShipName;
+
+    public String getPumpShipID() {
+        return PumpShipID;
+    }
+
+    public void setPumpShipID(String pumpShipID) {
+        PumpShipID = pumpShipID;
+    }
+
+    public String getPumpShipName() {
+        return PumpShipName;
+    }
+
+    public void setPumpShipName(String pumpShipName) {
+        PumpShipName = pumpShipName;
+    }
 
     public String getRemark() {
         return Remark;
