@@ -14,6 +14,15 @@ public class PartitionNum extends DataSupport{
     private int tag = 0; // 1 正常 0 长度不对
     private int layoutID; // 分层ID
     private String layoutName; // 分层名
+    private int nameTag = 0; // 0 正常  1 命名重合
+
+    public int getNameTag() {
+        return nameTag;
+    }
+
+    public void setNameTag(int nameTag) {
+        this.nameTag = nameTag;
+    }
 
     public int getTag() {
         return tag;

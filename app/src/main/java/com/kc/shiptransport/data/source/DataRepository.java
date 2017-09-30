@@ -5108,7 +5108,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<ThreadDetailInfo> e) throws Exception {
                 String result = mRemoteDataSource.GetBCFBoatThrowingSandRecordByItemID(itemID);
 
-                LogUtil.d(itemID + "\n1.75 根据ItemID获取施工日志（抛砂）数据 (BCF来砂)json: \n" + result);
+                LogUtil.d(itemID + "\n1.75 根据ItemID获取施工日志（抛砂）数据 (BCF来砂)result: \n" + result);
 
                 List<ThreadDetailInfo> list = gson.fromJson(result, new TypeToken<List<ThreadDetailInfo>>() {
                 }.getType());

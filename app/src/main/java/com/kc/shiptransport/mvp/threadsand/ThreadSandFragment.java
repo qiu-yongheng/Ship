@@ -1,8 +1,11 @@
 package com.kc.shiptransport.mvp.threadsand;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -38,6 +41,7 @@ import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.downtimelog.DowntimeLogActivity;
 import com.kc.shiptransport.mvp.partition.PartitionActivity;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.DBUtil;
 import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
@@ -54,6 +58,7 @@ import org.litepal.crud.DataSupport;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,6 +131,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     private String startTime;
     private String pumpShipID;
     private String pumpShipName;
+    private String endTime;
 
     @Nullable
     @Override
@@ -160,6 +166,8 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                 String endTime = lists.get(0).getEndTime();
                 tvEndTime.setText(endTime);
                 realDate = endTime;
+                //                // 回显Remark
+                //                etRemark.setText(lists.get(0).getRemark());
 
 
                 switch (activity.type) {
@@ -239,7 +247,13 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                             ToastUtil.tip(getContext(), "开始时间不能为空");
                             return;
                         }
-                        String offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM, startTime, Calendar.HOUR, 1);
+
+                        String offsetDate = "";
+                        if (TextUtils.isEmpty(endTime)) {
+                            offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, startTime, Calendar.HOUR, 0);
+                        } else {
+                            offsetDate = endTime;
+                        }
 
                         CalendarUtil.showTimeDialog(getContext(), tvEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, offsetDate, new OnTimePickerSureClickListener() {
                             @Override
@@ -383,13 +397,45 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                                                 .setOnClickListener(R.id.tv, new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View view) {
-                                                        // 供砂船舶账号
-                                                        SandHandlingShipID = threadShip.getShipAccount();
-                                                        sandShipName = threadShip.getShipName();
-                                                        tvSandShip.setText(threadShip.getShipName());
-                                                        etSandVoyage.setText(threadShip.getShipItemNum());
-                                                        if (sandShipPupWindow != null) {
-                                                            sandShipPupWindow.dismiss();
+
+                                                        if (activity.type == SettingUtil.TYPE_DATA_NEW) {
+                                                            /** 随便选择 */
+                                                            // 供砂船舶账号
+                                                            SandHandlingShipID = threadShip.getShipAccount();
+                                                            sandShipName = threadShip.getShipName();
+                                                            tvSandShip.setText(threadShip.getShipName());
+                                                            etSandVoyage.setText(threadShip.getShipItemNum());
+                                                            if (sandShipPupWindow != null) {
+                                                                sandShipPupWindow.dismiss();
+                                                            }
+                                                        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE_THREAD) {
+                                                            /** 只能选择抛砂船 */
+                                                            if (threadShip.getShipName().contains("BCF")) {
+                                                                ToastUtil.tip(getContext(), "不能修改供砂船为BCF船");
+                                                            } else {
+                                                                // 供砂船舶账号
+                                                                SandHandlingShipID = threadShip.getShipAccount();
+                                                                sandShipName = threadShip.getShipName();
+                                                                tvSandShip.setText(threadShip.getShipName());
+                                                                etSandVoyage.setText(threadShip.getShipItemNum());
+                                                                if (sandShipPupWindow != null) {
+                                                                    sandShipPupWindow.dismiss();
+                                                                }
+                                                            }
+                                                        } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE_BCF) {
+                                                            /** 只能选择BCF船 */
+                                                            if (!threadShip.getShipName().contains("BCF")) {
+                                                                ToastUtil.tip(getContext(), "只能选择BCF船为供砂船舶");
+                                                            } else {
+                                                                // 供砂船舶账号
+                                                                SandHandlingShipID = threadShip.getShipAccount();
+                                                                sandShipName = threadShip.getShipName();
+                                                                tvSandShip.setText(threadShip.getShipName());
+                                                                etSandVoyage.setText(threadShip.getShipItemNum());
+                                                                if (sandShipPupWindow != null) {
+                                                                    sandShipPupWindow.dismiss();
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 });
@@ -420,7 +466,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             public void onClick(View view) {
                 if (activity.type == SettingUtil.TYPE_DATA_NEW) {
                     PartitionActivity.startActivity(getContext(), 0, SettingUtil.TYPE_DATA_NEW);
-                } else  {
+                } else {
                     PartitionActivity.startActivity(getContext(), activity.itemID, SettingUtil.TYPE_DATA_UPDATE);
                 }
             }
@@ -453,7 +499,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                 List<ConstructionBoat> all = findAll(ConstructionBoat.class);
                 int position = SharePreferenceUtil.getInt(getContext(), SettingUtil.LOG_SHIP_POSITION);
                 boat = all.get(position - 1);
-            } else  {
+            } else {
                 List<LogManagerList> lists = DataSupport.where("ItemID = ?", String.valueOf(activity.itemID)).find(LogManagerList.class);
                 if (!lists.isEmpty()) {
                     String shipAccount = lists.get(0).getShipAccount();
@@ -473,6 +519,8 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         List<PartitionNum> numList = DataSupport.where("num is not null and num != ?", "").find(PartitionNum.class);
         // 长度不一致的分区
         List<PartitionNum> list = DataSupport.where("tag = ? and num is not null and num != ? and userAccount = ?", "0", "", boat.getShipNum()).find(PartitionNum.class);
+        // panel命名重复的分区
+        List<Map> maps = isRepeat();
         // 开始时间
         String startTime = tvStartTime.getText().toString();
         // 结束时间
@@ -489,7 +537,6 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         remark = remark.equals("添加备注") ? "" : remark;
 
 
-
         if (!endTime.equals(HINT) &&
                 !TextUtils.isEmpty(endTime) &&
                 //!stratification.equals(HINT) &&
@@ -503,6 +550,12 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             /** 当panel数量大于1条, 且有panel长度不一致, 提示修改 */
             if (!list.isEmpty() && numList.size() > 1) {
                 ToastUtil.tip(getContext(), "有" + list.size() + "个施工panel长度不一致, 请修改后提交");
+                return;
+            }
+
+            /** 判断是否有panel重命名 */
+            if (!maps.isEmpty()) {
+                ToastUtil.tip(getContext(), "有" + maps.size() + "个施工panel命名重复, 请修改后提交");
                 return;
             }
 
@@ -553,6 +606,38 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         }
     }
 
+
+
+    /**
+     * 获取重复命名数据
+     * @return
+     */
+    @NonNull
+    private List<Map> isRepeat() {
+        ContentValues v = new ContentValues();
+        v.put("nameTag", 0);
+        int ii = DataSupport.updateAll(PartitionNum.class, v);
+
+        LogUtil.d("还原panel状态数量: " + ii);
+
+        // 验证是否有重命名的panel
+        Cursor cursor = DataSupport.findBySQL("select * from PartitionNum where userAccount = " + "\"" + boat.getShipNum() + "\"" + " and num in (select num from PartitionNum group by num having count(num) > 1)");
+
+        List<Map> maps = DBUtil.queryListMap(cursor);
+
+        // 更新命名重合的tag
+        StringBuffer stringBuffer = new StringBuffer();
+        ContentValues values = new ContentValues();
+        values.put("nameTag", 1);
+        for (Map map : maps) {
+            String num = (String) map.get("num");
+            int i = DataSupport.updateAll(PartitionNum.class, values, "num = ? and userAccount = ?", num, boat.getShipNum());
+            stringBuffer.append("命名重合panel: " + num + ", 条数: " + i + "\n");
+        }
+        LogUtil.d(stringBuffer.toString());
+        return maps;
+    }
+
     @Override
     public void setPresenter(ThreadSandContract.Presenter presenter) {
         this.presenter = presenter;
@@ -589,6 +674,11 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             // 修改开始日期
             tvStartTime.setText(bean.getStartTime());
             startTime = bean.getStartTime();
+
+            // 保存结束时间
+            if (!TextUtils.isEmpty(bean.getEndTime())) {
+                endTime = bean.getEndTime();
+            }
         }
 
         // 详细信息
@@ -654,6 +744,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         // 回显供砂航次
         etSandVoyage.setText(bean.getShipItemNum());
 
+
         // TODO:保存施工分区到数据库
         DataSupport.deleteAll(PartitionNum.class);
         List<ThreadDetailInfo.PartitionRecordListBean> list = bean.getPartitionRecordList();
@@ -666,7 +757,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             PartitionNum partitionNum = new PartitionNum();
             partitionNum.setUserAccount(boat.getShipNum());
             partitionNum.setNum(listBean.getPartitionName());
-            partitionNum.setLayoutID(listBean.getLayerID());
+            partitionNum.setLayoutID(TextUtils.isEmpty(listBean.getLayerID()) ? 0 : Integer.valueOf(listBean.getLayerID()));
             partitionNum.setLayoutName(listBean.getLayerName());
             if (length == listBean.getPartitionName().length()) {
                 partitionNum.setTag(1);
@@ -681,8 +772,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         // 回显工程量
         etEngineeringQuantity.setText(bean.getQuantity());
         // 回显备注
-        //etRemark.setText(bean.getRemark());
-
+        etRemark.setText(bean.getRemark());
 
 
         // 回显施工分区

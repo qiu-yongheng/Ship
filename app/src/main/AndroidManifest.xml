@@ -67,8 +67,9 @@
         <activity android:name=".mvp.constructionlog.ConstructionLogActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".mvp.downtime.DowntimeActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".mvp.threadsand.ThreadSandActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
-        <activity android:name=".mvp.partition.PartitionActivity" android:launchMode="singleTask" android:screenOrientation="portrait" android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".mvp.downtimelog.DowntimeLogActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <!-- android:windowSoftInputMode="adjustPan" -->
+        <activity android:name=".mvp.partition.PartitionActivity" android:launchMode="singleTask" android:screenOrientation="portrait"  android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".mvp.downtimelog.DowntimeLogActivity" android:launchMode="singleTask" android:screenOrientation="portrait"/>
         <activity android:name=".mvp.exitapplicationdetail.ExitApplicationDetailActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".mvp.exitapplication.ExitApplicationActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".mvp.changepassword.ChangePasswordActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />

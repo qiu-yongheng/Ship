@@ -34,6 +34,9 @@ public class BaseActivity extends AppCompatActivity {
     private AlertDialog.Builder singleBuilder;
     private int singleSelectedId;
     private AlertDialog singleDialog;
+    private AlertDialog.Builder singleNoButtonBuilder;
+    private int singleNoButtonSelectedId;
+    private AlertDialog singleNoButtonDialog;
 
 
     @Override
@@ -124,6 +127,10 @@ public class BaseActivity extends AppCompatActivity {
         //        }).start();
     }
 
+    /**
+     * 更新进度
+     * @param listener
+     */
     public void updataProgress(OnProgressFinishListener listener) {
         progress++;
         mProgress.setProgress(progress);
@@ -306,6 +313,41 @@ public class BaseActivity extends AppCompatActivity {
 
         // show it
         singleDialog.show();
+    }
+
+    /**
+     * 显示单选框, 没有确定按钮
+     * @param data
+     * @param title
+     * @param cancelListener
+     * @param okListener
+     */
+    public void showSingleNoButtonDailog(String[] data, String title, DialogInterface.OnClickListener cancelListener, final OnDailogOKClickListener okListener) {
+        singleNoButtonBuilder = new AlertDialog.Builder(BaseActivity.this);
+        singleNoButtonSelectedId = -1;
+
+        singleNoButtonBuilder.setTitle(title);
+        singleNoButtonBuilder.setItems(data, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                singleNoButtonSelectedId = which;
+                okListener.onOK(singleNoButtonSelectedId);
+
+                singleNoButtonDialog.hide();
+            }
+        });
+
+        // set dialog message
+        singleNoButtonBuilder.setCancelable(true);
+
+        // create alert dialog
+        singleNoButtonDialog = singleNoButtonBuilder.create();
+
+        singleNoButtonDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "取消", cancelListener);
+
+        // show it
+        singleNoButtonDialog.show();
     }
 
     /**

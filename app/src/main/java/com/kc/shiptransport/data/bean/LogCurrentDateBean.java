@@ -18,7 +18,7 @@ public class LogCurrentDateBean {
     private String ShipAccount;
     private String ShipName;
     private String StartTime;
-    private Object EndTime;
+    private String EndTime;
     private String ShipType;
     private String CurrentTide; // 潮水
     private String ShipItemNum; // 船次
@@ -71,11 +71,11 @@ public class LogCurrentDateBean {
         this.StartTime = StartTime;
     }
 
-    public Object getEndTime() {
+    public String getEndTime() {
         return EndTime;
     }
 
-    public void setEndTime(Object EndTime) {
+    public void setEndTime(String EndTime) {
         this.EndTime = EndTime;
     }
 }

@@ -62,8 +62,18 @@ public class ThreadDetailInfo extends DataSupport{
     private String AvgQuantityForOnePartition;
     private String PumpShipID;
     private String PumpShipName;
+    private String Remark;
+
 
     private List<PartitionRecordListBean> PartitionRecordList;
+
+    public String getRemark() {
+        return Remark;
+    }
+
+    public void setRemark(String remark) {
+        Remark = remark;
+    }
 
     public String getPumpShipID() {
         return PumpShipID;
@@ -273,16 +283,16 @@ public class ThreadDetailInfo extends DataSupport{
          * PartitionName : erty1234
          */
 
-        private int LayerID;
+        private String LayerID;
         private String LayerName;
         private String PartitionName;
 
 
-        public int getLayerID() {
+        public String getLayerID() {
             return LayerID;
         }
 
-        public void setLayerID(int LayerID) {
+        public void setLayerID(String LayerID) {
             this.LayerID = LayerID;
         }
 

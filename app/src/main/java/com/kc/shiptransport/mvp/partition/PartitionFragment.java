@@ -1,9 +1,13 @@
 package com.kc.shiptransport.mvp.partition;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,9 +21,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +37,8 @@ import com.kc.shiptransport.db.threadsand.Layered;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.util.DBUtil;
+import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.PatternUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
@@ -40,6 +48,7 @@ import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,6 +85,9 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     private int layoutID = 0;
     private String layoutName = "";
     private List<Layered> arr;
+    private int usableHeightPrevious = 0;
+    private FrameLayout.LayoutParams frameLayoutParams;
+    private boolean isPush = true;
 
     @Nullable
     @Override
@@ -90,7 +102,17 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     }
 
     @Override
-    public void initViews(View view) {
+    public void initViews(final View view) {
+        frameLayoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                //possiblyResizeChildOfContent(view);
+            }
+        });
+
+
         // 设置标题
         setHasOptionsMenu(true);
         activity = (PartitionActivity) getActivity();
@@ -122,6 +144,41 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                 }
             }
         }
+    }
+
+    /**
+     * 重新设置界面的可用高度
+     *
+     * @param view
+     */
+    private void possiblyResizeChildOfContent(View view) {
+        int usableHeightNow = computeUsableHeight(view);
+        LogUtil.d("界面高度: " + usableHeightNow);
+        if (usableHeightNow != usableHeightPrevious) {
+            int usableHeightSansKeyboard = view.getRootView().getHeight();
+            int heightDifference = usableHeightSansKeyboard - usableHeightNow;
+            if (heightDifference > (usableHeightSansKeyboard / 4)) {
+                // keyboard probably just became visible
+                frameLayoutParams.height = usableHeightSansKeyboard - heightDifference;
+            } else {
+                // keyboard probably just became hidden
+                frameLayoutParams.height = usableHeightSansKeyboard + 60;
+            }
+            view.requestLayout();
+            usableHeightPrevious = usableHeightNow;
+        }
+    }
+
+    /**
+     * 获取可以被开发者用以显示内容的高度
+     *
+     * @return
+     */
+    private int computeUsableHeight(View view) {
+        Rect r = new Rect();
+        view.getWindowVisibleDisplayFrame(r);
+
+        return (r.bottom - r.top);// 全屏模式下： return r.bottom
     }
 
     @Override
@@ -165,6 +222,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
 
     @Override
     public void initListener() {
+
         /** 新增分区 */
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,9 +247,10 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                 for (int i = 0; i < arr.size(); i++) {
                     data[i] = arr.get(i).getLayerName();
                 }
-                activity.showSingleDailog(data, "选择施工分层", "取消", "确定", new DialogInterface.OnClickListener() {
+
+                activity.showSingleNoButtonDailog(data, "选择施工分层", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
                 }, new OnDailogOKClickListener() {
@@ -203,7 +262,6 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                         tvConstructionStratification.setText(layoutName);
                     }
                 });
-
             }
         });
 
@@ -266,67 +324,61 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                     final boolean finalIsChar = isChar;
                     final Integer finalStart = start;
                     final Integer finalEnd = end;
-                    activity.showDailog("施工分区生成", "是否一键生成施工分区", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            try {
-                                // 缓存分区前缀
-                                SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_PREFIX, prefix);
+                    try {
+                        // 缓存分区前缀
+                        SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_PREFIX, prefix);
 
-                                if (finalIsChar) {
-                                    /** 字符 */
-                                    char[] startChars = startNum.toCharArray();
-                                    int startChar = (int) startChars[0];
-                                    char[] endChars = endNum.toCharArray();
-                                    int endChar = (int) endChars[0];
+                        if (finalIsChar) {
+                            /** 字符 */
+                            char[] startChars = startNum.toCharArray();
+                            int startChar = (int) startChars[0];
+                            char[] endChars = endNum.toCharArray();
+                            int endChar = (int) endChars[0];
 
-                                    for (int j = startChar; j <= endChar; j++) {
-                                        PartitionNum num = new PartitionNum();
-                                        num.setUserAccount(boat.getShipNum());
-                                        char c = (char) j;
-                                        num.setNum(prefix.replace('#', c).toLowerCase());
-                                        num.setLayoutID(layoutID);
-                                        num.setLayoutName(layoutName);
-                                        num.save();
-                                    }
-
-                                } else {
-                                    /** 数字 */
-                                    for (int j = finalStart; j <= finalEnd; j++) {
-                                        // 创建一个新的数据, 保存用户名
-                                        PartitionNum num = new PartitionNum();
-                                        num.setUserAccount(boat.getShipNum());
-                                        String format = String.format("%0" + PatternUtil.appearNumber(prefix, "#") + "d", j);
-                                        StringBuffer sb = new StringBuffer();
-                                        for (int n = 0; n < PatternUtil.appearNumber(prefix, "#"); n++) {
-                                            sb.append("#");
-                                        }
-                                        num.setNum(prefix.replaceAll(sb.toString(), format).toLowerCase());
-                                        num.setLayoutID(layoutID);
-                                        num.setLayoutName(layoutName);
-                                        num.save();
-                                    }
-                                }
-
-                                List<PartitionNum> numList = DataSupport.where("userAccount = ? and num is not null and num != ?", boat.getShipNum(), "").find(PartitionNum.class);
-                                adapter.setDates(numList);
-                                adapter.notifyDataSetChanged();
-
-                                // 如果输入法在窗口上已经显示，则隐藏，反之则显示
-                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-
-
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
-                                ToastUtil.tip(getContext(), "开始数与结束数必须输入数字");
+                            for (int j = startChar; j <= endChar; j++) {
+                                PartitionNum num = new PartitionNum();
+                                num.setUserAccount(boat.getShipNum());
+                                char c = (char) j;
+                                num.setNum(prefix.replace('#', c).toLowerCase());
+                                num.setLayoutID(layoutID);
+                                num.setLayoutName(layoutName);
+                                num.save();
                             }
 
-
+                        } else {
+                            /** 数字 */
+                            for (int j = finalStart; j <= finalEnd; j++) {
+                                // 创建一个新的数据, 保存用户名
+                                PartitionNum num = new PartitionNum();
+                                num.setUserAccount(boat.getShipNum());
+                                String format = String.format("%0" + PatternUtil.appearNumber(prefix, "#") + "d", j);
+                                StringBuffer sb = new StringBuffer();
+                                for (int n = 0; n < PatternUtil.appearNumber(prefix, "#"); n++) {
+                                    sb.append("#");
+                                }
+                                num.setNum(prefix.replaceAll(sb.toString(), format).toLowerCase());
+                                num.setLayoutID(layoutID);
+                                num.setLayoutName(layoutName);
+                                num.save();
+                            }
                         }
-                    });
-                }
 
+                        List<PartitionNum> numList = DataSupport.where("userAccount = ? and num is not null and num != ?", boat.getShipNum(), "").find(PartitionNum.class);
+                        adapter.setDates(numList);
+                        adapter.notifyDataSetChanged();
+
+                        // 如果输入法在窗口上已经显示，则隐藏，反之则显示
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        ToastUtil.tip(getContext(), "开始数与结束数必须输入数字");
+                    }
+
+
+                }
             }
         });
     }
@@ -378,42 +430,16 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(final View view, final int position, int... type) {
-                    String num = adapter.list.get(position).getNum();
-                    if (TextUtils.isEmpty(num)) {
-                        ToastUtil.tip(getContext(), "请先填写施工panel");
-                        return;
+                    switch (type[0]) {
+                        case 0:
+                            // 选择施工分层
+                            selectBed((Button) view, position);
+                            break;
+                        case 1:
+                            // 更新数据命名重复状态
+                            isRepeat();
+                            break;
                     }
-
-
-                    // 给panel选择施工分层
-                    if (arr == null || arr.isEmpty()) {
-                        arr = DataSupport.order("SortNum asc").find(Layered.class);
-                    }
-                    String[] data = new String[arr.size()];
-                    for (int i = 0; i < arr.size(); i++) {
-                        data[i] = arr.get(i).getLayerName();
-                    }
-                    activity.showSingleDailog(data, "选择施工分区", "取消", "确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    }, new OnDailogOKClickListener() {
-                        @Override
-                        public void onOK(Object data) {
-                            PartitionNum partitionNum = adapter.list.get(position);
-                            int layoutID = arr.get((int) data).getItemID();
-                            String layoutName = arr.get((int) data).getLayerName();
-
-                            partitionNum.setLayoutID(layoutID);
-                            partitionNum.setLayoutName(layoutName);
-                            partitionNum.save();
-
-                            Button btnBed = (Button) view;
-                            btnBed.setText(layoutName);
-                            btnBed.setBackgroundColor(getResources().getColor(R.color.et_bg));
-                        }
-                    });
                 }
 
                 @Override
@@ -433,6 +459,51 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
             adapter.setDates(list);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * 选择施工分层
+     * @param view
+     * @param position
+     */
+    private void selectBed(final Button view, final int position) {
+        String num = adapter.list.get(position).getNum();
+        if (TextUtils.isEmpty(num)) {
+            ToastUtil.tip(getContext(), "请先填写施工panel");
+            return;
+        }
+
+
+        // 给panel选择施工分层
+        if (arr == null || arr.isEmpty()) {
+            arr = DataSupport.order("SortNum asc").find(Layered.class);
+        }
+        String[] data = new String[arr.size()];
+        for (int i = 0; i < arr.size(); i++) {
+            data[i] = arr.get(i).getLayerName();
+        }
+
+        activity.showSingleNoButtonDailog(data, "选择施工分层", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        }, new OnDailogOKClickListener() {
+            @Override
+            public void onOK(Object data) {
+                PartitionNum partitionNum = adapter.list.get(position);
+                int layoutID = arr.get((int) data).getItemID();
+                String layoutName = arr.get((int) data).getLayerName();
+
+                partitionNum.setLayoutID(layoutID);
+                partitionNum.setLayoutName(layoutName);
+                partitionNum.save();
+
+                Button btnBed = view;
+                btnBed.setText(layoutName);
+                btnBed.setBackgroundColor(getResources().getColor(R.color.et_bg));
+            }
+        });
     }
 
     @Override
@@ -468,6 +539,8 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         // 验证施工panel是否都填写了施工分层
         List<PartitionNum> list1 = DataSupport.where("num is not null and num != ? and userAccount = ? and layoutID == ?", "", boat.getShipNum(), String.valueOf(0)).find(PartitionNum.class);
 
+        /** 验证是否有重复命名数据 */
+        List<Map> maps = isRepeat();
 
         if (!list.isEmpty()) {
             activity.showDailog("提示", "施工panel长度必须一致才能进行提交, 请修改红色标注的施工panel\n\n当前待修改数: " + list.size() + "个", new DialogInterface.OnClickListener() {
@@ -483,8 +556,51 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
 
                 }
             });
+        } else if (!maps.isEmpty()) {
+            activity.showDailog("提示", "有" + maps.size() + "个施工panel命名重复, 请修改", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
         } else {
             getActivity().onBackPressed();
         }
+    }
+
+    /**
+     * 获取重复命名数据
+     * @return
+     */
+    @NonNull
+    private List<Map> isRepeat() {
+        ContentValues v = new ContentValues();
+        v.put("nameTag", 0);
+        int ii = DataSupport.updateAll(PartitionNum.class, v);
+
+        LogUtil.d("还原panel状态数量: " + ii);
+
+
+        // 验证是否有重命名的panel
+        Cursor cursor = DataSupport.findBySQL("select * from PartitionNum where userAccount = " + "\"" + boat.getShipNum() + "\"" + " and num in (select num from PartitionNum group by num having count(num) > 1)");
+
+        List<Map> maps = DBUtil.queryListMap(cursor);
+
+        // 更新命名重合的tag
+        StringBuffer stringBuffer = new StringBuffer();
+        ContentValues values = new ContentValues();
+        values.put("nameTag", 1);
+        for (Map map : maps) {
+            String num = (String) map.get("num");
+            int i = DataSupport.updateAll(PartitionNum.class, values, "num = ? and userAccount = ?", num, boat.getShipNum());
+            stringBuffer.append("命名重合panel: " + num + ", 条数: " + i + "\n");
+        }
+        LogUtil.d(stringBuffer.toString());
+
+        // 更新显示
+        List<PartitionNum> numList = DataSupport.where("userAccount = ? and num is not null and num != ?", boat.getShipNum(), "").find(PartitionNum.class);
+        adapter.setDates(numList);
+        adapter.notifyDataSetChanged();
+        return maps;
     }
 }

@@ -116,7 +116,7 @@ public class BCFFragment extends Fragment implements BCFContract.View {
 
 
         // 回显
-        SandHandlingShipID = SharePreferenceUtil.getString(getContext(), SettingUtil.SP_KEY_SUB_ACCOUNT, "");
+        subAccount = SharePreferenceUtil.getString(getContext(), SettingUtil.SP_KEY_SUB_ACCOUNT, "");
         tvSub.setText(SharePreferenceUtil.getString(getContext(), SettingUtil.SP_KEY_SUB_NAME, "请选择"));
     }
 
@@ -291,7 +291,7 @@ public class BCFFragment extends Fragment implements BCFContract.View {
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(SandHandlingShipID)) {
-                    ToastUtil.tip(getContext(), "请选择供砂船舶");
+                    ToastUtil.tip(getContext(), "请选择来砂船舶");
                 } else if (TextUtils.isEmpty(subAccount)) {
                     ToastUtil.tip(getContext(), "请选择供应商");
                 } else if (TextUtils.isEmpty(time)) {

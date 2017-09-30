@@ -41,6 +41,15 @@ public class LogManagerList extends DataSupport{
     private float Quantity; // 工程量
     private String SandHandlingShipID; // 供砂船舶账号
     private String SandHandlingShipName; // 供砂船舶名称
+    private String Remark;
+
+    public String getRemark() {
+        return Remark;
+    }
+
+    public void setRemark(String remark) {
+        Remark = remark;
+    }
 
     public float getQuantity() {
         return Quantity;

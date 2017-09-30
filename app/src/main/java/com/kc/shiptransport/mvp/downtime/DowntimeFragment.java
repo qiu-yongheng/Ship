@@ -89,6 +89,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     private String startTime;
     private String pumpShipID;
     private String pumpShipName;
+    private String endTime;
 
     @Nullable
     @Override
@@ -224,7 +225,13 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
                             return;
                         }
 
-                        String offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM, startTime, Calendar.HOUR, 1);
+
+                        String offsetDate = "";
+                        if (TextUtils.isEmpty(endTime)) {
+                            offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, startTime, Calendar.HOUR, 0);
+                        } else {
+                            offsetDate = endTime;
+                        }
 
 
                         CalendarUtil.showTimeDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, offsetDate, new OnTimePickerSureClickListener() {
@@ -380,6 +387,11 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         if (bean != null) {
             textStartTime.setText(bean.getStartTime());
             startTime = bean.getStartTime();
+
+            // 修改结束时间
+            if (!TextUtils.isEmpty(bean.getEndTime())) {
+                endTime = bean.getEndTime();
+            }
         } else {
             textStartTime.setText("获取数据失败");
         }
@@ -395,6 +407,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
     public void showDetailData(List<DownLogBean> list) {
         LogUtil.d("停工回显num: " + list.size());
         if (!list.isEmpty()) {
+            // 回显备注
             etRemark.setText(TextUtils.isEmpty(list.get(0).getRemark()) ? "" : list.get(0).getRemark());
         }
 
