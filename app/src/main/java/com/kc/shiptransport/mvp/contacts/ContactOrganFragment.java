@@ -116,11 +116,6 @@ public class ContactOrganFragment extends Fragment {
                                 return true;
                             }
                         });
-
-                        // 默认展开
-//                        for (int i = 0; i < gData.size(); i++) {
-//                            expandListView.expandGroup(i);
-//                        }
                     }
                 });
     }

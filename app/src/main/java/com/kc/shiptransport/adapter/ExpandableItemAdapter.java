@@ -16,7 +16,11 @@ public class ExpandableItemAdapter extends BaseMultiItemQuickAdapter<MultiItemEn
     private static final String TAG = ExpandableItemAdapter.class.getSimpleName();
 
     public static final int TYPE_LEVEL_0 = 0;
-    public static final int TYPE_PERSON = 1;
+    public static final int TYPE_LEVEL_1 = 1;
+    public static final int TYPE_LEVEL_2 = 2;
+    public static final int TYPE_LEVEL_3 = 3;
+    public static final int TYPE_LEVEL_4 = 4;
+    public static final int TYPE_PERSON = 5;
 
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
@@ -34,6 +38,18 @@ public class ExpandableItemAdapter extends BaseMultiItemQuickAdapter<MultiItemEn
     protected void convert(final BaseViewHolder holder, final MultiItemEntity item) {
         switch (holder.getItemViewType()) {
             case TYPE_LEVEL_0:
+
+                break;
+            case TYPE_LEVEL_1:
+
+                break;
+            case TYPE_LEVEL_2:
+
+                break;
+            case TYPE_LEVEL_3:
+
+                break;
+            case TYPE_LEVEL_4:
 
                 break;
             case TYPE_PERSON:

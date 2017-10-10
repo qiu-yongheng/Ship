@@ -23,6 +23,8 @@ public class Contacts extends DataSupport implements Serializable{
      * Sex :
      */
 
+    private int ID;
+    private int PID;
     private String LoginName;
     private String DisplayName;
     private String Department;
@@ -31,6 +33,22 @@ public class Contacts extends DataSupport implements Serializable{
     private String Mobile;
     private String TelephoneNumber;
     private String Sex;
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int getPID() {
+        return PID;
+    }
+
+    public void setPID(int PID) {
+        this.PID = PID;
+    }
 
     public String getLoginName() {
         return LoginName;

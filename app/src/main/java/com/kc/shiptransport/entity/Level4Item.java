@@ -7,20 +7,20 @@ import com.kc.shiptransport.adapter.ExpandableItemAdapter;
 /**
  * 根目录
  */
-public class Level0Item extends AbstractExpandableItem<MultiItemEntity> implements MultiItemEntity {
+public class Level4Item extends AbstractExpandableItem<MultiItemEntity> implements MultiItemEntity {
     public String title;
 
-    public Level0Item( String title) {
+    public Level4Item(String title) {
         this.title = title;
     }
 
     @Override
     public int getItemType() {
-        return ExpandableItemAdapter.TYPE_LEVEL_0;
+        return ExpandableItemAdapter.TYPE_LEVEL_4;
     }
 
     @Override
     public int getLevel() {
-        return 0;
+        return 4;
     }
 }
