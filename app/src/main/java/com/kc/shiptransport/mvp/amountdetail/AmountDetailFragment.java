@@ -583,10 +583,11 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         // 激光量方
         etTotalVolume.setText(TextUtils.isEmpty(laserQuantitySand) ? "" : laserQuantitySand);
         // 量方类型 (切换radio)
-        if (TextUtils.isEmpty(theAmountOfType) || theAmountOfType.contains("人工")) {
+        if (theAmountOfType.contains("人工")) {
             radioGroup.check(R.id.radio_man);
             tvAmountType.setText("人工量砂");
-        } else if (theAmountOfType.contains("激光")) {
+        } else if (TextUtils.isEmpty(theAmountOfType) || theAmountOfType.contains("激光")) {
+            /** 默认激光量砂 */
             radioGroup.check(R.id.radio_laser);
             tvAmountType.setText("激光量砂");
         }

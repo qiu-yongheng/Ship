@@ -100,6 +100,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
     private CommonAdapter<SandSamplingNumRecordListBean> sandAdapter;
     private String ConstructionBoatAccount = "";
     private String bacth = "";
+    private String nqaa;
 
     @Nullable
     @Override
@@ -118,11 +119,14 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         btnCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 保存数据到sp
-                //saveImageList();
-
-                // TODO 提交图片与总json
-                presenter.commit(sandSample);
+                if (TextUtils.isEmpty(bacth)) {
+                    ToastUtil.tip(getContext(), "请填写BATCH");
+                } else if (TextUtils.isEmpty(nqaa)) {
+                    ToastUtil.tip(getContext(), "请填写NAQQ");
+                } else {
+                    // TODO 提交图片与总json
+                    presenter.commit(sandSample);
+                }
             }
         });
 
@@ -315,7 +319,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
             }
         } else if (requestCode == 101) {
             /** 设置NQAA */
-            String nqaa = data.getStringExtra(InputActivity.TAG);
+            nqaa = data.getStringExtra(InputActivity.TAG);
 
             if (!TextUtils.isEmpty(nqaa)) {
                 textNaqq.setText(nqaa);

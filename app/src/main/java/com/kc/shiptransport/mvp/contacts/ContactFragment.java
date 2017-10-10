@@ -122,7 +122,7 @@ public class ContactFragment extends Fragment implements ContactContract.View {
     @Override
     public void showContact(List<Contacts> list) {
         viewPager.setOffscreenPageLimit(2);
-        viewPager.setAdapter(new ContactPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), new ContactsListFragment(), new ContactOrganFragment()));
+        viewPager.setAdapter(new ContactPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), new ContactsListFragment(), new ContactOrganFragment(), new ContactsDredgeFragment()));
         tabLayout.setupWithViewPager(viewPager);
     }
 }

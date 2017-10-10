@@ -290,6 +290,10 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
         /** 初始化状态 */
         SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.ALREADY_COMMIT, true);
         SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.RETURNED, true);
+
+        // 默认显示已验收与未验收数据
+        SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.ACCEPTED, true);
+        SharePreferenceUtil.saveBoolean(getContext(), SettingUtil.NO_ACCEPTED, true);
     }
 
     @Override

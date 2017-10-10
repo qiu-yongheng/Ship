@@ -110,14 +110,14 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
 
     @Override
     public void initListener() {
-        /** 拨打手机 */
+        /** 拨打香港号码 */
         rlPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String phone = tvPhone.getText().toString().trim();
                 if (TextUtils.isEmpty(phone)) {
                     Toast.makeText(getContext(), "此联系人还未添加手机号码", Toast.LENGTH_SHORT).show();
-                } else if (PatternUtil.patternPhone(phone)) {
+                } else if (PatternUtil.patternNumber(phone)) {
                     Intent phoneIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
                     startActivity(phoneIntent);
                 } else {
@@ -126,14 +126,14 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
             }
         });
 
-        /** 拨打电话 */
+        /** 拨打国内号码 */
         rlTell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String tell = tvTell.getText().toString().trim();
                 if (TextUtils.isEmpty(tell)) {
                     Toast.makeText(getContext(), "此联系人还未添加电话号码", Toast.LENGTH_SHORT).show();
-                } else if (PatternUtil.patternTell(tell)) {
+                } else if (PatternUtil.patternNumber(tell)) {
                     Intent phoneIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + tell));
                     startActivity(phoneIntent);
                 } else {

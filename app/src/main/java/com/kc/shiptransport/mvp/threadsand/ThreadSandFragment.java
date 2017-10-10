@@ -242,7 +242,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
             public void onClick(View view) {
                 if (activity.isAllow) {
                     try {
-                        // 结束时间为开始时间+1小时
+                        // 默认结束时间为开始时间+2小时
                         if (TextUtils.isEmpty(startTime)) {
                             ToastUtil.tip(getContext(), "开始时间不能为空");
                             return;
@@ -250,7 +250,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
                         String offsetDate = "";
                         if (TextUtils.isEmpty(endTime)) {
-                            offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, startTime, Calendar.HOUR, 0);
+                            offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM, startTime, Calendar.HOUR, 2);
                         } else {
                             offsetDate = endTime;
                         }
