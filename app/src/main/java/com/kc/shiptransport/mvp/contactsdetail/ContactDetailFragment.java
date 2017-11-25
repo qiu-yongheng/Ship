@@ -91,15 +91,15 @@ public class ContactDetailFragment extends Fragment implements ContactDetailCont
 
         this.contacts = activity.contacts;
         // 用户名
-        tvUserName.setText(contacts.getDisplayName());
-        // 用户账号
-        tvUserAccount.setText(contacts.getLoginName());
+        tvUserName.setText(contacts.getDepartment());
+        // 英文名
+        tvUserAccount.setText(contacts.getEnglishName());
         // 性别
         tvSex.setText(TextUtils.isEmpty(contacts.getSex()) ? "" : contacts.getSex());
         // 部门
-        tvSection.setText(TextUtils.isEmpty(contacts.getDepartment()) ? "" : contacts.getDepartment());
+        tvSection.setText(TextUtils.isEmpty(contacts.getDuties()) ? "" : contacts.getDuties());
         // 职务
-        tvDuties.setText(TextUtils.isEmpty(contacts.getTitle()) ? "" : contacts.getTitle());
+        tvDuties.setText(TextUtils.isEmpty(contacts.getDuties()) ? "" : contacts.getDuties());
         // 手机
         tvPhone.setText(TextUtils.isEmpty(contacts.getMobile()) ? "" : contacts.getMobile());
         // email

@@ -23,8 +23,8 @@ public interface ThreadSandContract {
     interface Presenter extends BasePresenter {
         void getDates(String CurrentDate, String CurrentBoatAccount);
         void getPartition(String userID);
-        void commit(String json);
-        void commitBCF(String json);
+        void commit(String json, String shipNum, String startTime, String endTime, boolean isUpdate);
+        void commitBCF(String json, String shipNum, String startTime, String endTime, boolean isUpdate);
         void getDetailThreadInfo(int itemID);
         void getDetailBCFInfo(int itemID);
     }

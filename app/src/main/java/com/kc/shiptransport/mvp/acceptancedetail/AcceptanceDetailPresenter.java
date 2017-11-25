@@ -148,7 +148,7 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                     public Observable<Boolean> apply(Integer integer) throws Exception {
                         // 更新当前选中的供应商计划
                         if (integer == success) {
-                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN),
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP),
                                     SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
                             return Observable.create(new ObservableOnSubscribe<Boolean>() {
@@ -166,7 +166,7 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                     public Boolean apply(@NonNull Boolean aBoolean) throws Exception {
                         /** 删除不能进行预验砂的任务 */
                         DataSupport.deleteAll(WeekTask.class, "IsAllowPreAcceptanceEvaluation = 0 and PreAcceptanceEvaluationStatus  != 1");
-                        dataRepository.dataSort(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN));
+                        dataRepository.dataSort(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP));
                         return aBoolean;
                     }
                 })

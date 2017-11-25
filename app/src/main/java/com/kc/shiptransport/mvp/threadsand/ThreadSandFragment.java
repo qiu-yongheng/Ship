@@ -250,12 +250,12 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
                         String offsetDate = "";
                         if (TextUtils.isEmpty(endTime)) {
-                            offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM, startTime, Calendar.HOUR, 2);
+                            offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM_SS, startTime, Calendar.HOUR, 2);
                         } else {
                             offsetDate = endTime;
                         }
 
-                        CalendarUtil.showTimeDialog(getContext(), tvEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, offsetDate, new OnTimePickerSureClickListener() {
+                        CalendarUtil.showTimeDialog(getContext(), tvEndTime, CalendarUtil.YYYY_MM_DD_HH_MM_SS, offsetDate, new OnTimePickerSureClickListener() {
                             @Override
                             public void onSure(String str) {
                                 /** 不能选择在开始时间之前的时间 */
@@ -374,6 +374,14 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
                     return;
                 }
 
+                // 获取数据
+                final List<ThreadShip> list = DataSupport.order("rownumber asc").find(ThreadShip.class);
+
+                if (list.isEmpty()) {
+                    ToastUtil.tip(getContext(), "当前日期没有可以选择的供砂船舶");
+                    return;
+                }
+
                 sandShipPupWindow = new CommonPopupWindow.Builder(getContext())
                         .setView(R.layout.popup_down)
                         .setWidthAndHeight(sandWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -387,8 +395,6 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
                                 recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-                                // 获取数据
-                                List<ThreadShip> list = DataSupport.order("rownumber asc").find(ThreadShip.class);
 
                                 CommonAdapter<ThreadShip> commonAdapter = new CommonAdapter<ThreadShip>(getContext(), R.layout.item_thread_sand, list) {
                                     @Override
@@ -588,13 +594,13 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
 
                 LogUtil.d("抛砂提交: " + json);
 
-
+                boolean isUpdate = activity.type == SettingUtil.TYPE_DATA_UPDATE;
                 /** 判断供砂船舶是否是BCF */
                 if (sandShipName.contains("BCF")) {
                     // 提交到BCF
-                    presenter.commitBCF(json);
+                    presenter.commitBCF(json, boat.getShipNum(), startTime, endTime, isUpdate);
                 } else {
-                    presenter.commit(json);
+                    presenter.commit(json, boat.getShipNum(), startTime, endTime, isUpdate);
                 }
 
 
@@ -607,9 +613,9 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
     }
 
 
-
     /**
      * 获取重复命名数据
+     *
      * @return
      */
     @NonNull
@@ -648,7 +654,7 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         if (isShow) {
             activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });
@@ -748,38 +754,43 @@ public class ThreadSandFragment extends Fragment implements ThreadSandContract.V
         // TODO:保存施工分区到数据库
         DataSupport.deleteAll(PartitionNum.class);
         List<ThreadDetailInfo.PartitionRecordListBean> list = bean.getPartitionRecordList();
-        tvDevisionNum.setText(String.valueOf(list.size()));
 
-        StringBuffer stringBuffer = new StringBuffer();
-        // 记录第一条长度
-        int length = list.get(0).getPartitionName().length();
-        for (ThreadDetailInfo.PartitionRecordListBean listBean : list) {
-            PartitionNum partitionNum = new PartitionNum();
-            partitionNum.setUserAccount(boat.getShipNum());
-            partitionNum.setNum(listBean.getPartitionName());
-            partitionNum.setLayoutID(TextUtils.isEmpty(listBean.getLayerID()) ? 0 : Integer.valueOf(listBean.getLayerID()));
-            partitionNum.setLayoutName(listBean.getLayerName());
-            if (length == listBean.getPartitionName().length()) {
-                partitionNum.setTag(1);
-            } else {
-                partitionNum.setTag(0);
+        // 如果没有施工分区, 不保存
+        if (list != null && !list.isEmpty()) {
+            tvDevisionNum.setText(String.valueOf(list.size()));
+            StringBuffer stringBuffer = new StringBuffer();
+
+            // 记录第一条长度
+            int length = list.get(0).getPartitionName().length();
+            for (ThreadDetailInfo.PartitionRecordListBean listBean : list) {
+                PartitionNum partitionNum = new PartitionNum();
+                partitionNum.setUserAccount(boat.getShipNum());
+                partitionNum.setNum(listBean.getPartitionName());
+                partitionNum.setLayoutID(TextUtils.isEmpty(listBean.getLayerID()) ? 0 : Integer.valueOf(listBean.getLayerID()));
+                partitionNum.setLayoutName(listBean.getLayerName());
+                if (length == listBean.getPartitionName().length()) {
+                    partitionNum.setTag(1);
+                } else {
+                    partitionNum.setTag(0);
+                }
+                partitionNum.save();
+
+                stringBuffer.append(listBean.getPartitionName() + ",");
             }
-            partitionNum.save();
 
-            stringBuffer.append(listBean.getPartitionName() + ",");
+            // 回显施工分区
+            //String partitionNameArr = bean.getPartitionNameArr();
+            String s = stringBuffer.toString();
+            String substring = s.substring(0, s.length() - 1);
+            tvConstructionDevision.setText(substring);
         }
+
 
         // 回显工程量
         etEngineeringQuantity.setText(bean.getQuantity());
         // 回显备注
         etRemark.setText(bean.getRemark());
 
-
-        // 回显施工分区
-        //String partitionNameArr = bean.getPartitionNameArr();
-        String s = stringBuffer.toString();
-        String substring = s.substring(0, s.length() - 1);
-        tvConstructionDevision.setText(substring);
 
     }
 

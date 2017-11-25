@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/marginleft_14"
-            android:text="NAQQ:"
+            android:text="NQAA:"
             android:textColor="@color/text_tag_gray"
             android:textSize="@dimen/text_13sp"/>
 

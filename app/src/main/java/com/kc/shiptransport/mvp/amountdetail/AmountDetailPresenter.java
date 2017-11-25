@@ -142,7 +142,8 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
     @Override
     public void commit(final int itemID,
                        final String TheAmountOfTime,
-                       final String subcontractorAccount, final int SubcontractorInterimApproachPlanID,
+                       final String subcontractorAccount,
+                       final int SubcontractorInterimApproachPlanID,
                        final String ShipAccount,
                        final String Capacity,
                        final String DeckGauge,
@@ -176,7 +177,7 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                     public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
                         // 提交成功后, 重新加载列表数据, 并过滤未验收的数据
                         if (aBoolean) {
-                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN),
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP),
                                     SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
                             return null;
@@ -187,7 +188,7 @@ public class AmountDetailPresenter implements AmountDetailContract.Presenter{
                     @Override
                     public Observable<Boolean> apply(Boolean aBoolean) throws Exception {
                         // 删除未验收数据后, 进行重新排序
-                        return dataRepository.getWeekTaskSort(SettingUtil.TYPE_AMOUNT, SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN));
+                        return dataRepository.getWeekTaskSort(SettingUtil.TYPE_AMOUNT, SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP));
                     }
                 })
                 .flatMap(new Function<Boolean, ObservableSource<List<BackLog>>>() {

@@ -12,25 +12,31 @@ import org.litepal.crud.DataSupport;
 public class UserInfo extends DataSupport{
 
     /**
-     * LoginName : kl
-     * DisplayName : 卡乐
-     * Department : 工程部
-     * Email :
-     * Title :
-     * Mobile :
+     * LoginName : wangzhengliang
+     * CId : 42
+     * PId : 3
+     * DisplayName :
+     * Department : 王XX
+     * Email : wansdl@fhdigz.com
+     * Title : 副总工程师
+     * Mobile : 6680-6573
      * TelephoneNumber :
      * Sex :
+     * EnglishName : Wang Zhengliang
      */
 
+    private int DepartmentID;
     private String LoginName;
+    private String CId;
+    private String PId;
     private String DisplayName;
     private String Department;
-    private int DepartmentID;
     private String Email;
     private String Title;
     private String Mobile;
     private String TelephoneNumber;
     private String Sex;
+    private String EnglishName;
 
     public int getDepartmentID() {
         return DepartmentID;
@@ -46,6 +52,22 @@ public class UserInfo extends DataSupport{
 
     public void setLoginName(String LoginName) {
         this.LoginName = LoginName;
+    }
+
+    public String getCId() {
+        return CId;
+    }
+
+    public void setCId(String CId) {
+        this.CId = CId;
+    }
+
+    public String getPId() {
+        return PId;
+    }
+
+    public void setPId(String PId) {
+        this.PId = PId;
     }
 
     public String getDisplayName() {
@@ -102,5 +124,13 @@ public class UserInfo extends DataSupport{
 
     public void setSex(String Sex) {
         this.Sex = Sex;
+    }
+
+    public String getEnglishName() {
+        return EnglishName;
+    }
+
+    public void setEnglishName(String EnglishName) {
+        this.EnglishName = EnglishName;
     }
 }

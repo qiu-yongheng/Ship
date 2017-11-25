@@ -8,12 +8,16 @@ import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.threadsand.ThreadDetailInfo;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function3;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -22,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public class ThreadSandPresenter implements ThreadSandContract.Presenter{
+public class ThreadSandPresenter implements ThreadSandContract.Presenter {
     private final Context context;
     private final ThreadSandContract.View view;
     private final DataRepository dataRepository;
@@ -48,11 +52,12 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
 
     /**
      * 获取显示数据, 分区
+     *
      * @param CurrentDate
      * @param CurrentBoatAccount
      */
     @Override
-    public void getDates(String CurrentDate, String CurrentBoatAccount) {
+    public void getDates(final String CurrentDate, final String CurrentBoatAccount) {
         view.showLoading(true);
         // 抛砂分区
         Observable<Boolean> observable = dataRepository
@@ -60,21 +65,42 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                 .subscribeOn(Schedulers.io());
 
         // 供砂船
-        Observable<Boolean> conship = dataRepository
-                .GetBoatShipItemNum(1000, 1, CurrentBoatAccount)
-                .subscribeOn(Schedulers.io());
+        //        Observable<Boolean> conship =
 
         // 回显数据
         Observable<LogCurrentDateBean> log = dataRepository
                 .GetConstructionBoatDefaultStartTime(CurrentDate, CurrentBoatAccount)
                 .subscribeOn(Schedulers.io());
 
-        Observable.zip(observable, conship, log, new Function3<Boolean, Boolean, LogCurrentDateBean, LogCurrentDateBean>() {
+        Observable.zip(observable, log, new BiFunction<Boolean, LogCurrentDateBean, LogCurrentDateBean>() {
             @Override
-            public LogCurrentDateBean apply(@NonNull Boolean aBoolean, @NonNull Boolean aBoolean2, @NonNull LogCurrentDateBean bean) throws Exception {
-                return bean;
+            public LogCurrentDateBean apply(Boolean aBoolean, LogCurrentDateBean logCurrentDateBean) throws Exception {
+                return logCurrentDateBean;
             }
-        }).observeOn(AndroidSchedulers.mainThread())
+        }).subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<LogCurrentDateBean, ObservableSource<LogCurrentDateBean>>() {
+                    @Override
+                    public ObservableSource<LogCurrentDateBean> apply(final LogCurrentDateBean logCurrentDateBean) throws Exception {
+                        String startTime = logCurrentDateBean.getStartTime();
+                        return dataRepository
+                                .GetBoatShipItemNum(1000, 1, CurrentBoatAccount, startTime)
+                                .subscribeOn(Schedulers.io())
+                                .flatMap(new Function<Boolean, ObservableSource<LogCurrentDateBean>>() {
+                                    @Override
+                                    public ObservableSource<LogCurrentDateBean> apply(Boolean aBoolean) throws Exception {
+                                        return Observable.create(new ObservableOnSubscribe<LogCurrentDateBean>() {
+                                            @Override
+                                            public void subscribe(ObservableEmitter<LogCurrentDateBean> e) throws Exception {
+                                                e.onNext(logCurrentDateBean);
+                                                e.onComplete();
+                                            }
+                                        });
+                                    }
+                                });
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<LogCurrentDateBean>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
@@ -101,6 +127,7 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
 
     /**
      * 获取施工分区
+     *
      * @param userID
      */
     @Override
@@ -133,10 +160,26 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
     }
 
     @Override
-    public void commit(String json) {
+    public void commit(final String json, String shipNum, final String startTime, final String endTime, final boolean isUpdate) {
         view.showLoading(true);
         dataRepository
-                .InsertConstructionBoatThrowingSandRecord(json)
+                .IsCurrentDataInTimeRangeForBoatDaily(shipNum, startTime, endTime)
+                .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
+                        if (aBoolean || isUpdate) {
+                            return dataRepository.InsertConstructionBoatThrowingSandRecord(json);
+                        } else {
+                            return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                                @Override
+                                public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                                    e.onError(new RuntimeException("该施工船舶在此工作区间不能提交施工日报"));
+                                    e.onComplete();
+                                }
+                            });
+                        }
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -154,7 +197,7 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                     @Override
                     public void onError(@NonNull Throwable e) {
                         view.showLoading(false);
-                        view.showError(e.toString());
+                        view.showError(e.getMessage());
                     }
 
                     @Override
@@ -165,9 +208,25 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
     }
 
     @Override
-    public void commitBCF(String json) {
+    public void commitBCF(final String json, String shipNum, String startTime, String endTime, final boolean isUpdate) {
         dataRepository
-                .InsertBCFBoatThrowingSandRecord(json)
+                .IsCurrentDataInTimeRangeForBoatDaily(shipNum, startTime, endTime)
+                .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
+                        if (aBoolean || isUpdate) {
+                            return dataRepository.InsertBCFBoatThrowingSandRecord(json);
+                        } else {
+                            return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                                @Override
+                                public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                                    e.onError(new RuntimeException("该施工船舶在此工作区间不能提交施工日报"));
+                                    e.onComplete();
+                                }
+                            });
+                        }
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
@@ -184,7 +243,7 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
                     @Override
                     public void onError(@NonNull Throwable e) {
                         view.showLoading(false);
-                        view.showError(e.toString());
+                        view.showError(e.getMessage());
                     }
 
                     @Override
@@ -196,6 +255,7 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
 
     /**
      * 抛砂明细
+     *
      * @param itemID
      */
     @Override
@@ -231,6 +291,7 @@ public class ThreadSandPresenter implements ThreadSandContract.Presenter{
 
     /**
      * BCF明细
+     *
      * @param itemID
      */
     @Override

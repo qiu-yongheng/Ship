@@ -10,7 +10,16 @@ import android.os.Parcelable;
  */
 
 public class ImgList implements Parcelable {
+    private int itemID;
     private String path;
+
+    public int getItemID() {
+        return itemID;
+    }
+
+    public void setItemID(int itemID) {
+        this.itemID = itemID;
+    }
 
     public String getPath() {
         return path;
@@ -26,11 +35,13 @@ public class ImgList implements Parcelable {
     }
 
     protected ImgList(Parcel in) {
+        itemID = in.readInt();
         path = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(itemID);
         parcel.writeString(path);
     }
 

@@ -30,7 +30,7 @@ public class RecordedSandFragment extends BaseMvpFragment {
         if (active) {
             activity.showProgressDailog(getResources().getString(R.string.dialog_loading), getResources().getString(R.string.dialog_loading), new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

@@ -9,5 +9,5 @@ import android.app.ProgressDialog;
  */
 
 public interface OnDailogCancleClickListener {
-    void onCancle(ProgressDialog dialog);
+    void onCancel(ProgressDialog dialog);
 }

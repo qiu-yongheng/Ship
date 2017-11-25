@@ -16,7 +16,7 @@ import com.kc.shiptransport.mvp.BaseActivity;
  * @desc 施工分区
  */
 
-public class PartitionActivity extends BaseActivity{
+public class PartitionActivity extends BaseActivity {
 
     private static final String ITEMID = "ITEMID";
     private static final String TYPE = "TYPE";
@@ -65,5 +65,15 @@ public class PartitionActivity extends BaseActivity{
         bundle.putInt(TYPE, type);
         intent.putExtras(bundle);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (null != fragment) {
+            boolean b = fragment.onBackPressed();
+            if (b) {
+                super.onBackPressed();
+            }
+        }
     }
 }

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:background="@android:color/white"
               android:layout_width="match_parent"
-              android:layout_height="80dp"
+              android:layout_height="50dp"
               android:orientation="horizontal"
               android:gravity="center_vertical"
               android:layout_marginBottom="1dp">
@@ -10,9 +10,9 @@
         android:id="@+id/iv_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/arrow_b"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:src="@mipmap/tree_ec"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         />
     <TextView
         android:id="@+id/title"

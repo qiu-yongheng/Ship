@@ -395,7 +395,7 @@ public class MineFragment extends Fragment {
         if (isShow) {
             activity.showProgressDailog("修改中", "修改中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
 
                 }
             });

@@ -9,10 +9,25 @@ public class BaseUrl {
     /**
      * 正式服
      */
-        public static final String EndPoint = "http://www.cchk3.com/AppService/cchk3WebService.asmx";
+//    public static final String Url = "http://www.cchk3.com/AppService/";
 
     /**
      * 测试服
      */
-//    public static final String EndPoint = "https://cchk3.kingwi.org/AppService/cchk3WebService.asmx";
+    public static final String Url = "https://cchk3.kingwi.org/AppService/";
+
+    /**
+     *
+     */
+    public static final String EndPoint = Url +  "cchk3WebService.asmx";
+
+    /**
+     * 今日计划API
+     */
+    public static final String getToday = Url + "Analysis.asmx";
+
+    /**
+     * HSE
+     */
+    public static final String HSE = Url + "SafeManage.asmx";
 }

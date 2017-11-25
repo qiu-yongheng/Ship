@@ -9,10 +9,15 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
@@ -59,6 +64,22 @@ public class RxGalleryUtil {
     }
 
     /**
+     * 自定义多选图片(有图片数量限制)
+     * @param context
+     * @param currentSize
+     * @param maxSize
+     * @param listener
+     */
+    public static void getImagMultiple(final Context context,int currentSize, int maxSize, final OnRxGalleryRadioListener listener) {
+        int size = maxSize - currentSize;
+        if (size > 0) {
+            getImagMultiple(context, maxSize, listener);
+        } else {
+            ToastUtil.tip(context, "已到达图片选择上限");
+        }
+    }
+
+    /**
      * 自定义多选图片
      * @param context
      * @param maxSize
@@ -102,7 +123,6 @@ public class RxGalleryUtil {
                 Toast.makeText(context, "你最多只能选择" + maxSize + "张图片", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     /**
@@ -144,5 +164,40 @@ public class RxGalleryUtil {
                 .fitCenter()
                 .thumbnail(0.2f)
                 .into(imageView);
+    }
+
+    /**
+     * 将选择的图片转换成指定列表数据
+     * @param imageMultipleResultEvent
+     * @return
+     */
+    public static List<ImgList> MultipletoImgList(ImageMultipleResultEvent imageMultipleResultEvent) {
+        List<ImgList> list = new ArrayList<>();
+        for (MediaBean bean : imageMultipleResultEvent.getResult()) {
+            ImgList imgList = new ImgList();
+            imgList.setPath(bean.getOriginalPath());
+            list.add(imgList);
+        }
+        return list;
+    }
+
+    /**
+     * 获取未提交的图片
+     * @param souce
+     * @return
+     */
+    public static List<ImgList> getNoCommitImg(List<ImgList> souce) {
+        List<ImgList> list = new ArrayList<>();
+        if (souce == null) {
+            return new ArrayList<>();
+        }
+
+        for (ImgList bean : souce) {
+            if (bean.getItemID() == 0) {
+                list.add(bean);
+            }
+        }
+
+        return list;
     }
 }

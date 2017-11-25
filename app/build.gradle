@@ -2,24 +2,23 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.kc.shiptransport"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 33
-        versionName "1.2.9.6.8"
+        versionCode 46
+        versionName "1.2.9.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        multiDexEnabled true
+        flavorDimensions "release"
     }
 
     productFlavors {
         official {
+            dimension "release"
             applicationId "com.kc.shiptransport.official"
-        }
-
-        clothes {
-            applicationId "com.kc.shiptransport.clothes"
         }
     }
 
@@ -33,59 +32,101 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+
     /* butterknife */
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
     /* MD */
     compile 'com.android.support:design:25.3.1'
+
     // ReactiveX series
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
     // Retrofit series
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+
     // card view 控件
     compile 'com.android.support:cardview-v7:25.3.1'
+
     // ORM框架数据库
     compile 'org.litepal.android:core:1.5.1'
+
     // 图片选择器
     compile 'cn.finalteam.rxgalleryfinal:library:1.1.3'
+
     // 图片加载
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
     // 图片压缩
     compile 'top.zibin:Luban:1.1.1'
+
     // 图片查看
     compile 'com.bm.photoview:library:1.4.1'
+
     // 圆形图片控件
     compile 'de.hdodenhof:circleimageview:2.1.0'
+
     // 友盟统计
     compile 'com.umeng.analytics:analytics:latest.integration'
+
     //汉字转拼音，通讯录 https://github.com/promeG/TinyPinyin
-    compile 'com.github.promeg:tinypinyin:2.0.3' // TinyPinyin核心包，约80KB
-    compile 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3' // 可选，适用于Android的中国地区词典
+    compile 'com.github.promeg:tinypinyin:2.0.3'
+
+    // TinyPinyin核心包，约80KB
+    compile 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3'
+
+    // 可选，适用于Android的中国地区词典
+
     // 联动选择框
     compile project(':pickerview')
+
     // 封装的通用Adapter
     compile project(':baseadapter-recyclerview')
+
     // 应用icon角标
-    compile "me.leolin:ShortcutBadger:1.1.18@aar"
+    compile 'me.leolin:ShortcutBadger:1.1.18@aar'
+
     // 应用内角标
     compile 'q.rorbin:badgeview:1.1.2'
+
     // 日志打印
-    compile 'com.elvishew:xlog:1.3.0'
+    compile 'com.elvishew:xlog:1.4.0'
+
+    //compile 'com.orhanobut:logger:2.1.1'
+
     // BRVAH RecyclerView
-    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.28'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+
     // 文件选择器
     compile project(':filepicker')
+
     // RxDownload
     compile 'zlc.season:rxdownload2:2.0.4'
 
+    // XSnow
+    compile 'com.vise.xiaoyaoyou:xsnow:2.1.3'
+
+    // 解决65535问题
+    compile 'com.android.support:multidex:1.0.1'
+
+    // guava
+    compile 'com.google.guava:guava:23.4-android'
+
+    // spinner
+    compile 'com.github.arcadefire:nice-spinner:1.3.3'
+
+    // refresh recycler view
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
+    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'//没有使用特殊Header，可以不加这行
 }

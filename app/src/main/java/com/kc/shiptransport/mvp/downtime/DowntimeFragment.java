@@ -203,9 +203,9 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
 
                 if (stopType != -1 && !TextUtils.isEmpty(endTime) && !endTime.equals("请选择时间")) {
                     if (activity.type == SettingUtil.TYPE_DATA_NEW) {
-                        presenter.stop(0, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark, pumpShipID);
+                        presenter.stop(0, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark, pumpShipID, false);
                     } else if (activity.type == SettingUtil.TYPE_DATA_UPDATE) {
-                        presenter.stop(activity.itemID, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark, pumpShipID);
+                        presenter.stop(activity.itemID, boat.getShipNum(), startTime, endTime, users.get(0).getUserID(), stopType, remark, pumpShipID, true);
                     }
 
                 } else {
@@ -228,13 +228,13 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
 
                         String offsetDate = "";
                         if (TextUtils.isEmpty(endTime)) {
-                            offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, startTime, Calendar.HOUR, 0);
+                            offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD_HH_MM_SS, startTime, Calendar.HOUR, 2);
                         } else {
                             offsetDate = endTime;
                         }
 
 
-                        CalendarUtil.showTimeDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM, offsetDate, new OnTimePickerSureClickListener() {
+                        CalendarUtil.showTimeDialog(getContext(), textEndTime, CalendarUtil.YYYY_MM_DD_HH_MM_SS, offsetDate, new OnTimePickerSureClickListener() {
                             @Override
                             public void onSure(String str) {
                                 /** 不能选择在开始时间之前的时间 */
@@ -305,7 +305,7 @@ public class DowntimeFragment extends Fragment implements DowntimeContract.View 
         if (isShow) {
             activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

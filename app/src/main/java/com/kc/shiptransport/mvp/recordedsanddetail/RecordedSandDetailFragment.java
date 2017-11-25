@@ -434,7 +434,7 @@ public class RecordedSandDetailFragment extends Fragment implements RecordedSand
         if (isShow) {
             activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

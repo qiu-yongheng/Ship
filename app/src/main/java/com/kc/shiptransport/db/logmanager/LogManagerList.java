@@ -12,17 +12,32 @@ public class LogManagerList extends DataSupport{
 
     /**
      * rownumber : 1
-     * ItemID : 19
-     * ShipAccount : ftb25
-     * ShipName : FTB25
-     * StartTime : 2017-07-14T00:00:00
-     * EndTime : 2017-07-14T12:58:00
-     * StopTypeName : 正常过砂
-     * Date : 2017-07-14
+     * ItemID : 2038
+     * ShipAccount : ftb23
+     * ShipName : FTB23
+     * StartTime : 2017-10-11 00:00:00
+     * EndTime : 2017-10-11 04:30:00
+     * StopTypeName : 设备故障
+     * Date : 2017-10-11
      * Creator : csfbs
      * CreatorName : 测试分包商
+     * ConstructionType : 停工
+     * Quantity : 0
+     * SandHandlingShipID :
+     * SandHandlingShipName :
+     * TotalMinuteForOneItem : 0
+     * TotalQuantity : 0
+     * TotalMinutes : 0
+     * AvgQuantityForOneMinute : 0
+     * TotalQuantityForOneItem : 0
+     * AvgQuantityForOnePartition : 0
+     * ShipItemNum :
+     * Remark : ZXC
+     * LayerDetails :
      * Num : 1
      * IsAllowEdit : 1
+     * StartTimeHourAndMinute : 00:00
+     * EndTimeHourAndMinute : 04:30
      */
 
     private int rownumber;
@@ -35,53 +50,23 @@ public class LogManagerList extends DataSupport{
     private String Date;
     private String Creator;
     private String CreatorName;
+    private String ConstructionType;
+    private float Quantity;
+    private String SandHandlingShipID;
+    private String SandHandlingShipName;
+    private float TotalMinuteForOneItem;
+    private float TotalQuantity;
+    private float TotalMinutes;
+    private float AvgQuantityForOneMinute;
+    private float TotalQuantityForOneItem;
+    private float AvgQuantityForOnePartition;
+    private String ShipItemNum;
+    private String Remark;
+    private String LayerDetails;
     private int Num;
     private int IsAllowEdit;
-    private String ConstructionType;
-    private float Quantity; // 工程量
-    private String SandHandlingShipID; // 供砂船舶账号
-    private String SandHandlingShipName; // 供砂船舶名称
-    private String Remark;
-
-    public String getRemark() {
-        return Remark;
-    }
-
-    public void setRemark(String remark) {
-        Remark = remark;
-    }
-
-    public float getQuantity() {
-        return Quantity;
-    }
-
-    public void setQuantity(float quantity) {
-        Quantity = quantity;
-    }
-
-    public String getSandHandlingShipID() {
-        return SandHandlingShipID;
-    }
-
-    public void setSandHandlingShipID(String sandHandlingShipID) {
-        SandHandlingShipID = sandHandlingShipID;
-    }
-
-    public String getSandHandlingShipName() {
-        return SandHandlingShipName;
-    }
-
-    public void setSandHandlingShipName(String sandHandlingShipName) {
-        SandHandlingShipName = sandHandlingShipName;
-    }
-
-    public String getConstructionType() {
-        return ConstructionType;
-    }
-
-    public void setConstructionType(String constructionType) {
-        ConstructionType = constructionType;
-    }
+    private String StartTimeHourAndMinute;
+    private String EndTimeHourAndMinute;
 
     public int getRownumber() {
         return rownumber;
@@ -163,6 +148,110 @@ public class LogManagerList extends DataSupport{
         this.CreatorName = CreatorName;
     }
 
+    public String getConstructionType() {
+        return ConstructionType;
+    }
+
+    public void setConstructionType(String ConstructionType) {
+        this.ConstructionType = ConstructionType;
+    }
+
+    public float getQuantity() {
+        return Quantity;
+    }
+
+    public void setQuantity(float Quantity) {
+        this.Quantity = Quantity;
+    }
+
+    public String getSandHandlingShipID() {
+        return SandHandlingShipID;
+    }
+
+    public void setSandHandlingShipID(String SandHandlingShipID) {
+        this.SandHandlingShipID = SandHandlingShipID;
+    }
+
+    public String getSandHandlingShipName() {
+        return SandHandlingShipName;
+    }
+
+    public void setSandHandlingShipName(String SandHandlingShipName) {
+        this.SandHandlingShipName = SandHandlingShipName;
+    }
+
+    public float getTotalMinuteForOneItem() {
+        return TotalMinuteForOneItem;
+    }
+
+    public void setTotalMinuteForOneItem(float TotalMinuteForOneItem) {
+        this.TotalMinuteForOneItem = TotalMinuteForOneItem;
+    }
+
+    public float getTotalQuantity() {
+        return TotalQuantity;
+    }
+
+    public void setTotalQuantity(float TotalQuantity) {
+        this.TotalQuantity = TotalQuantity;
+    }
+
+    public float getTotalMinutes() {
+        return TotalMinutes;
+    }
+
+    public void setTotalMinutes(float TotalMinutes) {
+        this.TotalMinutes = TotalMinutes;
+    }
+
+    public float getAvgQuantityForOneMinute() {
+        return AvgQuantityForOneMinute;
+    }
+
+    public void setAvgQuantityForOneMinute(float AvgQuantityForOneMinute) {
+        this.AvgQuantityForOneMinute = AvgQuantityForOneMinute;
+    }
+
+    public float getTotalQuantityForOneItem() {
+        return TotalQuantityForOneItem;
+    }
+
+    public void setTotalQuantityForOneItem(float TotalQuantityForOneItem) {
+        this.TotalQuantityForOneItem = TotalQuantityForOneItem;
+    }
+
+    public float getAvgQuantityForOnePartition() {
+        return AvgQuantityForOnePartition;
+    }
+
+    public void setAvgQuantityForOnePartition(float AvgQuantityForOnePartition) {
+        this.AvgQuantityForOnePartition = AvgQuantityForOnePartition;
+    }
+
+    public String getShipItemNum() {
+        return ShipItemNum;
+    }
+
+    public void setShipItemNum(String ShipItemNum) {
+        this.ShipItemNum = ShipItemNum;
+    }
+
+    public String getRemark() {
+        return Remark;
+    }
+
+    public void setRemark(String Remark) {
+        this.Remark = Remark;
+    }
+
+    public String getLayerDetails() {
+        return LayerDetails;
+    }
+
+    public void setLayerDetails(String LayerDetails) {
+        this.LayerDetails = LayerDetails;
+    }
+
     public int getNum() {
         return Num;
     }
@@ -177,5 +266,21 @@ public class LogManagerList extends DataSupport{
 
     public void setIsAllowEdit(int IsAllowEdit) {
         this.IsAllowEdit = IsAllowEdit;
+    }
+
+    public String getStartTimeHourAndMinute() {
+        return StartTimeHourAndMinute;
+    }
+
+    public void setStartTimeHourAndMinute(String StartTimeHourAndMinute) {
+        this.StartTimeHourAndMinute = StartTimeHourAndMinute;
+    }
+
+    public String getEndTimeHourAndMinute() {
+        return EndTimeHourAndMinute;
+    }
+
+    public void setEndTimeHourAndMinute(String EndTimeHourAndMinute) {
+        this.EndTimeHourAndMinute = EndTimeHourAndMinute;
     }
 }

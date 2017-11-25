@@ -9,11 +9,16 @@ import com.kc.shiptransport.db.down.StopOption;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -22,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public class DowntimePresenter implements DowntimeContract.Presenter{
+public class DowntimePresenter implements DowntimeContract.Presenter {
     private final Context context;
     private final DowntimeContract.View view;
     private final DataRepository dataRepository;
@@ -106,10 +111,26 @@ public class DowntimePresenter implements DowntimeContract.Presenter{
     }
 
     @Override
-    public void stop(int itemID, String userID, String startTime, String endTime, String id, int type, String remark, String pumpShipID) {
+    public void stop(final int itemID, final String userID, final String startTime, final String endTime, final String id, final int type, final String remark, final String pumpShipID, final boolean isUpdate) {
         view.showLoading(true);
         dataRepository
-                .InsertConstructionBoatStopDaily(itemID, userID, startTime, endTime, id, type, remark, pumpShipID)
+                .IsCurrentDataInTimeRangeForBoatDaily(userID, startTime, endTime)
+                .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
+                        if (aBoolean || isUpdate) {
+                            return dataRepository.InsertConstructionBoatStopDaily(itemID, userID, startTime, endTime, id, type, remark, pumpShipID);
+                        } else {
+                            return Observable.create(new ObservableOnSubscribe<Boolean>() {
+                                @Override
+                                public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                                    e.onError(new RuntimeException("该施工船舶在此工作区间不能提交施工日报"));
+                                    e.onComplete();
+                                }
+                            });
+                        }
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
@@ -126,6 +147,7 @@ public class DowntimePresenter implements DowntimeContract.Presenter{
                     @Override
                     public void onError(@NonNull Throwable e) {
                         view.showLoading(false);
+                        view.showError(e.getMessage());
                     }
 
                     @Override
@@ -137,6 +159,7 @@ public class DowntimePresenter implements DowntimeContract.Presenter{
 
     /**
      * 回显详细数据
+     *
      * @param itemID
      */
     @Override

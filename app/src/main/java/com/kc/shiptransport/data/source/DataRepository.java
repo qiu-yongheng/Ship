@@ -33,7 +33,15 @@ import com.kc.shiptransport.data.bean.TaskVolumeBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
+import com.kc.shiptransport.data.bean.hse.HseCheckAddBean;
+import com.kc.shiptransport.data.bean.hse.HseCheckListBean;
+import com.kc.shiptransport.data.bean.hse.HseCheckSelectBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectDeadlineBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectListBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectTypeBean;
+import com.kc.shiptransport.data.bean.threadsandlog.IsCurrentData;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
+import com.kc.shiptransport.data.bean.todayplan.TodayPlanBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
@@ -67,6 +75,9 @@ import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitapplication.ExitList;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
+import com.kc.shiptransport.db.hse.HseCheckShip;
+import com.kc.shiptransport.db.hse.HseDefectDeadline;
+import com.kc.shiptransport.db.hse.HseDefectType;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.pump.PumpShip;
@@ -87,6 +98,7 @@ import com.kc.shiptransport.db.voyage.PerfectBoatRecordInfo;
 import com.kc.shiptransport.db.voyage.WashStoneSource;
 import com.kc.shiptransport.util.CalendarUtil;
 import com.kc.shiptransport.util.FileUtil;
+import com.kc.shiptransport.util.JsonUtil;
 import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -812,7 +824,8 @@ public class DataRepository implements DataSouceImpl {
                     num = DataSupport.where("IsSumbitted = ?", "0").count(ExitAssessor.class);
                 } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
                     /** 退场审核 IsExit审核状态 */
-                    num = DataSupport.where("IsExit = ? and IsSumbitted = ?", "0", "1").count(ExitAssessor.class);
+//                    num = DataSupport.where("IsExit = ? and IsSumbitted = ?", "0", "1").count(ExitAssessor.class);
+                    num = DataSupport.where("IsExit = ?", "0").count(ExitAssessor.class);
                 } else if (type == SettingUtil.TYPE_ACCEPT) {
                     /** 验收 1通过, 0保存, -1不通过(不显示) */
                     // TODO
@@ -1127,7 +1140,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 // 2. 获取数据, 缓存到数据库
                 String shipInfo = mRemoteDataSource.getShipInfo(username);
-                Log.d("ship", shipInfo);
+                LogUtil.json(shipInfo);
                 List<Ship> list = gson.fromJson(shipInfo, new TypeToken<List<Ship>>() {
                 }.getType());
 
@@ -1166,7 +1179,7 @@ public class DataRepository implements DataSouceImpl {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 String loginInfo = mRemoteDataSource.getLoginInfo(username, password);
-                LogUtil.d("当前登录用户信息: " + loginInfo);
+                LogUtil.json(loginInfo);
 
                 LoginResult loginResult = gson.fromJson(loginInfo, LoginResult.class);
 
@@ -1253,7 +1266,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 // 发送网络请求
                 String appList = mRemoteDataSource.getAppList(account);
-                Log.d("==", appList);
+                LogUtil.json(appList);
                 // 解析数据
                 List<AppListBean> lists = gson.fromJson(appList, new TypeToken<List<AppListBean>>() {
                 }.getType());
@@ -1381,6 +1394,10 @@ public class DataRepository implements DataSouceImpl {
                             break;
                         case 28:
                             // BCF来船
+                            list.setIcon_id(R.mipmap.plan);
+                            break;
+                        default:
+                            // 设置默认图标
                             list.setIcon_id(R.mipmap.plan);
                             break;
                     }
@@ -1690,7 +1707,8 @@ public class DataRepository implements DataSouceImpl {
                         break;
                     case SettingUtil.TYPE_SUPPLY:
                         /** 验砂管理, 量方后才能操作*/
-                        condition = "IsTheAmountOfTime != 1";
+                        // TODO: 需求, 量方
+                        condition = "PreAcceptanceEvaluationStatus != 1";
                         break;
                 }
                 // 1. 删除未验收的数据 PreAcceptanceEvaluationStatus != 1
@@ -3478,7 +3496,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
                 String result = mRemoteDataSource.GetUserDataByLoginName(LoginName);
 
-                Log.d("==", "用户信息: " + result);
+                LogUtil.json(result);
 
                 List<UserInfo> list = gson.fromJson(result, new TypeToken<List<UserInfo>>() {
                 }.getType());
@@ -3507,7 +3525,7 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
                 String result = mRemoteDataSource.GetDepartmentsOptions();
 
-                Log.d("==", "部门信息: " + result);
+                LogUtil.json(result);
 
                 List<Department> list = gson.fromJson(result, new TypeToken<List<Department>>() {
                 }.getType());
@@ -4453,10 +4471,11 @@ public class DataRepository implements DataSouceImpl {
      * @param PageCount
      * @param jumpWeek
      * @param account
+     * @param isExitApplication
      * @return
      */
     @Override
-    public Observable<Boolean> GetExitApplicationList(final int PageSize, final int PageCount, final int jumpWeek, final String account) {
+    public Observable<Boolean> GetExitApplicationList(final int PageSize, final int PageCount, final int jumpWeek, final String account, final boolean isExitApplication) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -4544,7 +4563,11 @@ public class DataRepository implements DataSouceImpl {
 
                     } else {
                         set.add(planDay);
-                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(ExitAssessor.class));
+//                        if (isExitApplication) {
+                            totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(ExitAssessor.class));
+//                        } else {
+//                            totalLists.add(DataSupport.where("PlanDay = ? and IsSumbitted = ?", planDay, "1").find(ExitAssessor.class));
+//                        }
                     }
                 }
 
@@ -4557,6 +4580,8 @@ public class DataRepository implements DataSouceImpl {
                         record.save();
                     }
                 }
+
+                List<ExitAssessor> all = DataSupport.findAll(ExitAssessor.class);
 
                 e.onNext(true);
                 e.onComplete();
@@ -4575,11 +4600,16 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<List<Contacts>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<Contacts>> e) throws Exception {
-                List<Contacts> list = DataSupport
-                        .where("DisplayName like ? or Department like ?", "%" + keyWords + "%", "%" + keyWords + "%")
-                        .find(Contacts.class);
+                if (TextUtils.isEmpty(keyWords)) {
+                    e.onNext(new ArrayList<Contacts>());
 
-                e.onNext(list);
+                } else {
+                    List<Contacts> list = DataSupport
+                            .where("EnglishName like ? or Department like ? and LoginName is not null and LoginName != ?", "%" + keyWords + "%", "%" + keyWords + "%", "")
+                            .find(Contacts.class);
+
+                    e.onNext(list);
+                }
                 e.onComplete();
             }
         });
@@ -4658,7 +4688,8 @@ public class DataRepository implements DataSouceImpl {
                         list.add(num);
                     } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
                         /** 退场审核 IsExit审核状态 */
-                        num = DataSupport.where("PlanDay like ? and IsSumbitted = ?", dates.get(i) + "%", "1").count(ExitAssessor.class);
+//                        num = DataSupport.where("PlanDay like ? and IsSumbitted = ?", dates.get(i) + "%", "1").count(ExitAssessor.class);
+                        num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(ExitAssessor.class);
                         list.add(num);
                     } else if (type == SettingUtil.TYPE_ACCEPT) {
                         /** 验收 1通过, 0保存, -1不通过(不显示) */
@@ -4679,10 +4710,11 @@ public class DataRepository implements DataSouceImpl {
      *
      * @param PageSize
      * @param PageCount
+     * @param currentDate
      * @return
      */
     @Override
-    public Observable<Boolean> GetBoatShipItemNum(final int PageSize, final int PageCount, final String shipAccount) {
+    public Observable<Boolean> GetBoatShipItemNum(final int PageSize, final int PageCount, final String shipAccount, final String currentDate) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -4691,16 +4723,64 @@ public class DataRepository implements DataSouceImpl {
 
                 JSONArray Column = new JSONArray();
 
-                // 来砂船账号
+                // 供砂船账号
                 JSONObject object1 = new JSONObject();
                 object1.put("Name", "ShipAccount");
                 object1.put("Type", "string");
-                object1.put("Format", "Equal");
+                //object1.put("Format", "Equal");
                 object1.put("Value", shipAccount);
+
+                // 供砂航次
+                JSONObject object2 = new JSONObject();
+                object2.put("Name", "ShipItemNum");
+                object2.put("Type", "float");
+                object2.put("Format", "");
+
+                JSONArray array2 = new JSONArray();
+
+                String offsetDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, currentDate, Calendar.DAY_OF_YEAR, -7);
+                String s = offsetDate.replaceAll("-", "");
+                String num = currentDate.replaceAll("-", "");
+
+                JSONObject object21 = new JSONObject();
+                object21.put("Min", s + "01");
+                JSONObject object22 = new JSONObject();
+                object22.put("Max", num + "99");
+
+                array2.put(object21);
+                array2.put(object22);
+                object2.put("Value", array2);
+
+                // 验收时间
+                JSONObject object3 = new JSONObject();
+                object3.put("Name", "PreAcceptanceTime");
+                object3.put("Type", "datetime");
+
+                JSONArray array3 = new JSONArray();
+
+                JSONObject object31 = new JSONObject();
+                object31.put("Min", offsetDate + " 00:00:00");
+                JSONObject object32 = new JSONObject();
+                object32.put("Max", currentDate);
+
+                array3.put(object31);
+                array3.put(object32);
+                object3.put("Value", array3);
+
 
                 // 保存3个对象到object
                 if (!TextUtils.isEmpty(shipAccount)) {
-                    Column.put(object1);
+                    // TODO: 不根据供砂船过滤
+                    //Column.put(object1);
+                }
+
+                if (!TextUtils.isEmpty(currentDate)) {
+                    // TODO: 2017/11/16修改需求, 不根据船舶航次进行过滤
+                    //Column.put(object2);
+                }
+
+                if (!TextUtils.isEmpty(currentDate)) {
+                    Column.put(object3);
                 }
 
                 // 保存object到Condition
@@ -4713,8 +4793,8 @@ public class DataRepository implements DataSouceImpl {
 
                 LogUtil.d("1.68 获取供砂船航次信息数据(近7天)json: \n" + json);
 
-                // TODO: 暂时获取所有供砂船舶
-                String result = mRemoteDataSource.GetBoatShipItemNum(PageSize, PageCount, "");
+                // TODO: 暂时根据供砂航次进行过滤
+                String result = mRemoteDataSource.GetBoatShipItemNum(PageSize, PageCount, json);
 
                 LogUtil.d("1.68 获取供砂船航次信息数据(近7天): \n" + result);
 
@@ -4753,6 +4833,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 获取验砂取样图片列表
+     *
      * @param imageMultipleResultEvent
      * @param p_position
      * @return
@@ -4814,6 +4895,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.69 提交BCF供砂来船数据
+     *
      * @param ItemID
      * @param SandHandlingShipID
      * @param SubcontractorAccount
@@ -4856,6 +4938,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.70 提交BCF抛砂数据（施工日志抛砂）
+     *
      * @param json
      * @return
      */
@@ -4876,6 +4959,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.71 获取BCF来砂船舶的明细数据
+     *
      * @param PageSize
      * @param PageCount
      * @param startTime
@@ -4952,6 +5036,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.72 获取BCF来砂船舶（抛砂）的明细数据
+     *
      * @param PageSize
      * @param PageCount
      * @param startTime
@@ -5026,6 +5111,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.73 获取BCF来砂船舶数据
+     *
      * @param PageSize
      * @param PageCount
      * @param shipAccount
@@ -5054,6 +5140,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.74 删除BCF来砂船舶日志数据
+     *
      * @param ItemID
      * @return
      */
@@ -5076,6 +5163,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.74 删除BCF船舶日志(抛砂日志)数据
+     *
      * @param ItemID
      * @return
      */
@@ -5098,6 +5186,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.75 根据ItemID获取施工日志（抛砂）数据 (BCF来砂)
+     *
      * @param itemID
      * @return
      */
@@ -5121,6 +5210,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.76 根据ItemID获取施工日志（抛砂）数据
+     *
      * @param itemID
      * @return
      */
@@ -5144,6 +5234,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.77 获取泵砂船数据
+     *
      * @param PageSize
      * @param PageCount
      * @param shipAccount
@@ -5185,7 +5276,8 @@ public class DataRepository implements DataSouceImpl {
 
                 LogUtil.d("1.77 获取泵砂船数据result: \n" + result);
 
-                List<PumpShip> list = gson.fromJson(result, new TypeToken<List<PumpShip>>() {}.getType());
+                List<PumpShip> list = gson.fromJson(result, new TypeToken<List<PumpShip>>() {
+                }.getType());
 
                 DataSupport.deleteAll(PumpShip.class);
                 DataSupport.saveAll(list);
@@ -5197,8 +5289,271 @@ public class DataRepository implements DataSouceImpl {
     }
 
     /**
+     * 1.79 验证当前施工船舶数据是否在已有的数据范围
      *
+     * @param ShipAccount
+     * @param StartTime
+     * @param EndTime
+     * @return
      */
+    @Override
+    public Observable<Boolean> IsCurrentDataInTimeRangeForBoatDaily(final String ShipAccount, final String StartTime, final String EndTime) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.IsCurrentDataInTimeRangeForBoatDaily(ShipAccount, StartTime, EndTime);
+
+                LogUtil.d("shipAccount = " + ShipAccount + ", startTime = " + StartTime + ", endTime = " + EndTime + "\n是否允许提交施工日报: " + result);
+                IsCurrentData isCurrentData = gson.fromJson(result, IsCurrentData.class);
+
+                e.onNext(isCurrentData.getReturnValue() == 0);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 2.9 今日来船数据统计分析
+     * @param CurrentDate
+     * @return
+     */
+    @Override
+    public Observable<TodayPlanBean> GetToShipByCurrentDateAnalysis(final String CurrentDate) {
+        return Observable.create(new ObservableOnSubscribe<TodayPlanBean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<TodayPlanBean> e) throws Exception {
+                String result = mRemoteDataSource.GetToShipByCurrentDateAnalysis(CurrentDate);
+                LogUtil.d(CurrentDate + "\n2.9 今日来船数据统计分析result: " + result);
+
+                TodayPlanBean todayPlanBean = gson.fromJson(result, TodayPlanBean.class);
+                e.onNext(todayPlanBean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.5 获取HSE检查记录数据
+     * @param PageSize
+     * @param PageCount
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<List<HseCheckListBean>> GetSafeHSECheckedRecords(final int PageSize, final int PageCount, final HseCheckSelectBean bean) {
+        return Observable.create(new ObservableOnSubscribe<List<HseCheckListBean>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<HseCheckListBean>> e) throws Exception {
+                // 检查时间 (start = currentTime, end = offsetTime)
+                JSONObject checkedTime = JsonUtil.creatorJsonObjectArray("CheckedTime", JsonUtil.TYPE_DATETIME, bean.getStartDate(), bean.getEndDate());
+                // 当前用户
+                JSONObject creator = JsonUtil.creatorJsonObject("Creator", JsonUtil.TYPE_STRING, bean.getCreator());
+                // 受检船舶
+                JSONObject checkedShipAccount = JsonUtil.creatorJsonObject("CheckedShipAccount", JsonUtil.TYPE_STRING, bean.getCheckedShipAccount());
+                String json = JsonUtil.spliceJson(checkedTime, creator, checkedShipAccount);
+
+                LogUtil.t("6.5 获取HSE检查记录数据: \n");
+                LogUtil.json(json);
+
+                String result = mRemoteDataSource.GetSafeHSECheckedRecords(PageSize, PageCount, json);
+
+                LogUtil.t("6.5 获取HSE检查记录数据result: \n");
+                LogUtil.json(result);
+
+
+                List<HseCheckListBean> list = gson.fromJson(result, new TypeToken<List<HseCheckListBean>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.3 获取受检船舶数据（包含供砂船舶，施工船舶）
+     * @return
+     */
+    @Override
+    public Observable<List<HseCheckShip>> GetSafeCheckedShip() {
+        return Observable.create(new ObservableOnSubscribe<List<HseCheckShip>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<HseCheckShip>> e) throws Exception {
+                String result = mRemoteDataSource.GetSafeCheckedShip();
+                LogUtil.t("6.3 获取受检船舶数据（包含供砂船舶，施工船舶） result:\n");
+                LogUtil.json(result);
+
+                List<HseCheckShip> list = gson.fromJson(result, new TypeToken<List<HseCheckShip>>() {
+                }.getType());
+
+                DataSupport.deleteAll(HseCheckShip.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.4 提交HSE检查记录数据
+     * @param list
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertSafeHSECheckedRecord(final List<HseCheckAddBean> list) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String json = gson.toJson(list);
+                LogUtil.json(json);
+                String result = mRemoteDataSource.InsertSafeHSECheckedRecord(json);
+                LogUtil.t("6.4 提交HSE检查记录数据result: \n");
+                LogUtil.json(result);
+
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.7 根据ItemID删除HSE检查记录数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteSafeHSECheckedRecordByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteSafeHSECheckedRecordByItemID(ItemID);
+                CommitResultBean bean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(bean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.6 根据ItemID获取HSE检查记录数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<HseCheckListBean> GetSafeHSECheckedRecordByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<HseCheckListBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<HseCheckListBean> e) throws Exception {
+                String result = mRemoteDataSource.GetSafeHSECheckedRecordByItemID(ItemID);
+                LogUtil.t(ItemID + "HSE检查记录: \n");
+                LogUtil.json(result);
+
+                List<HseCheckListBean> list = gson.fromJson(result, new TypeToken<List<HseCheckListBean>>() {
+                }.getType());
+
+                e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.2 获取缺陷类别数据
+     * @param PageSize
+     * @param PageCount
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<List<HseDefectType>> GetSafeShipSelfCheckItems(final int PageSize, final int PageCount, HseDefectTypeBean bean) {
+        return Observable.create(new ObservableOnSubscribe<List<HseDefectType>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<HseDefectType>> e) throws Exception {
+                // 查询所有
+                String result = mRemoteDataSource.GetSafeShipSelfCheckItems(PageSize, PageCount, "");
+
+                List<HseDefectType> list = gson.fromJson(result, new TypeToken<List<HseDefectType>>() {
+                }.getType());
+
+                DataSupport.deleteAll(HseDefectType.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.19 整改期限基础信息
+     * @param PageSize
+     * @param PageCount
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<List<HseDefectDeadline>> GetSafeRectificationDeadlineOptions(final int PageSize, final int PageCount, HseDefectDeadlineBean bean) {
+        return Observable.create(new ObservableOnSubscribe<List<HseDefectDeadline>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<HseDefectDeadline>> e) throws Exception {
+                // 查询所有
+                String result = mRemoteDataSource.GetSafeRectificationDeadlineOptions(PageSize, PageCount, "");
+
+                List<HseDefectDeadline> list = gson.fromJson(result, new TypeToken<List<HseDefectDeadline>>() {
+                }.getType());
+
+                DataSupport.deleteAll(HseDefectDeadline.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.22 获取所有缺陷纪录（包含待处理，已处理）
+     * @param PageSize
+     * @param PageCount
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<List<HseDefectListBean>> GetSafeDefectRecords(final int PageSize, final int PageCount, final HseDefectListBean bean) {
+        return Observable.create(new ObservableOnSubscribe<List<HseDefectListBean>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<HseDefectListBean>> e) throws Exception {
+                // 检查记录ID
+                JSONObject hseCheckedRecordID = JsonUtil.creatorJsonObject("HSECheckedRecordID", JsonUtil.TYPE_STRING, bean.getHSECheckedRecordID() == 0 ? "" : String.valueOf(bean.getHSECheckedRecordID()));
+                // 缺陷类别
+                JSONObject defectTypeID = JsonUtil.creatorJsonObject("DefectTypeID", JsonUtil.TYPE_STRING, bean.getDefectTypeID() == 0 ? "" : String.valueOf(bean.getDefectTypeID()));
+                // 缺陷项目
+                JSONObject defectItem = JsonUtil.creatorJsonObject("DefectItem", JsonUtil.TYPE_STRING, bean.getDefectItem());
+                // 整改期限
+                JSONObject rectificationDeadline = JsonUtil.creatorJsonObject("RectificationDeadline", JsonUtil.TYPE_STRING, bean.getRectificationDeadline() == 0 ? "" : String.valueOf(bean.getRectificationDeadline()));
+                // 处理状态
+                JSONObject isSubmitted = JsonUtil.creatorJsonObject("IsSubmitted", JsonUtil.TYPE_STRING, bean.getIsSubmitted() == 100 ? "" : String.valueOf(bean.getIsSubmitted()));
+
+                String json = JsonUtil.spliceJson(hseCheckedRecordID, defectTypeID, defectItem, rectificationDeadline, isSubmitted);
+                LogUtil.t(bean.getHSECheckedRecordID() + ", 6.22 获取所有缺陷纪录（包含待处理，已处理）\n");
+                LogUtil.json(json);
+
+                String result = mRemoteDataSource.GetSafeDefectRecords(PageSize, PageCount, json);
+
+                List<HseDefectListBean> list = gson.fromJson(result, new TypeToken<List<HseDefectListBean>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+
     private void reset() {
         day_0 = 0;
         day_1 = 0;

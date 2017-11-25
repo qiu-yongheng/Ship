@@ -26,7 +26,7 @@ public interface SampleDetailContract {
         void updateProgress();
         // 获取数据, 显示列表
         void showDetailList(SampleData bean);
-        void showImageUpdataResult();
+        void showImageUpdataResult(boolean isCommit);
         void showCommitReturn();
         void startCommit();
         void showDeleteNumForItemID(boolean isSuccess, int p_position);
@@ -43,7 +43,7 @@ public interface SampleDetailContract {
         void upImage(SampleImageList sampleCommitList);
         // 查看图片
         void getDates(int itemID);
-        void commitJson(int itemID);
+        void commitJson(int itemID, boolean isCommit);
         void deleteNumForItemID(int ItemID, int p_position);
         void deleteImgForItemID(int itemID, int p_position, int position);
 

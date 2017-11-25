@@ -367,7 +367,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
                 /** 退场审核 */
                 // 根据position查询数据(退场已申请)
-                List<ExitAssessor> recordLists = DataSupport.where("position = ? and IsSumbitted = ?", String.valueOf(position), "1").find(ExitAssessor.class);
+//                List<ExitAssessor> recordLists = DataSupport.where("position = ? and IsSumbitted = ?", String.valueOf(position), "1").find(ExitAssessor.class);
+                List<ExitAssessor> recordLists = DataSupport.where("position = ?", String.valueOf(position)).find(ExitAssessor.class);
 
                 if (!recordLists.isEmpty()) {
                     ExitAssessor recordList = recordLists.get(0);

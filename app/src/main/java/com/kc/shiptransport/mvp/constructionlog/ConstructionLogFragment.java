@@ -194,7 +194,7 @@ public class ConstructionLogFragment extends Fragment implements ConstructionLog
         if (isShow) {
             activity.showProgressDailog("加载", "加载中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
 
                 }
             });

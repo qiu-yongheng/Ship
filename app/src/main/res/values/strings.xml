@@ -178,6 +178,11 @@
     <string name="text_quantume_tag">提示:\n当供砂船给第一艘施工船供砂结束，且仍需向第二艘施工船供砂时，请分别填写每艘施工船抛填的预估工程量。
 \n\n当供砂船仅给一艘施工船供砂时无需填写预估工程量。</string>
     <string name="select_thread">全部类型</string>
+    <string name="title_today_plan">今日来船</string>
+    <string name="title_hse_check">HSE检查记录</string>
+    <string name="title_hse_check_add">新增HSE检查记录</string>
+    <string name="title_hse_check_defect">HSE检查记录缺陷</string>
+    <string name="title_hse_check_defect_add">HSE检查记录缺陷</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">
@@ -225,5 +230,17 @@
         <item>抛砂</item>
         <item>来砂</item>
         <item>停工</item>
+    </array>
+
+    <!-- 时间选择(HSE检查) -->
+    <array name="select_hse_check_time">
+        <item>近一月</item>
+        <item>自定义时间</item>
+    </array>
+
+    <!-- 处理状态(HSE缺陷) -->
+    <array name="select_hse_defect_status">
+        <item>未处理</item>
+        <item>已处理</item>
     </array>
 </resources>

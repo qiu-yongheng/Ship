@@ -91,7 +91,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plan_set, container, false);
         unbinder = ButterKnife.bind(this, view);
-        jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN);
+        jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP);
         initViews(view);
         initListener();
         return view;
@@ -188,7 +188,7 @@ public class PlanSetFragment extends Fragment implements PlanSetContract.View {
 
             activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

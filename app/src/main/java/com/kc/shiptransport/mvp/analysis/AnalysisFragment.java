@@ -32,6 +32,7 @@ import com.kc.shiptransport.db.bcf.BCFThread;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.ship.ShipList;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
@@ -119,6 +120,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
     private CommonAdapter<BCFThread> bcfThreadAdapter;
     private CommonPopupWindow pop_thread;
     private String threadType;
+    private String creator;
 
     @Nullable
     @Override
@@ -127,6 +129,13 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         unbinder = ButterKnife.bind(this, view);
         initViews(view);
         initListener();
+
+        List<User> all = DataSupport.findAll(User.class);
+        if (all.isEmpty()) {
+            creator = "";
+        } else {
+            creator = all.get(0).getUserID();
+        }
 
         /**
          * 根据类型加载不同的数据
@@ -145,7 +154,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                 presenter.getExitFeedBack(20, pageCount, "", "", "", true);
                 break;
             case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER: // 施工日志管理
-                presenter.getLogManager(100, 1, "", "", "", "");
+                presenter.getLogManager(100, 1, "", "", "", creator, "");
                 break;
             case SettingUtil.TYPE_TOMORROW_PLAN: // 明日来船计划
                 try {
@@ -403,7 +412,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                                         break;
                                                                     case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER:
                                                                         /** 日报管理 */
-                                                                        presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
+                                                                        presenter.getLogManager(100, 1, startTime, endTime, consShip, creator, threadType);
                                                                         break;
                                                                     case SettingUtil.TYPE_BCF_LOG:
                                                                         /** BCF LOG */
@@ -496,7 +505,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                             presenter.getExitFeedBack(20, pageCount, startTime, endTime, consShip, true);
                                         } else if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                             // 日志管理
-                                            presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
+                                            presenter.getLogManager(100, 1, startTime, endTime, consShip, creator, threadType);
                                         } else if (type == SettingUtil.TYPE_BCF_LOG) {
                                             // BCF LOG
                                             presenter.getBCFLog(100, 1, startTime, endTime, subAccount);
@@ -677,7 +686,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                             // TODO 请求数据
                                                             if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                                                 /** 日报管理 */
-                                                                presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
+                                                                presenter.getLogManager(100, 1, startTime, endTime, consShip, creator, threadType);
                                                             } else if (type == SettingUtil.TYPE_BCF_THREAD) {
                                                                 /** BCF THREAD */
                                                                 presenter.getBCFThread(100, 1, startTime, endTime, consShip);
@@ -708,7 +717,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                             // TODO 请求数据
                                             if (type == SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER) {
                                                 /** 日报管理 */
-                                                presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
+                                                presenter.getLogManager(100, 1, startTime, endTime, consShip, creator, threadType);
                                             } else if (type == SettingUtil.TYPE_BCF_THREAD) {
                                                 /** BCF THREAD */
                                                 presenter.getBCFThread(100, 1, startTime, endTime, consShip);
@@ -870,7 +879,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                                                             switch (type) {
                                                                 case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER:
                                                                     /** 日报管理 */
-                                                                    presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
+                                                                    presenter.getLogManager(100, 1, startTime, endTime, consShip, creator, threadType);
                                                                     break;
                                                             }
                                                             pop_thread.dismiss();
@@ -925,7 +934,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         if (isShow) {
             activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });
@@ -1183,7 +1192,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
                         .setText(R.id.tv_construction_type, logManagerList.getConstructionType())
                         .setText(R.id.tv_creator, logManagerList.getCreatorName())
                         .setText(R.id.tv_sand_ship, logManagerList.getSandHandlingShipName())
-                        .setText(R.id.tv_quantum, String.valueOf(logManagerList.getQuantity()))
+                        .setText(R.id.tv_quantum, String.valueOf(logManagerList.getTotalQuantityForOneItem()))
                         .setOnClickListener(R.id.btn_update, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -1265,7 +1274,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
         if (isSuccess) {
             ToastUtil.tip(getContext(), "删除成功");
 
-            presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
+            presenter.getLogManager(100, 1, startTime, endTime, consShip, creator, threadType);
         } else {
             ToastUtil.tip(getContext(), "删除失败, 请重试");
         }
@@ -1439,7 +1448,7 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
             case SettingUtil.TYPE_EXIT_FEEDBACK: // 退场反馈
                 break;
             case SettingUtil.TYPE_CONSTRUCTIONLOG_MANAGER: // 施工日志管理
-                presenter.getLogManager(100, 1, startTime, endTime, consShip, threadType);
+                presenter.getLogManager(100, 1, startTime, endTime, consShip, creator, threadType);
                 break;
         }
     }

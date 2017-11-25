@@ -139,7 +139,7 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
         if (active) {
             activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });
@@ -180,7 +180,7 @@ public class ShipSelectFragment extends Fragment implements ShipSelectContract.V
 
     @Override
     public void showCommitSuccess() {
-        int jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN);
+        int jumpWeek = SharePreferenceUtil.getInt(getActivity(), SettingUtil.WEEK_JUMP);
         presenter.doRefresh(jumpWeek);
     }
 }

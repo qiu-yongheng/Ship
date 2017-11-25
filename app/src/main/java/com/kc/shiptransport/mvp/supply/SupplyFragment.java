@@ -175,13 +175,13 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
                             Toast.makeText(activity, "上一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求上一周数据
                             jumpWeek--;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP, jumpWeek);
                             presenter.start(jumpWeek, subcontractorAccount);
                         } else if (upX - dowmX < -100 && Math.abs(upY - dowmY) < Math.abs(upX - dowmX) && dowmX != 0 && dowmY != 0) {
                             Toast.makeText(activity, "下一周", Toast.LENGTH_SHORT).show();
                             // TODO 请求下一周数据
                             jumpWeek++;
-                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP_PLAN, jumpWeek);
+                            SharePreferenceUtil.saveInt(getActivity(), SettingUtil.WEEK_JUMP, jumpWeek);
                             presenter.start(jumpWeek, subcontractorAccount);
                         }
                         dowmX = 0;
@@ -218,7 +218,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
 
     @Override
     public void initViews(View view) {
-        SharePreferenceUtil.saveInt(getContext(), SettingUtil.WEEK_JUMP_SUPPLY, 0);
+        SharePreferenceUtil.saveInt(getContext(), SettingUtil.WEEK_JUMP, 0);
 
         // 还原当前选中的供应商账号
         SharePreferenceUtil.saveString(getContext(), SettingUtil.SUBCONTRACTOR_ACCOUNT, "");
@@ -342,7 +342,7 @@ public class SupplyFragment extends Fragment implements SupplyContract.View {
         if (active) {
             activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

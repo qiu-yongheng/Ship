@@ -183,7 +183,8 @@
                 android:orientation="horizontal"
                 android:paddingBottom="5dp"
                 android:paddingRight="20dp"
-                android:paddingTop="5dp">
+                android:paddingTop="5dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -218,7 +219,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:text="甲  板  方: "
+                    android:text="量  方  量: "
                     android:textColor="#000"
                     android:textSize="@dimen/text_15sp"/>
 

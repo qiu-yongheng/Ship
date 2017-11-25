@@ -131,7 +131,6 @@ public class MainFragment extends Fragment {
         tabLayout.getTabAt(0).setIcon(R.mipmap.home);
         tabLayout.getTabAt(1).setIcon(R.mipmap.un_upcoming);
         tabLayout.getTabAt(2).setIcon(R.mipmap.un_mine);
-
     }
 
     public void initListener() {

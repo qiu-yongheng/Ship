@@ -157,7 +157,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                         view.showLoading(false);
                         Log.d("==", "上传图片完成");
                         // 上传json数据
-                        view.showImageUpdataResult();
+                        //view.showImageUpdataResult(isCommit);
                     }
                 });
     }
@@ -374,7 +374,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
      *
      */
     @Override
-    public void commitJson(final int itemID) {
+    public void commitJson(final int itemID, final boolean isCommit) {
         view.showLoading(true);
         dataRepository
                 .InsertSandSampling()
@@ -400,9 +400,10 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
 
                     @Override
                     public void onNext(@NonNull SampleData bean) {
-                        //view.showDetailList(bean);
+                        // 重新加载数据
+                        view.showDetailList(bean);
                         // 返回
-                        view.showCommitReturn();
+                        //view.showCommitReturn();
                     }
 
                     @Override
@@ -415,7 +416,7 @@ public class SampleDetailPresenter implements SampleDetailContract.Presenter {
                     @Override
                     public void onComplete() {
                         view.showError("提交成功");
-                        view.showImageUpdataResult();
+                        view.showImageUpdataResult(isCommit);
                         view.showLoading(false);
                     }
                 });

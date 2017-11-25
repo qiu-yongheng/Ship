@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Ship.iml" filepath="$PROJECT_DIR$/Ship.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ShipTransport.iml" filepath="$PROJECT_DIR$/ShipTransport.iml" />
+      <module fileurl="file://C:\Users\Administrator\Desktop\aa\Ship\ShipTransport.iml" filepath="C:\Users\Administrator\Desktop\aa\Ship\ShipTransport.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/baseadapter-recyclerview/baseadapter-recyclerview.iml" filepath="$PROJECT_DIR$/baseadapter-recyclerview/baseadapter-recyclerview.iml" />
       <module fileurl="file://$PROJECT_DIR$/filepicker/filepicker.iml" filepath="$PROJECT_DIR$/filepicker/filepicker.iml" />

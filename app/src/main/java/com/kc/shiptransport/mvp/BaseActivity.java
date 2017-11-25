@@ -16,6 +16,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
+import com.kc.shiptransport.util.LogUtil;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -82,7 +83,7 @@ public class BaseActivity extends AppCompatActivity {
             public void onCancel(DialogInterface dialogInterface) {
                 Log.d("==", "取消显示");
                 // TODO 取消rxjava的任务
-                listener.onCancle(progressDialog);
+                listener.onCancel(progressDialog);
             }
         });
     }
@@ -211,6 +212,14 @@ public class BaseActivity extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, ok, okListener);
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
+    }
+
+    public void setDialogDismissListener(DialogInterface.OnDismissListener listener) {
+        if (alertDialog != null) {
+            alertDialog.setOnDismissListener(listener);
+        } else {
+            LogUtil.e("alertDialog can not null");
+        }
     }
 
     /**
@@ -397,4 +406,11 @@ public class BaseActivity extends AppCompatActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        if (!BackHandlerHelper.handleBackPress(this)) {
+//            super.onBackPressed();
+//        }
+//    }
 }

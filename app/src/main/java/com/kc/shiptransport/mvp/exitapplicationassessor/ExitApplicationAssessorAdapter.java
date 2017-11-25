@@ -54,7 +54,7 @@ public class ExitApplicationAssessorAdapter extends RecyclerView.Adapter<Recycle
         ExitDetail.AttachmentListBean listBean = list.get(position);
         RxGalleryUtil.showImage(context, listBean.getFilePath(), null, null, ((NormalHolder) holder).mIvNormal);
 
-        ((NormalHolder) holder).mIvDelete.setVisibility(View.GONE);
+        //((NormalHolder) holder).mIvDelete.setVisibility(View.GONE);
 
         // 点击图片, 预览图片
         ((NormalHolder) holder).mIvNormal.setOnClickListener(new View.OnClickListener() {

@@ -402,7 +402,7 @@ public abstract class BaseMvpFragment extends Fragment implements BaseMvpContrac
     //        if (active) {
     //            activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
     //                @Override
-    //                public void onCancle(ProgressDialog dialog) {
+    //                public void onCancel(ProgressDialog dialog) {
     //                    presenter.unsubscribe();
     //                }
     //            });

@@ -28,6 +28,7 @@ import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
 import com.kc.shiptransport.mvp.sample.SampleActivity;
 import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
+import com.kc.shiptransport.mvp.todayplan.TodayPlanActivity;
 import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
 import com.kc.shiptransport.util.SettingUtil;
 
@@ -184,6 +185,10 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                         case 28:
                             // BCF来船
                             BCFActivity.startActivity(getContext(), 0, true);
+                            break;
+                        case 29:
+                            // 今日计划
+                            TodayPlanActivity.startActivity(getContext());
                             break;
 
                         /** AppPID = 18 考勤管理 */

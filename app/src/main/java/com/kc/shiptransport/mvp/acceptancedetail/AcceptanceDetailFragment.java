@@ -60,6 +60,7 @@ import static com.kc.shiptransport.R.id.tv;
  */
 public class AcceptanceDetailFragment extends Fragment implements AcceptanceDetailContract.View {
 
+    private static final String TIMETAG = "请选择验收时间";
     Unbinder unbinder;
     @BindView(R.id.toolbar_supply_detail)
     Toolbar toolbarSupplyDetail;
@@ -136,15 +137,17 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
             @Override
             public void onClick(View view) {
                 // 通过验收时间
-                final String time = tvAcceptanceTime.getText().toString().trim();
+                String time = tvAcceptanceTime.getText().toString().trim();
+                time = TextUtils.isEmpty(time) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : time;
                 // 预验收意见
                 final String opinion = tvAcceptanceOpinion.getText().toString().trim();
                 // if (time.equals("") || rbcomplete == 0 || rbtimely == 0) {
+                final String finalTime = time;
                 if (TextUtils.isEmpty(opinion)) {
                     activity.showDailog("不通过", "填入预验收意见可以更好的帮助供应商进行资料完善", "不填写直接审核", "填写预验收意见", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, -1, opinion);
+                            presenter.commit(activity.itemID, finalTime, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, -1, opinion);
                         }
                     }, new DialogInterface.OnClickListener() {
                         @Override
@@ -156,7 +159,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
                     activity.showDailog("不通过", "确定预验收审核不通过吗?", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            presenter.commit(activity.itemID, time, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, -1, opinion);
+                            presenter.commit(activity.itemID, finalTime, activity.acceptanceDetailActivity_evaluationID, rbcomplete, rbtimely, value, -1, opinion);
                         }
                     });
                 }
@@ -324,7 +327,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         this.value = value;
 
         String preAcceptanceTime = value.getPreAcceptanceTime();
-        tvAcceptanceTime.setText(TextUtils.isEmpty(preAcceptanceTime) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : preAcceptanceTime);
+        //        tvAcceptanceTime.setText(TextUtils.isEmpty(preAcceptanceTime) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : preAcceptanceTime);
+        tvAcceptanceTime.setText(TextUtils.isEmpty(preAcceptanceTime) ? "" : preAcceptanceTime);
         shipItemNum = value.getShipItemNum();
         tvShipName.setText(value.getShipName());
         tvShipId.setText("船次: " + (shipItemNum == null ? "" : shipItemNum));
@@ -355,7 +359,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
 
     @Override
     public void showAcceptanceTime(String currentDate) {
-        tvAcceptanceTime.setText(currentDate);
+        //tvAcceptanceTime.setText(currentDate);
     }
 
     @Override
@@ -363,7 +367,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         if (active) {
             activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

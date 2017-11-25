@@ -2350,4 +2350,263 @@ public class RemoteDataSource {
 
         return getCallResult(endPoint, soapAction, rpc);
     }
+
+    /**
+     * 1.79 验证当前施工船舶数据是否在已有的数据范围
+     * @param ShipAccount
+     * @param StartTime
+     * @param EndTime
+     * @return
+     * @throws Exception
+     */
+    public String IsCurrentDataInTimeRangeForBoatDaily(String ShipAccount, String StartTime, String EndTime) throws Exception {
+        // 调用的方法名称
+        String methodName = "IsCurrentDataInTimeRangeForBoatDaily";
+        // EndPoint
+        String endPoint = EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ShipAccount", ShipAccount);
+        rpc.addProperty("StartTime", StartTime);
+        rpc.addProperty("EndTime", EndTime);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 2.9 今日来船数据统计分析
+     * @param CurrentDate
+     * @return
+     * @throws Exception
+     */
+    public String GetToShipByCurrentDateAnalysis(String CurrentDate) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetToShipByCurrentDateAnalysis";
+        // EndPoint
+        String endPoint = BaseUrl.getToday;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("CurrentDate", CurrentDate);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.5 获取HSE检查记录数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeHSECheckedRecords(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeHSECheckedRecords";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.3 获取受检船舶数据（包含供砂船舶，施工船舶）
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeCheckedShip() throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeCheckedShip";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.4 提交HSE检查记录数据
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    public String InsertSafeHSECheckedRecord(String json) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertSafeHSECheckedRecord";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.7 根据ItemID删除HSE检查记录数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteSafeHSECheckedRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteSafeHSECheckedRecordByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.6 根据ItemID获取HSE检查记录数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeHSECheckedRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeHSECheckedRecordByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.2 获取缺陷类别数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeShipSelfCheckItems(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeShipSelfCheckItems";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.19 整改期限基础信息
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeRectificationDeadlineOptions(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeRectificationDeadlineOptions";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.22 获取所有缺陷纪录（包含待处理，已处理）
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeDefectRecords(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeDefectRecords";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.10 提交HSE检查缺陷记录数据
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    public String InsertSafeDefectRecord(String json) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertSafeDefectRecord";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
 }

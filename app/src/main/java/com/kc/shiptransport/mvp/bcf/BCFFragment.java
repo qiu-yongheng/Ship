@@ -166,7 +166,6 @@ public class BCFFragment extends Fragment implements BCFContract.View {
                             public void getChildView(View view, int layoutResId) {
                                 // 初始化控件
                                 RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
-
                                 recycle_view.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
                                 // 获取数据
@@ -328,7 +327,7 @@ public class BCFFragment extends Fragment implements BCFContract.View {
         if (isShow) {
             activity.showProgressDailog("提交", "提交中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

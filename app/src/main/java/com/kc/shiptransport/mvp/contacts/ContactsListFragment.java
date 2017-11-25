@@ -43,7 +43,7 @@ public class ContactsListFragment extends Fragment {
     }
 
     private void initView() {
-        List<Contacts> contactses = DataSupport.findAll(Contacts.class);
+        List<Contacts> contactses = DataSupport.where("LoginName is not null and LoginName != ?", "").find(Contacts.class);
 
         ContactAdapter contactAdapter = new ContactAdapter(getContext(), contactses);
 

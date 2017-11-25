@@ -20,6 +20,8 @@ public class PatternUtil {
     private static final String PATTERN_TELL = "(\\(\\d{3,4}\\)|\\d{3,4}-|\\s)?\\d{7,14}";
     // 数字
     private static final String PATTERN_NUMBER = "[0-9]*";
+    // 数字+小数
+    private static final String PATTERN_NUMBER_L = "([1-9][0-9]*)+(.[0-9]{1,4})?";
     // 匹配一个字符
     private static final String PATTERN_CHAR_ONE = "[a-z]{1}";
 

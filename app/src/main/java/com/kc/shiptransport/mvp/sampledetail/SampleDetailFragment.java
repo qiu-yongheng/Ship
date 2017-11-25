@@ -125,7 +125,8 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
                     ToastUtil.tip(getContext(), "请填写NAQQ");
                 } else {
                     // TODO 提交图片与总json
-                    presenter.commit(sandSample);
+                    //presenter.commit(sandSample);
+                    presenter.commitJson(itemID, true);
                 }
             }
         });
@@ -349,7 +350,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         if (isShow) {
             activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });
@@ -383,7 +384,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
             @Override
             public void onFinish() {
                 // 提交总json
-                presenter.commitJson(itemID);
+                presenter.commitJson(itemID, false);
             }
         });
     }
@@ -413,6 +414,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
         textBatch.setText(bean.getBatch());
         // 回显nqaa数据
         textNaqq.setText(bean.getNQAA());
+        nqaa = bean.getNQAA();
 
         // 获取取样编号的集合
         final List<SandSamplingNumRecordListBean> sandNumList = bean.getSandSamplingNumRecordList();
@@ -592,10 +594,17 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
 
     /**
      * 提交成功后
+     * @param isCommit
      */
     @Override
-    public void showImageUpdataResult() {
-        // TODO: 提交成功后, 退回上一个界面, 废弃此方法
+    public void showImageUpdataResult(boolean isCommit) {
+        // TODO: 提交成功后, 退回上一个界面
+        if (isCommit) {
+            getActivity().onBackPressed();
+        } else {
+
+        }
+
     }
 
     /**
@@ -603,7 +612,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
      */
     @Override
     public void showCommitReturn() {
-        getActivity().onBackPressed();
+        //getActivity().onBackPressed();
     }
 
     /**
@@ -611,7 +620,7 @@ public class SampleDetailFragment extends Fragment implements SampleDetailContra
      */
     @Override
     public void startCommit() {
-        presenter.commitJson(itemID);
+        presenter.commitJson(itemID, false);
     }
 
     /**

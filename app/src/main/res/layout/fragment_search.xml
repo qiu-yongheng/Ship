@@ -30,7 +30,7 @@
                     android:layout_height="match_parent"
                     android:iconifiedByDefault="false"
                     android:imeOptions="actionSearch|flagNoExtractUi"
-                    app:queryHint="用户名或部门"/>
+                    app:queryHint="中文名或英文名"/>
 
             </android.support.v7.widget.Toolbar>
 

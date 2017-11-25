@@ -51,7 +51,7 @@ public class ContactFragment extends Fragment implements ContactContract.View {
         initViews(view);
         initListener();
 
-        presenter.getContact(100, 1, "");
+        presenter.getContact(1000, 1, "");
         return view;
     }
 
@@ -99,7 +99,7 @@ public class ContactFragment extends Fragment implements ContactContract.View {
         if (isShow) {
             activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

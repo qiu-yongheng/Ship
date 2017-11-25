@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop_8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_14"
+                android:text="检  查  人"/>
+
+            <TextView
+                android:id="@+id/tv_checker"
+                style="@style/text_description_black"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_height"
+                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginRight="@dimen/marginleft_14"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop_8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_14"
+                android:text="缺陷类别"/>
+
+            <TextView
+                android:id="@+id/tv_defect_type"
+                style="@style/text_description_black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginRight="@dimen/marginleft_14"
+                android:background="@color/et_bg"
+                android:gravity="center"
+                android:text="@string/tv_hint"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop_8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_14"
+                android:text="缺陷项目"/>
+
+            <TextView
+                android:id="@+id/tv_defect_project"
+                style="@style/text_description_black"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_height"
+                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginRight="@dimen/marginleft_14"
+                android:background="@color/et_bg"
+                android:gravity="center"
+                android:text="@string/tv_hint"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margintop_8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginleft_14"
+                android:text="整改期限"/>
+
+            <TextView
+                android:id="@+id/tv_defect_deadline"
+                style="@style/text_description_black"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tv_height"
+                android:layout_marginLeft="@dimen/margin_12"
+                android:layout_marginRight="@dimen/marginleft_14"
+                android:background="@color/et_bg"
+                android:gravity="center"
+                android:text="@string/tv_hint"/>
+        </LinearLayout>
+
+        <TextView
+            style="@style/text_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginleft_14"
+            android:layout_marginTop="10dp"
+            android:text="备注填写"/>
+
+        <EditText
+            android:id="@+id/et_remark"
+            style="@style/text_description_black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/et_bg"
+            android:gravity="left|top"
+            android:hint="@string/et_hint_remark"
+            android:minLines="2"
+            android:padding="10dp"/>
+
+        <TextView
+            style="@style/text_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginleft_14"
+            android:text="缺陷图片"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginleft_14"
+            android:layout_marginRight="@dimen/marginleft_14"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btn_commit"
+            style="@style/text_title_w"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?colorPrimary"
+            android:text="@string/btn_commit"/>
+
+        <Button
+            android:id="@+id/btn_return"
+            style="@style/text_title_w"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/gray"
+            android:text="@string/btn_return"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+</RelativeLayout>

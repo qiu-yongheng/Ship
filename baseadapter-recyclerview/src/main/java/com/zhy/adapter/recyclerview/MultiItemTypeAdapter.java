@@ -84,7 +84,7 @@ public class MultiItemTypeAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
      */
     public void convert(ViewHolder holder, T t) {
         /** 给子类实现, 数据绑定 */
-        mItemViewDelegateManager.convert(holder, t, holder.getAdapterPosition(), getDatas());
+        mItemViewDelegateManager.convert(holder, t, holder.getLayoutPosition(), getDatas());
     }
 
     /**
@@ -218,5 +218,22 @@ public class MultiItemTypeAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
         this.mOnItemClickListener = onItemClickListener;
     }
 
+    /**
+     * 删除条目, 解决刷新错乱, 数组越界问题
+     * @param position
+     */
+    public void removeItem(int position) {
+        getDatas().remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, getItemCount());
+    }
 
+    /**
+     * 加载更多数据
+     * @param datas
+     */
+    public void loadmore(List<T> datas) {
+        getDatas().addAll(datas);
+        notifyDataSetChanged();
+    }
 }

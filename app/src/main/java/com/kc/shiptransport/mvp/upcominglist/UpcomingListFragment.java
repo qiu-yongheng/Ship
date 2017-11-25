@@ -103,7 +103,7 @@ public class UpcomingListFragment extends Fragment implements UpcomingListContra
         if (isShow) {
             activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

@@ -134,10 +134,11 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         adapter = new CommonAdapter<Contacts>(getContext(), R.layout.item_contact_normal, list) {
             @Override
             protected void convert(ViewHolder holder, final Contacts contacts, int position) {
-                holder.setText(R.id.textViewAvatar, TextUtils.isEmpty(contacts.getDisplayName()) ? "" : contacts.getDisplayName().substring(0, 1).toUpperCase())
-                        .setText(R.id.text_view_name, TextUtils.isEmpty(contacts.getDisplayName()) ? "" : contacts.getDisplayName())
-                        .setText(R.id.text_view_office, TextUtils.isEmpty(contacts.getDepartment()) ? "" : contacts.getDepartment())
+                holder.setText(R.id.textViewAvatar, TextUtils.isEmpty(contacts.getDepartment()) ? "" : contacts.getDepartment().substring(0, 1).toUpperCase())
+                        .setText(R.id.text_view_name, TextUtils.isEmpty(contacts.getDepartment()) ? "" : contacts.getDepartment())
+                        .setText(R.id.text_view_office, TextUtils.isEmpty(contacts.getDuties()) ? "" : contacts.getDuties())
                         .setText(R.id.text_view_phone, TextUtils.isEmpty(contacts.getMobile()) ? "" : contacts.getMobile())
+                        .setText(R.id.text_view_english_name, TextUtils.isEmpty(contacts.getEnglishName()) ? "" : contacts.getEnglishName())
                         .setOnClickListener(R.id.ll, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {

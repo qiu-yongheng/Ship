@@ -162,7 +162,7 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
 
                         if (integer == success) {
                             // 刷新进场数据
-                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN),
+                            return dataRepository.doRefresh(SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP),
                                     SharePreferenceUtil.getString(context, SettingUtil.SUBCONTRACTOR_ACCOUNT, ""));
                         } else {
                             return null;
@@ -172,7 +172,7 @@ public class SupplyDetailPresenter implements SupplyDetailContract.Presenter {
                 .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
                     @Override
                     public ObservableSource<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
-                        return dataRepository.getWeekTaskSort(SettingUtil.TYPE_SUPPLY, SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP_PLAN));
+                        return dataRepository.getWeekTaskSort(SettingUtil.TYPE_SUPPLY, SharePreferenceUtil.getInt(context, SettingUtil.WEEK_JUMP));
                     }
                 })
                 .flatMap(new Function<Boolean, ObservableSource<List<BackLog>>>() {

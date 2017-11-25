@@ -102,7 +102,7 @@ public class UpcomingFragment extends Fragment implements UpcomingContract.View 
         if (isShow) {
             activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

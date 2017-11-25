@@ -120,7 +120,7 @@ public class ChangePasswordFragment extends Fragment implements ChangePasswordCo
         if (isShow) {
             activity.showProgressDailog("修改中", "修改中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

@@ -2,39 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:background="@android:color/white"
               android:layout_width="match_parent"
-              android:layout_height="80dp"
+              android:layout_height="50dp"
+              android:backgroundTint="#eeEDEB"
               android:orientation="horizontal"
               android:gravity="center_vertical"
-              android:layout_marginBottom="1dp"
-              android:paddingLeft="10dp"
-    >
+              android:layout_marginBottom="1dp">
     <ImageView
+        android:id="@+id/iv_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"/>
+        android:src="@mipmap/tree_ec"
+        android:layout_marginLeft="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"/>
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:textStyle="bold"
         android:textColor="@android:color/black"
         android:layout_weight="1"
         />
-    <TextView
-        android:id="@+id/sub_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:visibility="gone"
-        />
-    <ImageView
-        android:id="@+id/iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|center"
-        android:layout_weight="3"
-        android:src="@mipmap/arrow_r"/>
 </LinearLayout>

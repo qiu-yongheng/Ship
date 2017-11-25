@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -109,7 +110,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder setText(int viewId, String text) {
         TextView tv = getView(viewId);
         if (tv != null) {
-            tv.setText(text);
+            tv.setText(TextUtils.isEmpty(text) ? "" : text);
         }
         return this;
     }

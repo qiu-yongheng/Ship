@@ -419,7 +419,7 @@ public class CalendarUtil {
     }
 
     /**
-     * 弹出日期选择器
+     * 弹出日期选择器(自定义, 自己处理监听器)
      *
      * @param context
      * @param view
@@ -439,37 +439,12 @@ public class CalendarUtil {
     }
 
     /**
-     * 弹出日期选择器
+     * 弹出日期选择器(自定义)
      *
      * @param context
      * @param view
      */
     public static void showDatePickerDialog(final Context context, final TextView view, final OnTimePickerSureClickListener listener, final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
-        //        if (isSystem) {
-        //            final Calendar now = Calendar.getInstance();
-        //
-        //            // 显示日期选择器
-        //            DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-        //                @Override
-        //                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        //                    final Calendar c = Calendar.getInstance();
-        //                    c.set(Calendar.YEAR, year);
-        //                    c.set(Calendar.MONTH, month);
-        //                    c.set(Calendar.DAY_OF_MONTH, day);
-        //
-        //                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        //                    String format = df.format(c.getTime());
-        //                    view.setText(format);
-        //                    listener.onSure(format);
-        //                }
-        //            }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-        //
-        //
-        //            datePickerDialog.show();
-        //        } else {
-        //            showTimePicker(context, view, YYYY_MM_DD, null, listener, new boolean[]{true, true, true, false, false, false}, false);
-        //        }
-
         showDatePickerDialog(context, view, listener, lastDateClickListener, false, isSystem, isCustom);
     }
 

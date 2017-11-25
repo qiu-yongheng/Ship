@@ -53,6 +53,7 @@ public class ImgViewPageActivity extends BaseActivity {
         bundle.putParcelableArrayList(IMGLIST, list);
         bundle.putInt(POSITION, position);
         intent.putExtras(bundle);
+        // 如果intent保存了数据, 这里start只能传递intent, 不能传递bundle, 不然会报错
         context.startActivity(intent);
     }
 }

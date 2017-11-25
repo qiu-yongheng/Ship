@@ -148,10 +148,10 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             etRemark.setFocusable(false);
 
         } else {
-            // 开启软键盘
-            etShipVolume.setInputType(InputType.TYPE_CLASS_TEXT);
-            etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
-            etBatch.setInputType(InputType.TYPE_CLASS_TEXT);
+            // 开启软键盘(不能在代码开启软键盘, 不然会让输入类型的设置失效!!!)
+//            etShipVolume.setInputType(InputType.TYPE_CLASS_TEXT);
+//            etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
+//            etBatch.setInputType(InputType.TYPE_CLASS_TEXT);
             btnAcceptanceCommit.setVisibility(View.VISIBLE);
             btnAcceptanceCancel.setVisibility(View.VISIBLE);
             btnAcceptanceReturn.setVisibility(View.GONE);
@@ -192,9 +192,9 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(tvSupplyTime.getText().toString())) {
-                    if (value != null &&
-                            value.getReceptionSandAttachmentList() != null &&
-                            !value.getReceptionSandAttachmentList().isEmpty()) {
+//                    if (value != null &&
+//                            value.getReceptionSandAttachmentList() != null &&
+//                            !value.getReceptionSandAttachmentList().isEmpty()) {
 
                         activity.showDailog("提交", "是否提交验砂审核通过?", new DialogInterface.OnClickListener() {
                             @Override
@@ -206,9 +206,9 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                             }
                         });
 
-                    } else {
-                        ToastUtil.tip(getContext(), "满载照片上传后才能通过");
-                    }
+//                    } else {
+//                        ToastUtil.tip(getContext(), "满载照片上传后才能通过");
+//                    }
 
                 } else {
                     ToastUtil.tip(getContext(), "请选择时间");
@@ -529,7 +529,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
         if (active) {
             activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

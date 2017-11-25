@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -191,8 +190,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                warn();
-                //getActivity().onBackPressed();
+                getActivity().onBackPressed();
                 break;
             case R.id.action_delete_all:
                 activity.showDailog("删除所有分区", "确定要删除所有分区吗", new DialogInterface.OnClickListener() {
@@ -393,7 +391,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         if (isShow) {
             activity.showProgressDailog("加载中", "加载中", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });
@@ -463,6 +461,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
 
     /**
      * 选择施工分层
+     *
      * @param view
      * @param position
      */
@@ -506,33 +505,33 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getFocus();
-    }
+    //    @Override
+    //    public void onResume() {
+    //        super.onResume();
+    //        getFocus();
+    //    }
+    //
+    //    private void getFocus() {
+    //        if (getView() != null) {
+    //            getView().setFocusable(true);
+    //            getView().setFocusableInTouchMode(true);
+    //            getView().requestFocus();
+    //            getView().setOnKeyListener(new View.OnKeyListener() {
+    //
+    //                @Override
+    //                public boolean onKey(View v, int keyCode, KeyEvent event) {
+    //                    if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
+    //                        // 监听到返回按钮点击事件
+    //                        warn();
+    //                        return true;// 未处理
+    //                    }
+    //                    return false;
+    //                }
+    //            });
+    //        }
+    //    }
 
-    private void getFocus() {
-        if (getView() != null) {
-            getView().setFocusable(true);
-            getView().setFocusableInTouchMode(true);
-            getView().requestFocus();
-            getView().setOnKeyListener(new View.OnKeyListener() {
-
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
-                        // 监听到返回按钮点击事件
-                        warn();
-                        return true;// 未处理
-                    }
-                    return false;
-                }
-            });
-        }
-    }
-
-    private void warn() {
+    private boolean warn() {
         // 验证施工panel长度是否一致
         List<PartitionNum> list = DataSupport.where("tag = ? and num is not null and num != ? and userAccount = ?", "0", "", boat.getShipNum()).find(PartitionNum.class);
 
@@ -564,12 +563,15 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                 }
             });
         } else {
-            getActivity().onBackPressed();
+            return true;
         }
+
+        return false;
     }
 
     /**
      * 获取重复命名数据
+     *
      * @return
      */
     @NonNull
@@ -602,5 +604,9 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
         adapter.setDates(numList);
         adapter.notifyDataSetChanged();
         return maps;
+    }
+
+    public boolean onBackPressed() {
+        return warn();
     }
 }

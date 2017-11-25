@@ -191,7 +191,8 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                         // 甲板方
                         String deck = etDeckVolume.getText().toString().trim();
                         // 扣方
-                        String dedu = etShipVolume.getText().toString().trim();
+                        //                        String dedu = etShipVolume.getText().toString().trim();
+                        String dedu = "0";
                         // 激光量砂
                         String LaserSand = etTotalVolume.getText().toString().trim();
                         float LaserQuantitySand = 0;
@@ -240,7 +241,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                                     value.getSubcontractorAccount(),
                                     activity.itemID,
                                     value.getShipAccount(),
-                                    value.getCapacity(),
+                                    "0", // 舱容 value.getCapacity(), 现在全部传0
                                     deck,
                                     dedu,
                                     creator,
@@ -274,10 +275,12 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String ship = etShipVolume.getText().toString();
+                //                String ship = etShipVolume.getText().toString();
+                String ship = "0";
                 String deck = etDeckVolume.getText().toString();
 
-                presenter.getTotalVolume(ship, deck, value.getCapacity());
+//                presenter.getTotalVolume(ship, deck, value.getCapacity());
+                presenter.getTotalVolume(ship, deck, "0");
             }
         });
 
@@ -294,9 +297,11 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String ship = etShipVolume.getText().toString();
+                //                String ship = etShipVolume.getText().toString();
+                String ship = "0";
                 String deck = etDeckVolume.getText().toString();
-                presenter.getTotalVolume(ship, deck, value.getCapacity());
+//                presenter.getTotalVolume(ship, deck, value.getCapacity());
+                presenter.getTotalVolume(ship, deck, "0");
             }
         });
 
@@ -309,7 +314,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
                         // 人工量砂
                         radio_type = AMOUNT_MAN;
                         llDeck.setVisibility(View.VISIBLE);
-                        llDeduction.setVisibility(View.VISIBLE);
+                        llDeduction.setVisibility(View.GONE); // 扣方
                         etTotalVolume.setVisibility(View.GONE);
                         tvTotalVolume.setVisibility(View.VISIBLE);
                         break;
@@ -420,9 +425,9 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
             etRemark.setFocusable(false);
             etRemark.setFocusableInTouchMode(false);
         } else {
-            // 开启软键盘
-            etShipVolume.setInputType(InputType.TYPE_CLASS_TEXT);
-            etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
+            // 开启软键盘(不能在代码开启软键盘, 不然会让输入类型的设置失效!!!)
+//            etShipVolume.setInputType(InputType.TYPE_CLASS_TEXT);
+//            etDeckVolume.setInputType(InputType.TYPE_CLASS_TEXT);
             btnCommit.setVisibility(View.VISIBLE);
             btnCancel.setVisibility(View.VISIBLE);
             btnReturn.setVisibility(View.GONE);
@@ -632,7 +637,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         // 扣方
         etShipVolume.setText(TextUtils.isEmpty(deduction) ? "" : deduction);
         // 甲板方
-        etDeckVolume.setText(TextUtils.isEmpty(deckGauge) ? "" : deckGauge);
+        etDeckVolume.setText((TextUtils.isEmpty(deckGauge) || deckGauge.equals("0") )? "" : deckGauge);
         // 量方时间
         tvSupplyTime.setText(TextUtils.isEmpty(theAmountOfTime) ? CalendarUtil.getCurrentDate(CalendarUtil.YYYY_MM_DD_HH_MM) : theAmountOfTime);
 
@@ -724,7 +729,7 @@ public class AmountDetailFragment extends Fragment implements AmountDetailContra
         if (active) {
             activity.showProgressDailog("提交中", "提交中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

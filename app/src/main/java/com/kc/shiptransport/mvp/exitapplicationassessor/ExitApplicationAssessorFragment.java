@@ -23,23 +23,33 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.img.ImgList;
+import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
+import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
+import com.kc.shiptransport.mvp.exitapplicationdetail.ExitApplicationDetailAdapter;
 import com.kc.shiptransport.util.CalendarUtil;
+import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.actiivty.ImgViewPageActivity;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 
 /**
  * @author 邱永恒
@@ -95,7 +105,7 @@ public class ExitApplicationAssessorFragment extends Fragment implements ExitApp
     private ExitApplicationAssessorContract.Presenter presenter;
     private ExitApplicationAssessorActivity activity;
     private ExitDetail bean;
-    private ExitApplicationAssessorAdapter adapter;
+    private ExitApplicationDetailAdapter adapter;
     private int totalAmount = 0;
     private ArrayList<ImgList> imgLists = new ArrayList<>();
 
@@ -141,6 +151,28 @@ public class ExitApplicationAssessorFragment extends Fragment implements ExitApp
             etQuantum.setFocusableInTouchMode(true);
             etRemark.setFocusable(true);
             etRemark.setFocusableInTouchMode(true);
+
+            // 设置退场时间
+            tvSupplyTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        CalendarUtil.showTimePickerDialog(getContext(), tvSupplyTime, new OnTimePickerSureClickListener() {
+                            @Override
+                            public void onSure(String str) {
+                                // TODO 可以限制不能选择之前的时间
+                            }
+                        }, new OnTimePickerLastDateClickListener() {
+                            @Override
+                            public void onLastDate() {
+
+                            }
+                        }, false, false);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 
@@ -254,7 +286,7 @@ public class ExitApplicationAssessorFragment extends Fragment implements ExitApp
         if (isShow) {
             activity.showProgressDailog("加载中", "加载中...", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });
@@ -343,10 +375,10 @@ public class ExitApplicationAssessorFragment extends Fragment implements ExitApp
             imageList = new ArrayList<>();
         }
 
-
         /** 初始化图片列表 */
         if (adapter == null) {
-            adapter = new ExitApplicationAssessorAdapter(getContext(), imageList);
+            // TODO: ExitApplicationAssessorAdapter 替换成 ExitApplicationDetailAdapter
+            adapter = new ExitApplicationDetailAdapter(getContext(), imageList);
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position, int... type) {
@@ -354,7 +386,7 @@ public class ExitApplicationAssessorFragment extends Fragment implements ExitApp
                     final ExitDetail.AttachmentListBean bean = adapter.list.get(position);
                     if (type[0] == 0) {
                         // 预览
-//                        ImageActivity.startActivity(getContext(), bean.getFilePath());
+                        //                        ImageActivity.startActivity(getContext(), bean.getFilePath());
                         imgLists.clear();
                         for (ExitDetail.AttachmentListBean listBean : adapter.list) {
                             ImgList imgList = new ImgList();
@@ -362,48 +394,48 @@ public class ExitApplicationAssessorFragment extends Fragment implements ExitApp
                             imgLists.add(imgList);
                         }
                         ImgViewPageActivity.startActivity(getContext(), imgLists, position);
+                    } else {
+                        if (activity.isExit) {
+                            Toast.makeText(getContext(), "退场审核已提交, 不能删除图片", Toast.LENGTH_SHORT).show();
+                        } else {
+                            activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // 删除
+                                    presenter.deleteImgForItemID(bean.getItemID());
+                                }
+                            });
+                        }
                     }
-                    //                    else {
-                    //                        if (activity.isExit == 1) {
-                    //                            Toast.makeText(getContext(), "退场申请已提交, 不能删除图片", Toast.LENGTH_SHORT).show();
-                    //                        } else {
-                    //                            activity.showDailog("删除图片", "是否删除图片", new DialogInterface.OnClickListener() {
-                    //                                @Override
-                    //                                public void onClick(DialogInterface dialogInterface, int i) {
-                    //                                    // 删除
-                    //                                    presenter.deleteNumForItemID(bean.getItemID());
-                    //                                }
-                    //                            });
-                    //                        }
-                    //                    }
                 }
 
                 @Override
                 public void onItemLongClick(View view, int position) {
-                    //                    if (activity.isExit == 1) {
-                    //                        Toast.makeText(getContext(), "退场申请已提交, 不能新增图片", Toast.LENGTH_SHORT).show();
-                    //                    } else {
-                    //                        /** 弹出图片选择器 */
-                    //                        int size = adapter.list.size();
-                    //                        int max = SettingUtil.NUM_IMAGE_SELECTION - size;
-                    //                        if (max > 0) {
-                    //                            RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
-                    //                                @Override
-                    //                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-                    //                                    // 把图片解析成可以上传的任务, 上传
-                    //                                    List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
-                    //                                    presenter.getCommitImgList(imageMultipleResultEvent, activity.itemID, all.get(0).getSubcontractorAccount());
-                    //                                }
-                    //
-                    //                                @Override
-                    //                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
-                    //
-                    //                                }
-                    //                            });
-                    //                        } else {
-                    //                            Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
-                    //                        }
-                    //                    }
+                    // TODO: 退场审核暂时屏蔽, 把图片添加功能移到这里
+                    if (activity.isExit) {
+                        Toast.makeText(getContext(), "退场审核已提交, 不能新增图片", Toast.LENGTH_SHORT).show();
+                    } else {
+                        /** 弹出图片选择器 */
+                        int size = adapter.list.size();
+                        int max = SettingUtil.NUM_IMAGE_SELECTION - size;
+                        if (max > 0) {
+                            RxGalleryUtil.getImagMultiple(getContext(), max, new OnRxGalleryRadioListener() {
+                                @Override
+                                public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                    // 把图片解析成可以上传的任务, 上传
+                                    List<Subcontractor> all = DataSupport.findAll(Subcontractor.class);
+                                    presenter.getCommitImgList(imageMultipleResultEvent, activity.itemID, all.get(0).getSubcontractorAccount());
+                                }
+
+                                @Override
+                                public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getContext(), "已到达图片选择上限", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             });
 

@@ -191,7 +191,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         if (active) {
             showProgressDailog(getResources().getString(R.string.dailog_title_update), "正在登陆", new OnDailogCancleClickListener() {
                 @Override
-                public void onCancle(ProgressDialog dialog) {
+                public void onCancel(ProgressDialog dialog) {
                     presenter.unsubscribe();
                 }
             });

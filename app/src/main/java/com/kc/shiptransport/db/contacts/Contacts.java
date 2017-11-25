@@ -11,43 +11,74 @@ import java.io.Serializable;
  */
 
 public class Contacts extends DataSupport implements Serializable{
-
     /**
-     * LoginName : kl
-     * DisplayName : 卡乐
-     * Department : 工程部
-     * Email :
-     * Title :
-     * Mobile :
+     * rownumber : 1
+     * ItemID : 194
+     * CId : 42
+     * PId : 3
+     * EnglishName : Wang Zhengliang
+     * LoginName : wangzhengliang
+     * Email : wangzl@fhdigz.com
+     * Duties : 副总工程师
+     * Mobile : 6680-6273
      * TelephoneNumber :
      * Sex :
+     * Department : 王x亮
+     * DisplayName :
      */
 
-    private int ID;
-    private int PID;
+    private int rownumber;
+    private int ItemID;
+    private String CId;
+    private String PId;
+    private String EnglishName;
     private String LoginName;
-    private String DisplayName;
-    private String Department;
     private String Email;
-    private String Title;
+    private String Duties;
     private String Mobile;
     private String TelephoneNumber;
     private String Sex;
+    private String Department;
+    private String DisplayName;
 
-    public int getID() {
-        return ID;
+    public int getRownumber() {
+        return rownumber;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setRownumber(int rownumber) {
+        this.rownumber = rownumber;
     }
 
-    public int getPID() {
-        return PID;
+    public int getItemID() {
+        return ItemID;
     }
 
-    public void setPID(int PID) {
-        this.PID = PID;
+    public void setItemID(int ItemID) {
+        this.ItemID = ItemID;
+    }
+
+    public String getCId() {
+        return CId;
+    }
+
+    public void setCId(String CId) {
+        this.CId = CId;
+    }
+
+    public String getPId() {
+        return PId;
+    }
+
+    public void setPId(String PId) {
+        this.PId = PId;
+    }
+
+    public String getEnglishName() {
+        return EnglishName;
+    }
+
+    public void setEnglishName(String EnglishName) {
+        this.EnglishName = EnglishName;
     }
 
     public String getLoginName() {
@@ -58,22 +89,6 @@ public class Contacts extends DataSupport implements Serializable{
         this.LoginName = LoginName;
     }
 
-    public String getDisplayName() {
-        return DisplayName;
-    }
-
-    public void setDisplayName(String DisplayName) {
-        this.DisplayName = DisplayName;
-    }
-
-    public String getDepartment() {
-        return Department;
-    }
-
-    public void setDepartment(String Department) {
-        this.Department = Department;
-    }
-
     public String getEmail() {
         return Email;
     }
@@ -82,12 +97,12 @@ public class Contacts extends DataSupport implements Serializable{
         this.Email = Email;
     }
 
-    public String getTitle() {
-        return Title;
+    public String getDuties() {
+        return Duties;
     }
 
-    public void setTitle(String Title) {
-        this.Title = Title;
+    public void setDuties(String Duties) {
+        this.Duties = Duties;
     }
 
     public String getMobile() {
@@ -112,5 +127,21 @@ public class Contacts extends DataSupport implements Serializable{
 
     public void setSex(String Sex) {
         this.Sex = Sex;
+    }
+
+    public String getDepartment() {
+        return Department;
+    }
+
+    public void setDepartment(String Department) {
+        this.Department = Department;
+    }
+
+    public String getDisplayName() {
+        return DisplayName;
+    }
+
+    public void setDisplayName(String DisplayName) {
+        this.DisplayName = DisplayName;
     }
 }

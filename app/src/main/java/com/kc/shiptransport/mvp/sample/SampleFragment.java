@@ -33,7 +33,7 @@ public class SampleFragment extends BaseMvpFragment{
                     getResources().getString(R.string.dialog_loading),
                     new OnDailogCancleClickListener() {
                         @Override
-                        public void onCancle(ProgressDialog dialog) {
+                        public void onCancel(ProgressDialog dialog) {
                             presenter.unsubscribe();
                         }
                     });

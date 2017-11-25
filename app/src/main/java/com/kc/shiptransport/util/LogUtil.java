@@ -1,5 +1,7 @@
 package com.kc.shiptransport.util;
 
+import android.util.Log;
+
 import com.elvishew.xlog.XLog;
 
 /**
@@ -9,11 +11,19 @@ import com.elvishew.xlog.XLog;
  */
 
 public class LogUtil {
-    public static void d (Object o) {
+    public static void d(Object o) {
         XLog.d(o);
     }
 
-    public static void e (Object o) {
+    public static void e(Object o) {
         XLog.e(o);
+    }
+
+    public static void json(String json) {
+        XLog.json(json);
+    }
+
+    public static void t(String msg) {
+        Log.e("ship_tag", msg);
     }
 }

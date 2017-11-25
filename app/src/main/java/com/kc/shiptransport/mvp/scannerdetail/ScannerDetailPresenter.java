@@ -179,7 +179,7 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter {
      * @param ItemID
      * @param Creator
      * @param SubcontractorInterimApproachPlanID
-     * @param IsSumbitted
+     * @param IsSumbitted 1代表已提交，0代表未提交 (这里的提交指的是提交航次信息扫描件)
      * @param Remark
      */
     @Override
@@ -201,6 +201,7 @@ public class ScannerDetailPresenter implements ScannerDetailContract.Presenter {
                 .filter(new Predicate<VoyageDetailBean>() {
                     @Override
                     public boolean test(@NonNull VoyageDetailBean bean) throws Exception {
+                        // 过滤没有提交航次信息完善的数据
                         return Integer.valueOf(bean.getIsSumbitted()) == 1;
                     }
                 })

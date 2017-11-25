@@ -12,7 +12,14 @@ import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
+import com.kc.shiptransport.data.bean.hse.HseCheckAddBean;
+import com.kc.shiptransport.data.bean.hse.HseCheckListBean;
+import com.kc.shiptransport.data.bean.hse.HseCheckSelectBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectDeadlineBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectListBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectTypeBean;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
+import com.kc.shiptransport.data.bean.todayplan.TodayPlanBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.AttendanceRecordList;
@@ -38,6 +45,9 @@ import com.kc.shiptransport.db.contacts.Contacts;
 import com.kc.shiptransport.db.down.StopOption;
 import com.kc.shiptransport.db.exitapplication.ExitDetail;
 import com.kc.shiptransport.db.exitassessor.ExitAssessor;
+import com.kc.shiptransport.db.hse.HseCheckShip;
+import com.kc.shiptransport.db.hse.HseDefectDeadline;
+import com.kc.shiptransport.db.hse.HseDefectType;
 import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.pump.PumpShip;
@@ -975,9 +985,10 @@ public interface DataSouceImpl {
      * @param PageCount
      * @param jumpWeek
      * @param account
+     * @param isExitApplication
      * @return
      */
-    Observable<Boolean> GetExitApplicationList(int PageSize, int PageCount, int jumpWeek, String account);
+    Observable<Boolean> GetExitApplicationList(int PageSize, int PageCount, int jumpWeek, String account, boolean isExitApplication);
 
     /**
      * 搜索联系人
@@ -1005,9 +1016,10 @@ public interface DataSouceImpl {
      * 1.68 获取供砂船航次信息数据(近7天)
      * @param PageSize
      * @param PageCount
+     * @param currentDate
      * @return
      */
-    Observable<Boolean> GetBoatShipItemNum(int PageSize, int PageCount, String shipAccount);
+    Observable<Boolean> GetBoatShipItemNum(int PageSize, int PageCount, String shipAccount, String currentDate);
 
     /**
      * 1.24 删除验砂取样图片数据
@@ -1109,4 +1121,84 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<PumpShip>> GetPumpShipInfo(int PageSize, int PageCount, String shipAccount);
+
+    /**
+     * 1.79 验证当前施工船舶数据是否在已有的数据范围
+     * @param ShipAccount
+     * @param StartTime
+     * @param EndTime
+     * @return
+     */
+    Observable<Boolean> IsCurrentDataInTimeRangeForBoatDaily(String ShipAccount, String StartTime, String EndTime);
+
+    /**
+     * 2.9 今日来船数据统计分析
+     * @param CurrentDate
+     * @return
+     */
+    Observable<TodayPlanBean> GetToShipByCurrentDateAnalysis(String CurrentDate);
+
+    /**
+     * 6.5 获取HSE检查记录数据
+     * @param PageSize
+     * @param PageCount
+     * @param bean
+     * @return
+     */
+    Observable<List<HseCheckListBean>> GetSafeHSECheckedRecords(int PageSize, int PageCount, HseCheckSelectBean bean);
+
+    /**
+     * 6.3 获取受检船舶数据（包含供砂船舶，施工船舶）
+     * @return
+     */
+    Observable<List<HseCheckShip>> GetSafeCheckedShip();
+
+    /**
+     * 6.4 提交HSE检查记录数据
+     * @param listBeans
+     * @return
+     */
+    Observable<Boolean> InsertSafeHSECheckedRecord(List<HseCheckAddBean> listBeans);
+
+    /**
+     * 6.7 根据ItemID删除HSE检查记录数据
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteSafeHSECheckedRecordByItemID(int ItemID);
+
+    /**
+     * 6.6 根据ItemID获取HSE检查记录数据
+     * @param ItemID
+     * @return
+     */
+    Observable<HseCheckListBean> GetSafeHSECheckedRecordByItemID(int ItemID);
+
+    /**
+     * 6.2 获取缺陷类别数据
+     * @param PageSize
+     * @param PageCount
+     * @param bean
+     * @return
+     */
+    Observable<List<HseDefectType>> GetSafeShipSelfCheckItems(int PageSize, int PageCount, HseDefectTypeBean bean);
+
+    /**
+     * 6.19 整改期限基础信息
+     * @param PageSize
+     * @param PageCount
+     * @param bean
+     * @return
+     */
+    Observable<List<HseDefectDeadline>> GetSafeRectificationDeadlineOptions(int PageSize, int PageCount, HseDefectDeadlineBean bean);
+
+    /**
+     * 6.22 获取所有缺陷纪录（包含待处理，已处理）
+     * @param PageSize
+     * @param PageCount
+     * @param bean
+     * @return
+     */
+    Observable<List<HseDefectListBean>> GetSafeDefectRecords(int PageSize, int PageCount, HseDefectListBean bean);
+
 }

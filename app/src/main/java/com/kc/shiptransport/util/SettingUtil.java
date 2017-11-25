@@ -25,14 +25,8 @@ public class SettingUtil {
     /* 用户名 */
     public static final String DATA_USERNAME = "username";
 
-    /* plan jumpWeek */
-    public static final String WEEK_JUMP_PLAN = "jump_week_plan";
-
-    /* supply jumpWeek */
-    public static final String WEEK_JUMP_SUPPLY = "jump_week_supply";
-
-    /* acceptance jumpWeek */
-    public static final String WEEK_JUMP_ACCEPTANCE = "jump_week_acceptance";
+    /* jumpWeek */
+    public static final String WEEK_JUMP = "jump_week";
 
     /* 工程人员当前审核供应商账号 */
     public static final String SUBCONTRACTOR_ACCOUNT = "subcontractor_account";
@@ -243,5 +237,31 @@ public class SettingUtil {
     /* 供应商名称 */
     public static final String SP_KEY_SUB_NAME = "SP_KEY_SUB_NAME";
     /*-----------------------------------------------bcf--------------------------------------------------*/
+
+
+    /*-----------------------------------------------hse--------------------------------------------------*/
+    /* 受检船舶账号 */
+    public static final String SP_KEY_HSE_SHIP_ACCOUNT = "SP_KEY_HSE_SHIP_ACCOUNT";
+    /* 受检船舶名称 */
+    public static final String SP_KEY_HSE_SHIP_NAME = "SP_KEY_HSE_SHIP_NAME";
+    /*-----------------------------------------------hse--------------------------------------------------*/
+
+
+
+
+    /*-----------------------------------------------hse类型--------------------------------------------------*/
+    /* HSE记录新增 */
+    public static final int TYPE_HSE_CHECK_ADD = 901;
+    /* HSE记录修改 */
+    public static final int TYPE_HSE_CHECK_UPDATE = 902;
+
+    /* HSE缺陷新增 */
+    public static final int TYPE_HSE_DEFECT_ADD = 903;
+    /* HSE缺陷修改 */
+    public static final int TYPE_HSE_DEFECT_UPDATE = 903;
+    /*-----------------------------------------------hse新增--------------------------------------------------*/
+
+
+
 
 }

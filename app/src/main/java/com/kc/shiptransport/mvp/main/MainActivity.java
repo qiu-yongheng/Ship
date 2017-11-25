@@ -180,7 +180,6 @@ public class MainActivity extends BaseActivity {
                     showDailog("", "权限已被禁止, 请到系统设置开启权限", "", "退出", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
                         }
                     }, new DialogInterface.OnClickListener() {
                         @Override
