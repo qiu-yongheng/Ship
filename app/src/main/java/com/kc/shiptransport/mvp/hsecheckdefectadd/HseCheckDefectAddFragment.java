@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.hse.HseDefectAddCommitBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectDetailBean;
 import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.db.hse.HseDefectDeadline;
 import com.kc.shiptransport.db.hse.HseDefectType;
@@ -51,8 +54,7 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
     TextView tvChecker;
     @BindView(R.id.tv_defect_type)
     TextView tvDefectType;
-    @BindView(R.id.tv_defect_project)
-    TextView tvDefectProject;
+
     @BindView(R.id.tv_defect_deadline)
     TextView tvDefectDeadline;
     @BindView(R.id.et_remark)
@@ -64,12 +66,16 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
     @BindView(R.id.btn_return)
     Button btnReturn;
     Unbinder unbinder;
+    @BindView(R.id.et_defect_item)
+    EditText etDefectItem;
     private HseCheckDefectAddContract.Presenter presenter;
     private String userAccount;
     private List<HseDefectType> defectType;
     private List<HseDefectDeadline> defectDeadline;
-    private int hse_defect_type;
-    private int hse_defect_deadline;
+    private int hse_defect_type_id;
+    private int hse_defect_deadline_id;
+    private String hse_defect_item;
+    private String hse_remark;
     private List<ImgList> imgLists = new ArrayList<>(); // 图片显示列表
     private List<ImgList> deleteImgLists = new ArrayList<>(); // 需要请求删除的图片列表
     //    private List<ImgList> addImgLists = new ArrayList<>(); // 需要提交的图片列表
@@ -106,6 +112,14 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
 
         // recycler view
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+
+        switch (activity.type) {
+            case SettingUtil.TYPE_HSE_DEFECT_ADD:
+                break;
+            case SettingUtil.TYPE_HSE_DEFECT_UPDATE:
+                presenter.getDetailData(activity.itemID);
+                break;
+        }
     }
 
     /**
@@ -113,7 +127,7 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
      */
     private void initAdapter() {
         if (adapter == null) {
-            adapter = new ImgSelectAdapter(getContext(), imgLists);
+            adapter = new ImgSelectAdapter(getContext(), imgLists, true);
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, final int position, int... type) {
@@ -161,7 +175,6 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
     @Override
     public void initListener() {
         tvDefectType.setOnClickListener(this);
-        tvDefectProject.setOnClickListener(this);
         tvDefectDeadline.setOnClickListener(this);
         btnCommit.setOnClickListener(this);
     }
@@ -218,15 +231,13 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
                                     @Override
                                     public void onClick(View v) {
                                         tvDefectType.setText(hseDefectType.getName());
-                                        hse_defect_type = hseDefectType.getItemID(); // id
+                                        hse_defect_type_id = hseDefectType.getItemID(); // id
                                         // TODO 记忆
                                         PopwindowUtil.hidePopwindow();
                                     }
                                 });
                     }
                 }, null, null);
-                break;
-            case R.id.tv_defect_project: // 缺陷项目
                 break;
             case R.id.tv_defect_deadline: // 整改期限
                 PopwindowUtil.showPopwindow(getContext(), defectDeadline, tvDefectDeadline, true, new PopwindowUtil.InitHolder<HseDefectDeadline>() {
@@ -237,7 +248,7 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
                                     @Override
                                     public void onClick(View v) {
                                         tvDefectDeadline.setText(hseDefectDeadline.getRectificationDeadlineName());
-                                        hse_defect_deadline = hseDefectDeadline.getRectificationDeadlineID();
+                                        hse_defect_deadline_id = hseDefectDeadline.getRectificationDeadlineID();
 
 
                                         PopwindowUtil.hidePopwindow();
@@ -247,8 +258,8 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
                 }, null, null);
                 break;
             case R.id.btn_commit:
-                // TODO:
-
+                // 提交
+                commit();
                 break;
         }
     }
@@ -261,14 +272,12 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
             activity.showDailog("警告", "修改数据还未提交, 是否提交?", "返回不保存", "提交", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    imgLists.clear();
-                    deleteImgLists.clear();
-                    activity.onBackPressed();
+                    back();
                 }
             }, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
+                    commit();
                 }
             });
             return true;
@@ -277,6 +286,96 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
 
     @Override
     public void showCommitResult(boolean isSuccess) {
+        if (isSuccess) {
+            ToastUtil.tip(getContext(), "提交成功");
+            back();
+        } else {
+            ToastUtil.tip(getContext(), "提交失败, 请重试");
+        }
+    }
 
+    @Override
+    public void showDetailData(HseDefectDetailBean bean) {
+        // 缺陷类别
+        String defectTypeName = bean.getDefectTypeName();
+        hse_defect_type_id = bean.getDefectTypeID();
+        // 缺陷项目
+        hse_defect_item = bean.getDefectItem();
+        // 整改期限
+        String rectificationDeadlineName = bean.getRectificationDeadlineName();
+        hse_defect_deadline_id = bean.getRectificationDeadline();
+        // 备注
+        hse_remark = bean.getRemark();
+
+        tvDefectType.setText(defectTypeName);
+        etDefectItem.setText(hse_defect_item);
+        tvDefectDeadline.setText(rectificationDeadlineName);
+        etRemark.setText(hse_remark);
+
+
+        if (bean.getAttachmentList() != null) {
+            List<ImgList> imgLists = RxGalleryUtil.toImgList(bean.getAttachmentList());
+            adapter.loadmore(imgLists);
+        }
+    }
+
+    /**
+     * @param title
+     * @param max
+     */
+    @Override
+    public void showProgressDialog(String title, int max) {
+        activity.progressDialog(title, max, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                presenter.unsubscribe();
+            }
+        });
+    }
+
+    /**
+     * @param title
+     * @param len
+     */
+    @Override
+    public void updateProgressDialog(String title, int len) {
+        activity.updateProgressTitle(title, len);
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        activity.hideProgress();
+    }
+
+    /**
+     * 提交修改
+     */
+    public void commit() {
+        hse_defect_item = etDefectItem.getText().toString().trim();
+        hse_remark = etRemark.getText().toString().trim();
+        if (hse_defect_type_id == 0) {
+            ToastUtil.tip(getContext(), "请选择缺陷类别");
+        } else if (TextUtils.isEmpty(hse_defect_item)) {
+            ToastUtil.tip(getContext(), "请填写缺陷项目");
+        } else if (hse_defect_deadline_id == 0) {
+            ToastUtil.tip(getContext(), "请选择整改期限");
+        } else {
+            presenter.commit(new HseDefectAddCommitBean(activity.itemID,
+                    activity.checkRecordID,
+                    hse_defect_type_id,
+                    hse_defect_item,
+                    hse_defect_deadline_id,
+                    creator,
+                    hse_remark), RxGalleryUtil.getNoCommitImg(imgLists), deleteImgLists);
+        }
+    }
+
+    /**
+     * 返回
+     */
+    public void back() {
+        imgLists.clear();
+        deleteImgLists.clear();
+        activity.onBackPressed();
     }
 }

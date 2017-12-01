@@ -7,20 +7,20 @@ android {
         applicationId "com.kc.shiptransport"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 46
-        versionName "1.2.9.9"
+        versionCode 47
+        versionName "1.3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
         flavorDimensions "release"
     }
 
-    productFlavors {
-        official {
-            dimension "release"
-            applicationId "com.kc.shiptransport.official"
-        }
-    }
+//    productFlavors {
+//        official {
+//            dimension "release"
+//            applicationId "com.kc.shiptransport.official"
+//        }
+//    }
 
 
     buildTypes {

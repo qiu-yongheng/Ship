@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface HseCheckContract {
     interface View extends BaseView<Presenter> {
-        void showDates(List<HseCheckListBean> hseCheckListBeans);
+        void showDates(List<HseCheckListBean> hseCheckListBeans, boolean isFirst);
         void showDeleteResult(boolean isSuccess);
     }
 

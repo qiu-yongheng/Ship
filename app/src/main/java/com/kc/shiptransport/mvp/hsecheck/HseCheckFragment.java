@@ -112,8 +112,8 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
         select4.setVisibility(View.GONE);
         startDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, Calendar.DATE, -30);
         endDate = CalendarUtil.getOffsetDate(CalendarUtil.YYYY_MM_DD, Calendar.DATE, 1);
-//        List<User> users = DataSupport.findAll(User.class);
-//        creator = users.isEmpty() ? "" : users.get(0).getUserID();
+        //        List<User> users = DataSupport.findAll(User.class);
+        //        creator = users.isEmpty() ? "" : users.get(0).getUserID();
         refreshLayout.setEnableHeaderTranslationContent(false);
     }
 
@@ -171,7 +171,7 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
 
     @Override
     public int setView() {
-        return R.layout.fragment_hsecheck;
+        return R.layout.fragment_hse_list;
     }
 
     @Override
@@ -186,7 +186,7 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
     }
 
     @Override
-    public void showDates(List<HseCheckListBean> hseCheckListBeans) {
+    public void showDates(List<HseCheckListBean> hseCheckListBeans, boolean isFirst) {
         if (hseCheckListBeans == null || hseCheckListBeans.isEmpty()) {
             // 不能加载更多
             refreshLayout.finishLoadmore();
@@ -205,6 +205,10 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                             .setText(R.id.tv_check_time, bean.getCheckedTime())
                             .setText(R.id.tv_check_ship, bean.getCheckedShipName())
                             .setText(R.id.tv_remark, bean.getRemark())
+                            .setText(R.id.tv_defect_count, String.valueOf(bean.getDefectCount()))
+                            .setText(R.id.tv_rectificationed, String.valueOf(bean.getRectificationDoneCount()))
+                            .setText(R.id.tv_rectificationing, String .valueOf(bean.getRectificationDoingCount()))
+                            .setText(R.id.tv_other, "(缺陷数:" + bean.getDefectCount() + " 已整改:" + bean.getRectificationDoneCount() + " 待整改:" + bean.getRectificationDoingCount() + ")")
                             .setOnClickListener(R.id.btn_update, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) { // 修改
@@ -232,15 +236,18 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                             });
                 }
             };
+
+            // 不能使用EmptyWrapper装饰adapter, 不然删除列表没有变化
+            //        EmptyWrapper<String> emptyWrapper = new EmptyWrapper<>(adapter);
+            //        emptyWrapper.setEmptyView(R.layout.empty_view);
+            recyclerView.setAdapter(adapter);
         } else {
+            if (isFirst) {
+                adapter.clear();
+            }
             adapter.loadmore(hseCheckListBeans);
+
         }
-
-
-        // 不能使用EmptyWrapper装饰adapter, 不然删除列表没有变化
-//        EmptyWrapper<String> emptyWrapper = new EmptyWrapper<>(adapter);
-//        emptyWrapper.setEmptyView(R.layout.empty_view);
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -253,7 +260,6 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
             ToastUtil.tip(getContext(), "删除失败, 请重试");
         }
     }
-
 
 
     @Override
@@ -322,6 +328,17 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                     }
                 });
                 break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (refreshLayout != null && refreshLayout.isRefreshing()) {
+            refreshLayout.finishRefresh();
+        }
+        if (presenter != null) {
+            presenter.unsubscribe();
         }
     }
 }

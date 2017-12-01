@@ -19,6 +19,7 @@ public abstract class MySubcriber<T> implements Observer<T> {
 
     @Override
     public void onError(Throwable e) {
+        //LogUtil.e(e);
         _onError(ExceptionHandle.handleException(e));
     }
 

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="@dimen/paddingtop_18dp"
+        android:layout_marginRight="@dimen/paddingtop_18dp"
+        android:layout_marginTop="@dimen/margintop_8dp"
+        app:cardElevation="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_12"
+            android:layout_marginRight="@dimen/margin_12"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="提单日期"/>
+
+                <TextView
+                    android:id="@+id/tv_defect_date"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="缺陷类别"/>
+
+                <TextView
+                    android:id="@+id/tv_defect_type"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="缺陷项目"/>
+
+                <TextView
+                    android:id="@+id/tv_defect_project"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="截止整改时间"/>
+
+                <TextView
+                    android:id="@+id/tv_deadline_date"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="整改期限"/>
+
+                <TextView
+                    android:id="@+id/tv_defect_deadline"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="处理状态"/>
+
+                <TextView
+                    android:id="@+id/tv_defect_status"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="备          注"/>
+
+                <TextView
+                    android:id="@+id/tv_remark"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp">
+
+                <Button
+                    android:id="@+id/btn_detail"
+                    style="@style/text_tag"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/text_white"
+                    android:text="缺陷详情"/>
+
+                <include layout="@layout/view_divi_v"/>
+
+                <Button
+                    android:id="@+id/btn_rectification"
+                    style="@style/text_tag"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/text_white"
+                    android:text="整改缺陷"/>
+
+                <include layout="@layout/view_divi_v"/>
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    style="@style/text_tag"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/text_white"
+                    android:text="删除整改"
+                    android:visibility="visible"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

@@ -30,6 +30,9 @@ public abstract class BaseFragment<V extends AppCompatActivity> extends Fragment
     Toolbar toolbar;
     ViewFlipper layoutContainer;
     public String creator;
+    public int pageSize = 20;
+    public int pageCount = 1;
+    public String creatorName;
 
     @Nullable
     @Override
@@ -61,6 +64,7 @@ public abstract class BaseFragment<V extends AppCompatActivity> extends Fragment
 
         List<User> users = DataSupport.findAll(User.class);
         creator = users.isEmpty() ? "" : users.get(0).getUserID();
+        creatorName = users.isEmpty() ? "" : users.get(0).getUserName();
     }
 
     @Override

@@ -1,12 +1,14 @@
 package com.kc.shiptransport.data.bean.hse;
 
+import java.io.Serializable;
+
 /**
  * @author 邱永恒
  * @time 2017/11/25  15:24
  * @desc ${TODD}
  */
 
-public class HseDefectListBean {
+public class HseDefectListBean implements Serializable{
 
     /**
      * rownumber : 1
@@ -27,6 +29,8 @@ public class HseDefectListBean {
     private int rownumber;
     private int ItemID;
     private int HSECheckedRecordID;
+    private String CheckedShipAccount;
+    private String CheckedShipName;
     private int DefectTypeID;
     private String DefectTypeName;
     private String DefectItem;
@@ -37,7 +41,20 @@ public class HseDefectListBean {
     private String CreatorName;
     private String SystemDate;
     private int IsSubmitted;
+    private String RectificationTime;
+    private String RectificationRemark;
+    private int RectificationRecordID;
+    private String DeadlineTime;
 
+    /**
+     * HSE缺陷
+     * @param HSECheckedRecordID
+     * @param defectTypeID
+     * @param defectItem
+     * @param rectificationDeadline
+     * @param creator
+     * @param isSubmitted
+     */
     public HseDefectListBean(int HSECheckedRecordID, int defectTypeID, String defectItem, int rectificationDeadline, String creator, int isSubmitted) {
         this.HSECheckedRecordID = HSECheckedRecordID;
         DefectTypeID = defectTypeID;
@@ -45,6 +62,44 @@ public class HseDefectListBean {
         RectificationDeadline = rectificationDeadline;
         Creator = creator;
         IsSubmitted = isSubmitted;
+    }
+
+    public HseDefectListBean(int rownumber, int itemID, int HSECheckedRecordID, String checkedShipAccount, String checkedShipName, int defectTypeID, String defectTypeName, String defectItem, int rectificationDeadline, String rectificationDeadlineName, String remark, String creator, String creatorName, String systemDate, int isSubmitted, String rectificationTime, String rectificationRemark, int rectificationRecordID, String deadlineTime) {
+        this.rownumber = rownumber;
+        ItemID = itemID;
+        this.HSECheckedRecordID = HSECheckedRecordID;
+        CheckedShipAccount = checkedShipAccount;
+        CheckedShipName = checkedShipName;
+        DefectTypeID = defectTypeID;
+        DefectTypeName = defectTypeName;
+        DefectItem = defectItem;
+        RectificationDeadline = rectificationDeadline;
+        RectificationDeadlineName = rectificationDeadlineName;
+        Remark = remark;
+        Creator = creator;
+        CreatorName = creatorName;
+        SystemDate = systemDate;
+        IsSubmitted = isSubmitted;
+        RectificationTime = rectificationTime;
+        RectificationRemark = rectificationRemark;
+        RectificationRecordID = rectificationRecordID;
+        DeadlineTime = deadlineTime;
+    }
+
+    public String getCheckedShipAccount() {
+        return CheckedShipAccount;
+    }
+
+    public void setCheckedShipAccount(String checkedShipAccount) {
+        CheckedShipAccount = checkedShipAccount;
+    }
+
+    public String getCheckedShipName() {
+        return CheckedShipName;
+    }
+
+    public void setCheckedShipName(String checkedShipName) {
+        CheckedShipName = checkedShipName;
     }
 
     public int getRownumber() {
@@ -149,5 +204,37 @@ public class HseDefectListBean {
 
     public void setIsSubmitted(int IsSubmitted) {
         this.IsSubmitted = IsSubmitted;
+    }
+
+    public String getRectificationTime() {
+        return RectificationTime;
+    }
+
+    public void setRectificationTime(String rectificationTime) {
+        RectificationTime = rectificationTime;
+    }
+
+    public String getRectificationRemark() {
+        return RectificationRemark;
+    }
+
+    public void setRectificationRemark(String rectificationRemark) {
+        RectificationRemark = rectificationRemark;
+    }
+
+    public int getRectificationRecordID() {
+        return RectificationRecordID;
+    }
+
+    public void setRectificationRecordID(int rectificationRecordID) {
+        RectificationRecordID = rectificationRecordID;
+    }
+
+    public String getDeadlineTime() {
+        return DeadlineTime;
+    }
+
+    public void setDeadlineTime(String deadlineTime) {
+        DeadlineTime = deadlineTime;
     }
 }

@@ -131,6 +131,7 @@ public class HomeFragment extends Fragment {
                             break;
                         case 5:
                             // 安全管理
+                            HomeDetailActivity.startActiviyt(getContext(), type[0]);
                             break;
                         case 6:
                             // 数据分析

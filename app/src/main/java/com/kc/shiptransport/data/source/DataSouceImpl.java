@@ -11,13 +11,25 @@ import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
+import com.kc.shiptransport.data.bean.boatinquire.BoatInquireBean;
+import com.kc.shiptransport.data.bean.boatinquire.BoatInquireCommitBean;
+import com.kc.shiptransport.data.bean.boatinquire.BoatInquireDetailBean;
+import com.kc.shiptransport.data.bean.boatinquire.BoatInquireItemBean;
+import com.kc.shiptransport.data.bean.certificatesupervision.CertificateBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckAddBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckListBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckSelectBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectAddCommitBean;
 import com.kc.shiptransport.data.bean.hse.HseDefectDeadlineBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectDetailBean;
 import com.kc.shiptransport.data.bean.hse.HseDefectListBean;
 import com.kc.shiptransport.data.bean.hse.HseDefectTypeBean;
+import com.kc.shiptransport.data.bean.hse.rectification.HseRectificationBean;
+import com.kc.shiptransport.data.bean.hse.rectification.HseRectificationCommitBean;
+import com.kc.shiptransport.data.bean.img.ImgCommitBean;
+import com.kc.shiptransport.data.bean.img.ImgCommitResultBean;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.data.bean.todayplan.TodayPlanBean;
 import com.kc.shiptransport.db.Acceptance;
@@ -1181,7 +1193,7 @@ public interface DataSouceImpl {
      * @param bean
      * @return
      */
-    Observable<List<HseDefectType>> GetSafeShipSelfCheckItems(int PageSize, int PageCount, HseDefectTypeBean bean);
+    Observable<List<HseDefectType>> GetSafeDefectType(int PageSize, int PageCount, HseDefectTypeBean bean);
 
     /**
      * 6.19 整改期限基础信息
@@ -1199,6 +1211,121 @@ public interface DataSouceImpl {
      * @param bean
      * @return
      */
-    Observable<List<HseDefectListBean>> GetSafeDefectRecords(int PageSize, int PageCount, HseDefectListBean bean);
+    Observable<List<HseDefectListBean>> GetSafeDefectRecords(int PageSize, int PageCount, HseDefectListBean bean, String startDate, String endDate);
 
+    /**
+     * 生产待提交的图片数据
+     * @param imgList
+     * @return
+     */
+    Observable<ImgCommitBean> getImgCommitBean(ImgList imgList);
+
+    /**
+     * 1.21	 上传图片接口
+     * @param bean
+     * @return
+     */
+    Observable<ImgCommitResultBean> UploadFile(ImgCommitBean bean);
+
+    /**
+     * 6.10 提交HSE检查缺陷记录数据
+     * @param bean
+     * @param imgCommitResultBeans
+     * @return
+     */
+    Observable<Boolean> InsertSafeDefectRecord(HseDefectAddCommitBean bean, List<ImgCommitResultBean> imgCommitResultBeans);
+
+    /**
+     * 6.6根据ItemID删除缺陷记录图片
+     * @return
+     */
+    Observable<Boolean> DeleteSafeDefectAttachmentRecordByItemID(int itemID);
+
+    /**
+     * 6.23 根据缺陷记录ItemID,获取缺陷记录数据，包含图片信息
+     * @param itemID
+     * @return
+     */
+    Observable<HseDefectDetailBean> GetSafeDefectRecordByItemID(int itemID);
+
+    /**
+     * 6.11 根据ItemID 删除HSE检查缺陷记录数据
+     * @param itemID
+     * @return
+     */
+    Observable<Boolean> DeleteDefectRecordByItemID(int itemID);
+
+    /**
+     * 6.17 根据ItemID删除整改记录数据
+     * @param itemID
+     * @return
+     */
+    Observable<Boolean> DeleteSafeRectificationRecordByItemID(int itemID);
+
+    /**
+     * 6.16 提交整改记录数据
+     * @param bean
+     * @param imgCommitResultBeans
+     * @return
+     */
+    Observable<Boolean> InsertSafeRectificationRecord(HseRectificationCommitBean bean, List<ImgCommitResultBean> imgCommitResultBeans);
+
+    /**
+     * 6.14根据ItemID删除整改记录图片
+     * @return
+     */
+    Observable<Boolean> DeleteSafeRectificationAttachmentRecordByItemID(int itemID);
+
+    /**
+     * 6.25 根据缺陷记录ItemID,获取缺陷记录数据，包含图片信息
+     * @param itemID
+     * @return
+     */
+    Observable<HseRectificationBean> GetSafeRectificationRecordByItemID(int itemID);
+
+    /**
+     * 6.19 获取砂船自查记录（包含自查明细项）
+     * @param pageSize
+     * @param pageCount
+     * @param bean
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    Observable<List<BoatInquireBean>> GetSafeShipSelfCheckRecordsAnalysis(int pageSize, int pageCount, BoatInquireBean bean, String startDate, String endDate);
+
+    /**
+     * 6.26 根据ItemID,获取砂船自查记录（包含自查明细项）
+     * @param itemID
+     * @return
+     */
+    Observable<BoatInquireDetailBean> GetSafeShipSelfCheckDetailRecordByItemID(int itemID);
+
+    /**
+     * 6.1 砂船自查数据基础信息
+     * @return
+     */
+    Observable<List<BoatInquireItemBean>> GetSafeShipSelfCheckItems();
+
+    /**
+     * 6.18 提交砂船自查数据
+     * @param bean
+     * @return
+     */
+    Observable<Boolean> InsertSafeShipSelfCheckRecord(BoatInquireCommitBean bean);
+
+    /**
+     * 6.24 获取安全管理_持证监督数据
+     * @param pageSize
+     * @param pageCount
+     * @return
+     */
+    Observable<List<CertificateBean>> GetSafeCertificateSupervision(int pageSize, int pageCount);
+
+    /**
+     * 搜索持证监督记录
+     * @param msg
+     * @return
+     */
+    Observable<List<CertificateBean>> searchCertificate(String msg, boolean isSearchAll);
 }

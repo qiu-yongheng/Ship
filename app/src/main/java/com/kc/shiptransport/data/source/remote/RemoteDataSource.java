@@ -2518,9 +2518,9 @@ public class RemoteDataSource {
      * @return
      * @throws Exception
      */
-    public String GetSafeShipSelfCheckItems(int PageSize, int PageCount, String ConditionJson) throws Exception {
+    public String GetSafeDefectType(int PageSize, int PageCount, String ConditionJson) throws Exception {
         // 调用的方法名称
-        String methodName = "GetSafeShipSelfCheckItems";
+        String methodName = "GetSafeDefectType";
         // EndPoint
         String endPoint = BaseUrl.HSE;
         // SOAP Action
@@ -2606,6 +2606,282 @@ public class RemoteDataSource {
         SoapObject rpc = new SoapObject(nameSpace, methodName);
 
         rpc.addProperty("json", json);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.6根据ItemID删除缺陷记录图片
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteSafeDefectAttachmentRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteSafeDefectAttachmentRecordByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.23 根据缺陷记录ItemID,获取缺陷记录数据，包含图片信息
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeDefectRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeDefectRecordByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.11 根据ItemID 删除HSE检查缺陷记录数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteDefectRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteDefectRecordByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.17 根据ItemID删除整改记录数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteSafeRectificationRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteSafeRectificationRecordByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.16 提交整改记录数据
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    public String InsertSafeRectificationRecord(String json) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertSafeRectificationRecord";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.14根据ItemID删除整改记录图片
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteSafeRectificationAttachmentRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteSafeRectificationAttachmentRecordByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.25 根据缺陷记录ItemID,获取缺陷记录数据，包含图片信息
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeRectificationRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeRectificationRecordByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.19 获取砂船自查记录（包含自查明细项）
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeShipSelfCheckRecordsAnalysis(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeShipSelfCheckRecordsAnalysis";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.26 根据ItemID,获取砂船自查记录（包含自查明细项）
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeShipSelfCheckDetailRecordByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeShipSelfCheckDetailRecordByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.1 砂船自查数据基础信息
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeShipSelfCheckItems(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeShipSelfCheckItems";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.18 提交砂船自查数据
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    public String InsertSafeShipSelfCheckRecord(String json) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertSafeShipSelfCheckRecord";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 6.24 获取安全管理_持证监督数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetSafeCertificateSupervision(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetSafeCertificateSupervision";
+        // EndPoint
+        String endPoint = BaseUrl.HSE;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
 
         return getCallResult(endPoint, soapAction, rpc);
     }

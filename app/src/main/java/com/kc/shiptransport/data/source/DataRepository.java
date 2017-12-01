@@ -32,13 +32,25 @@ import com.kc.shiptransport.data.bean.SubmitBean;
 import com.kc.shiptransport.data.bean.TaskVolumeBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
+import com.kc.shiptransport.data.bean.boatinquire.BoatInquireBean;
+import com.kc.shiptransport.data.bean.boatinquire.BoatInquireCommitBean;
+import com.kc.shiptransport.data.bean.boatinquire.BoatInquireDetailBean;
+import com.kc.shiptransport.data.bean.boatinquire.BoatInquireItemBean;
+import com.kc.shiptransport.data.bean.certificatesupervision.CertificateBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckAddBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckListBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckSelectBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectAddCommitBean;
 import com.kc.shiptransport.data.bean.hse.HseDefectDeadlineBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectDetailBean;
 import com.kc.shiptransport.data.bean.hse.HseDefectListBean;
 import com.kc.shiptransport.data.bean.hse.HseDefectTypeBean;
+import com.kc.shiptransport.data.bean.hse.rectification.HseRectificationBean;
+import com.kc.shiptransport.data.bean.hse.rectification.HseRectificationCommitBean;
+import com.kc.shiptransport.data.bean.img.ImgCommitBean;
+import com.kc.shiptransport.data.bean.img.ImgCommitResultBean;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.data.bean.threadsandlog.IsCurrentData;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.data.bean.todayplan.TodayPlanBean;
@@ -824,7 +836,7 @@ public class DataRepository implements DataSouceImpl {
                     num = DataSupport.where("IsSumbitted = ?", "0").count(ExitAssessor.class);
                 } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
                     /** 退场审核 IsExit审核状态 */
-//                    num = DataSupport.where("IsExit = ? and IsSumbitted = ?", "0", "1").count(ExitAssessor.class);
+                    //                    num = DataSupport.where("IsExit = ? and IsSumbitted = ?", "0", "1").count(ExitAssessor.class);
                     num = DataSupport.where("IsExit = ?", "0").count(ExitAssessor.class);
                 } else if (type == SettingUtil.TYPE_ACCEPT) {
                     /** 验收 1通过, 0保存, -1不通过(不显示) */
@@ -4563,11 +4575,11 @@ public class DataRepository implements DataSouceImpl {
 
                     } else {
                         set.add(planDay);
-//                        if (isExitApplication) {
-                            totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(ExitAssessor.class));
-//                        } else {
-//                            totalLists.add(DataSupport.where("PlanDay = ? and IsSumbitted = ?", planDay, "1").find(ExitAssessor.class));
-//                        }
+                        //                        if (isExitApplication) {
+                        totalLists.add(DataSupport.where("PlanDay = ?", planDay).find(ExitAssessor.class));
+                        //                        } else {
+                        //                            totalLists.add(DataSupport.where("PlanDay = ? and IsSumbitted = ?", planDay, "1").find(ExitAssessor.class));
+                        //                        }
                     }
                 }
 
@@ -4688,7 +4700,7 @@ public class DataRepository implements DataSouceImpl {
                         list.add(num);
                     } else if (type == SettingUtil.TYPE_EXIT_ASSESSOR) {
                         /** 退场审核 IsExit审核状态 */
-//                        num = DataSupport.where("PlanDay like ? and IsSumbitted = ?", dates.get(i) + "%", "1").count(ExitAssessor.class);
+                        //                        num = DataSupport.where("PlanDay like ? and IsSumbitted = ?", dates.get(i) + "%", "1").count(ExitAssessor.class);
                         num = DataSupport.where("PlanDay like ?", dates.get(i) + "%").count(ExitAssessor.class);
                         list.add(num);
                     } else if (type == SettingUtil.TYPE_ACCEPT) {
@@ -5314,6 +5326,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 2.9 今日来船数据统计分析
+     *
      * @param CurrentDate
      * @return
      */
@@ -5334,6 +5347,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 6.5 获取HSE检查记录数据
+     *
      * @param PageSize
      * @param PageCount
      * @param bean
@@ -5372,6 +5386,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 6.3 获取受检船舶数据（包含供砂船舶，施工船舶）
+     *
      * @return
      */
     @Override
@@ -5397,6 +5412,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 6.4 提交HSE检查记录数据
+     *
      * @param list
      * @return
      */
@@ -5421,6 +5437,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 6.7 根据ItemID删除HSE检查记录数据
+     *
      * @param ItemID
      * @return
      */
@@ -5440,6 +5457,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 6.6 根据ItemID获取HSE检查记录数据
+     *
      * @param ItemID
      * @return
      */
@@ -5463,18 +5481,19 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 6.2 获取缺陷类别数据
+     *
      * @param PageSize
      * @param PageCount
      * @param bean
      * @return
      */
     @Override
-    public Observable<List<HseDefectType>> GetSafeShipSelfCheckItems(final int PageSize, final int PageCount, HseDefectTypeBean bean) {
+    public Observable<List<HseDefectType>> GetSafeDefectType(final int PageSize, final int PageCount, HseDefectTypeBean bean) {
         return Observable.create(new ObservableOnSubscribe<List<HseDefectType>>() {
             @Override
             public void subscribe(ObservableEmitter<List<HseDefectType>> e) throws Exception {
                 // 查询所有
-                String result = mRemoteDataSource.GetSafeShipSelfCheckItems(PageSize, PageCount, "");
+                String result = mRemoteDataSource.GetSafeDefectType(PageSize, PageCount, "");
 
                 List<HseDefectType> list = gson.fromJson(result, new TypeToken<List<HseDefectType>>() {
                 }.getType());
@@ -5490,6 +5509,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 6.19 整改期限基础信息
+     *
      * @param PageSize
      * @param PageCount
      * @param bean
@@ -5517,13 +5537,14 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 6.22 获取所有缺陷纪录（包含待处理，已处理）
+     *
      * @param PageSize
      * @param PageCount
      * @param bean
      * @return
      */
     @Override
-    public Observable<List<HseDefectListBean>> GetSafeDefectRecords(final int PageSize, final int PageCount, final HseDefectListBean bean) {
+    public Observable<List<HseDefectListBean>> GetSafeDefectRecords(final int PageSize, final int PageCount, final HseDefectListBean bean, final String startDate, final String endDate) {
         return Observable.create(new ObservableOnSubscribe<List<HseDefectListBean>>() {
             @Override
             public void subscribe(ObservableEmitter<List<HseDefectListBean>> e) throws Exception {
@@ -5537,16 +5558,472 @@ public class DataRepository implements DataSouceImpl {
                 JSONObject rectificationDeadline = JsonUtil.creatorJsonObject("RectificationDeadline", JsonUtil.TYPE_STRING, bean.getRectificationDeadline() == 0 ? "" : String.valueOf(bean.getRectificationDeadline()));
                 // 处理状态
                 JSONObject isSubmitted = JsonUtil.creatorJsonObject("IsSubmitted", JsonUtil.TYPE_STRING, bean.getIsSubmitted() == 100 ? "" : String.valueOf(bean.getIsSubmitted()));
+                // 当前船舶账号
+                JSONObject checkedShipAccount = JsonUtil.creatorJsonObject("CheckedShipAccount", JsonUtil.TYPE_STRING, bean.getCheckedShipAccount());
+                // 时间
+                JSONObject systemDate = JsonUtil.creatorJsonObjectArray("SystemDate", JsonUtil.TYPE_DATETIME, startDate, endDate);
 
-                String json = JsonUtil.spliceJson(hseCheckedRecordID, defectTypeID, defectItem, rectificationDeadline, isSubmitted);
+
+                String json = JsonUtil.spliceJson(hseCheckedRecordID, defectTypeID, defectItem, rectificationDeadline, isSubmitted, checkedShipAccount, systemDate);
                 LogUtil.t(bean.getHSECheckedRecordID() + ", 6.22 获取所有缺陷纪录（包含待处理，已处理）\n");
                 LogUtil.json(json);
 
                 String result = mRemoteDataSource.GetSafeDefectRecords(PageSize, PageCount, json);
 
+                LogUtil.t(bean.getHSECheckedRecordID() + ", 6.22 获取所有缺陷纪录（包含待处理，已处理）result: \n");
+                LogUtil.json(result);
+
                 List<HseDefectListBean> list = gson.fromJson(result, new TypeToken<List<HseDefectListBean>>() {
                 }.getType());
 
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 生产待提交图片数据
+     *
+     * @param imgList
+     * @return
+     */
+    @Override
+    public Observable<ImgCommitBean> getImgCommitBean(final ImgList imgList) {
+        return Observable.create(new ObservableOnSubscribe<ImgCommitBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<ImgCommitBean> e) throws Exception {
+                // 文件名
+                String fileName = imgList.getPath().substring(imgList.getPath().lastIndexOf("/") + 1);
+                // 文件后缀名
+                String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
+                // base64
+                File file = new File(imgList.getPath());
+                byte[] bytes = FileUtil.File2byte(file);
+                String byteDataStr = new String(Base64.encode(bytes, Base64.DEFAULT));
+
+                ImgCommitBean imgCommitBean = new ImgCommitBean(byteDataStr, suffixName, fileName);
+                LogUtil.d("待提交图片: " + imgCommitBean);
+                e.onNext(imgCommitBean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.21	 上传图片接口
+     *
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<ImgCommitResultBean> UploadFile(final ImgCommitBean bean) {
+        return Observable.create(new ObservableOnSubscribe<ImgCommitResultBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<ImgCommitResultBean> e) throws Exception {
+                String result = mRemoteDataSource.UploadFile(bean.getByteDataStr(), bean.getSuffixName(), bean.getFileName());
+
+                LogUtil.t(bean.getFileName() + ", 1.21 上传图片接口result: \n");
+                LogUtil.json(result);
+
+                ImgCommitResultBean resultBean = gson.fromJson(result, ImgCommitResultBean.class);
+
+                e.onNext(resultBean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.10 提交HSE检查缺陷记录数据
+     *
+     * @param bean
+     * @param imgCommitResultBeans
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertSafeDefectRecord(final HseDefectAddCommitBean bean, final List<ImgCommitResultBean> imgCommitResultBeans) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                List<HseDefectAddCommitBean.AttachmentListBean> list = new ArrayList<>();
+                for (ImgCommitResultBean bean : imgCommitResultBeans) {
+                    HseDefectAddCommitBean.AttachmentListBean attachmentListBean = new HseDefectAddCommitBean.AttachmentListBean();
+                    attachmentListBean.setFileName(bean.getFileName());
+                    attachmentListBean.setFilePath(bean.getFilePath());
+                    list.add(attachmentListBean);
+                }
+
+                bean.setAttachmentList(list);
+
+                String json = gson.toJson(bean);
+
+                LogUtil.t(bean.getItemID() + ", 6.10 提交HSE检查缺陷记录数据\n");
+                LogUtil.json(json);
+
+                String result = mRemoteDataSource.InsertSafeDefectRecord(json);
+                LogUtil.t(bean.getItemID() + ", 6.10 提交HSE检查缺陷记录数据result: \n");
+                LogUtil.json(result);
+
+                CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(resultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.6根据ItemID删除缺陷记录图片
+     *
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteSafeDefectAttachmentRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteSafeDefectAttachmentRecordByItemID(itemID);
+                LogUtil.t(itemID + ", 6.6根据ItemID删除缺陷记录图片\n");
+                LogUtil.json(result);
+
+                CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(resultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.23 根据缺陷记录ItemID,获取缺陷记录数据，包含图片信息
+     *
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<HseDefectDetailBean> GetSafeDefectRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<HseDefectDetailBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<HseDefectDetailBean> e) throws Exception {
+                String result = mRemoteDataSource.GetSafeDefectRecordByItemID(itemID);
+                LogUtil.t(itemID + ", 6.23 根据缺陷记录ItemID,获取缺陷记录数据，包含图片信息result:\n");
+                LogUtil.json(result);
+
+                HseDefectDetailBean bean = gson.fromJson(result, HseDefectDetailBean.class);
+
+                e.onNext(bean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.11 根据ItemID 删除HSE检查缺陷记录数据
+     *
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteDefectRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteDefectRecordByItemID(itemID);
+                LogUtil.t(itemID + ", 6.11 根据ItemID 删除HSE检查缺陷记录数据result: \n");
+                LogUtil.json(result);
+
+                CommitResultBean commitResultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(commitResultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.17 根据ItemID删除整改记录数据
+     *
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteSafeRectificationRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteSafeRectificationRecordByItemID(itemID);
+
+                LogUtil.t(itemID + ", 6.17 根据ItemID删除整改记录数据result: \n");
+                LogUtil.json(result);
+
+                CommitResultBean commitResultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(commitResultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.16 提交整改记录数据
+     *
+     * @param bean
+     * @param imgCommitResultBeans
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertSafeRectificationRecord(final HseRectificationCommitBean bean, final List<ImgCommitResultBean> imgCommitResultBeans) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                List<HseRectificationCommitBean.AttachmentListBean> list = new ArrayList<>();
+                for (ImgCommitResultBean bean : imgCommitResultBeans) {
+                    HseRectificationCommitBean.AttachmentListBean attachmentListBean = new HseRectificationCommitBean.AttachmentListBean();
+                    attachmentListBean.setFileName(bean.getFileName());
+                    attachmentListBean.setFilePath(bean.getFilePath());
+                    list.add(attachmentListBean);
+                }
+
+                bean.setAttachmentList(list);
+
+                String json = gson.toJson(bean);
+
+                LogUtil.t(bean.getItemID() + ", 6.16 提交整改记录数据\n");
+                LogUtil.json(json);
+
+                String result = mRemoteDataSource.InsertSafeRectificationRecord(json);
+                LogUtil.t(bean.getItemID() + ", 6.16 提交整改记录数据result: \n");
+                LogUtil.json(result);
+
+                CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(resultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.14根据ItemID删除整改记录图片
+     *
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteSafeRectificationAttachmentRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteSafeRectificationAttachmentRecordByItemID(itemID);
+                LogUtil.t(itemID + ", 6.14根据ItemID删除整改记录图片result: \n");
+                LogUtil.json(result);
+
+                CommitResultBean commitResultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(commitResultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.25 根据缺陷记录ItemID,获取缺陷记录数据，包含图片信息
+     *
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<HseRectificationBean> GetSafeRectificationRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<HseRectificationBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<HseRectificationBean> e) throws Exception {
+                String result = mRemoteDataSource.GetSafeRectificationRecordByItemID(itemID);
+                LogUtil.t(itemID + ", 6.25 根据缺陷记录ItemID,获取缺陷记录数据，包含图片信息result: \n");
+                LogUtil.json(result);
+
+                HseRectificationBean hseRectificationBean = gson.fromJson(result, HseRectificationBean.class);
+
+                e.onNext(hseRectificationBean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.19 获取砂船自查记录（包含自查明细项）
+     *
+     * @param pageSize
+     * @param pageCount
+     * @param bean
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @Override
+    public Observable<List<BoatInquireBean>> GetSafeShipSelfCheckRecordsAnalysis(final int pageSize, final int pageCount, final BoatInquireBean bean, final String startDate, final String endDate) {
+        return Observable.create(new ObservableOnSubscribe<List<BoatInquireBean>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<BoatInquireBean>> e) throws Exception {
+                // 检查日期
+                JSONObject checkDate = JsonUtil.creatorJsonObjectArray("CheckDate", JsonUtil.TYPE_DATETIME, startDate, endDate);
+                // 船舶账号
+                JSONObject shipAccount = JsonUtil.creatorJsonObject("ShipAccount", JsonUtil.TYPE_STRING, bean.getShipAccount());
+                // 检查人员
+                JSONObject creator = JsonUtil.creatorJsonObject("Creator", JsonUtil.TYPE_STRING, bean.getCreator());
+
+                String json = JsonUtil.spliceJson(checkDate, shipAccount, creator);
+                LogUtil.t("6.19 获取砂船自查记录（包含自查明细项）json: \n");
+                LogUtil.json(json);
+
+                String result = mRemoteDataSource.GetSafeShipSelfCheckRecordsAnalysis(pageSize, pageCount, json);
+
+                LogUtil.t("6.19 获取砂船自查记录（包含自查明细项）result: \n");
+                LogUtil.json(result);
+
+                List<BoatInquireBean> list = gson.fromJson(result, new TypeToken<List<BoatInquireBean>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.26 根据ItemID,获取砂船自查记录（包含自查明细项）
+     *
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<BoatInquireDetailBean> GetSafeShipSelfCheckDetailRecordByItemID(final int itemID) {
+        return Observable.create(new ObservableOnSubscribe<BoatInquireDetailBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<BoatInquireDetailBean> e) throws Exception {
+                String result = mRemoteDataSource.GetSafeShipSelfCheckDetailRecordByItemID(itemID);
+                LogUtil.t(itemID + "--> 6.26 根据ItemID,获取砂船自查记录（包含自查明细项）result: \n");
+                LogUtil.json(result);
+
+                List<BoatInquireDetailBean> list = gson.fromJson(result, new TypeToken<List<BoatInquireDetailBean>>() {
+                }.getType());
+
+                e.onNext(list.get(0));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.1 砂船自查数据基础信息
+     *
+     * @return
+     */
+    @Override
+    public Observable<List<BoatInquireItemBean>> GetSafeShipSelfCheckItems() {
+        return Observable.create(new ObservableOnSubscribe<List<BoatInquireItemBean>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<BoatInquireItemBean>> e) throws Exception {
+                String result = mRemoteDataSource.GetSafeShipSelfCheckItems(10000, 1, "");
+                LogUtil.t("6.1 砂船自查数据基础信息");
+                LogUtil.json(result);
+
+                List<BoatInquireItemBean> list = gson.fromJson(result, new TypeToken<List<BoatInquireItemBean>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.18 提交砂船自查数据
+     *
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertSafeShipSelfCheckRecord(final BoatInquireCommitBean bean) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String json = gson.toJson(bean);
+                LogUtil.t("6.18 提交砂船自查数据\n");
+                LogUtil.json(json);
+
+                String result = mRemoteDataSource.InsertSafeShipSelfCheckRecord(json);
+                LogUtil.t("6.18 提交砂船自查数据result: \n");
+                LogUtil.json(result);
+
+                CommitResultBean commitResultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(commitResultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.24 获取安全管理_持证监督数据
+     *
+     * @param pageSize
+     * @param pageCount
+     * @return
+     */
+    @Override
+    public Observable<List<CertificateBean>> GetSafeCertificateSupervision(int pageSize, int pageCount) {
+        return Observable.create(new ObservableOnSubscribe<List<CertificateBean>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<CertificateBean>> e) throws Exception {
+                String result = mRemoteDataSource.GetSafeCertificateSupervision(10000, 1, "");
+                List<CertificateBean> list = gson.fromJson(result, new TypeToken<List<CertificateBean>>() {
+                }.getType());
+
+                DataSupport.deleteAll(CertificateBean.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 搜索持证监督记录
+     * 1. 船舶 ShipName ShipAccount
+     * 2. 供应商 SubcontractorName SubcontractorAccount
+     * 3. 姓名 UserName
+     * 4. 持证情况 CertificateOptions
+     *
+     * @param msg
+     * @return
+     */
+    @Override
+    public Observable<List<CertificateBean>> searchCertificate(final String msg, final boolean isSearchAll) {
+        return Observable.create(new ObservableOnSubscribe<List<CertificateBean>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<CertificateBean>> e) throws Exception {
+                List<CertificateBean> list = new ArrayList<>();
+                if (isSearchAll) {
+                    list = DataSupport.findAll(CertificateBean.class);
+                } else if (!isSearchAll && !TextUtils.isEmpty(msg)) {
+                    list = DataSupport
+                            .where("ShipName like ? " +
+                                            "or ShipAccount like ? " +
+                                            "or SubcontractorName like ? " +
+                                            "or SubcontractorAccount like ? " +
+                                            "or UserName like ? " +
+                                            "or CertificateOptions like ?",
+                                    "%" + msg + "%",
+                                    "%" + msg + "%",
+                                    "%" + msg + "%",
+                                    "%" + msg + "%",
+                                    "%" + msg + "%",
+                                    "%" + msg + "%")
+                            .find(CertificateBean.class);
+                }
                 e.onNext(list);
                 e.onComplete();
             }

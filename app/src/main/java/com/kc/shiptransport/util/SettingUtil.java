@@ -258,9 +258,26 @@ public class SettingUtil {
     /* HSE缺陷新增 */
     public static final int TYPE_HSE_DEFECT_ADD = 903;
     /* HSE缺陷修改 */
-    public static final int TYPE_HSE_DEFECT_UPDATE = 903;
+    public static final int TYPE_HSE_DEFECT_UPDATE = 904;
+
+    /* HSE整改新增 */
+    public static final int TYPE_HSE_RECTIFICATION_ADD = 905;
+    /* HSE整改只读 */
+    public static final int TYPE_HSE_RECTIFICATION_READ_ONLY = 906;
+    /* HSE整改缺陷详情 */
+    public static final int TYPE_HSE_RECTIFICATION_DEFECT_DETAIL = 907;
     /*-----------------------------------------------hse新增--------------------------------------------------*/
 
+
+
+    /*-----------------------------------------------砂船自查--------------------------------------------------*/
+    /* 砂船自查 新增 */
+    public static final int TYPE_BOAT_INQUIRE_ADD = 1001;
+    /* 砂船自查 修改 */
+    public static final int TYPE_BOAT_INQUIRE_UPDATE = 1002;
+    /* 砂船自查 只读 */
+    public static final int TYPE_BOAT_INQUIRE_READ_ONLY = 1003;
+    /*-----------------------------------------------砂船自查--------------------------------------------------*/
 
 
 

@@ -21,8 +21,12 @@ import com.kc.shiptransport.mvp.analysis.AnalysisActivity;
 import com.kc.shiptransport.mvp.attendance.AttendanceActivity;
 import com.kc.shiptransport.mvp.attendanceaudit.AttendanceAuditActivity;
 import com.kc.shiptransport.mvp.bcf.BCFActivity;
+import com.kc.shiptransport.mvp.boatinquire.BoatInquireActivity;
+import com.kc.shiptransport.mvp.certificatesupervision.CertificateSupervisionActivity;
 import com.kc.shiptransport.mvp.exitapplication.ExitApplicationActivity;
 import com.kc.shiptransport.mvp.exitassessor.ExitAssessorActivity;
+import com.kc.shiptransport.mvp.hsecheck.HseCheckActivity;
+import com.kc.shiptransport.mvp.hserectification.HseRectificationActivity;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
 import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
 import com.kc.shiptransport.mvp.sample.SampleActivity;
@@ -199,6 +203,24 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                         case 20:
                             // 考勤审核
                             AttendanceAuditActivity.startActivity(getContext());
+                            break;
+
+                        /** AppPID = 5 安全管理 */
+                        case 30:
+                            // HSE检查
+                            HseCheckActivity.startActivity(getContext());
+                            break;
+                        case 31:
+                            // HSE整改
+                            HseRectificationActivity.startActivity(getContext(), null);
+                            break;
+                        case 32:
+                            // 砂船自查
+                            BoatInquireActivity.startActivity(getContext());
+                            break;
+                        case 33:
+                            // 制证监督
+                            CertificateSupervisionActivity.startActivity(getContext());
                             break;
                     }
                 }

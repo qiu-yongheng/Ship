@@ -236,4 +236,9 @@ public class MultiItemTypeAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
         getDatas().addAll(datas);
         notifyDataSetChanged();
     }
+
+    public void clear() {
+        getDatas().clear();
+        notifyDataSetChanged();
+    }
 }

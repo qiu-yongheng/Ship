@@ -17,6 +17,7 @@ import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.util.LogUtil;
+import com.kc.shiptransport.util.fragmentback.BackHandlerHelper;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -109,23 +110,22 @@ public class BaseActivity extends AppCompatActivity {
         mProgress.setButton(AlertDialog.BUTTON_NEUTRAL, "取消", listenter);
 
         mProgress.show();
-        //        new Thread(new Runnable() {
-        //            int progress = 0;
-        //            @Override
-        //            public void run() {
-        //                // TODO Auto-generated method stub
-        //                while (progress <= max) {
-        //                    mProgress.setProgress(progress);
-        //                    try {
-        //                        Thread.sleep(100);
-        //                    } catch (InterruptedException e) {
-        //                        // TODO Auto-generated catch block
-        //                        e.printStackTrace();
-        //                    }
-        //                    progress++;
-        //                }
-        //            }
-        //        }).start();
+    }
+
+    /**
+     * 更新进度与标题
+     * @param title
+     * @param len
+     */
+    public void updateProgressTitle(String title, int len) {
+        mProgress.setTitle(title);
+        progress += len;
+        mProgress.setProgress(progress);
+
+        if (progress >= mProgress.getMax()) {
+            mProgress.dismiss();
+            Toast.makeText(this, "上传成功", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -143,6 +143,9 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 隐藏进度
+     */
     public void hideProgress() {
         if (mProgress != null) {
             if (mProgress.isShowing()) {
@@ -368,15 +371,6 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 点击返回时, 取消土司显示
-     */
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        cancelToast();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -407,10 +401,10 @@ public class BaseActivity extends AppCompatActivity {
         MobclickAgent.onPause(this);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if (!BackHandlerHelper.handleBackPress(this)) {
-//            super.onBackPressed();
-//        }
-//    }
+    @Override
+    public void onBackPressed() {
+        if (!BackHandlerHelper.handleBackPress(this)) {
+            super.onBackPressed();
+        }
+    }
 }

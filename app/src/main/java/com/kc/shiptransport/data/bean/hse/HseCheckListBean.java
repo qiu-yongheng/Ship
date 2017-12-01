@@ -29,7 +29,22 @@ public class HseCheckListBean {
     private String Creator;
     private String CreatorName;
     private String SystemDate;
+    private int DefectCount;
+    private int RectificationDoneCount;
+    private int RectificationDoingCount;
 
+    /**
+     * HSE检查记录提交创建对象用
+     * @param rownumber
+     * @param itemID
+     * @param checkedTime
+     * @param checkedShipAccount
+     * @param checkedShipName
+     * @param remark
+     * @param creator
+     * @param creatorName
+     * @param systemDate
+     */
     public HseCheckListBean(int rownumber, int itemID, String checkedTime, String checkedShipAccount, String checkedShipName, String remark, String creator, String creatorName, String systemDate) {
         this.rownumber = rownumber;
         ItemID = itemID;
@@ -40,6 +55,45 @@ public class HseCheckListBean {
         Creator = creator;
         CreatorName = creatorName;
         SystemDate = systemDate;
+    }
+
+    public HseCheckListBean(int rownumber, int itemID, String checkedTime, String checkedShipAccount, String checkedShipName, String remark, String creator, String creatorName, String systemDate, int defectCount, int rectificationDoneCount, int rectificationDoingCount) {
+        this.rownumber = rownumber;
+        ItemID = itemID;
+        CheckedTime = checkedTime;
+        CheckedShipAccount = checkedShipAccount;
+        CheckedShipName = checkedShipName;
+        Remark = remark;
+        Creator = creator;
+        CreatorName = creatorName;
+        SystemDate = systemDate;
+        DefectCount = defectCount;
+        RectificationDoneCount = rectificationDoneCount;
+        RectificationDoingCount = rectificationDoingCount;
+    }
+
+    public int getDefectCount() {
+        return DefectCount;
+    }
+
+    public void setDefectCount(int defectCount) {
+        DefectCount = defectCount;
+    }
+
+    public int getRectificationDoneCount() {
+        return RectificationDoneCount;
+    }
+
+    public void setRectificationDoneCount(int rectificationDoneCount) {
+        RectificationDoneCount = rectificationDoneCount;
+    }
+
+    public int getRectificationDoingCount() {
+        return RectificationDoingCount;
+    }
+
+    public void setRectificationDoingCount(int rectificationDoingCount) {
+        RectificationDoingCount = rectificationDoingCount;
     }
 
     public int getRownumber() {

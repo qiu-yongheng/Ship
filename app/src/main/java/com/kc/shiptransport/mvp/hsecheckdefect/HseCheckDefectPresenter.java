@@ -48,9 +48,8 @@ public class HseCheckDefectPresenter implements HseCheckDefectContract.Presenter
                 .subscribeOn(Schedulers.io());
         // 缺陷类别
         Observable<List<HseDefectType>> typeObservable = dataRepository
-                .GetSafeShipSelfCheckItems(10000, 1, new HseDefectTypeBean("", 0))
+                .GetSafeDefectType(10000, 1, new HseDefectTypeBean("", 0))
                 .subscribeOn(Schedulers.io());
-        // 缺陷项目
 
         Observable.zip(deadlineObservable, typeObservable, new BiFunction<List<HseDefectDeadline>, List<HseDefectType>, Boolean>() {
             @Override
@@ -91,15 +90,18 @@ public class HseCheckDefectPresenter implements HseCheckDefectContract.Presenter
     }
 
     @Override
-    public void getDefects(int pageSize, int pageCount, HseDefectListBean bean) {
+    public void getDefects(int pageSize, final int pageCount, HseDefectListBean bean, boolean isShow) {
+        if (isShow) {
+            view.showLoading(true);
+        }
         dataRepository
-                .GetSafeDefectRecords(pageSize, pageCount, bean)
+                .GetSafeDefectRecords(pageSize, pageCount, bean, null, null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<List<HseDefectListBean>>() {
                     @Override
                     protected void _onNext(List<HseDefectListBean> listBeans) {
-                        view.showDefects(listBeans);
+                        view.showDefects(listBeans, pageCount == 1);
                         if (listBeans.isEmpty()) {
                             view.showError("没有数据");
                         }
@@ -108,11 +110,43 @@ public class HseCheckDefectPresenter implements HseCheckDefectContract.Presenter
                     @Override
                     protected void _onError(String message) {
                         view.showError(message);
+                        view.showLoading(false);
                     }
 
                     @Override
                     protected void _onComplete() {
+                        view.showLoading(false);
+                    }
 
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
+    }
+
+    @Override
+    public void deleteForItem(int itemID) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteDefectRecordByItemID(itemID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySubcriber<Boolean>() {
+                    @Override
+                    protected void _onNext(Boolean aBoolean) {
+                        view.showDeleteResult(aBoolean);
+                    }
+
+                    @Override
+                    protected void _onError(String message) {
+                        view.showError(message);
+                        view.showLoading(false);
+                    }
+
+                    @Override
+                    protected void _onComplete() {
+                        view.showLoading(false);
                     }
 
                     @Override

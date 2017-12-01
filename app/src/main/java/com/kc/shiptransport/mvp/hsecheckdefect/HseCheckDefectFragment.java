@@ -1,5 +1,7 @@
 package com.kc.shiptransport.mvp.hsecheckdefect;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.hse.HseDefectListBean;
 import com.kc.shiptransport.db.hse.HseDefectDeadline;
 import com.kc.shiptransport.db.hse.HseDefectType;
+import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.BaseFragment;
 import com.kc.shiptransport.mvp.hsecheckdefectadd.HseCheckDefectAddActivity;
 import com.kc.shiptransport.util.PopwindowUtil;
@@ -67,6 +70,7 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
     private List<HseDefectType> defectTypeList;
     private List<HseDefectDeadline> defectDeadlineList;
     private String[] defectStatusList;
+    private int deletePosition;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,7 +115,7 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout.setEnableHeaderTranslationContent(false);
         select1.setText("缺陷类别");
-        select2.setText("缺陷项目");
+        select2.setVisibility(View.GONE);
         select3.setText("整改期限");
         select4.setText("处理状态");
     }
@@ -127,14 +131,14 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refreshlayout.finishRefresh(30000, false);
-                refresh();
+                refresh(false);
             }
         });
         refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 refreshlayout.finishLoadmore(30000, false);
-                presenter.getDefects(pageSize, ++pageCount, new HseDefectListBean(activity.itemID, defectTypeID, defectItem, rectificationDeadline, creator, isSubmitted));
+                presenter.getDefects(pageSize, ++pageCount, new HseDefectListBean(activity.itemID, defectTypeID, defectItem, rectificationDeadline, creator, isSubmitted), false);
             }
         });
     }
@@ -146,7 +150,16 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
 
     @Override
     public void showLoading(boolean isShow) {
-
+        if (isShow) {
+            activity.showProgressDailog("请稍等", "请稍等...", new OnDailogCancleClickListener() {
+                @Override
+                public void onCancel(ProgressDialog dialog) {
+                    presenter.unsubscribe();
+                }
+            });
+        } else {
+            activity.hideProgressDailog();
+        }
     }
 
     @Override
@@ -183,7 +196,7 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
                                     public void onClick(View v) {
                                         select1.setText(hseDefectType.getName());
                                         defectTypeID = hseDefectType.getItemID(); // 缺陷id
-                                        refresh();
+                                        refresh(true);
                                         PopwindowUtil.hidePopwindow();
                                     }
                                 });
@@ -193,11 +206,9 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
                     public void onHeadClick(View view, RecyclerView.ViewHolder holder, int position) {
                         select1.setText("全部缺陷类型");
                         defectTypeID = 0;
-                        refresh();
+                        refresh(true);
                     }
                 });
-                break;
-            case R.id.select_2:
                 break;
             case R.id.select_3: // 整改期限
                 PopwindowUtil.showPopwindow(getContext(), defectDeadlineList, select3, false, new PopwindowUtil.InitHolder<HseDefectDeadline>() {
@@ -210,7 +221,7 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
                                         select3.setText(hseDefectDeadline.getRectificationDeadlineName());
                                         rectificationDeadline = hseDefectDeadline.getRectificationDeadlineID();
                                         PopwindowUtil.hidePopwindow();
-                                        refresh();
+                                        refresh(true);
                                     }
                                 });
                     }
@@ -219,7 +230,7 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
                     public void onHeadClick(View view, RecyclerView.ViewHolder holder, int position) {
                         select3.setText("全部整改期限");
                         rectificationDeadline = 0;
-                        refresh();
+                        refresh(true);
                     }
                 });
                 break;
@@ -232,8 +243,8 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
                                     @Override
                                     public void onClick(View v) {
                                         select4.setText(s);
-                                        isSubmitted = position;
-                                        refresh();
+                                        isSubmitted = position - 1;
+                                        refresh(true);
                                         PopwindowUtil.hidePopwindow();
                                     }
                                 });
@@ -243,20 +254,20 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
                     public void onHeadClick(View view, RecyclerView.ViewHolder holder, int position) {
                         select4.setText("全部状态");
                         isSubmitted = 100;
-                        refresh();
+                        refresh(true);
                     }
                 });
                 break;
         }
     }
 
-    private void refresh() {
+    private void refresh(boolean isShow) {
         pageCount = 1;
-        presenter.getDefects(pageSize, pageCount, new HseDefectListBean(activity.itemID, defectTypeID, defectItem, rectificationDeadline, creator, isSubmitted));
+        presenter.getDefects(pageSize, pageCount, new HseDefectListBean(activity.itemID, defectTypeID, defectItem, rectificationDeadline, creator, isSubmitted), isShow);
     }
 
     @Override
-    public void showDefects(List<HseDefectListBean> list) {
+    public void showDefects(List<HseDefectListBean> list, boolean isFirst) {
         if (list == null || list.isEmpty()) {
             // 不能加载更多
             refreshLayout.finishLoadmore();
@@ -267,7 +278,7 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
         if (adapter == null) {
             adapter = new CommonAdapter<HseDefectListBean>(getContext(), R.layout.item_hse_check_defect, list) {
                 @Override
-                protected void convert(ViewHolder holder, HseDefectListBean bean, int position) {
+                protected void convert(ViewHolder holder, final HseDefectListBean bean, final int position) {
                     holder.setText(R.id.tv_defect_type, bean.getDefectTypeName())
                             .setText(R.id.tv_defect_project, bean.getDefectItem())
                             .setText(R.id.tv_defect_deadline, bean.getRectificationDeadlineName())
@@ -276,21 +287,36 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
                             .setOnClickListener(R.id.btn_update, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(HseCheckDefectAddActivity.TYPE, SettingUtil.TYPE_HSE_DEFECT_UPDATE);
+                                    bundle.putInt(HseCheckDefectAddActivity.CHECKRECORDID, activity.itemID);
+                                    bundle.putInt(HseCheckDefectAddActivity.ITEMID, bean.getItemID());
+                                    HseCheckDefectAddActivity.startActivity(getContext(), bundle);
                                 }
                             })
                             .setOnClickListener(R.id.btn_delete, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
+                                    activity.showDailog("删除缺陷", "是否删除缺陷?", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            deletePosition = position;
+                                            presenter.deleteForItem(bean.getItemID());
+                                        }
+                                    });
                                 }
                             });
                 }
             };
+
+            recyclerView.setAdapter(adapter);
         } else {
+            if (isFirst) {
+                adapter.clear();
+            }
             adapter.loadmore(list);
+
         }
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -306,6 +332,27 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
 
         } else {
             ToastUtil.tip(getContext(), "同步数据失败, 请重试");
+        }
+    }
+
+    @Override
+    public void showDeleteResult(boolean isSuccess) {
+        if (isSuccess) {
+            ToastUtil.tip(getContext(), "删除成功");
+            adapter.removeItem(deletePosition);
+        } else {
+            ToastUtil.tip(getContext(), "删除失败, 请重试");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (refreshLayout != null && refreshLayout.isRefreshing()) {
+            refreshLayout.finishRefresh();
+        }
+        if (presenter != null) {
+            presenter.unsubscribe();
         }
     }
 }

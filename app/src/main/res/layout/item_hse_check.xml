@@ -8,10 +8,10 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
         android:layout_marginLeft="@dimen/paddingtop_18dp"
         android:layout_marginRight="@dimen/paddingtop_18dp"
         android:layout_marginTop="@dimen/margintop_8dp"
-        android:layout_marginBottom="1dp"
         app:cardElevation="1dp">
 
         <LinearLayout
@@ -35,6 +35,14 @@
                 <TextView
                     android:id="@+id/tv_ship_name"
                     style="@style/text_tag_big"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_11"/>
+
+                <TextView
+                    android:id="@+id/tv_other"
+                    android:textColor="@color/red"
+                    android:textSize="12sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/marginleft_11"/>
@@ -123,45 +131,111 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/view_divi"/>
-            <LinearLayout
-                android:paddingBottom="2dp"
-                android:id="@+id/ll_btn"
+            <RelativeLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
                 android:layout_height="@dimen/item_height_32"
                 android:gravity="center_vertical">
 
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="缺   陷   数"/>
+
+                <TextView
+                    android:id="@+id/tv_defect_count"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已   整   改"/>
+
+                <TextView
+                    android:id="@+id/tv_rectificationed"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/text_tag_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未   整   改"/>
+
+                <TextView
+                    android:id="@+id/tv_rectificationing"
+                    style="@style/text_description_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <include layout="@layout/view_divi"/>
+
+            <LinearLayout
+                android:id="@+id/ll_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height_32"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp">
+
                 <Button
                     android:id="@+id/btn_update"
-                    android:background="@color/text_white"
                     style="@style/text_tag"
-                    android:text="修改记录"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"/>
+                    android:background="@color/text_white"
+                    android:text="修改记录"/>
 
                 <include layout="@layout/view_divi_v"/>
+
                 <Button
-                    android:visibility="visible"
                     android:id="@+id/btn_delete"
-                    android:background="@color/text_white"
                     style="@style/text_tag"
-                    android:text="删除记录"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"/>
+                    android:background="@color/text_white"
+                    android:text="删除记录"
+                    android:visibility="visible"/>
 
                 <include layout="@layout/view_divi_v"/>
+
                 <Button
-                    android:visibility="visible"
                     android:id="@+id/btn_add_defect"
-                    android:background="@color/text_white"
                     style="@style/text_tag"
-                    android:text="填写缺陷"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"/>
+                    android:background="@color/text_white"
+                    android:text="填写缺陷"
+                    android:visibility="visible"/>
             </LinearLayout>
 
         </LinearLayout>

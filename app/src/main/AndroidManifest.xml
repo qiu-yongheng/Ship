@@ -94,6 +94,12 @@
         <activity android:name=".mvp.hsecheckadd.HseCheckAddActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".mvp.hsecheckdefect.HseCheckDefectActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
         <activity android:name=".mvp.hsecheckdefectadd.HseCheckDefectAddActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.hserectification.HseRectificationActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.hserectificationupdate.HseRectificationUpdateActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.hserectificationlist.HseRectificationListActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.boatinquire.BoatInquireActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.boatinquireadd.BoatInquireAddActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
+        <activity android:name=".mvp.certificatesupervision.CertificateSupervisionActivity" android:launchMode="singleTask" android:screenOrientation="portrait" />
 
 
         <activity

@@ -3,13 +3,18 @@ package com.kc.shiptransport.mvp.login;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.kc.shiptransport.data.bean.hse.HseDefectDeadlineBean;
+import com.kc.shiptransport.data.bean.hse.HseDefectTypeBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
+import com.kc.shiptransport.db.hse.HseDefectDeadline;
+import com.kc.shiptransport.db.hse.HseDefectType;
 import com.kc.shiptransport.util.BaseUrl;
 import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.NetworkUtil;
 
 import java.net.SocketTimeoutException;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -91,6 +96,15 @@ public class LoginPresenter implements LoginContract.Presenter {
         /** 获取部门信息 */
         Observable<Boolean> department = mDataRepository
                 .GetDepartmentsOptions()
+                .subscribeOn(Schedulers.io());
+
+        /** 整改期限 */
+        Observable<List<HseDefectDeadline>> deadlineObservable = mDataRepository
+                .GetSafeRectificationDeadlineOptions(10000, 1, new HseDefectDeadlineBean(""))
+                .subscribeOn(Schedulers.io());
+        /** 缺陷类别 */
+        Observable<List<HseDefectType>> typeObservable = mDataRepository
+                .GetSafeDefectType(10000, 1, new HseDefectTypeBean("", 0))
                 .subscribeOn(Schedulers.io());
 
 

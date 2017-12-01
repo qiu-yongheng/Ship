@@ -76,10 +76,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginleft_14"
-                android:text="缺陷项目"/>
+                android:text="整改期限"/>
 
             <TextView
-                android:id="@+id/tv_defect_project"
+                android:id="@+id/tv_defect_deadline"
                 style="@style/text_description_black"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tv_height"
@@ -102,18 +102,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginleft_14"
-                android:text="整改期限"/>
+                android:text="缺陷项目"/>
 
-            <TextView
-                android:id="@+id/tv_defect_deadline"
+            <EditText
+                android:id="@+id/et_defect_item"
                 style="@style/text_description_black"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/tv_height"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:layout_marginLeft="@dimen/margin_12"
                 android:layout_marginRight="@dimen/marginleft_14"
                 android:background="@color/et_bg"
                 android:gravity="center"
-                android:text="@string/tv_hint"/>
+                android:hint="请填写"/>
         </LinearLayout>
 
         <TextView

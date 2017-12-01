@@ -59,7 +59,9 @@ public class UpcomingFragment extends Fragment implements UpcomingContract.View 
         initViews(view);
         initListener();
 
-        presenter.getPending(10000, 1);
+        if (presenter != null) {
+            presenter.getPending(10000, 1);
+        }
         return view;
     }
 

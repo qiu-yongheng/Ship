@@ -14,11 +14,13 @@ import java.util.List;
 
 public interface HseCheckDefectContract {
     interface View extends BaseView<Presenter> {
-        void showDefects(List<HseDefectListBean> list);
+        void showDefects(List<HseDefectListBean> list, boolean isFirst);
         void showSyncResult(boolean isSuccess);
+        void showDeleteResult(boolean isSuccess);
     }
 
     interface Presenter extends BasePresenter {
-        void getDefects(int pageSize, int pageCount, HseDefectListBean bean);
+        void getDefects(int pageSize, int pageCount, HseDefectListBean bean, boolean isShow);
+        void deleteForItem(int itemID);
     }
 }

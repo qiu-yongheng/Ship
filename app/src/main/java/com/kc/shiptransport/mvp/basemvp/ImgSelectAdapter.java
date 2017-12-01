@@ -33,13 +33,15 @@ public class ImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * item类型: footer，加载更多
      */
     private static final int TYPE_ADD = 1;
+    private final boolean isCanChange;
     public List<ImgList> list;
     private OnRecyclerviewItemClickListener listener;
 
-    public ImgSelectAdapter(Context context, List<ImgList> list) {
+    public ImgSelectAdapter(Context context, List<ImgList> list, boolean isCanChange) {
         this.context = context;
         this.list = list;
         this.inflater = LayoutInflater.from(context);
+        this.isCanChange = isCanChange;
     }
 
     @Override
@@ -68,6 +70,8 @@ public class ImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
 
+            // 是否可以显示
+            ((NormalHolder) holder).mIvDelete.setVisibility(isCanChange ? View.VISIBLE : View.GONE);
             // 点击 X 删除图片 (发送网络请求)
             ((NormalHolder) holder).mIvDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,6 +82,7 @@ public class ImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
         } else if (holder instanceof AddHolder) {
+            ((AddHolder) holder).mBtnAdd.setVisibility(isCanChange ? View.VISIBLE : View.GONE);
             ((AddHolder) holder).mBtnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

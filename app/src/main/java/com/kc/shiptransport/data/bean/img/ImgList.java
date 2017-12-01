@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * @author 邱永恒
  * @time 2017/9/19  8:52
- * @desc 图片列表
+ * @desc 图片显示列表
  */
 
 public class ImgList implements Parcelable {

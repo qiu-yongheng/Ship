@@ -9,6 +9,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.hse.imglist.AttachmentListBean;
+import com.kc.shiptransport.data.bean.hse.rectification.HseRectificationBean;
 import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 
@@ -182,17 +184,74 @@ public class RxGalleryUtil {
     }
 
     /**
-     * 获取未提交的图片
-     * @param souce
+     * 图片转换
+     * @param list
      * @return
      */
-    public static List<ImgList> getNoCommitImg(List<ImgList> souce) {
+    public static List<ImgList> toImgList(List<AttachmentListBean> list) {
+        List<ImgList> imgLists = new ArrayList<>();
+        if (list == null) {
+            return imgLists;
+        }
+        for (AttachmentListBean bean : list) {
+            ImgList imgList = new ImgList();
+            imgList.setItemID(bean.getItemID());
+            imgList.setPath(bean.getFilePath());
+            imgLists.add(imgList);
+        }
+        return imgLists;
+    }
+
+    /**
+     * 整改图片转换
+     * @param list
+     * @return
+     */
+    public static List<ImgList> rectificationToImgList(List<HseRectificationBean.RectificationAttachmentListBean> list) {
+        List<ImgList> imgLists = new ArrayList<>();
+        if (list == null) {
+            return imgLists;
+        }
+        for (HseRectificationBean.RectificationAttachmentListBean bean : list) {
+            ImgList imgList = new ImgList();
+            imgList.setItemID(bean.getItemID());
+            imgList.setPath(bean.getFilePath());
+            imgLists.add(imgList);
+        }
+        return imgLists;
+    }
+
+    /**
+     * 缺陷图片转换
+     * @param list
+     * @return
+     */
+    public static List<ImgList> defectToImgList(List<HseRectificationBean.DefectAttachmentListBean> list) {
+        List<ImgList> imgLists = new ArrayList<>();
+        if (list == null) {
+            return imgLists;
+        }
+        for (HseRectificationBean.DefectAttachmentListBean bean : list) {
+            ImgList imgList = new ImgList();
+            imgList.setItemID(bean.getItemID());
+            imgList.setPath(bean.getFilePath());
+            imgLists.add(imgList);
+        }
+        return imgLists;
+    }
+
+    /**
+     * 获取未提交的图片
+     * @param source
+     * @return
+     */
+    public static List<ImgList> getNoCommitImg(List<ImgList> source) {
         List<ImgList> list = new ArrayList<>();
-        if (souce == null) {
+        if (source == null) {
             return new ArrayList<>();
         }
 
-        for (ImgList bean : souce) {
+        for (ImgList bean : source) {
             if (bean.getItemID() == 0) {
                 list.add(bean);
             }

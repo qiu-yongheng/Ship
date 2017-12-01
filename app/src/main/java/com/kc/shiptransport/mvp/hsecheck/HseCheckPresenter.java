@@ -51,7 +51,7 @@ public class HseCheckPresenter implements HseCheckContract.Presenter {
     }
 
     @Override
-    public void getDates(int PAGESIZE, int PAGECOUNT, HseCheckSelectBean bean, boolean isShowDialog) {
+    public void getDates(int PAGESIZE, final int PAGECOUNT, HseCheckSelectBean bean, boolean isShowDialog) {
         if (isShowDialog) {
             view.showLoading(true);
         }
@@ -78,7 +78,7 @@ public class HseCheckPresenter implements HseCheckContract.Presenter {
 
                     @Override
                     public void onNext(List<HseCheckListBean> hseCheckListBeans) {
-                        view.showDates(hseCheckListBeans);
+                        view.showDates(hseCheckListBeans, PAGECOUNT == 1);
                         if (hseCheckListBeans.isEmpty()) {
                             view.showError("没有数据");
                         }

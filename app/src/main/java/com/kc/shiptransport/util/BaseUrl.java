@@ -17,7 +17,7 @@ public class BaseUrl {
     public static final String Url = "https://cchk3.kingwi.org/AppService/";
 
     /**
-     *
+     * 供砂
      */
     public static final String EndPoint = Url +  "cchk3WebService.asmx";
 

@@ -183,6 +183,11 @@
     <string name="title_hse_check_add">新增HSE检查记录</string>
     <string name="title_hse_check_defect">HSE检查记录缺陷</string>
     <string name="title_hse_check_defect_add">HSE检查记录缺陷</string>
+    <string name="title_hse_retification">HSE整改</string>
+    <string name="title_hse_retification_add">HSE整改</string>
+    <string name="title_hse_retification_list">HSE已整改</string>
+    <string name="title_boat_inquire">砂船自查</string>
+    <string name="title_certificate_supervision">持证监督</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

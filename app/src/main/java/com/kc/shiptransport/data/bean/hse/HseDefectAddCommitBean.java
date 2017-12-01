@@ -21,69 +21,79 @@ public class HseDefectAddCommitBean {
      * AttachmentList : [{"FileName":"xxx","FilePath":"https://cchk3.kingwi.org/Files/20171013/aca74d8c-33f4-499d-abd9-ab044cb8ce7a.jpeg"},{"FileName":"xxx","FilePath":"https://cchk3.kingwi.org/Files/20171013/aca74d8c-33f4-499d-abd9-ab044cb8ce7a.jpeg"}]
      */
 
-    private String ItemID;
-    private String HSECheckedRecordID;
-    private String DefectTypeID;
+    private int ItemID;
+    private int HSECheckedRecordID;
+    private int DefectTypeID;
     private String DefectItem;
-    private String RectificationDeadline;
+    private int RectificationDeadline;
     private String Creator;
     private String Remark;
     private List<AttachmentListBean> AttachmentList;
 
-    public String getItemID() {
+    public HseDefectAddCommitBean(int itemID, int HSECheckedRecordID, int defectTypeID, String defectItem, int rectificationDeadline, String creator, String remark) {
+        ItemID = itemID;
+        this.HSECheckedRecordID = HSECheckedRecordID;
+        DefectTypeID = defectTypeID;
+        DefectItem = defectItem;
+        RectificationDeadline = rectificationDeadline;
+        Creator = creator;
+        Remark = remark;
+    }
+
+    public int getItemID() {
         return ItemID;
     }
 
-    public void setItemID(String ItemID) {
-        this.ItemID = ItemID;
+    public void setItemID(int itemID) {
+        ItemID = itemID;
     }
 
-    public String getHSECheckedRecordID() {
+    public int getHSECheckedRecordID() {
         return HSECheckedRecordID;
     }
 
-    public void setHSECheckedRecordID(String HSECheckedRecordID) {
+    public void setHSECheckedRecordID(int HSECheckedRecordID) {
         this.HSECheckedRecordID = HSECheckedRecordID;
     }
 
-    public String getDefectTypeID() {
+    public int getDefectTypeID() {
         return DefectTypeID;
     }
 
-    public void setDefectTypeID(String DefectTypeID) {
-        this.DefectTypeID = DefectTypeID;
+    public void setDefectTypeID(int defectTypeID) {
+        DefectTypeID = defectTypeID;
     }
 
     public String getDefectItem() {
         return DefectItem;
     }
 
-    public void setDefectItem(String DefectItem) {
-        this.DefectItem = DefectItem;
+    public void setDefectItem(String defectItem) {
+        DefectItem = defectItem;
     }
 
-    public String getRectificationDeadline() {
+    public int getRectificationDeadline() {
         return RectificationDeadline;
     }
 
-    public void setRectificationDeadline(String RectificationDeadline) {
-        this.RectificationDeadline = RectificationDeadline;
+    public void setRectificationDeadline(int rectificationDeadline) {
+        RectificationDeadline = rectificationDeadline;
     }
 
     public String getCreator() {
         return Creator;
     }
 
-    public void setCreator(String Creator) {
-        this.Creator = Creator;
+    public void setCreator(String creator) {
+        Creator = creator;
     }
 
     public String getRemark() {
         return Remark;
     }
 
-    public void setRemark(String Remark) {
-        this.Remark = Remark;
+    public void setRemark(String remark) {
+        Remark = remark;
     }
 
     public List<AttachmentListBean> getAttachmentList() {
