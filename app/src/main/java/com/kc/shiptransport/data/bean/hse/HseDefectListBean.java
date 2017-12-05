@@ -1,6 +1,7 @@
 package com.kc.shiptransport.data.bean.hse;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author 邱永恒
@@ -45,6 +46,7 @@ public class HseDefectListBean implements Serializable{
     private String RectificationRemark;
     private int RectificationRecordID;
     private String DeadlineTime;
+    private List<DefectAttachmentList> DefectAttachmentList;
 
     /**
      * HSE缺陷
@@ -236,5 +238,52 @@ public class HseDefectListBean implements Serializable{
 
     public void setDeadlineTime(String deadlineTime) {
         DeadlineTime = deadlineTime;
+    }
+
+    public List<HseDefectListBean.DefectAttachmentList> getDefectAttachmentList() {
+        return DefectAttachmentList;
+    }
+
+    public void setDefectAttachmentList(List<HseDefectListBean.DefectAttachmentList> defectAttachmentList) {
+        DefectAttachmentList = defectAttachmentList;
+    }
+
+    public static class DefectAttachmentList {
+        private int ItemID;
+        private int DefectRecordID;
+        private String FilePath;
+        private String FileName;
+
+        public int getItemID() {
+            return ItemID;
+        }
+
+        public void setItemID(int itemID) {
+            ItemID = itemID;
+        }
+
+        public int getDefectRecordID() {
+            return DefectRecordID;
+        }
+
+        public void setDefectRecordID(int defectRecordID) {
+            DefectRecordID = defectRecordID;
+        }
+
+        public String getFilePath() {
+            return FilePath;
+        }
+
+        public void setFilePath(String filePath) {
+            FilePath = filePath;
+        }
+
+        public String getFileName() {
+            return FileName;
+        }
+
+        public void setFileName(String fileName) {
+            FileName = fileName;
+        }
     }
 }

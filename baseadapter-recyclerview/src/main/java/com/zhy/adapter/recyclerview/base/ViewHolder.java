@@ -116,6 +116,21 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
+     * 设置下划线
+     * @param viewId
+     * @param text
+     * @return
+     */
+    public ViewHolder setTextUnderline(int viewId, String text) {
+        TextView tv = getView(viewId);
+        if (tv != null) {
+            tv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//下划线
+            tv.setText(TextUtils.isEmpty(text) ? "" : text);
+        }
+        return this;
+    }
+
+    /**
      * 设置图片
      *
      * @param viewId

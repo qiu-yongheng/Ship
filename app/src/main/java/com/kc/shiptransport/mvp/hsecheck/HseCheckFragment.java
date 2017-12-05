@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.hsecheck;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,8 +50,6 @@ import butterknife.Unbinder;
 
 public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements HseCheckContract.View, View.OnClickListener {
 
-    private static int PAGESIZE = 20;
-    private static int PAGECOUNT = 1;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     Unbinder unbinder;
@@ -125,18 +124,26 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refreshLayout.finishRefresh(30000, false);
-                PAGECOUNT = 1;
-                presenter.getDates(PAGESIZE, PAGECOUNT, new HseCheckSelectBean(startDate, endDate, checkedShipAccount, creator), false);
+                refresh(false, false);
             }
         });
         refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 LogUtil.d("加载更多");
-                presenter.getDates(PAGESIZE, ++PAGECOUNT, new HseCheckSelectBean(startDate, endDate, checkedShipAccount, creator), false);
                 refreshlayout.finishLoadmore(30000, false);
+                refresh(false, true);
             }
         });
+    }
+
+    public void refresh(boolean isShow, boolean isLoadMore) {
+        if (isLoadMore) {
+            ++pageCount;
+        } else {
+            pageCount = 1;
+        }
+        presenter.getDates(pageSize, pageCount, new HseCheckSelectBean(startDate, endDate, checkedShipAccount, null), isShow);
     }
 
     @Override
@@ -208,7 +215,16 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                             .setText(R.id.tv_defect_count, String.valueOf(bean.getDefectCount()))
                             .setText(R.id.tv_rectificationed, String.valueOf(bean.getRectificationDoneCount()))
                             .setText(R.id.tv_rectificationing, String .valueOf(bean.getRectificationDoingCount()))
-                            .setText(R.id.tv_other, "(缺陷数:" + bean.getDefectCount() + " 已整改:" + bean.getRectificationDoneCount() + " 待整改:" + bean.getRectificationDoingCount() + ")")
+                            .setTextUnderline(R.id.tv_other, "(缺陷数:" + bean.getDefectCount() + " 已整改:" + bean.getRectificationDoneCount() + " 待整改:" + bean.getRectificationDoingCount() + ")")
+                            .setVisible(R.id.btn_delete, bean.getDefectCount() == 0)
+                            .setOnClickListener(R.id.tv_other, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(HseCheckDefectActivity.ITEMID, bean.getItemID());
+                                    HseCheckDefectActivity.startActivity(getContext(), bundle);
+                                }
+                            })
                             .setOnClickListener(R.id.btn_update, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) { // 修改
@@ -221,9 +237,14 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                             .setOnClickListener(R.id.btn_delete, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) { // 删除
-                                    presenter.delete(bean.getItemID());
-                                    // 记录需要删除的position
-                                    deletePosition = position;
+                                    activity.showDailog("删除记录", "删除此记录?", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            presenter.delete(bean.getItemID());
+                                            // 记录需要删除的position
+                                            deletePosition = position;
+                                        }
+                                    });
                                 }
                             })
                             .setOnClickListener(R.id.btn_add_defect, new View.OnClickListener() {
@@ -261,7 +282,6 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
         }
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -286,8 +306,7 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                                         }
 
                                         if (position != 1) {
-                                            PAGECOUNT = 1;
-                                            presenter.getDates(PAGESIZE, PAGECOUNT, new HseCheckSelectBean(startDate, endDate, checkedShipAccount, creator), true);
+                                            refresh(true, false);
                                             PopwindowUtil.hidePopwindow();
                                         }
                                     }
@@ -298,7 +317,7 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                     public void onOkClick(String startTime, String endTime) {
                         startDate = startTime;
                         endDate = endTime;
-                        presenter.getDates(PAGESIZE, 1, new HseCheckSelectBean(startDate, endDate, checkedShipAccount, creator), true);
+                        refresh(true, false);
                     }
                 }, null);
                 break;
@@ -312,8 +331,7 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                                     public void onClick(View v) {
                                         select2.setText(hseCheckShip.getShipName());
                                         checkedShipAccount = hseCheckShip.getShipAccount();
-                                        PAGECOUNT = 1;
-                                        presenter.getDates(PAGESIZE, PAGECOUNT, new HseCheckSelectBean(startDate, endDate, checkedShipAccount, creator), true);
+                                        refresh(true, false);
                                         PopwindowUtil.hidePopwindow();
                                     }
                                 });
@@ -323,8 +341,7 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                     public void onHeadClick(View view, RecyclerView.ViewHolder holder, int position) {
                         select2.setText("全部受检船舶");
                         checkedShipAccount = "";
-                        PAGECOUNT = 1;
-                        presenter.getDates(PAGESIZE, PAGECOUNT, new HseCheckSelectBean(startDate, endDate, checkedShipAccount, creator), true);
+                        refresh(true, false);
                     }
                 });
                 break;

@@ -188,6 +188,7 @@
     <string name="title_hse_retification_list">HSE已整改</string>
     <string name="title_boat_inquire">砂船自查</string>
     <string name="title_certificate_supervision">持证监督</string>
+    <string name="title_violation_records">违规记录</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

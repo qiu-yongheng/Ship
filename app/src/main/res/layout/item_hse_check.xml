@@ -91,6 +91,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height_32"
                 android:gravity="center_vertical">
@@ -234,7 +235,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/text_white"
-                    android:text="填写缺陷"
+                    android:text="编辑缺陷"
                     android:visibility="visible"/>
             </LinearLayout>
 

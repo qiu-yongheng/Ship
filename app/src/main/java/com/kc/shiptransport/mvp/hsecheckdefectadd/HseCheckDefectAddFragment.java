@@ -98,7 +98,6 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
     private void initData() {
         // 缺陷类别
         defectType = DataSupport.findAll(HseDefectType.class);
-        // 缺陷项目
         // 整改期限
         defectDeadline = DataSupport.findAll(HseDefectDeadline.class);
     }
@@ -115,9 +114,24 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
 
         switch (activity.type) {
             case SettingUtil.TYPE_HSE_DEFECT_ADD:
+                tvDefectType.setOnClickListener(this);
+                tvDefectDeadline.setOnClickListener(this);
                 break;
             case SettingUtil.TYPE_HSE_DEFECT_UPDATE:
                 presenter.getDetailData(activity.itemID);
+                tvDefectType.setOnClickListener(this);
+                tvDefectDeadline.setOnClickListener(this);
+                break;
+            case SettingUtil.TYPE_HSE_DEFECT_READ_ONLY:
+                presenter.getDetailData(activity.itemID);
+
+                tvDefectType.setBackground(null);
+                tvDefectDeadline.setBackground(null);
+                etDefectItem.setBackground(null);
+                etDefectItem.setFocusable(false);
+                etDefectItem.setFocusableInTouchMode(false);
+                btnReturn.setVisibility(View.VISIBLE);
+                btnCommit.setVisibility(View.GONE);
                 break;
         }
     }
@@ -127,7 +141,7 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
      */
     private void initAdapter() {
         if (adapter == null) {
-            adapter = new ImgSelectAdapter(getContext(), imgLists, true);
+            adapter = new ImgSelectAdapter(getContext(), imgLists, activity.type != SettingUtil.TYPE_HSE_DEFECT_READ_ONLY);
             adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                 @Override
                 public void onItemClick(View view, final int position, int... type) {
@@ -174,9 +188,8 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
 
     @Override
     public void initListener() {
-        tvDefectType.setOnClickListener(this);
-        tvDefectDeadline.setOnClickListener(this);
         btnCommit.setOnClickListener(this);
+        btnReturn.setOnClickListener(this);
     }
 
     @Override
@@ -260,6 +273,10 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
             case R.id.btn_commit:
                 // 提交
                 commit();
+                break;
+            case R.id.btn_return:
+                // 返回
+                getActivity().onBackPressed();
                 break;
         }
     }

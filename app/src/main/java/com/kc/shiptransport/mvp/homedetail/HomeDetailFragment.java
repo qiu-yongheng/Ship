@@ -33,6 +33,7 @@ import com.kc.shiptransport.mvp.sample.SampleActivity;
 import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
 import com.kc.shiptransport.mvp.todayplan.TodayPlanActivity;
+import com.kc.shiptransport.mvp.violationrecords.ViolationRecordsActivity;
 import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
 import com.kc.shiptransport.util.SettingUtil;
 
@@ -221,6 +222,10 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                         case 33:
                             // 制证监督
                             CertificateSupervisionActivity.startActivity(getContext());
+                            break;
+                        case 34:
+                            // 违规记录
+                            ViolationRecordsActivity.startActivity(getContext());
                             break;
                     }
                 }

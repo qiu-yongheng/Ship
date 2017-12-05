@@ -3,6 +3,7 @@ package com.kc.shiptransport.mvp.hsecheckdefect;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,18 +12,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.hse.HseDefectListBean;
+import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.db.hse.HseDefectDeadline;
 import com.kc.shiptransport.db.hse.HseDefectType;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.mvp.BaseFragment;
 import com.kc.shiptransport.mvp.hsecheckdefectadd.HseCheckDefectAddActivity;
 import com.kc.shiptransport.util.PopwindowUtil;
+import com.kc.shiptransport.util.RxGalleryUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.ToastUtil;
+import com.kc.shiptransport.view.actiivty.ImgViewPageActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -32,6 +37,7 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -284,6 +290,16 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
                             .setText(R.id.tv_defect_deadline, bean.getRectificationDeadlineName())
                             .setText(R.id.tv_defect_status, bean.getIsSubmitted() == 1 ? "已处理" : "未处理")
                             .setText(R.id.tv_remark, bean.getRemark())
+                            .setOnClickListener(R.id.btn_show, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(HseCheckDefectAddActivity.TYPE, SettingUtil.TYPE_HSE_DEFECT_READ_ONLY);
+                                    bundle.putInt(HseCheckDefectAddActivity.CHECKRECORDID, activity.itemID);
+                                    bundle.putInt(HseCheckDefectAddActivity.ITEMID, bean.getItemID());
+                                    HseCheckDefectAddActivity.startActivity(getContext(), bundle);
+                                }
+                            })
                             .setOnClickListener(R.id.btn_update, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -306,6 +322,30 @@ public class HseCheckDefectFragment extends BaseFragment<HseCheckDefectActivity>
                                     });
                                 }
                             });
+
+                    // 缺陷图片
+                    RecyclerView recyclerView = holder.getView(R.id.recycler_view);
+                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+                    List<HseDefectListBean.DefectAttachmentList> defectAttachmentList = bean.getDefectAttachmentList();
+                    final List<ImgList> imgLists = RxGalleryUtil.defectListToImgList(defectAttachmentList);
+
+
+                    CommonAdapter<ImgList> commonAdapter = new CommonAdapter<ImgList>(getContext(), R.layout.item_img, imgLists) {
+                        @Override
+                        protected void convert(ViewHolder holder, ImgList imgList, final int position) {
+                            holder.setVisible(R.id.iv_delete, false)
+                                    .setOnClickListener(R.id.iv_img, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ImgViewPageActivity.startActivity(getContext(), (ArrayList<ImgList>) imgLists, position);
+                                        }
+                                    });
+                            ImageView imageView = holder.getView(R.id.iv_img);
+                            RxGalleryUtil.showImage(getContext(), imgList.getPath(), null, null, imageView);
+                        }
+                    };
+
+                    recyclerView.setAdapter(commonAdapter);
                 }
             };
 

@@ -32,6 +32,7 @@ import com.kc.shiptransport.data.bean.img.ImgCommitResultBean;
 import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.data.bean.todayplan.TodayPlanBean;
+import com.kc.shiptransport.data.bean.violationrecord.ViolationRecordBean;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.AttendanceRecordList;
@@ -1328,4 +1329,12 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<CertificateBean>> searchCertificate(String msg, boolean isSearchAll);
+
+    /**
+     * 6.27 获取安全管理_违规记录数据
+     * @param pageSize
+     * @param pageCount
+     * @return
+     */
+    Observable<List<ViolationRecordBean>> GetSafeViolationRecords(int pageSize, int pageCount);
 }

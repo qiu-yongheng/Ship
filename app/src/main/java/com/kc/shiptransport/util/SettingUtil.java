@@ -259,13 +259,15 @@ public class SettingUtil {
     public static final int TYPE_HSE_DEFECT_ADD = 903;
     /* HSE缺陷修改 */
     public static final int TYPE_HSE_DEFECT_UPDATE = 904;
+    /* HSE缺陷查看 */
+    public static final int TYPE_HSE_DEFECT_READ_ONLY = 905;
 
     /* HSE整改新增 */
-    public static final int TYPE_HSE_RECTIFICATION_ADD = 905;
+    public static final int TYPE_HSE_RECTIFICATION_ADD = 906;
     /* HSE整改只读 */
-    public static final int TYPE_HSE_RECTIFICATION_READ_ONLY = 906;
+    public static final int TYPE_HSE_RECTIFICATION_READ_ONLY = 907;
     /* HSE整改缺陷详情 */
-    public static final int TYPE_HSE_RECTIFICATION_DEFECT_DETAIL = 907;
+    public static final int TYPE_HSE_RECTIFICATION_DEFECT_DETAIL = 908;
     /*-----------------------------------------------hse新增--------------------------------------------------*/
 
 

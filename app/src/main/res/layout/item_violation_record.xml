@@ -30,10 +30,10 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="缺陷类别"/>
+                    android:text="违规日期"/>
 
                 <TextView
-                    android:id="@+id/tv_defect_type"
+                    android:id="@+id/tv_violation_date"
                     style="@style/text_description_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -50,10 +50,10 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="缺陷项目"/>
+                    android:text="违规单位"/>
 
                 <TextView
-                    android:id="@+id/tv_defect_project"
+                    android:id="@+id/tv_violation_unit"
                     style="@style/text_description_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -70,10 +70,10 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="整改期限"/>
+                    android:text="违规类型"/>
 
                 <TextView
-                    android:id="@+id/tv_defect_deadline"
+                    android:id="@+id/tv_violation_type"
                     style="@style/text_description_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -90,27 +90,7 @@
                     style="@style/text_tag_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="处理状态"/>
-
-                <TextView
-                    android:id="@+id/tv_defect_status"
-                    style="@style/text_description_small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height_32"
-                android:gravity="center_vertical">
-
-                <TextView
-                    style="@style/text_tag_small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="备          注"/>
+                    android:text="备注说明"/>
 
                 <TextView
                     android:id="@+id/tv_remark"
@@ -121,28 +101,16 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/view_recycler_view"/>
 
-            <include layout="@layout/view_divi"/>
 
             <LinearLayout
+                android:visibility="gone"
                 android:paddingBottom="2dp"
                 android:id="@+id/ll_btn"
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_height="@dimen/item_height_32"
                 android:gravity="center_vertical">
-
-                <Button
-                    android:id="@+id/btn_show"
-                    android:background="@color/text_white"
-                    style="@style/text_tag"
-                    android:text="查看缺陷"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
-
-                <include layout="@layout/view_divi_v"/>
 
                 <Button
                     android:id="@+id/btn_update"

@@ -54,6 +54,7 @@ import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.data.bean.threadsandlog.IsCurrentData;
 import com.kc.shiptransport.data.bean.threadsandlog.ThreadSandLogBean;
 import com.kc.shiptransport.data.bean.todayplan.TodayPlanBean;
+import com.kc.shiptransport.data.bean.violationrecord.ViolationRecordBean;
 import com.kc.shiptransport.data.source.remote.RemoteDataSource;
 import com.kc.shiptransport.db.Acceptance;
 import com.kc.shiptransport.db.AppList;
@@ -6024,6 +6025,31 @@ public class DataRepository implements DataSouceImpl {
                                     "%" + msg + "%")
                             .find(CertificateBean.class);
                 }
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 6.27 获取安全管理_违规记录数据
+     * @param pageSize
+     * @param pageCount
+     * @return
+     */
+    @Override
+    public Observable<List<ViolationRecordBean>> GetSafeViolationRecords(final int pageSize, final int pageCount) {
+        return Observable.create(new ObservableOnSubscribe<List<ViolationRecordBean>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<ViolationRecordBean>> e) throws Exception {
+                String result = mRemoteDataSource.GetSafeViolationRecords(pageSize, pageCount, "");
+
+                LogUtil.t("6.27 获取安全管理_违规记录数据");
+                LogUtil.json(result);
+
+                List<ViolationRecordBean> list = gson.fromJson(result, new TypeToken<List<ViolationRecordBean>>() {
+                }.getType());
+
                 e.onNext(list);
                 e.onComplete();
             }

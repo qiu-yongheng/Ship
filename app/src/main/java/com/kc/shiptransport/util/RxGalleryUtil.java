@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.hse.HseDefectListBean;
 import com.kc.shiptransport.data.bean.hse.imglist.AttachmentListBean;
 import com.kc.shiptransport.data.bean.hse.rectification.HseRectificationBean;
 import com.kc.shiptransport.data.bean.img.ImgList;
@@ -232,6 +233,25 @@ public class RxGalleryUtil {
             return imgLists;
         }
         for (HseRectificationBean.DefectAttachmentListBean bean : list) {
+            ImgList imgList = new ImgList();
+            imgList.setItemID(bean.getItemID());
+            imgList.setPath(bean.getFilePath());
+            imgLists.add(imgList);
+        }
+        return imgLists;
+    }
+
+    /**
+     * 缺陷图片转换
+     * @param list
+     * @return
+     */
+    public static List<ImgList> defectListToImgList(List<HseDefectListBean.DefectAttachmentList> list) {
+        List<ImgList> imgLists = new ArrayList<>();
+        if (list == null) {
+            return imgLists;
+        }
+        for (HseDefectListBean.DefectAttachmentList bean : list) {
             ImgList imgList = new ImgList();
             imgList.setItemID(bean.getItemID());
             imgList.setPath(bean.getFilePath());

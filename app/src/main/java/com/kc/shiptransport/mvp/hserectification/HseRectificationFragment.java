@@ -440,7 +440,9 @@ public class HseRectificationFragment extends BaseFragment<HseRectificationActiv
     public void showDeleteResult(boolean isSuccess) {
         if (isSuccess) {
             ToastUtil.tip(getContext(), "删除成功");
-            adapter.removeItem(deletePosition);
+//            adapter.removeItem(deletePosition); // 不删除记录
+            adapter.getDatas().get(deletePosition).setRectificationRecordID(0);
+            adapter.notifyItemChanged(deletePosition);
         } else {
             ToastUtil.tip(getContext(), "删除失败, 请重试");
         }
