@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author 邱永恒
  * @time 2017/11/22  11:06
- * @desc ${TODD}
+ * @desc Fragment基类, 封装toolbar
  */
 
 public abstract class BaseFragment<V extends AppCompatActivity> extends Fragment{
@@ -52,8 +52,6 @@ public abstract class BaseFragment<V extends AppCompatActivity> extends Fragment
         initViews();
     }
 
-    public abstract int setView();
-
     public void initViews() {
         setHasOptionsMenu(true);
         activity = (V) getActivity();
@@ -77,5 +75,6 @@ public abstract class BaseFragment<V extends AppCompatActivity> extends Fragment
         return super.onOptionsItemSelected(item);
     }
 
+    public abstract int setView();
     public abstract int setTitle();
 }

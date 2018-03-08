@@ -246,6 +246,10 @@ public class BoatInquireAddFragment extends BaseFragment<BoatInquireAddActivity>
         }
     }
 
+    /**
+     *
+     * @param bean
+     */
     @Override
     public void showDetailData(BoatInquireDetailBean bean) {
         // 检查人

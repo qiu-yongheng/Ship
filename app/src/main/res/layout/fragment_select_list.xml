@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/ll_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_return"
+            style="@style/text_title_w"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/blue"
+            android:text="@string/btn_return"/>
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/text_title_w"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/red"
+            android:text="取消选择"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_btn"/>
+
+</RelativeLayout>

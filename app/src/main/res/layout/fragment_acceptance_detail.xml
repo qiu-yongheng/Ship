@@ -84,10 +84,20 @@
             android:id="@+id/tv_avg_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="2dp"
             android:text="平均航次方量: 0㎡"
+            android:textColor="#fff"
+            android:textSize="@dimen/text_15sp"/>
+
+        <TextView
+            android:id="@+id/tv_submit_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="2dp"
+            android:text="提交进场材料时间:"
             android:textColor="#fff"
             android:textSize="@dimen/text_15sp"/>
 

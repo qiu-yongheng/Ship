@@ -112,7 +112,7 @@ public class HseRectificationUpdateFragment extends BaseFragmentBack<HseRectific
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         recyclerViewDefect.setLayoutManager(new GridLayoutManager(getContext(), 4));
         assert activity.mData != null;
-        // 当前用户
+        // 用户(缺陷提交用户)
         String creatorName = activity.mData.getCreatorName();
         creator = activity.mData.getCreator();
         tvChecker.setText(creatorName);
@@ -350,6 +350,7 @@ public class HseRectificationUpdateFragment extends BaseFragmentBack<HseRectific
     }
 
     /**
+     *
      * @param bean
      */
     @Override
@@ -398,6 +399,7 @@ public class HseRectificationUpdateFragment extends BaseFragmentBack<HseRectific
     }
 
     /**
+     * 显示缺陷图片
      * @param bean
      */
     @Override

@@ -169,7 +169,7 @@
     <string name="menu_view_comments">查看退回意见</string>
     <string name="title_construction_log_manager">日报管理</string>
     <string name="action_search">搜索</string>
-    <string name="title_tomorrow_plan">明日来船计划</string>
+    <string name="title_tomorrow_plan">来船计划</string>
     <string name="desc_partition">panel012 ~ panel016分区生成规则:\n分区前缀填panel###, 开始数填012, 结束数填016\n\npanela12~panelg12分区生成规则:\n分区前缀填写panel#12，开始数填a，结束数填g
 \n\n说明：#代表变量数，一个#符号代表一个字符
 </string>
@@ -178,7 +178,7 @@
     <string name="text_quantume_tag">提示:\n当供砂船给第一艘施工船供砂结束，且仍需向第二艘施工船供砂时，请分别填写每艘施工船抛填的预估工程量。
 \n\n当供砂船仅给一艘施工船供砂时无需填写预估工程量。</string>
     <string name="select_thread">全部类型</string>
-    <string name="title_today_plan">今日来船</string>
+    <string name="title_today_plan">今日来船(已预验收航次)</string>
     <string name="title_hse_check">HSE检查记录</string>
     <string name="title_hse_check_add">新增HSE检查记录</string>
     <string name="title_hse_check_defect">HSE检查记录缺陷</string>
@@ -189,6 +189,8 @@
     <string name="title_boat_inquire">砂船自查</string>
     <string name="title_certificate_supervision">持证监督</string>
     <string name="title_violation_records">违规记录</string>
+    <string name="title_hse_check_select_ship">选择受检船舶</string>
+    <string name="title_album">施工相册</string>
 
     <!-- 供砂管理title -->
     <array name="home_item_pop">

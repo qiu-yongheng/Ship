@@ -105,18 +105,18 @@ public class HseCheckPresenter implements HseCheckContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<Boolean>() {
                     @Override
-                    protected void _onNext(Boolean aBoolean) {
+                    protected void next(Boolean aBoolean) {
                         view.showDeleteResult(aBoolean);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showLoading(false);
                         view.showError(message);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 

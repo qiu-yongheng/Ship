@@ -19,7 +19,7 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.db.versionupdate.VersionUpdate;
 import com.kc.shiptransport.download.DownloadService;
 import com.kc.shiptransport.mvp.BaseActivity;
-import com.kc.shiptransport.mvp.hsecheck.HseCheckActivity;
+import com.kc.shiptransport.mvp.constructionalbum.ConstructionAlbumActivity;
 import com.kc.shiptransport.util.AppInfoUtils;
 import com.kc.shiptransport.util.ToastUtil;
 
@@ -122,7 +122,8 @@ public class AboutActivity extends BaseActivity {
                         //BCFActivity.startActivity(AboutActivity.this);
                         //AnalysisActivity.startActivity(AboutActivity.this, SettingUtil.TYPE_BCF_THREAD);
                         //TodayPlanActivity.startActivity(AboutActivity.this);
-                        HseCheckActivity.startActivity(AboutActivity.this);
+                        //HseCheckActivity.startActivity(AboutActivity.this);
+                        ConstructionAlbumActivity.startActivity(AboutActivity.this);
                     }
                 }
             }

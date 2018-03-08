@@ -237,6 +237,27 @@ public class AnalysisFragment extends Fragment implements AnalysisContract.View 
 
     @Override
     public void initListener() {
+        /** 来船计划, 选择时间 */
+        tvTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    CalendarUtil.showDatePickerDialog(getContext(), tvTime, new OnTimePickerSureClickListener() {
+                        @Override
+                        public void onSure(String str) {
+                            presenter.getTomorrowPlan(str, str, "", "");
+                        }
+                    }, new OnTimePickerLastDateClickListener() {
+                        @Override
+                        public void onLastDate() {
+
+                        }
+                    }, false, true, false);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         /** 选择时间 */
         selectTime.setOnClickListener(new View.OnClickListener() {
             @Override

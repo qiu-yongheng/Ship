@@ -43,17 +43,17 @@ public class BoatInquirePresenter implements BoatInquireContract.Presenter{
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<List<HseCheckShip>>() {
                     @Override
-                    protected void _onNext(List<HseCheckShip> hseCheckShips) {
+                    protected void next(List<HseCheckShip> hseCheckShips) {
                         view.showSyncResult(!hseCheckShips.isEmpty());
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
 
                     }
 
@@ -80,7 +80,7 @@ public class BoatInquirePresenter implements BoatInquireContract.Presenter{
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<List<BoatInquireBean>>() {
                     @Override
-                    protected void _onNext(List<BoatInquireBean> list) {
+                    protected void next(List<BoatInquireBean> list) {
                         view.showDatas(list, pageCount == 1);
                         if (list.isEmpty()) {
                             view.showError("没有数据");
@@ -88,13 +88,13 @@ public class BoatInquirePresenter implements BoatInquireContract.Presenter{
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 

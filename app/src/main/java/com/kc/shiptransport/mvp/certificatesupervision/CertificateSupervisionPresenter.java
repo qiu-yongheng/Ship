@@ -53,18 +53,18 @@ public class CertificateSupervisionPresenter implements CertificateSupervisionCo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<List<CertificateBean>>() {
                     @Override
-                    protected void _onNext(List<CertificateBean> list) {
+                    protected void next(List<CertificateBean> list) {
                         view.showDatas(list);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 
@@ -83,7 +83,7 @@ public class CertificateSupervisionPresenter implements CertificateSupervisionCo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<List<CertificateBean>>() {
                     @Override
-                    protected void _onNext(List<CertificateBean> list) {
+                    protected void next(List<CertificateBean> list) {
                         view.showDatas(list);
                         if (!list.isEmpty() && !isSearchAll) {
                             view.showError("搜索到" + list.size() + "条记录");
@@ -91,12 +91,12 @@ public class CertificateSupervisionPresenter implements CertificateSupervisionCo
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
 
                     }
 

@@ -11,6 +11,8 @@ import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
+import com.kc.shiptransport.data.bean.album.ConstructionAlbumBean;
+import com.kc.shiptransport.data.bean.album.ConstructionAlbumPictureBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireCommitBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireDetailBean;
@@ -1219,7 +1221,7 @@ public interface DataSouceImpl {
      * @param imgList
      * @return
      */
-    Observable<ImgCommitBean> getImgCommitBean(ImgList imgList);
+    Observable<ImgCommitBean> getImgCommitBean(ImgList imgList, Context context);
 
     /**
      * 1.21	 上传图片接口
@@ -1337,4 +1339,69 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<List<ViolationRecordBean>> GetSafeViolationRecords(int pageSize, int pageCount);
+
+    /**
+     * 搜索受检船舶
+     * @param msg
+     * @param isSearchAll
+     * @return
+     */
+    Observable<List<HseCheckShip>> searchHseCheckShip(String msg, boolean isSearchAll);
+
+    /**
+     * 1.119	根据进场计划ID获取过砂图片列表（多条）
+     * @param subID
+     * @return
+     */
+    Observable<List<ScannerImgListByTypeBean>> GetOverSandAttachmentRecordsBySubcontractorInterimApproachPlanID(int subID);
+
+    /**
+     * 1.118	提交供砂图片数据
+     * @return
+     */
+    Observable<Boolean> InsertOverSandAttachment(ScanCommitBean bean);
+
+    /**
+     * 1.120	删除过砂图片数据
+     * @param ItemID
+     * @return
+     */
+    Observable<Boolean> DeleteOverSandAttachmentRecordsByItemID(int ItemID);
+
+    /**
+     * 1.124	获取施工相册数据
+     * @param PageSize
+     * @param PageCount
+     * @return
+     */
+    Observable<ConstructionAlbumBean> GetConstructionPictureAlbumRecordsData(int PageSize, int PageCount);
+
+    /**
+     * 1.126	添加/更新施工相册数据
+     * @param Table
+     * @param itemID
+     * @param albumName
+     * @param remark
+     * @return
+     */
+    Observable<Boolean> InsertTable(String Table, int itemID, String albumName, String remark);
+
+    /**
+     * 1.127	删除施工相册数据
+     * @param Table
+     * @param ItemID
+     * @param SubTable
+     * @param AssociatedColumn
+     * @return
+     */
+    Observable<Boolean> DeleteTable(String Table, String ItemID, String SubTable, String AssociatedColumn);
+
+    /**
+     * 1.125	获取施工相册对应的图片数据
+     * @param pageSize
+     * @param pageCount
+     * @param albumID
+     * @return
+     */
+    Observable<ConstructionAlbumPictureBean> GetConstructionPictureAttachmentRecordsData(int pageSize, int pageCount, int albumID);
 }

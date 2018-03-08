@@ -27,7 +27,7 @@ import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.db.supply.SupplyDetail;
 import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
-import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
+import com.kc.shiptransport.interfaze.OnDialogOkClickListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
@@ -226,7 +226,7 @@ public class SupplyDetailFragemnt extends Fragment implements SupplyDetailContra
                         public void onClick(DialogInterface dialogInterface, int i) {
 
                         }
-                    }, new OnDailogOKClickListener() {
+                    }, new OnDialogOkClickListener() {
                         @Override
                         public void onOK(Object remark) {
                             String str = (String) remark;

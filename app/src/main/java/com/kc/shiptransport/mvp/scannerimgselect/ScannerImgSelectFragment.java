@@ -79,8 +79,8 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
         initViews(view);
         initListener();
 
-        // TODO 获取要显示的图片列表
-        presenter.getImgList(activity.mSubID, activity.mTypeID);
+        // 根据类型获取要显示的图片列表
+        presenter.getImgList(activity.mSubID, activity.mTypeID, activity.activity_type);
         return view;
     }
 
@@ -166,7 +166,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             // 删除PDF
-                                            presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                                            presenter.deleteImg(scannerImgListByTypeBean.getItemID(), activity.activity_type);
                                         }
                                     });
                                 } else {
@@ -174,19 +174,19 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             // 删除图片
-                                            presenter.deleteImg(scannerImgListByTypeBean.getItemID());
+                                            presenter.deleteImg(scannerImgListByTypeBean.getItemID(), activity.activity_type);
                                         }
                                     });
                                 }
                             } else if (activity.isFinshReceptionSandAttachment == 1) {
-                                Toast.makeText(getContext(), "验砂已完成, 不可删除", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "操作已完成, 不可删除", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
 
                     @Override
                     public void onItemLongClick(View view, int position) {
-                        if (activity.isFinshReceptionSandAttachment == 0) {
+                        if (activity.isFinshReceptionSandAttachment == 0 && activity.activity_type == SettingUtil.TYPE_SCANNER) {
                             if (popupWindow != null && popupWindow.isShowing())
                                 return;
                             View upView = LayoutInflater.from(getContext()).inflate(R.layout.popup_scanner, null);
@@ -220,7 +220,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                                                             @Override
                                                             public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
                                                                 // 提交图片
-                                                                presenter.commit(imageMultipleResultEvent, activity.mSubID, activity.mTypeID, activity.mShipAccount);
+                                                                presenter.commit(imageMultipleResultEvent, activity.mSubID, activity.mTypeID, activity.mShipAccount, activity.activity_type);
                                                             }
 
                                                             @Override
@@ -275,6 +275,25 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
                             popupWindow.showAtLocation(getActivity().findViewById(android.R.id.content), Gravity.BOTTOM, 0, 0);
 
 
+                        } else if (activity.isFinshReceptionSandAttachment == 0 && activity.activity_type == SettingUtil.TYPE_RECORDEDSAND) {
+                            // 过砂记录
+                            int maxSize = SettingUtil.NUM_IMAGE_SELECTION - adapter.list.size();
+                            if (maxSize > 0) {
+                                RxGalleryUtil.getImagMultiple(getContext(), maxSize, new OnRxGalleryRadioListener() {
+                                    @Override
+                                    public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+                                        // 提交图片
+                                        presenter.commit(imageMultipleResultEvent, activity.mSubID, activity.mTypeID, activity.mShipAccount, activity.activity_type);
+                                    }
+
+                                    @Override
+                                    public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+                                        // 单选回调
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(getContext(), "图片张数已到达上限", Toast.LENGTH_SHORT).show();
+                            }
                         } else if (activity.isFinshReceptionSandAttachment == 1) {
                             Toast.makeText(getContext(), "已提交, 不能添加图片", Toast.LENGTH_SHORT).show();
                         }
@@ -302,7 +321,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
 
                     @Override
                     public void onItemLongClick(View view, int position) {
-
+                        ToastUtil.tip(getContext(), "已提交, 不能添加图片");
                     }
                 });
                 mRecyclerview.setAdapter(adapter);
@@ -337,7 +356,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
             @Override
             public void onFinish() {
                 // 全部上传成功的回调
-                presenter.getImgList(activity.mSubID, activity.mTypeID);
+                presenter.getImgList(activity.mSubID, activity.mTypeID, activity.activity_type);
             }
         });
     }
@@ -350,7 +369,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
     @Override
     public void showDeleteResult(boolean isSuccess) {
         if (isSuccess) {
-            presenter.getImgList(activity.mSubID, activity.mTypeID);
+            presenter.getImgList(activity.mSubID, activity.mTypeID, activity.activity_type);
         } else {
             Toast.makeText(getContext(), "删除图片失败, 请重试", Toast.LENGTH_SHORT).show();
         }
@@ -360,7 +379,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
     public void showCommitPDFResult(boolean isSuccess) {
         if (isSuccess) {
             // 全部上传成功的回调
-            presenter.getImgList(activity.mSubID, activity.mTypeID);
+            presenter.getImgList(activity.mSubID, activity.mTypeID, activity.activity_type);
         } else {
             ToastUtil.tip(getContext(), "提交失败, 请重试");
         }

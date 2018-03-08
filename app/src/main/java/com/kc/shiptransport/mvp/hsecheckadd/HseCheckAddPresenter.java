@@ -84,18 +84,18 @@ public class HseCheckAddPresenter implements HseCheckAddContract.Presenter{
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<HseCheckListBean>() {
                     @Override
-                    protected void _onNext(HseCheckListBean bean) {
+                    protected void next(HseCheckListBean bean) {
                         view.showDetail(bean);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showLoading(false);
                         view.showError(message);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 

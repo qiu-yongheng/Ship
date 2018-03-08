@@ -70,4 +70,32 @@ public class JsonUtil {
 
         return root.toString();
     }
+
+    /**
+     * 生产施工相册新增/修改json
+     *
+     * @param itemID
+     * @param albumName
+     * @param remark
+     * @param creator
+     * @return {"Data":{"Item":[{"ItemID":"1","AlbumName":"相册2018","Remark":"摘要","Creator":"yflf"}]}}
+     */
+    public static String getAlbumJson(int itemID, String albumName, String remark, String creator) throws JSONException {
+        JSONObject data = new JSONObject();
+        JSONObject item = new JSONObject();
+        JSONArray array = new JSONArray();
+        JSONObject object = new JSONObject();
+
+        if (itemID > 0) {
+            object.put("ItemID", itemID);
+        }
+        object.put("AlbumName", albumName);
+        object.put("Remark", TextUtils.isEmpty(remark) ? "" : remark);
+        object.put("Creator", TextUtils.isEmpty(creator) ? "" : creator);
+
+        array.put(object);
+        item.put("Item", array);
+        data.put("Data", item);
+        return data.toString();
+    }
 }

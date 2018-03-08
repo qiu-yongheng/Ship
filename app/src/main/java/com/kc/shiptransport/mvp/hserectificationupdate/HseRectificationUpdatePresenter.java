@@ -58,14 +58,14 @@ public class HseRectificationUpdatePresenter implements HseRectificationUpdateCo
 
     @Override
     public void commit(final HseRectificationCommitBean bean, List<ImgList> addList, final List<ImgList> deleteList) {
-        view.showProgressDialog("上传图片", addList.size() + deleteList.size() + 1);
+        view.showProgressDialog("上传", addList.size() + deleteList.size() + 1);
         Observable
                 .fromIterable(addList)
                 .flatMap(new Function<ImgList, ObservableSource<ImgCommitBean>>() {
                     @Override
                     public ObservableSource<ImgCommitBean> apply(ImgList imgList) throws Exception {
                         // 生成待提交图片数据
-                        return dataRepository.getImgCommitBean(imgList);
+                        return dataRepository.getImgCommitBean(imgList, context);
                     }
                 })
                 .flatMap(new Function<ImgCommitBean, ObservableSource<ImgCommitResultBean>>() {
@@ -154,20 +154,20 @@ public class HseRectificationUpdatePresenter implements HseRectificationUpdateCo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<Boolean>() {
                     @Override
-                    protected void _onNext(Boolean booleans) {
+                    protected void next(Boolean booleans) {
                         view.showCommitResult(booleans);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         LogUtil.e(message);
                         view.hideProgressDialog();
                     }
 
                     @Override
-                    protected void _onComplete() {
-
+                    protected void complete() {
+                        view.hideProgressDialog();
                     }
 
                     @Override
@@ -186,18 +186,18 @@ public class HseRectificationUpdatePresenter implements HseRectificationUpdateCo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<HseRectificationBean>() {
                     @Override
-                    protected void _onNext(HseRectificationBean bean) {
+                    protected void next(HseRectificationBean bean) {
                         view.showDetailData(bean);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 
@@ -217,18 +217,18 @@ public class HseRectificationUpdatePresenter implements HseRectificationUpdateCo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<HseDefectDetailBean>() {
                     @Override
-                    protected void _onNext(HseDefectDetailBean bean) {
+                    protected void next(HseDefectDetailBean bean) {
                         view.showDefectDetailData(bean);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 

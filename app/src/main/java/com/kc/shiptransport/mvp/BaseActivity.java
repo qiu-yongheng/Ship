@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +15,8 @@ import android.widget.Toast;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
-import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
+import com.kc.shiptransport.interfaze.OnDialogOkClickListener;
+import com.kc.shiptransport.interfaze.OnInitDialogViewListener;
 import com.kc.shiptransport.interfaze.OnProgressFinishListener;
 import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.fragmentback.BackHandlerHelper;
@@ -26,6 +28,7 @@ import com.umeng.analytics.MobclickAgent;
  * @desc ${TODD}
  */
 public class BaseActivity extends AppCompatActivity {
+    private String T = this.getClass().getSimpleName();
     protected ProgressDialog progressDialog;
     private AlertDialog alertDialog;
     protected Toast mToast;
@@ -39,6 +42,7 @@ public class BaseActivity extends AppCompatActivity {
     private AlertDialog.Builder singleNoButtonBuilder;
     private int singleNoButtonSelectedId;
     private AlertDialog singleNoButtonDialog;
+    private AlertDialog customDialog;
 
 
     @Override
@@ -50,6 +54,7 @@ public class BaseActivity extends AppCompatActivity {
         //            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         //            getWindow().setStatusBarColor(Color.TRANSPARENT);
         //        }
+        Log.d("BaseActivity", T);
     }
 
     protected void tip(String text) {
@@ -246,7 +251,7 @@ public class BaseActivity extends AppCompatActivity {
      * @param cancelListener
      * @param okListener
      */
-    public void showEditDailog(View view, String title, String cancel, String ok, DialogInterface.OnClickListener cancelListener, final OnDailogOKClickListener okListener) {
+    public void showEditDailog(View view, String title, String cancel, String ok, DialogInterface.OnClickListener cancelListener, final OnDialogOkClickListener okListener) {
         editBuilder = new AlertDialog.Builder(BaseActivity.this);
 
         if (view == null) {
@@ -281,6 +286,33 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * 显示自定义Dialog
+     * @param resource
+     * @param listener
+     */
+    public void showCustomDialog(@LayoutRes int resource, OnInitDialogViewListener listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // 添加布局
+        final View view = LayoutInflater.from(this).inflate(resource, null);
+        builder.setView(view);
+        // 初始化布局
+        listener.init(view);
+        // 不能点击外界取消
+        builder.setCancelable(false);
+        // 创建对话框
+        customDialog = builder.create();
+        // show it
+        customDialog.show();
+    }
+
+    public void hideCustomDialog() {
+        if (customDialog != null && customDialog.isShowing()) {
+            customDialog.dismiss();
+            customDialog = null;
+        }
+    }
+
+    /**
      * 显示单选框
      * @param data
      * @param title
@@ -289,7 +321,7 @@ public class BaseActivity extends AppCompatActivity {
      * @param cancelListener
      * @param okListener
      */
-    public void showSingleDailog(String[] data, String title, String cancel, String ok, DialogInterface.OnClickListener cancelListener, final OnDailogOKClickListener okListener) {
+    public void showSingleDailog(String[] data, String title, String cancel, String ok, DialogInterface.OnClickListener cancelListener, final OnDialogOkClickListener okListener) {
         singleBuilder = new AlertDialog.Builder(BaseActivity.this);
         singleSelectedId = -1;
 
@@ -334,7 +366,7 @@ public class BaseActivity extends AppCompatActivity {
      * @param cancelListener
      * @param okListener
      */
-    public void showSingleNoButtonDailog(String[] data, String title, DialogInterface.OnClickListener cancelListener, final OnDailogOKClickListener okListener) {
+    public void showSingleNoButtonDailog(String[] data, String title, DialogInterface.OnClickListener cancelListener, final OnDialogOkClickListener okListener) {
         singleNoButtonBuilder = new AlertDialog.Builder(BaseActivity.this);
         singleNoButtonSelectedId = -1;
 

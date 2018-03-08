@@ -39,6 +39,7 @@ public class RecordListBean {
     private String PreAcceptanceTime;
     private String ShipItemNum;
     private int IsFinish;
+    private int IsFullImages;
 
     public int getItemID() {
         return ItemID;
@@ -150,5 +151,13 @@ public class RecordListBean {
 
     public void setIsFinish(int IsFinish) {
         this.IsFinish = IsFinish;
+    }
+
+    public int getIsFullImages() {
+        return IsFullImages;
+    }
+
+    public void setIsFullImages(int isFullImages) {
+        IsFullImages = isFullImages;
     }
 }

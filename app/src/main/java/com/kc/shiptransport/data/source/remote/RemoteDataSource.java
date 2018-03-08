@@ -2911,4 +2911,175 @@ public class RemoteDataSource {
 
         return getCallResult(endPoint, soapAction, rpc);
     }
+
+    /**
+     * 1.119	根据进场计划ID获取过砂图片列表（多条）
+     * @param SubcontractorInterimApproachPlanID
+     * @return
+     * @throws Exception
+     */
+    public String GetOverSandAttachmentRecordsBySubcontractorInterimApproachPlanID(int SubcontractorInterimApproachPlanID) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetOverSandAttachmentRecordsBySubcontractorInterimApproachPlanID";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("SubcontractorInterimApproachPlanID", SubcontractorInterimApproachPlanID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.118	提交供砂图片数据
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    public String InsertOverSandAttachment(String json, String ByteDataStr) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertOverSandAttachment";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+        rpc.addProperty("ByteDataStr", ByteDataStr);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.120	删除过砂图片数据
+     * @param ItemID
+     * @return
+     * @throws Exception
+     */
+    public String DeleteOverSandAttachmentRecordsByItemID(int ItemID) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteOverSandAttachmentRecordsByItemID";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("ItemID", ItemID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.124	获取施工相册数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetConstructionPictureAlbumRecordsData(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetConstructionPictureAlbumRecordsData";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.126	添加/更新施工相册数据
+     * @param Table
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String InsertTable(String Table, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertTable";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("Table", Table);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.127	删除施工相册数据
+     * @param Table
+     * @param ItemID
+     * @param SubTable
+     * @param AssociatedColumn
+     * @return
+     * @throws Exception
+     */
+    public String DeleteTable(String Table, String ItemID, String SubTable, String AssociatedColumn) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteTable";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("Table", Table);
+        rpc.addProperty("ItemID", ItemID);
+        rpc.addProperty("SubTable", SubTable);
+        rpc.addProperty("AssociatedColumn", AssociatedColumn);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.125	获取施工相册对应的图片数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetConstructionPictureAttachmentRecordsData(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetConstructionPictureAttachmentRecordsData";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
 }

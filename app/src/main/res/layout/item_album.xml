@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="9dp"
+    android:layout_marginRight="9dp"
+    android:layout_marginTop="@dimen/margintop_8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.kc.shiptransport.view.custom.RatioImageView
+            android:id="@+id/iv_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            app:ratio="0.9"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_10"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_17.5sp"/>
+
+        <include layout="@layout/view_divi"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:padding="@dimen/dp_10"
+                android:text="2张"
+                android:textSize="@dimen/text_12sp"/>
+
+            <TextView
+                android:id="@+id/tv_update"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:padding="@dimen/dp_10"
+                android:text="编辑"
+                android:textSize="@dimen/text_12sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

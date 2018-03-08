@@ -36,6 +36,7 @@ public class ScannerImgListByTypeBean implements Parcelable {
     private String FileName;
     private String FilePath;
     private String SystemDate;
+    private String Creator;
 
 
 
@@ -139,6 +140,14 @@ public class ScannerImgListByTypeBean implements Parcelable {
         this.SystemDate = SystemDate;
     }
 
+    public String getCreator() {
+        return Creator;
+    }
+
+    public void setCreator(String creator) {
+        Creator = creator;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -157,6 +166,7 @@ public class ScannerImgListByTypeBean implements Parcelable {
         parcel.writeString(this.FileName);
         parcel.writeString(this.FilePath);
         parcel.writeString(this.SystemDate);
+        parcel.writeString(this.Creator);
     }
 
     protected ScannerImgListByTypeBean(Parcel in) {
@@ -171,5 +181,6 @@ public class ScannerImgListByTypeBean implements Parcelable {
         FileName = in.readString();
         FilePath = in.readString();
         SystemDate = in.readString();
+        Creator = in.readString();
     }
 }

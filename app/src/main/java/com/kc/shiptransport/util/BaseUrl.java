@@ -9,12 +9,12 @@ public class BaseUrl {
     /**
      * 正式服
      */
-    public static final String Url = "http://www.cchk3.com/AppService/";
+//    public static final String Url = "http://www.cchk3.com/AppService/";
 
     /**
      * 测试服
      */
-//    public static final String Url = "https://cchk3.kingwi.org/AppService/";
+    public static final String Url = "https://cchk3.kingwi.org/AppService/";
 
     /**
      * 供砂

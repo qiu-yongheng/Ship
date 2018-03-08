@@ -24,6 +24,7 @@ import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.mvp.scannerimgselect.ScannerImgSelectActivity;
+import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.ToastUtil;
 
 import org.litepal.crud.DataSupport;
@@ -247,7 +248,8 @@ public class ScannerDetailFragment extends Fragment implements ScannerDetailCont
                             bean.getAttachmentCount(),
                             bean.getDefalutAttachmentCount(),
                             activity.type,
-                            isSumbittedPerfectBoatScanner);
+                            isSumbittedPerfectBoatScanner,
+                            SettingUtil.TYPE_SCANNER);
                 }
 
                 @Override

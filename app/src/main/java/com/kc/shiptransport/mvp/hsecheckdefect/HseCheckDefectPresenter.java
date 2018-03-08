@@ -62,18 +62,18 @@ public class HseCheckDefectPresenter implements HseCheckDefectContract.Presenter
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<Boolean>() {
                     @Override
-                    protected void _onNext(Boolean aBoolean) {
+                    protected void next(Boolean aBoolean) {
                         view.showSyncResult(aBoolean);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showLoading(false);
                         view.showError(message);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 
@@ -100,7 +100,7 @@ public class HseCheckDefectPresenter implements HseCheckDefectContract.Presenter
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<List<HseDefectListBean>>() {
                     @Override
-                    protected void _onNext(List<HseDefectListBean> listBeans) {
+                    protected void next(List<HseDefectListBean> listBeans) {
                         view.showDefects(listBeans, pageCount == 1);
                         if (listBeans.isEmpty()) {
                             view.showError("没有数据");
@@ -108,13 +108,13 @@ public class HseCheckDefectPresenter implements HseCheckDefectContract.Presenter
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 
@@ -134,18 +134,18 @@ public class HseCheckDefectPresenter implements HseCheckDefectContract.Presenter
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<Boolean>() {
                     @Override
-                    protected void _onNext(Boolean aBoolean) {
+                    protected void next(Boolean aBoolean) {
                         view.showDeleteResult(aBoolean);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 

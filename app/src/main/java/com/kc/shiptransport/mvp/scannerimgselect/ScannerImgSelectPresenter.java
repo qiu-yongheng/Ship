@@ -6,7 +6,9 @@ import android.util.Log;
 import com.kc.shiptransport.data.bean.ScanCommitBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.source.DataRepository;
+import com.kc.shiptransport.util.SettingUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
@@ -55,38 +57,58 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
     }
 
     @Override
-    public void getImgList(int subID, int typeID) {
+    public void getImgList(int subID, int typeID, int activityID) {
         view.showLoading(true);
-        dataRepository
-                .GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID(subID, typeID)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<ScannerImgListByTypeBean>>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        mCompositeDisposable.add(d);
-                    }
+        Observable<List<ScannerImgListByTypeBean>> observable = null;
+        switch (activityID) {
+            case SettingUtil.TYPE_SCANNER: // 供应商航次信息扫描件
+                observable = dataRepository
+                        .GetSubcontractorPerfectBoatScannerAttachmentRecordByAttachmentTypeID(subID, typeID);
+                break;
+            case SettingUtil.TYPE_RECORDEDSAND: // 过砂记录
+                observable = dataRepository
+                        .GetOverSandAttachmentRecordsBySubcontractorInterimApproachPlanID(subID);
+                break;
+        }
 
-                    @Override
-                    public void onNext(@NonNull List<ScannerImgListByTypeBean> scannerImgListByTypeBeen) {
-                        view.showImgList(scannerImgListByTypeBeen);
-                    }
 
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        view.showLoading(false);
-                        view.showError(e.toString());
-                    }
+        if (observable != null) {
+            observable
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<List<ScannerImgListByTypeBean>>() {
+                        @Override
+                        public void onSubscribe(@NonNull Disposable d) {
+                            mCompositeDisposable.add(d);
+                        }
 
-                    @Override
-                    public void onComplete() {
-                        view.showLoading(false);
-                    }
-                });
+                        @Override
+                        public void onNext(@NonNull List<ScannerImgListByTypeBean> scannerImgListByTypeBeen) {
+                            view.showImgList(scannerImgListByTypeBeen);
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            view.showLoading(false);
+                            view.showError(e.toString());
+
+                            // TODO: 暂时返回空集合
+                            view.showImgList(new ArrayList<ScannerImgListByTypeBean>());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            view.showLoading(false);
+                        }
+                    });
+        } else {
+            view.showLoading(false);
+            view.showError("被观察者为空!");
+        }
     }
 
     @Override
-    public void commit(ImageMultipleResultEvent imageMultipleResultEvent, final int subID, final int typeID, String shipAccount) {
+    public void commit(ImageMultipleResultEvent imageMultipleResultEvent, final int subID, final int typeID, String shipAccount, final int activity_type) {
         view.showLoading(true);
         dataRepository
                 .getScanImgList(imageMultipleResultEvent, subID, typeID, shipAccount)
@@ -110,7 +132,7 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
                     @Override
                     public Boolean apply(@NonNull ScanCommitBean scanCommitBean) throws Exception {
                         // 上传图片
-                        commitImg(scanCommitBean);
+                        commitImg(scanCommitBean, activity_type);
                         return true;
                     }
                 })
@@ -137,6 +159,7 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
                         Log.d("==", "上传图片完成");
                     }
                 });
+
     }
 
     @Override
@@ -148,11 +171,26 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
      * 上传图片, 更新进度
      *
      * @param bean
+     * @param activity_type
      */
     @Override
-    public void commitImg(ScanCommitBean bean) {
-        dataRepository
-                .InsertSubcontractorPerfectBoatScannerAttachment(bean)
+    public void commitImg(ScanCommitBean bean, int activity_type) {
+        Observable<Boolean> observable = null;
+        switch (activity_type) {
+            case SettingUtil.TYPE_SCANNER:
+                observable = dataRepository.InsertSubcontractorPerfectBoatScannerAttachment(bean);
+                break;
+            case SettingUtil.TYPE_RECORDEDSAND:
+                observable = dataRepository.InsertOverSandAttachment(bean);
+                break;
+        }
+
+        if (observable == null) {
+            view.showError("图片提交失败, 请重试");
+            return;
+        }
+
+        observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
@@ -184,10 +222,25 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
     }
 
     @Override
-    public void deleteImg(int itemID) {
+    public void deleteImg(int itemID, int activity_type) {
         view.showLoading(true);
-        dataRepository
-                .DeleteSubcontractorPerfectBoatScannerAttachmentByItemID(itemID)
+
+        Observable<Boolean> observable = null;
+        switch (activity_type) {
+            case SettingUtil.TYPE_SCANNER:
+                observable = dataRepository.DeleteSubcontractorPerfectBoatScannerAttachmentByItemID(itemID);
+                break;
+            case SettingUtil.TYPE_RECORDEDSAND:
+                observable = dataRepository.DeleteOverSandAttachmentRecordsByItemID(itemID);
+                break;
+        }
+
+        if (observable == null) {
+            view.showError("图片删除失败, 请重试");
+            return;
+        }
+
+        observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Boolean>() {
@@ -216,6 +269,7 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
 
     /**
      * 提交PDF
+     *
      * @param path
      * @param subID
      * @param typeID

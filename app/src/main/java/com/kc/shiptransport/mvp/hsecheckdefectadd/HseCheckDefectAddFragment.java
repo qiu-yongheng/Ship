@@ -313,6 +313,9 @@ public class HseCheckDefectAddFragment extends BaseFragmentBack<HseCheckDefectAd
 
     @Override
     public void showDetailData(HseDefectDetailBean bean) {
+        // 检查人
+        userAccount = bean.getCreator();
+        tvChecker.setText(bean.getCreatorName());
         // 缺陷类别
         String defectTypeName = bean.getDefectTypeName();
         hse_defect_type_id = bean.getDefectTypeID();

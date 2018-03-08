@@ -54,18 +54,18 @@ public class BoatInquireAddPresenter implements BoatInquireAddContract.Presenter
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<BoatInquireDetailBean>() {
                     @Override
-                    protected void _onNext(BoatInquireDetailBean boatInquireDetailBean) {
+                    protected void next(BoatInquireDetailBean boatInquireDetailBean) {
                         view.showDetailData(boatInquireDetailBean);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 
@@ -85,18 +85,18 @@ public class BoatInquireAddPresenter implements BoatInquireAddContract.Presenter
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<List<BoatInquireItemBean>>() {
                     @Override
-                    protected void _onNext(List<BoatInquireItemBean> list) {
+                    protected void next(List<BoatInquireItemBean> list) {
                         view.showInquireItem(list);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 
@@ -116,18 +116,18 @@ public class BoatInquireAddPresenter implements BoatInquireAddContract.Presenter
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<Boolean>() {
                     @Override
-                    protected void _onNext(Boolean aBoolean) {
+                    protected void next(Boolean aBoolean) {
                         view.showCommitResult(aBoolean);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 

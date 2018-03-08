@@ -47,6 +47,15 @@ public class AcceptanceInfoBean {
     private String SubcontractorName;
     private String ShipAccount;
     private String ShipName;
+    private String SubcontractorPerfectBoatScannerTime;
+
+    public String getSubcontractorPerfectBoatScannerTime() {
+        return SubcontractorPerfectBoatScannerTime;
+    }
+
+    public void setSubcontractorPerfectBoatScannerTime(String subcontractorPerfectBoatScannerTime) {
+        SubcontractorPerfectBoatScannerTime = subcontractorPerfectBoatScannerTime;
+    }
 
     public int getItemID() {
         return ItemID;

@@ -52,17 +52,17 @@ public class ViolationRecordsPresenter implements ViolationRecordsContract.Prese
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<List<ViolationRecordBean>>() {
                     @Override
-                    protected void _onNext(List<ViolationRecordBean> list) {
+                    protected void next(List<ViolationRecordBean> list) {
                         view.showDatas(list, pageCount == 1);
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
 
                     }
 

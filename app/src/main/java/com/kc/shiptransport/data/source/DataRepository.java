@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.app.App;
 import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.AttendanceAuditCommitBean;
 import com.kc.shiptransport.data.bean.AttendanceTypeBean;
@@ -32,6 +33,8 @@ import com.kc.shiptransport.data.bean.SubmitBean;
 import com.kc.shiptransport.data.bean.TaskVolumeBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
 import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
+import com.kc.shiptransport.data.bean.album.ConstructionAlbumBean;
+import com.kc.shiptransport.data.bean.album.ConstructionAlbumPictureBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireCommitBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireDetailBean;
@@ -816,7 +819,8 @@ public class DataRepository implements DataSouceImpl {
                 /** 根据类型计算没有做相关处理的船次 */
                 if (type == SettingUtil.TYPE_RECORDEDSAND) { // 过砂记录
                     /** 过砂记录, IsFinish = 0的个数 */
-                    num = DataSupport.where("IsFinish = ?", "0").count(RecordList.class);
+                    //num = DataSupport.where("IsFinish = ?", "0").count(RecordList.class);
+                    num = DataSupport.where("IsFullImages = ?", "0").count(RecordList.class);
                 } else if (type == SettingUtil.TYPE_VOYAGEINFO) { // 航次信息完善
                     /** 航次信息完善, IsPerfect = 0的个数 */
                     num = DataSupport.where("IsPerfect = ?", "0").count(WeekTask.class);
@@ -1782,6 +1786,7 @@ public class DataRepository implements DataSouceImpl {
                     record.setPreAcceptanceTime(bean.getPreAcceptanceTime());
                     record.setShipItemNum(bean.getShipItemNum());
                     record.setIsFinish(bean.getIsFinish());
+                    record.setIsFullImages(bean.getIsFullImages());
                     record.save();
                 }
 
@@ -2506,7 +2511,10 @@ public class DataRepository implements DataSouceImpl {
                     LogUtil.d("扫描件图片路径: " + bean.getOriginalPath());
 
                     File file = new File(bean.getOriginalPath());
-                    byte[] bytes = FileUtil.File2byte(file);
+                    LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length()/1024 + "kb");
+                    File tagFile = Luban.with(App.getAppContext()).load(file).get();
+                    LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length()/1024 + "kb");
+                    byte[] bytes = FileUtil.File2byte(tagFile);
                     commitBean.setBase64img(new String(Base64.encode(bytes, Base64.DEFAULT)));
 
                     commitBeanList.add(commitBean);
@@ -2731,7 +2739,10 @@ public class DataRepository implements DataSouceImpl {
                     String filename = title + "." + suffixName;
                     // 解析图片
                     File file = new File(bean.getOriginalPath());
-                    byte[] bytes = FileUtil.File2byte(file);
+                    LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length()/1024 + "kb");
+                    File tagFile = Luban.with(App.getAppContext()).load(file).get();
+                    LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length()/1024 + "kb");
+                    byte[] bytes = FileUtil.File2byte(tagFile);
                     String ByteDataStr = new String(Base64.encode(bytes, Base64.DEFAULT));
 
 
@@ -4889,7 +4900,10 @@ public class DataRepository implements DataSouceImpl {
                     image.setConstructionBoatAccount(ConstructionBoatAccount);
                     // 解析图片
                     File file = new File(bean.getOriginalPath());
-                    byte[] bytes = FileUtil.File2byte(file);
+                    LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length()/1024 + "kb");
+                    File tagFile = Luban.with(App.getAppContext()).load(file).get();
+                    LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length()/1024 + "kb");
+                    byte[] bytes = FileUtil.File2byte(tagFile);
                     String ByteDataStr = new String(Base64.encode(bytes, Base64.DEFAULT));
                     image.setByteDataStr(ByteDataStr);
                     // 图片在取样列表中的位置
@@ -5590,21 +5604,27 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<ImgCommitBean> getImgCommitBean(final ImgList imgList) {
+    public Observable<ImgCommitBean> getImgCommitBean(final ImgList imgList, final Context context) {
         return Observable.create(new ObservableOnSubscribe<ImgCommitBean>() {
             @Override
             public void subscribe(ObservableEmitter<ImgCommitBean> e) throws Exception {
+                long start = System.currentTimeMillis();
                 // 文件名
                 String fileName = imgList.getPath().substring(imgList.getPath().lastIndexOf("/") + 1);
                 // 文件后缀名
                 String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
                 // base64
                 File file = new File(imgList.getPath());
-                byte[] bytes = FileUtil.File2byte(file);
+                LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length()/1024 + "kb");
+                File tagFile = Luban.with(context).load(file).get();
+                LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length()/1024 + "kb");
+
+                byte[] bytes = FileUtil.File2byte(tagFile);
                 String byteDataStr = new String(Base64.encode(bytes, Base64.DEFAULT));
 
                 ImgCommitBean imgCommitBean = new ImgCommitBean(byteDataStr, suffixName, fileName);
-                LogUtil.d("待提交图片: " + imgCommitBean);
+                long end = System.currentTimeMillis();
+                LogUtil.e("待提交图片: " + imgCommitBean + ", 耗时: " + (end - start));
                 e.onNext(imgCommitBean);
                 e.onComplete();
             }
@@ -6056,6 +6076,199 @@ public class DataRepository implements DataSouceImpl {
         });
     }
 
+    /**
+     * 搜索受检船舶
+     * @param msg
+     * @param isSearchAll
+     * @return
+     */
+    @Override
+    public Observable<List<HseCheckShip>> searchHseCheckShip(final String msg, final boolean isSearchAll) {
+        return Observable.create(new ObservableOnSubscribe<List<HseCheckShip>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<HseCheckShip>> e) throws Exception {
+                List<HseCheckShip> list = new ArrayList<>();
+                if (isSearchAll) {
+                    list = DataSupport.findAll(HseCheckShip.class);
+                } else if (!isSearchAll && !TextUtils.isEmpty(msg)) {
+                    list = DataSupport
+                            .where("ShipName like ? or ShipAccount like ? " ,  "%" + msg + "%", "%" + msg + "%")
+                            .find(HseCheckShip.class);
+                }
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.119	根据进场计划ID获取过砂图片列表（多条）
+     * @param subID
+     * @return
+     */
+    @Override
+    public Observable<List<ScannerImgListByTypeBean>> GetOverSandAttachmentRecordsBySubcontractorInterimApproachPlanID(final int subID) {
+        return Observable.create(new ObservableOnSubscribe<List<ScannerImgListByTypeBean>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<ScannerImgListByTypeBean>> e) throws Exception {
+                // 发送网络请求
+                String result = mRemoteDataSource.GetOverSandAttachmentRecordsBySubcontractorInterimApproachPlanID(subID);
+                LogUtil.d("过砂进场计划ID: " + subID + "\n图片信息: " + result);
+
+                // 解析数据
+                List<ScannerImgListByTypeBean> list = gson.fromJson(result, new TypeToken<List<ScannerImgListByTypeBean>>() {
+                }.getType());
+
+                e.onNext(list);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.118	提交供砂图片数据
+     * @param bean
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertOverSandAttachment(final ScanCommitBean bean) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                // 解析数据成json
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("SubcontractorInterimApproachPlanID", bean.getSubcontractorInterimApproachPlanID());
+                jsonObject.put("FileName", bean.getFileName());
+                jsonObject.put("SuffixName", bean.getSuffixName());
+                jsonObject.put("Creator", bean.getCreator());
+
+                jsonArray.put(jsonObject);
+
+
+                String json = jsonArray.toString();
+                LogUtil.d("提交过砂图片: " + json);
+
+                // 提交图片
+                String result = mRemoteDataSource.InsertOverSandAttachment(json, bean.getBase64img());
+
+                CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(resultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.120	删除过砂图片数据
+     * @param ItemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteOverSandAttachmentRecordsByItemID(final int ItemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteOverSandAttachmentRecordsByItemID(ItemID);
+                CommitResultBean resultBean = gson.fromJson(result, CommitResultBean.class);
+
+                e.onNext(resultBean.getMessage() == 1);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.124	获取施工相册数据
+     * @param PageSize
+     * @param PageCount
+     * @return
+     */
+    @Override
+    public Observable<ConstructionAlbumBean> GetConstructionPictureAlbumRecordsData(final int PageSize, final int PageCount) {
+        return Observable.create(new ObservableOnSubscribe<ConstructionAlbumBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<ConstructionAlbumBean> e) throws Exception {
+                String json = mRemoteDataSource.GetConstructionPictureAlbumRecordsData(PageSize, PageCount, "");
+                LogUtil.d("1.124\t获取施工相册数据: " + json);
+                ConstructionAlbumBean albumBean = gson.fromJson(json, ConstructionAlbumBean.class);
+                e.onNext(albumBean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.126	添加/更新施工相册数据
+     * @param Table
+     * @param itemID
+     * @param albumName
+     * @param remark
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertTable(final String Table, final int itemID, final String albumName, final String remark) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String creator = DataSupport.findAll(User.class).get(0).getUserID();
+                String json = JsonUtil.getAlbumJson(itemID, albumName, remark, creator);
+                LogUtil.d("1.126\t添加/更新施工相册数据: " + json);
+                String result = mRemoteDataSource.InsertTable(Table, json);
+                LogUtil.d("1.126\t添加/更新施工相册数据result: " + result);
+                e.onNext(getRequestResult(result));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.127	删除施工相册数据
+     * @param Table
+     * @param ItemID
+     * @param SubTable
+     * @param AssociatedColumn
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteTable(final String Table, final String ItemID, final String SubTable, final String AssociatedColumn) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.DeleteTable(Table, ItemID, SubTable, AssociatedColumn);
+                e.onNext(getRequestResult(result));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.125	获取施工相册对应的图片数据
+     * @param pageSize
+     * @param pageCount
+     * @param albumID
+     * @return
+     */
+    @Override
+    public Observable<ConstructionAlbumPictureBean> GetConstructionPictureAttachmentRecordsData(final int pageSize, final int pageCount, final int albumID) {
+        return Observable.create(new ObservableOnSubscribe<ConstructionAlbumPictureBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<ConstructionAlbumPictureBean> e) throws Exception {
+                String json = JsonUtil.spliceJson(JsonUtil.creatorJsonObject("AlbumID", JsonUtil.TYPE_STRING, String.valueOf(albumID)));
+                LogUtil.d("1.125\t获取施工相册对应的图片数据: " + json);
+                String result = mRemoteDataSource.GetConstructionPictureAttachmentRecordsData(pageSize, pageCount, json);
+                ConstructionAlbumPictureBean bean = gson.fromJson(result, ConstructionAlbumPictureBean.class);
+                e.onNext(bean);
+                e.onComplete();
+            }
+        });
+    }
+
+    private boolean getRequestResult(String result) {
+        return gson.fromJson(result, CommitResultBean.class).getMessage() == 1;
+    }
 
     private void reset() {
         day_0 = 0;

@@ -27,11 +27,11 @@ public interface ScannerImgSelectContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getImgList(int subID, int typeID);
-        void commit(ImageMultipleResultEvent imageMultipleResultEvent, int subID, int typeID, String shipAccount);
+        void getImgList(int subID, int typeID, int activiyID);
+        void commit(ImageMultipleResultEvent imageMultipleResultEvent, int subID, int typeID, String shipAccount, int activity_type);
         void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent);
-        void commitImg(ScanCommitBean bean);
-        void deleteImg(int itemID);
+        void commitImg(ScanCommitBean bean, int activity_type);
+        void deleteImg(int itemID, int activity_type);
         void commitPDF(String path, int subID, int typeID, String shipAccount);
         void downloadPDF(String url);
     }

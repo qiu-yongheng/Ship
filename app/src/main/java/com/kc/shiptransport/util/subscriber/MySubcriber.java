@@ -14,23 +14,23 @@ import io.reactivex.Observer;
 public abstract class MySubcriber<T> implements Observer<T> {
     @Override
     public void onNext(T t) {
-        _onNext(t);
+        next(t);
     }
 
     @Override
     public void onError(Throwable e) {
         //LogUtil.e(e);
-        _onError(ExceptionHandle.handleException(e));
+        error(ExceptionHandle.handleException(e));
     }
 
     @Override
     public void onComplete() {
-        _onComplete();
+        complete();
     }
 
-    protected abstract void _onNext(T t);
+    protected abstract void next(T t);
 
-    protected abstract void _onError(String message);
+    protected abstract void error(String message);
 
-    protected abstract void _onComplete();
+    protected abstract void complete();
 }

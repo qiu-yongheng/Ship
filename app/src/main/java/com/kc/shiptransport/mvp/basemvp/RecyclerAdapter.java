@@ -69,7 +69,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     ((NormalHolder) holder).mTvQuantum.setVisibility(View.GONE);
 
                     // 判断是否已过砂
-                    if (recordList.getIsFinish() == 1) {
+                    if (recordList.getIsFullImages() == 1) {
                         // 已过砂
                         ((NormalHolder) holder).mTvShip.setTextColor(Color.RED);
                         ((NormalHolder) holder).mTvQuantum.setTextColor(Color.RED);
@@ -77,7 +77,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         // 根据单选判断是否显示
                         boolean isAccepted = SharePreferenceUtil.getBoolean(context, SettingUtil.ACCEPTED);
                         ((NormalHolder) holder).mLlTask.setVisibility(isAccepted ? View.VISIBLE : View.INVISIBLE);
-                    } else if (recordList.getIsFinish() == 0) {
+                    } else if (recordList.getIsFullImages() == 0) {
                         // 未过砂
                         ((NormalHolder) holder).mTvShip.setTextColor(Color.BLACK);
                         ((NormalHolder) holder).mTvQuantum.setTextColor(Color.BLACK);

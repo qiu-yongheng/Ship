@@ -1,6 +1,7 @@
 package com.kc.shiptransport.mvp.hsecheckadd;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,11 +21,11 @@ import com.kc.shiptransport.interfaze.OnTimePickerLastDateClickListener;
 import com.kc.shiptransport.interfaze.OnTimePickerSureClickListener;
 import com.kc.shiptransport.mvp.BaseFragment;
 import com.kc.shiptransport.util.CalendarUtil;
-import com.kc.shiptransport.util.PopwindowUtil;
 import com.kc.shiptransport.util.SettingUtil;
 import com.kc.shiptransport.util.SharePreferenceUtil;
 import com.kc.shiptransport.util.ToastUtil;
-import com.zhy.adapter.recyclerview.base.ViewHolder;
+import com.kc.shiptransport.view.actiivty.select.SelectActivity;
+import com.kc.shiptransport.view.actiivty.select.SelectFragment;
 
 import org.litepal.crud.DataSupport;
 
@@ -88,7 +89,7 @@ public class HseCheckAddFragment extends BaseFragment<HseCheckAddActivity> imple
 
         // 回显船舶名称
         tvSpinner.setText(SharePreferenceUtil.getString(getContext(), SettingUtil.SP_KEY_HSE_SHIP_NAME, "请选择"));
-        shipList = DataSupport.findAll(HseCheckShip.class);
+
 
         switch (activity.type) {
             case SettingUtil.TYPE_HSE_CHECK_ADD:
@@ -167,24 +168,29 @@ public class HseCheckAddFragment extends BaseFragment<HseCheckAddActivity> imple
                 }
                 break;
             case R.id.tv_spinner:
-                PopwindowUtil.showPopwindow(getContext(), shipList, tvSpinner, true, new PopwindowUtil.InitHolder<HseCheckShip>() {
-                    @Override
-                    public void initHolder(ViewHolder holder, final HseCheckShip hseCheckShip, final int position) {
-                        holder.setText(R.id.tv_spinner, hseCheckShip.getShipName())
-                                .setOnClickListener(R.id.tv_spinner, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        tvSpinner.setText(hseCheckShip.getShipName());
-                                        checkShip = hseCheckShip.getShipAccount();
-                                        // 保存受检船舶
-                                        SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_HSE_SHIP_ACCOUNT, checkShip);
-                                        SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_HSE_SHIP_NAME, hseCheckShip.getShipName());
+                // TODO: 跳界面
+                Bundle bundle = new Bundle();
+                bundle.putInt(SelectActivity.TYPE, SettingUtil.TYPE_HSE_CHECK_ADD);
+                SelectActivity.startActivity(this, bundle);
 
-                                        PopwindowUtil.hidePopwindow();
-                                    }
-                                });
-                    }
-                }, null, null);
+//                PopwindowUtil.showPopwindow(getContext(), shipList, tvSpinner, true, new PopwindowUtil.InitHolder<HseCheckShip>() {
+//                    @Override
+//                    public void initHolder(ViewHolder holder, final HseCheckShip hseCheckShip, final int position) {
+//                        holder.setText(R.id.tv_spinner, hseCheckShip.getShipName())
+//                                .setOnClickListener(R.id.tv_spinner, new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        tvSpinner.setText(hseCheckShip.getShipName());
+//                                        checkShip = hseCheckShip.getShipAccount();
+//                                        // 保存受检船舶
+//                                        SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_HSE_SHIP_ACCOUNT, checkShip);
+//                                        SharePreferenceUtil.saveString(getContext(), SettingUtil.SP_KEY_HSE_SHIP_NAME, hseCheckShip.getShipName());
+//
+//                                        PopwindowUtil.hidePopwindow();
+//                                    }
+//                                });
+//                    }
+//                }, null, null);
                 break;
             case R.id.btn_commit:
                 String checkTime = tvTime.getText().toString().trim();
@@ -231,5 +237,17 @@ public class HseCheckAddFragment extends BaseFragment<HseCheckAddActivity> imple
         checkShip = list.getCheckedShipAccount();
         // remark
         etRemark.setText(list.getRemark());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            Bundle bundle = data.getExtras();
+            String shipName = bundle.getString(SelectFragment.SHIPNAME);
+            checkShip = bundle.getString(SelectFragment.SHIPACCOUNT);
+
+            tvSpinner.setText(TextUtils.isEmpty(shipName) ? "请选择" : shipName);
+        }
     }
 }

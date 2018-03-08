@@ -110,6 +110,8 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
     AppCompatButton btnAcceptanceReturn;
     @BindView(R.id.tv_status)
     TextView tvStatus;
+    @BindView(R.id.tv_submit_time)
+    TextView tvSubmitTime;
     private AcceptanceDetailContract.Presenter presenter;
     private AcceptanceDetailActivity activity;
     private int rbcomplete = 0;
@@ -336,6 +338,7 @@ public class AcceptanceDetailFragment extends Fragment implements AcceptanceDeta
         tvTotalVoyage.setText("累计完成航次: " + value.getTotalCompleteRide() + "次");
         tvTotalValue.setText("累计完成方量: " + value.getTotalCompleteSquare() + "㎡");
         tvAvgValue.setText("平均航次方量: " + value.getAvgSquare() + "㎡");
+        tvSubmitTime.setText("提交进场材料时间: " + (TextUtils.isEmpty(value.getSubcontractorPerfectBoatScannerTime()) ? "" : value.getSubcontractorPerfectBoatScannerTime()));
         tvStatus.setText(value.getStatus() == 1 ? "通过" : (value.getStatus() == 0 ? "待审核" : "不通过"));
         tvAcceptanceOpinion.setText(value.getRemark());
 

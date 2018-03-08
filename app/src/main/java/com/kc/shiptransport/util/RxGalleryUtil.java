@@ -159,10 +159,12 @@ public class RxGalleryUtil {
         errorDrawable = (errorDrawable == null) ? context.getResources().getDrawable(R.mipmap.load_error) : errorDrawable;
         //网络请求获取图片并设置
         Glide.with(context)
-                .load(path) //图片地址
+                //图片地址
+                .load(path)
                 .asBitmap()
                 .placeholder(defaultDrawable)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE) // 开启缓存
+                // 开启缓存
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .error(errorDrawable)
                 .fitCenter()
                 .thumbnail(0.2f)

@@ -13,7 +13,7 @@ import com.kc.shiptransport.mvp.BaseActivity;
 /**
  * @author 邱永恒
  * @time 2017/7/1 11:16
- * @desc ${TODO}
+ * @desc 填写进场材料上传图片界面
  */
 
 public class ScannerImgSelectActivity extends BaseActivity{
@@ -26,6 +26,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
     private static final String DEFALUTATTACHMENTCOUNT = "DEFALUTATTACHMENTCOUNT";
     private static final String P_TYPE = "P_TYPE";
     private static final String ISFINSHRECEPTIONSANDATTACHMENT = "ISFINSHRECEPTIONSANDATTACHMENT";
+    private static final String ACTIVITY_TYPE = "ACTIVITY_TYPE";
 
     private ScannerImgSelectFragment fragment;
     public int mTypeID;
@@ -36,6 +37,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
     public int mDefaulAttachmentCount;
     public int p_type;
     public int isFinshReceptionSandAttachment;
+    public int activity_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
         mDefaulAttachmentCount = bundle.getInt(DEFALUTATTACHMENTCOUNT);
         p_type = bundle.getInt(P_TYPE);
         isFinshReceptionSandAttachment = bundle.getInt(ISFINSHRECEPTIONSANDATTACHMENT);
+        activity_type = bundle.getInt(ACTIVITY_TYPE);
 
         if (savedInstanceState != null) {
             fragment = (ScannerImgSelectFragment) getSupportFragmentManager().getFragment(savedInstanceState, "ScannerImgSelectFragment");
@@ -77,7 +80,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void startActivity(Context context, int typeID, int subID, String title, String shipAccount, int AttachmentCount, int DefalutAttachmentCount, int p_type, int isFinshReceptionSandAttachment) {
+    public static void startActivity(Context context, int typeID, int subID, String title, String shipAccount, int AttachmentCount, int DefalutAttachmentCount, int p_type, int isFinshReceptionSandAttachment, int activity_type) {
         Intent intent = new Intent(context, ScannerImgSelectActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(TYPEID, typeID);
@@ -88,6 +91,7 @@ public class ScannerImgSelectActivity extends BaseActivity{
         bundle.putInt(DEFALUTATTACHMENTCOUNT, DefalutAttachmentCount);
         bundle.putInt(P_TYPE, p_type);
         bundle.putInt(ISFINSHRECEPTIONSANDATTACHMENT, isFinshReceptionSandAttachment);
+        bundle.putInt(ACTIVITY_TYPE, activity_type);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

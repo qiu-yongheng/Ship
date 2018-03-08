@@ -55,7 +55,7 @@ public class HseRectificationListPresenter implements HseRectificationListContra
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubcriber<List<HseDefectListBean>>() {
                     @Override
-                    protected void _onNext(List<HseDefectListBean> listBeans) {
+                    protected void next(List<HseDefectListBean> listBeans) {
                         view.showDefects(listBeans, pageCount == 1);
                         if (listBeans.isEmpty()) {
                             view.showError("没有数据");
@@ -63,13 +63,13 @@ public class HseRectificationListPresenter implements HseRectificationListContra
                     }
 
                     @Override
-                    protected void _onError(String message) {
+                    protected void error(String message) {
                         view.showError(message);
                         view.showLoading(false);
                     }
 
                     @Override
-                    protected void _onComplete() {
+                    protected void complete() {
                         view.showLoading(false);
                     }
 

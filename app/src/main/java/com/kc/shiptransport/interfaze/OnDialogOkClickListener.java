@@ -6,6 +6,10 @@ package com.kc.shiptransport.interfaze;
  * @desc ${TODO}
  */
 
-public interface OnDailogOKClickListener {
+public interface OnDialogOkClickListener {
+    /**
+     * 确定回调
+     * @param data 返回数据
+     */
     void onOK(Object data);
 }

@@ -34,7 +34,7 @@ import com.kc.shiptransport.db.logmanager.LogManagerList;
 import com.kc.shiptransport.db.partition.PartitionNum;
 import com.kc.shiptransport.db.threadsand.Layered;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
-import com.kc.shiptransport.interfaze.OnDailogOKClickListener;
+import com.kc.shiptransport.interfaze.OnDialogOkClickListener;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
 import com.kc.shiptransport.util.DBUtil;
 import com.kc.shiptransport.util.LogUtil;
@@ -251,7 +251,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
-                }, new OnDailogOKClickListener() {
+                }, new OnDialogOkClickListener() {
                     @Override
                     public void onOK(Object data) {
                         // 分层ID
@@ -487,7 +487,7 @@ public class PartitionFragment extends Fragment implements PartitionContract.Vie
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
-        }, new OnDailogOKClickListener() {
+        }, new OnDialogOkClickListener() {
             @Override
             public void onOK(Object data) {
                 PartitionNum partitionNum = adapter.list.get(position);

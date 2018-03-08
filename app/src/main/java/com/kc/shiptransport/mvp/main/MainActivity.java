@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mainFragment.isAdded()) {
+        if (mainFragment != null && mainFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, "MainFragment", mainFragment);
         }
     }
