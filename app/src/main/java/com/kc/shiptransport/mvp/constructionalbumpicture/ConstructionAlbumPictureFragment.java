@@ -13,12 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.adapter.AlbumAdapter;
 import com.kc.shiptransport.data.bean.album.ConstructionAlbumPictureBean;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.util.ToastUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +43,7 @@ public class ConstructionAlbumPictureFragment extends Fragment implements Constr
     Unbinder unbinder;
     private ConstructionAlbumPictureContract.Presenter presenter;
     private ConstructionAlbumPictureActivity activity;
+    private AlbumAdapter adapter;
 
     @Nullable
     @Override
@@ -52,11 +56,10 @@ public class ConstructionAlbumPictureFragment extends Fragment implements Constr
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout.autoRefresh();
     }
-
 
     @Override
     public void initViews(View view) {
@@ -69,7 +72,7 @@ public class ConstructionAlbumPictureFragment extends Fragment implements Constr
 
         swipeRefreshLayout.setEnableHeaderTranslationContent(false);
         swipeRefreshLayout.setEnableLoadmore(false);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
     }
 
     @Override
@@ -89,7 +92,6 @@ public class ConstructionAlbumPictureFragment extends Fragment implements Constr
         swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                // TODO: refresh
                 presenter.getImgList(activity.albumItem);
             }
         });
@@ -126,8 +128,37 @@ public class ConstructionAlbumPictureFragment extends Fragment implements Constr
         unbinder.unbind();
     }
 
+    public void deleteImg(int itemID, int position) {
+        presenter.deleteImg("ConstructionPictureAttachmentRecords", String.valueOf(itemID), "", "", position);
+    }
+
+    /**
+     * 提交图片
+     */
+    public void pushPicture() {
+
+    }
+
     @Override
     public void showImgList(ConstructionAlbumPictureBean bean) {
+        swipeRefreshLayout.finishRefresh();
+        List<ConstructionAlbumPictureBean.DataBean> data = bean.getData();
+        if (adapter == null) {
+            adapter = new AlbumAdapter(getActivity(), this, data);
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.clear();
+            adapter.loadmore(data);
+        }
+    }
 
+    @Override
+    public void showDeleteResult(boolean isSuccess, int position) {
+        if (isSuccess) {
+            ToastUtil.tip(getContext(), "删除相册成功!");
+            adapter.removeItem(position);
+        } else {
+            showError("删除失败, 请重试");
+        }
     }
 }

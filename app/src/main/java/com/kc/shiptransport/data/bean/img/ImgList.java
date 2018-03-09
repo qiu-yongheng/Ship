@@ -10,8 +10,18 @@ import android.os.Parcelable;
  */
 
 public class ImgList implements Parcelable {
+    /**
+     * 图片ID
+     */
     private int itemID;
+    /**
+     * 图片路径
+     */
     private String path;
+    /**
+     * 图片摘要(在相册使用)
+     */
+    private String remark;
 
     public int getItemID() {
         return itemID;
@@ -29,6 +39,14 @@ public class ImgList implements Parcelable {
         this.path = path;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -37,16 +55,17 @@ public class ImgList implements Parcelable {
     protected ImgList(Parcel in) {
         itemID = in.readInt();
         path = in.readString();
+        remark = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(itemID);
         parcel.writeString(path);
+        parcel.writeString(remark);
     }
 
-    public ImgList() {
-    }
+    public ImgList() {}
 
     public static final Parcelable.Creator<ImgList> CREATOR = new Creator<ImgList>() {
         @Override

@@ -8,43 +8,34 @@
     android:layout_marginRight="9dp"
     android:layout_marginTop="@dimen/margintop_8dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <com.kc.shiptransport.view.custom.RatioImageView
             android:id="@+id/iv_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            app:ratio="0.9"/>
-
-        <TextView
-            android:gravity="center"
-            android:id="@+id/tv_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/dp_10"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_17.5sp"/>
-
-        <include layout="@layout/view_divi"/>
+            app:ratio="1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/iv_img"
+            android:background="#8000"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_count"
+                android:id="@+id/tv_remark"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
-                android:padding="@dimen/dp_10"
-                android:text="2张"
+                android:singleLine="true"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="暂无摘要"
+                android:textColor="#fff"
                 android:textSize="@dimen/text_12sp"/>
 
             <TextView
@@ -55,9 +46,10 @@
                 android:gravity="right|center_vertical"
                 android:padding="@dimen/dp_10"
                 android:text="编辑"
-                android:textSize="@dimen/text_12sp"/>
+                android:textColor="#fff"
+                android:textSize="@dimen/text_12sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

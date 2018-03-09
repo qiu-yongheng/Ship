@@ -6,7 +6,7 @@ import com.kc.shiptransport.data.bean.CommitImgListBean;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
-import com.kc.shiptransport.data.bean.ScanCommitBean;
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
@@ -521,14 +521,14 @@ public interface DataSouceImpl {
      * @param bean
      * @return
      */
-    Observable<Boolean> InsertSubcontractorPerfectBoatScannerAttachment(ScanCommitBean bean);
+    Observable<Boolean> InsertSubcontractorPerfectBoatScannerAttachment(CommitPictureBean bean);
 
     /**
      * 选择多张图片回调后, 把数据解析成将要提交的集合
      *
      * @return
      */
-    Observable<List<ScanCommitBean>> getScanImgList(ImageMultipleResultEvent imageMultipleResultEvent, int subID, int typeID, String shipAccount);
+    Observable<List<CommitPictureBean>> getScanImgList(ImageMultipleResultEvent imageMultipleResultEvent, int subID, int typeID, String shipAccount);
 
     /**
      * 根据类型获取图片
@@ -966,7 +966,7 @@ public interface DataSouceImpl {
      * @param shipAccount
      * @return
      */
-    Observable<ScanCommitBean> getPDFCommit(String path, int subID, int typeID, String shipAccount);
+    Observable<CommitPictureBean> getPDFCommit(String path, int subID, int typeID, String shipAccount);
 
     /**
      * 1.68 获取施工船舶明细数据
@@ -1359,7 +1359,7 @@ public interface DataSouceImpl {
      * 1.118	提交供砂图片数据
      * @return
      */
-    Observable<Boolean> InsertOverSandAttachment(ScanCommitBean bean);
+    Observable<Boolean> InsertOverSandAttachment(CommitPictureBean bean);
 
     /**
      * 1.120	删除过砂图片数据
@@ -1404,4 +1404,12 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<ConstructionAlbumPictureBean> GetConstructionPictureAttachmentRecordsData(int pageSize, int pageCount, int albumID);
+
+    /**
+     * 1.123	提交施工图片信息数据
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    Observable<Boolean> InsertConstructionPictureAttachment(String json, String ByteDataStr);
 }

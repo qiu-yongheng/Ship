@@ -33,7 +33,7 @@ public final class ContactTitleDelegate implements ItemViewDelegate<Contacts> {
     }
 
     @Override
-    public boolean isForViewType(Contacts item, List<Contacts> dates, int position) {
+    public boolean isForViewType(List<Contacts> dates, int position) {
         boolean b1 = position == 0;
         if (b1) {
             return true;

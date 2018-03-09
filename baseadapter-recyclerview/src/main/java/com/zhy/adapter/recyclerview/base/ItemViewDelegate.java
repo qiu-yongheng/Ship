@@ -18,11 +18,10 @@ public interface ItemViewDelegate<T> {
 
     /**
      * 判断item的类型
-     * @param item
      * @param position
      * @return
      */
-    boolean isForViewType(T item, List<T> dates, int position);
+    boolean isForViewType(List<T> dates, int position);
 
     /**
      * 给控件绑定数据

@@ -3,9 +3,11 @@ package com.kc.shiptransport.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bm.library.PhotoView;
 import com.kc.shiptransport.R;
@@ -15,14 +17,10 @@ import com.kc.shiptransport.util.RxGalleryUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
- * <p> </p>
- *
- * @author 张华洋 2017/5/19 20:31
- * @version V1.1
- * @name ImgViewPageAdapter
+ * @author 邱永恒
+ * @time 2018/3/9  15:42
+ * @desc ImgViewPageAdapter
  */
 public class ImgViewPageAdapter extends PagerAdapter {
 
@@ -54,8 +52,17 @@ public class ImgViewPageAdapter extends PagerAdapter {
     @Override
     public View instantiateItem(ViewGroup container, int position) {
         final String imageUrl = mData.get(position).getPath();
+        String remark = mData.get(position).getRemark();
         View view = layoutInflater.inflate(R.layout.activity_image_list, container, false);
         PhotoView imageView = (PhotoView) view.findViewById(R.id.img);
+        TextView tvRemark = (TextView) view.findViewById(R.id.tv_remark);
+        if (!TextUtils.isEmpty(remark)) {
+            tvRemark.setVisibility(View.VISIBLE);
+            tvRemark.setText("摘要: " + remark);
+        } else {
+            tvRemark.setVisibility(View.GONE);
+        }
+
         imageView.enable();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

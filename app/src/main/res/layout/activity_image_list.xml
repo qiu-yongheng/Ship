@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <com.bm.library.PhotoView
         android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter" />
-</LinearLayout>
+        android:scaleType="fitCenter"/>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_remark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#8000"
+        android:gravity="left"
+        android:padding="10dp"
+        android:text="暂无摘要"
+        android:textColor="#fff"
+        android:textSize="@dimen/text_15sp"/>
+</RelativeLayout>

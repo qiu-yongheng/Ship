@@ -4,6 +4,8 @@ import com.kc.shiptransport.data.bean.album.ConstructionAlbumPictureBean;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+
 /**
  * @author 邱永恒
  * @time 2018/3/8  17:09
@@ -17,6 +19,13 @@ public interface ConstructionAlbumPictureContract {
          * @param bean
          */
         void showImgList(ConstructionAlbumPictureBean bean);
+
+        /**
+         * 删除结果
+         * @param isSuccess
+         * @param position
+         */
+        void showDeleteResult(boolean isSuccess, int position);
     }
 
     interface Presenter extends BasePresenter {
@@ -25,5 +34,23 @@ public interface ConstructionAlbumPictureContract {
          * @param albumItemID 相册ID
          */
         void getImgList(int albumItemID);
+
+        /**
+         * 删除照片
+         * @param Table
+         * @param ItemID
+         * @param SubTable
+         * @param AssociatedColumn
+         * @param position
+         */
+        void deleteImg(String Table, String ItemID, String SubTable, String AssociatedColumn, int position);
+
+        /**
+         * 提交图片
+         * @param albumID
+         * @param remark
+         * @param imageMultipleResultEvent
+         */
+        void commitPicture(int albumID, String remark, ImageMultipleResultEvent imageMultipleResultEvent);
     }
 }

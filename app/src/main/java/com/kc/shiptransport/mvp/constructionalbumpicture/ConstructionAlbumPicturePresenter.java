@@ -17,16 +17,16 @@ import io.reactivex.schedulers.Schedulers;
  * @desc ${TODD}
  */
 
-public class ConstructionAlbumPicturePresenter implements ConstructionAlbumPictureContract.Presenter{
+public class ConstructionAlbumPicturePresenter implements ConstructionAlbumPictureContract.Presenter {
     private final Context context;
     private final ConstructionAlbumPictureContract.View view;
-    private final DataRepository dataReository;
+    private final DataRepository dataRepository;
     private final CompositeDisposable compositeDisposable;
 
     public ConstructionAlbumPicturePresenter(Context context, ConstructionAlbumPictureContract.View view, DataRepository dataRepository) {
         this.context = context;
         this.view = view;
-        this.dataReository = dataRepository;
+        this.dataRepository = dataRepository;
         view.setPresenter(this);
         compositeDisposable = new CompositeDisposable();
     }
@@ -43,7 +43,7 @@ public class ConstructionAlbumPicturePresenter implements ConstructionAlbumPictu
 
     @Override
     public void getImgList(int albumItemID) {
-        dataReository
+        dataRepository
                 .GetConstructionPictureAttachmentRecordsData(1000, 1, albumItemID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -61,6 +61,37 @@ public class ConstructionAlbumPicturePresenter implements ConstructionAlbumPictu
                     @Override
                     protected void complete() {
 
+                    }
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
+    }
+
+    @Override
+    public void deleteImg(String Table, String ItemID, String SubTable, String AssociatedColumn, final int position) {
+        view.showLoading(true);
+        dataRepository
+                .DeleteTable(Table, ItemID, SubTable, AssociatedColumn)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MySubcriber<Boolean>() {
+                    @Override
+                    protected void next(Boolean aBoolean) {
+                        view.showDeleteResult(aBoolean, position);
+                    }
+
+                    @Override
+                    protected void error(String message) {
+                        view.showError(message);
+                        view.showLoading(false);
+                    }
+
+                    @Override
+                    protected void complete() {
+                        view.showLoading(false);
                     }
 
                     @Override

@@ -258,7 +258,7 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
                 @Override
                 public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, final int position) {
                     // TODO: 长按
-                    activity.showDailog("删除相册", "删除相册不能撤销, 是否删除?", "取消", "确定删除", new DialogInterface.OnClickListener() {
+                    activity.showDailog("删除相册", "删除相册不能撤销, 是否删除?", "取消", "删除", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // 取消

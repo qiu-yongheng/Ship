@@ -267,6 +267,15 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public ViewHolder setTextLine(int viewId, String text) {
+        TextView tv = getView(viewId);
+        if (tv != null) {
+            tv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+            tv.setText(TextUtils.isEmpty(text) ? "" : text);
+        }
+        return this;
+    }
+
     /**
      * 设置显示文本的字体和样式
      *

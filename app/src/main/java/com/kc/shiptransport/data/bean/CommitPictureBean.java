@@ -3,10 +3,10 @@ package com.kc.shiptransport.data.bean;
 /**
  * @author qiuyongheng
  * @time 2017/6/30  16:57
- * @desc 扫描件提交bean
+ * @desc 保存提交图片信息的对象
  */
 
-public class ScanCommitBean {
+public class CommitPictureBean {
 
     /**
      * ItemID :
@@ -27,8 +27,9 @@ public class ScanCommitBean {
     private String FileName;
     private String SuffixName;
     private String Creator;
-
     private String base64img;
+    private int albumID;
+    private String summary;
 
     public int getItemID() {
         return ItemID;
@@ -100,5 +101,21 @@ public class ScanCommitBean {
 
     public void setBase64img(String base64img) {
         this.base64img = base64img;
+    }
+
+    public int getAlbumID() {
+        return albumID;
+    }
+
+    public void setAlbumID(int albumID) {
+        this.albumID = albumID;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }

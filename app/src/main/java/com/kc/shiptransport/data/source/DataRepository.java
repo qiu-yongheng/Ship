@@ -23,7 +23,7 @@ import com.kc.shiptransport.data.bean.RecordListBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleCommitResult;
 import com.kc.shiptransport.data.bean.SampleUpdataBean;
-import com.kc.shiptransport.data.bean.ScanCommitBean;
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.ShipBean;
@@ -2430,7 +2430,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> InsertSubcontractorPerfectBoatScannerAttachment(final ScanCommitBean bean) {
+    public Observable<Boolean> InsertSubcontractorPerfectBoatScannerAttachment(final CommitPictureBean bean) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -2471,20 +2471,20 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<List<ScanCommitBean>> getScanImgList(final ImageMultipleResultEvent imageMultipleResultEvent, final int subID, final int typeID, final String shipAccount) {
-        return Observable.create(new ObservableOnSubscribe<List<ScanCommitBean>>() {
+    public Observable<List<CommitPictureBean>> getScanImgList(final ImageMultipleResultEvent imageMultipleResultEvent, final int subID, final int typeID, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<List<CommitPictureBean>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<ScanCommitBean>> e) throws Exception {
+            public void subscribe(@NonNull ObservableEmitter<List<CommitPictureBean>> e) throws Exception {
                 // 多选回调
                 List<MediaBean> result = imageMultipleResultEvent.getResult();
                 // 获取供应商账号
                 Subcontractor subcontractor = DataSupport.findAll(Subcontractor.class).get(0);
                 // 创建任务队列
-                List<ScanCommitBean> commitBeanList = new ArrayList<ScanCommitBean>();
+                List<CommitPictureBean> commitBeanList = new ArrayList<CommitPictureBean>();
 
                 // 保存图片数据到队列中
                 for (MediaBean bean : result) {
-                    ScanCommitBean commitBean = new ScanCommitBean();
+                    CommitPictureBean commitBean = new CommitPictureBean();
                     // 条目ID, 默认0
                     commitBean.setItemID(0);
                     // 进场ID
@@ -4299,14 +4299,14 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<ScanCommitBean> getPDFCommit(final String path, final int subID, final int typeID, final String shipAccount) {
-        return Observable.create(new ObservableOnSubscribe<ScanCommitBean>() {
+    public Observable<CommitPictureBean> getPDFCommit(final String path, final int subID, final int typeID, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<CommitPictureBean>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<ScanCommitBean> e) throws Exception {
+            public void subscribe(@NonNull ObservableEmitter<CommitPictureBean> e) throws Exception {
                 // 获取供应商账号
                 Subcontractor subcontractor = DataSupport.findAll(Subcontractor.class).get(0);
 
-                ScanCommitBean commitBean = new ScanCommitBean();
+                CommitPictureBean commitBean = new CommitPictureBean();
                 // 条目ID, 默认0
                 commitBean.setItemID(0);
                 // 进场ID
@@ -6131,7 +6131,7 @@ public class DataRepository implements DataSouceImpl {
      * @return
      */
     @Override
-    public Observable<Boolean> InsertOverSandAttachment(final ScanCommitBean bean) {
+    public Observable<Boolean> InsertOverSandAttachment(final CommitPictureBean bean) {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -6259,8 +6259,27 @@ public class DataRepository implements DataSouceImpl {
                 String json = JsonUtil.spliceJson(JsonUtil.creatorJsonObject("AlbumID", JsonUtil.TYPE_STRING, String.valueOf(albumID)));
                 LogUtil.d("1.125\t获取施工相册对应的图片数据: " + json);
                 String result = mRemoteDataSource.GetConstructionPictureAttachmentRecordsData(pageSize, pageCount, json);
+                LogUtil.d("1.125\t获取施工相册对应的图片数据result: " + result);
                 ConstructionAlbumPictureBean bean = gson.fromJson(result, ConstructionAlbumPictureBean.class);
                 e.onNext(bean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.123	提交施工图片信息数据
+     * @param json
+     * @param ByteDataStr
+     * @return
+     */
+    @Override
+    public Observable<Boolean> InsertConstructionPictureAttachment(final String json, final String ByteDataStr) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String result = mRemoteDataSource.InsertConstructionPictureAttachment(json, ByteDataStr);
+                e.onNext(getRequestResult(result));
                 e.onComplete();
             }
         });

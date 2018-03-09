@@ -9,11 +9,15 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.hse.HseDefectListBean;
 import com.kc.shiptransport.data.bean.hse.imglist.AttachmentListBean;
 import com.kc.shiptransport.data.bean.hse.rectification.HseRectificationBean;
 import com.kc.shiptransport.data.bean.img.ImgList;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,6 +186,33 @@ public class RxGalleryUtil {
             ImgList imgList = new ImgList();
             imgList.setPath(bean.getOriginalPath());
             list.add(imgList);
+        }
+        return list;
+    }
+
+    /**
+     * 将选择的图片转换成相册提交列表数据
+     * @param imageMultipleResultEvent
+     * @return
+     */
+    public static List<CommitPictureBean> multipleToCommitPictureList(ImageMultipleResultEvent imageMultipleResultEvent) {
+        ArrayList<CommitPictureBean> list = new ArrayList<>();
+        String creator = DataSupport.findAll(User.class).get(0).getUserID();
+        for (MediaBean bean : imageMultipleResultEvent.getResult()) {
+            CommitPictureBean pictureBean = new CommitPictureBean();
+
+            // 图片名
+            String title = bean.getTitle();
+
+            // 图片类型
+            String mimeType = bean.getMimeType();
+            String[] split = mimeType.split("/");
+            String suffixName = split[split.length - 1];
+
+            pictureBean.setFileName(title + "." + suffixName);
+            pictureBean.setSuffixName(suffixName);
+            pictureBean.setCreator(creator);
+            list.add(pictureBean);
         }
         return list;
     }

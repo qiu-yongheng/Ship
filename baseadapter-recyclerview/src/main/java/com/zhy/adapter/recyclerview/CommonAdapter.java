@@ -34,7 +34,7 @@ public abstract class CommonAdapter<T> extends MultiItemTypeAdapter<T> {
             }
 
             @Override
-            public boolean isForViewType(T item, List<T> dates, int position) {
+            public boolean isForViewType(List<T> dates, int position) {
                 return true;
             }
 

@@ -3,7 +3,7 @@ package com.kc.shiptransport.mvp.scannerimgselect;
 import android.content.Context;
 import android.util.Log;
 
-import com.kc.shiptransport.data.bean.ScanCommitBean;
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.util.SettingUtil;
@@ -114,25 +114,25 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
                 .getScanImgList(imageMultipleResultEvent, subID, typeID, shipAccount)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<List<ScanCommitBean>>() {
+                .doOnNext(new Consumer<List<CommitPictureBean>>() {
                     @Override
-                    public void accept(@NonNull List<ScanCommitBean> scanCommitBeen) throws Exception {
+                    public void accept(@NonNull List<CommitPictureBean> scanCommitBeen) throws Exception {
                         // 设置最大进度
                         view.showProgress(scanCommitBeen.size());
                     }
                 })
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<List<ScanCommitBean>, ObservableSource<ScanCommitBean>>() {
+                .flatMap(new Function<List<CommitPictureBean>, ObservableSource<CommitPictureBean>>() {
                     @Override
-                    public ObservableSource<ScanCommitBean> apply(@NonNull List<ScanCommitBean> scanCommitBeen) throws Exception {
+                    public ObservableSource<CommitPictureBean> apply(@NonNull List<CommitPictureBean> scanCommitBeen) throws Exception {
                         return Observable.fromIterable(scanCommitBeen);
                     }
                 })
-                .map(new Function<ScanCommitBean, Boolean>() {
+                .map(new Function<CommitPictureBean, Boolean>() {
                     @Override
-                    public Boolean apply(@NonNull ScanCommitBean scanCommitBean) throws Exception {
+                    public Boolean apply(@NonNull CommitPictureBean commitPictureBean) throws Exception {
                         // 上传图片
-                        commitImg(scanCommitBean, activity_type);
+                        commitImg(commitPictureBean, activity_type);
                         return true;
                     }
                 })
@@ -174,7 +174,7 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
      * @param activity_type
      */
     @Override
-    public void commitImg(ScanCommitBean bean, int activity_type) {
+    public void commitImg(CommitPictureBean bean, int activity_type) {
         Observable<Boolean> observable = null;
         switch (activity_type) {
             case SettingUtil.TYPE_SCANNER:
@@ -282,10 +282,10 @@ public class ScannerImgSelectPresenter implements ScannerImgSelectContract.Prese
                 .getPDFCommit(path, subID, typeID, shipAccount)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<ScanCommitBean, ObservableSource<Boolean>>() {
+                .flatMap(new Function<CommitPictureBean, ObservableSource<Boolean>>() {
                     @Override
-                    public ObservableSource<Boolean> apply(@NonNull ScanCommitBean scanCommitBean) throws Exception {
-                        return dataRepository.InsertSubcontractorPerfectBoatScannerAttachment(scanCommitBean);
+                    public ObservableSource<Boolean> apply(@NonNull CommitPictureBean commitPictureBean) throws Exception {
+                        return dataRepository.InsertSubcontractorPerfectBoatScannerAttachment(commitPictureBean);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

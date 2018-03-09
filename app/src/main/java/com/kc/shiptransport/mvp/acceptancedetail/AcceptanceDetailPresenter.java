@@ -3,7 +3,7 @@ package com.kc.shiptransport.mvp.acceptancedetail;
 import android.content.Context;
 import android.util.Log;
 
-import com.kc.shiptransport.data.bean.ScanCommitBean;
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
 import com.kc.shiptransport.data.source.DataRepository;
@@ -289,25 +289,25 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
                 .getScanImgList(imageMultipleResultEvent, subID, typeID, shipAccount)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<List<ScanCommitBean>>() {
+                .doOnNext(new Consumer<List<CommitPictureBean>>() {
                     @Override
-                    public void accept(@NonNull List<ScanCommitBean> scanCommitBeen) throws Exception {
+                    public void accept(@NonNull List<CommitPictureBean> scanCommitBeen) throws Exception {
                         // 设置最大进度
                         view.showProgress(scanCommitBeen.size());
                     }
                 })
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<List<ScanCommitBean>, ObservableSource<ScanCommitBean>>() {
+                .flatMap(new Function<List<CommitPictureBean>, ObservableSource<CommitPictureBean>>() {
                     @Override
-                    public ObservableSource<ScanCommitBean> apply(@NonNull List<ScanCommitBean> scanCommitBeen) throws Exception {
+                    public ObservableSource<CommitPictureBean> apply(@NonNull List<CommitPictureBean> scanCommitBeen) throws Exception {
                         return Observable.fromIterable(scanCommitBeen);
                     }
                 })
-                .map(new Function<ScanCommitBean, Boolean>() {
+                .map(new Function<CommitPictureBean, Boolean>() {
                     @Override
-                    public Boolean apply(@NonNull ScanCommitBean scanCommitBean) throws Exception {
+                    public Boolean apply(@NonNull CommitPictureBean commitPictureBean) throws Exception {
                         // 上传图片
-                        imgCommit(scanCommitBean);
+                        imgCommit(commitPictureBean);
                         return true;
                     }
                 })
@@ -342,7 +342,7 @@ public class AcceptanceDetailPresenter implements AcceptanceDetailContract.Prese
      * @param bean
      */
     @Override
-    public void imgCommit(ScanCommitBean bean) {
+    public void imgCommit(CommitPictureBean bean) {
         dataRepository
                 .InsertSubcontractorPerfectBoatScannerAttachment(bean)
                 .subscribeOn(Schedulers.io())

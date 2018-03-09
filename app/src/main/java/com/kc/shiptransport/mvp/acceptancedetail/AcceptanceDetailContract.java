@@ -1,6 +1,6 @@
 package com.kc.shiptransport.mvp.acceptancedetail;
 
-import com.kc.shiptransport.data.bean.ScanCommitBean;
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.acceptanceinfo.AcceptanceInfoBean;
 import com.kc.shiptransport.mvp.BasePresenter;
@@ -47,7 +47,7 @@ public interface AcceptanceDetailContract {
         void doEvaluation();
         void deleteImg(int itemID);
         void commitImg(ImageMultipleResultEvent imageMultipleResultEvent, int subID, int typeID, String shipAccount);
-        void imgCommit(ScanCommitBean bean);
+        void imgCommit(CommitPictureBean bean);
         void updateImgDetail(int itemID);
     }
 }

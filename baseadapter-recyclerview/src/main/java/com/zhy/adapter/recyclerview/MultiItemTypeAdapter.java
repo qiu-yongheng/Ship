@@ -2,6 +2,7 @@ package com.zhy.adapter.recyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -52,11 +53,12 @@ public class MultiItemTypeAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
         }
 
         /** 给子类判断item类型 这里会调用子类: isForViewType */
-        return mItemViewDelegateManager.getItemViewType(mDatas.get(position), position, getDatas());
+        return mItemViewDelegateManager.getItemViewType(position, getDatas());
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.d("MultiItemTypeAdapter", "item类型: " + viewType);
         /** 根据viewType, 获取view的布局ID */
         int layoutId = mItemViewDelegateManager.getItemViewLayoutId(viewType);
 
@@ -142,7 +144,8 @@ public class MultiItemTypeAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        convert(holder, mDatas.get(position));
+        //convert(holder, mDatas.get(position));
+        convert(holder, mDatas.size() > position ? mDatas.get(position) : null);
     }
 
     /**

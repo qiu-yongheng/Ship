@@ -1,6 +1,6 @@
 package com.kc.shiptransport.mvp.scannerimgselect;
 
-import com.kc.shiptransport.data.bean.ScanCommitBean;
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
@@ -30,7 +30,7 @@ public interface ScannerImgSelectContract {
         void getImgList(int subID, int typeID, int activiyID);
         void commit(ImageMultipleResultEvent imageMultipleResultEvent, int subID, int typeID, String shipAccount, int activity_type);
         void getCommitImgList(ImageMultipleResultEvent imageMultipleResultEvent);
-        void commitImg(ScanCommitBean bean, int activity_type);
+        void commitImg(CommitPictureBean bean, int activity_type);
         void deleteImg(int itemID, int activity_type);
         void commitPDF(String path, int subID, int typeID, String shipAccount);
         void downloadPDF(String url);

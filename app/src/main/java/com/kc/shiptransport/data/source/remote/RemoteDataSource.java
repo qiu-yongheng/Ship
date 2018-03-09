@@ -3082,4 +3082,28 @@ public class RemoteDataSource {
 
         return getCallResult(endPoint, soapAction, rpc);
     }
+
+    /**
+     * 1.123	提交施工图片信息数据
+     * @param json
+     * @param ByteDataStr
+     * @return
+     * @throws Exception
+     */
+    public String InsertConstructionPictureAttachment(String json, String ByteDataStr) throws Exception {
+        // 调用的方法名称
+        String methodName = "InsertConstructionPictureAttachment";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("json", json);
+        rpc.addProperty("ByteDataStr", ByteDataStr);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
 }

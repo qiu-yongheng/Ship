@@ -93,12 +93,11 @@ public class ItemViewDelegateManager<T> {
 
     /**
      * 提供给adapter调用, 判断当前item类型
-     * @param item
      * @param position
      * @param datas
      * @return
      */
-    public int getItemViewType(T item, int position, List<T> datas) {
+    public int getItemViewType(int position, List<T> datas) {
         int delegatesCount = delegates.size();
         /** 遍历获取item类型, 判断当前position对应type */
         for (int i = delegatesCount - 1; i >= 0; i--) {
@@ -106,7 +105,7 @@ public class ItemViewDelegateManager<T> {
             ItemViewDelegate<T> delegate = delegates.valueAt(i);
 
             /** 给子类实现判断, 子类根据: item对应的数据, position --> 判断item当前类型 */
-            if (delegate.isForViewType(item, datas, position)) {
+            if (delegate.isForViewType(datas, position)) {
                 /** 返回item类型id */
                 return delegates.keyAt(i);
             }
@@ -129,7 +128,7 @@ public class ItemViewDelegateManager<T> {
 
             ItemViewDelegate<T> delegate = delegates.valueAt(i);
 
-            if (delegate.isForViewType(item, datas, position)) {
+            if (delegate.isForViewType(datas, position)) {
                 /** 给子类实现, 数据绑定 */
                 delegate.convert(holder, item, position);
                 return;
