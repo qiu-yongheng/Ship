@@ -3,7 +3,6 @@ package com.kc.shiptransport.adapter;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 
-import com.kc.shiptransport.adapter.delegate.AlbumAddDelegate;
 import com.kc.shiptransport.adapter.delegate.AlbumPictureDelegate;
 import com.kc.shiptransport.data.bean.album.ConstructionAlbumPictureBean;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
@@ -17,15 +16,15 @@ import java.util.List;
  */
 
 public class AlbumAdapter extends MultiItemTypeAdapter<ConstructionAlbumPictureBean.DataBean>{
-    public AlbumAdapter(Context context, Fragment fragment, List<ConstructionAlbumPictureBean.DataBean> datas) {
+    public AlbumAdapter(Context context, Fragment fragment, int albumItem, List<ConstructionAlbumPictureBean.DataBean> datas) {
         super(context, datas);
 
-        addItemViewDelegate(new AlbumPictureDelegate(context, fragment));
-        addItemViewDelegate(new AlbumAddDelegate(context, fragment));
+        addItemViewDelegate(new AlbumPictureDelegate(context, albumItem, fragment));
+        //addItemViewDelegate(new AlbumAddDelegate(context, albumItem, fragment));
     }
 
-    @Override
-    public int getItemCount() {
-        return getDatas().size() + 1;
-    }
+//    @Override
+//    public int getItemCount() {
+//        return getDatas().size() + 1;
+//    }
 }

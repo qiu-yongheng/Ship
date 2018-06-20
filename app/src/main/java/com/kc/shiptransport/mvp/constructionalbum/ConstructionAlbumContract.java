@@ -16,7 +16,13 @@ public interface ConstructionAlbumContract {
          * 展示相册列表
          * @param bean
          */
-        void ShowAlbumList(ConstructionAlbumBean bean);
+        void showAlbumList(ConstructionAlbumBean bean);
+
+        /**
+         * 加载更多
+         * @param bean
+         */
+        void showAlbumMore(ConstructionAlbumBean bean);
 
         /**
          * 展示新增结果
@@ -52,11 +58,12 @@ public interface ConstructionAlbumContract {
         /**
          * 修改相册
          * @param itemID
+         * @param creator
          * @param albumName
          * @param remark
          * @param position
          */
-        void updateAlbum(int itemID, String albumName, String remark, int position);
+        void updateAlbum(int itemID, String creator, String albumName, String remark, int position);
 
         /**
          * 新增相册
@@ -71,8 +78,9 @@ public interface ConstructionAlbumContract {
          * @param ItemID
          * @param SubTable
          * @param AssociatedColumn
+         * @param creator
          * @param position
          */
-        void deleteAlbum(String Table, String ItemID, String SubTable, String AssociatedColumn, int position);
+        void deleteAlbum(String Table, String ItemID, String SubTable, String AssociatedColumn, String creator, int position);
     }
 }

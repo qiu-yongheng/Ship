@@ -341,7 +341,7 @@ public class ScannerImgSelectFragment extends Fragment implements ScannerImgSele
      */
     @Override
     public void showProgress(int max) {
-        activity.progressDialog("gaga", max, new DialogInterface.OnClickListener() {
+        activity.progressDialog("提交图片", max, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // 取消任务

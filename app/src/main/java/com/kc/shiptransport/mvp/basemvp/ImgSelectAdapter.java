@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author 邱永恒
  * @time 2017/7/1 13:41
- * @desc ${TODO}
+ * @desc 图片选择Adapter
  */
 
 public class ImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -33,10 +33,16 @@ public class ImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * item类型: footer，加载更多
      */
     private static final int TYPE_ADD = 1;
-    private final boolean isCanChange;
+    private boolean isCanChange;
     public List<ImgList> list;
     private OnRecyclerviewItemClickListener listener;
 
+    /**
+     * 构造器
+     * @param context 上下文
+     * @param list 数据源集合
+     * @param isCanChange 是否可以修改图片 true显示添加图片和删除图片UI  false不显示添加图片和删除图片的UI
+     */
     public ImgSelectAdapter(Context context, List<ImgList> list, boolean isCanChange) {
         this.context = context;
         this.list = list;
@@ -99,6 +105,14 @@ public class ImgSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public List<ImgList> getDatas() {
         return list;
+    }
+
+    public void setIsCanChange(boolean isCanChange) {
+        this.isCanChange = isCanChange;
+    }
+
+    public boolean getIsCanChange() {
+        return isCanChange;
     }
 
     /**

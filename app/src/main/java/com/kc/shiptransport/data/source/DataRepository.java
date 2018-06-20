@@ -14,6 +14,7 @@ import com.kc.shiptransport.data.bean.AppListBean;
 import com.kc.shiptransport.data.bean.AttendanceAuditCommitBean;
 import com.kc.shiptransport.data.bean.AttendanceTypeBean;
 import com.kc.shiptransport.data.bean.CommitImgListBean;
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.CommitResultBean;
 import com.kc.shiptransport.data.bean.IsAllowEdit;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
@@ -23,7 +24,6 @@ import com.kc.shiptransport.data.bean.RecordListBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
 import com.kc.shiptransport.data.bean.SampleCommitResult;
 import com.kc.shiptransport.data.bean.SampleUpdataBean;
-import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.ShipBean;
@@ -40,6 +40,9 @@ import com.kc.shiptransport.data.bean.boatinquire.BoatInquireCommitBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireDetailBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireItemBean;
 import com.kc.shiptransport.data.bean.certificatesupervision.CertificateBean;
+import com.kc.shiptransport.data.bean.device.repair.DeviceRepairBean;
+import com.kc.shiptransport.data.bean.device.repair.DeviceShipBean;
+import com.kc.shiptransport.data.bean.device.repair.DeviceShipListBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckAddBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckListBean;
@@ -1214,6 +1217,7 @@ public class DataRepository implements DataSouceImpl {
                 User user = new User();
                 user.setUserID(loginResult.getUserID());
                 user.setUserName(loginResult.getUserName());
+                user.setIsConstructionPictureAdmin("0");
                 user.save();
 
                 // 统计登录
@@ -2511,9 +2515,9 @@ public class DataRepository implements DataSouceImpl {
                     LogUtil.d("扫描件图片路径: " + bean.getOriginalPath());
 
                     File file = new File(bean.getOriginalPath());
-                    LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length()/1024 + "kb");
+                    LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length() / 1024 + "kb");
                     File tagFile = Luban.with(App.getAppContext()).load(file).get();
-                    LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length()/1024 + "kb");
+                    LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length() / 1024 + "kb");
                     byte[] bytes = FileUtil.File2byte(tagFile);
                     commitBean.setBase64img(new String(Base64.encode(bytes, Base64.DEFAULT)));
 
@@ -2739,9 +2743,9 @@ public class DataRepository implements DataSouceImpl {
                     String filename = title + "." + suffixName;
                     // 解析图片
                     File file = new File(bean.getOriginalPath());
-                    LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length()/1024 + "kb");
+                    LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length() / 1024 + "kb");
                     File tagFile = Luban.with(App.getAppContext()).load(file).get();
-                    LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length()/1024 + "kb");
+                    LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length() / 1024 + "kb");
                     byte[] bytes = FileUtil.File2byte(tagFile);
                     String ByteDataStr = new String(Base64.encode(bytes, Base64.DEFAULT));
 
@@ -4900,9 +4904,9 @@ public class DataRepository implements DataSouceImpl {
                     image.setConstructionBoatAccount(ConstructionBoatAccount);
                     // 解析图片
                     File file = new File(bean.getOriginalPath());
-                    LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length()/1024 + "kb");
+                    LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length() / 1024 + "kb");
                     File tagFile = Luban.with(App.getAppContext()).load(file).get();
-                    LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length()/1024 + "kb");
+                    LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length() / 1024 + "kb");
                     byte[] bytes = FileUtil.File2byte(tagFile);
                     String ByteDataStr = new String(Base64.encode(bytes, Base64.DEFAULT));
                     image.setByteDataStr(ByteDataStr);
@@ -5615,9 +5619,9 @@ public class DataRepository implements DataSouceImpl {
                 String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
                 // base64
                 File file = new File(imgList.getPath());
-                LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length()/1024 + "kb");
+                LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length() / 1024 + "kb");
                 File tagFile = Luban.with(context).load(file).get();
-                LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length()/1024 + "kb");
+                LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length() / 1024 + "kb");
 
                 byte[] bytes = FileUtil.File2byte(tagFile);
                 String byteDataStr = new String(Base64.encode(bytes, Base64.DEFAULT));
@@ -6053,6 +6057,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 6.27 获取安全管理_违规记录数据
+     *
      * @param pageSize
      * @param pageCount
      * @return
@@ -6078,6 +6083,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 搜索受检船舶
+     *
      * @param msg
      * @param isSearchAll
      * @return
@@ -6092,7 +6098,7 @@ public class DataRepository implements DataSouceImpl {
                     list = DataSupport.findAll(HseCheckShip.class);
                 } else if (!isSearchAll && !TextUtils.isEmpty(msg)) {
                     list = DataSupport
-                            .where("ShipName like ? or ShipAccount like ? " ,  "%" + msg + "%", "%" + msg + "%")
+                            .where("ShipName like ? or ShipAccount like ? ", "%" + msg + "%", "%" + msg + "%")
                             .find(HseCheckShip.class);
                 }
                 e.onNext(list);
@@ -6103,6 +6109,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.119	根据进场计划ID获取过砂图片列表（多条）
+     *
      * @param subID
      * @return
      */
@@ -6127,6 +6134,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.118	提交供砂图片数据
+     *
      * @param bean
      * @return
      */
@@ -6163,6 +6171,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.120	删除过砂图片数据
+     *
      * @param ItemID
      * @return
      */
@@ -6182,6 +6191,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.124	获取施工相册数据
+     *
      * @param PageSize
      * @param PageCount
      * @return
@@ -6191,9 +6201,11 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<ConstructionAlbumBean>() {
             @Override
             public void subscribe(ObservableEmitter<ConstructionAlbumBean> e) throws Exception {
-                String json = mRemoteDataSource.GetConstructionPictureAlbumRecordsData(PageSize, PageCount, "");
-                LogUtil.d("1.124\t获取施工相册数据: " + json);
-                ConstructionAlbumBean albumBean = gson.fromJson(json, ConstructionAlbumBean.class);
+                JSONObject isDelObject = JsonUtil.creatorJsonObject("IsDel", JsonUtil.TYPE_STRING, String.valueOf(0));
+                String json = JsonUtil.spliceJson(isDelObject);
+                String result = mRemoteDataSource.GetConstructionPictureAlbumRecordsData(PageSize, PageCount, json);
+                LogUtil.d("1.124\t获取施工相册数据: " + result);
+                ConstructionAlbumBean albumBean = gson.fromJson(result, ConstructionAlbumBean.class);
                 e.onNext(albumBean);
                 e.onComplete();
             }
@@ -6202,6 +6214,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.126	添加/更新施工相册数据
+     *
      * @param Table
      * @param itemID
      * @param albumName
@@ -6213,7 +6226,9 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
-                String creator = DataSupport.findAll(User.class).get(0).getUserID();
+                User user = DataSupport.findFirst(User.class);
+                String creator = user.getUserID();
+
                 String json = JsonUtil.getAlbumJson(itemID, albumName, remark, creator);
                 LogUtil.d("1.126\t添加/更新施工相册数据: " + json);
                 String result = mRemoteDataSource.InsertTable(Table, json);
@@ -6226,6 +6241,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.127	删除施工相册数据
+     *
      * @param Table
      * @param ItemID
      * @param SubTable
@@ -6246,6 +6262,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.125	获取施工相册对应的图片数据
+     *
      * @param pageSize
      * @param pageCount
      * @param albumID
@@ -6256,7 +6273,9 @@ public class DataRepository implements DataSouceImpl {
         return Observable.create(new ObservableOnSubscribe<ConstructionAlbumPictureBean>() {
             @Override
             public void subscribe(ObservableEmitter<ConstructionAlbumPictureBean> e) throws Exception {
-                String json = JsonUtil.spliceJson(JsonUtil.creatorJsonObject("AlbumID", JsonUtil.TYPE_STRING, String.valueOf(albumID)));
+                JSONObject albumIDObject = JsonUtil.creatorJsonObject("AlbumID", JsonUtil.TYPE_STRING, String.valueOf(albumID));
+                JSONObject isDelObject = JsonUtil.creatorJsonObject("IsDel", JsonUtil.TYPE_STRING, String.valueOf(0));
+                String json = JsonUtil.spliceJson(albumIDObject, isDelObject);
                 LogUtil.d("1.125\t获取施工相册对应的图片数据: " + json);
                 String result = mRemoteDataSource.GetConstructionPictureAttachmentRecordsData(pageSize, pageCount, json);
                 LogUtil.d("1.125\t获取施工相册对应的图片数据result: " + result);
@@ -6269,6 +6288,7 @@ public class DataRepository implements DataSouceImpl {
 
     /**
      * 1.123	提交施工图片信息数据
+     *
      * @param json
      * @param ByteDataStr
      * @return
@@ -6280,6 +6300,118 @@ public class DataRepository implements DataSouceImpl {
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 String result = mRemoteDataSource.InsertConstructionPictureAttachment(json, ByteDataStr);
                 e.onNext(getRequestResult(result));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.129 根据当前用户UserID, 判断是否有权限修改相册
+     *
+     * @return
+     */
+    @Override
+    public Observable<Boolean> IsConstructionPictureAdmin() {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                User user = DataSupport.findFirst(User.class);
+                String result = mRemoteDataSource.IsConstructionPictureAdmin(user.getUserID());
+                JSONObject jsonObject = new JSONObject(result);
+                String returnValue = jsonObject.getString("ReturnValue");
+                LogUtil.d("当前用户是否有权限修改相册: " + returnValue);
+                user.setIsConstructionPictureAdmin(returnValue);
+                user.save();
+
+                e.onNext("1".equals(returnValue));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.127	删除施工相册数据
+     * @param Table
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteItems(final String Table, final List<ConstructionAlbumPictureBean.DataBean> datas, final Set<Integer> positionSet) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String deleteAlbumJson = JsonUtil.getDeleteAlbumPictureJson(datas, positionSet);
+                String result = mRemoteDataSource.DeleteItems(Table, deleteAlbumJson);
+                e.onNext(getRequestResult(result));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 删除相册
+     * @param table
+     * @param itemID
+     * @return
+     */
+    @Override
+    public Observable<Boolean> DeleteItem(final String table, final String itemID) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                String deleteAlbumJson = JsonUtil.getDeleteAlbumJson(itemID);
+                String result = mRemoteDataSource.DeleteItems(table, deleteAlbumJson);
+                e.onNext(getRequestResult(result));
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.158	获取-设备修理数据
+     * @param pageSize
+     * @param pageCount
+     * @param startData
+     * @param endData
+     * @param shipAccount
+     * @return
+     */
+    @Override
+    public Observable<DeviceRepairBean> GetEquipmentRepairRecords(final int pageSize, final int pageCount, String startData, String endData, final String shipAccount) {
+        return Observable.create(new ObservableOnSubscribe<DeviceRepairBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<DeviceRepairBean> e) throws Exception {
+                JSONObject account = JsonUtil.creatorJsonObject("ShipAccount", JsonUtil.TYPE_STRING, shipAccount);
+                String json = JsonUtil.spliceJson(account);
+                LogUtil.t("1.158\t获取-设备修理数据\n");
+                LogUtil.json(json);
+
+                String result = mRemoteDataSource.GetEquipmentRepairRecords(pageSize, pageCount, json);
+                DeviceRepairBean deviceRepairBean = gson.fromJson(result, DeviceRepairBean.class);
+                e.onNext(deviceRepairBean);
+                e.onComplete();
+            }
+        });
+    }
+
+    /**
+     * 1.157	获取施工船舶PVD信息数据
+     * @param pageSize
+     * @param pageCount
+     * @return
+     */
+    @Override
+    public Observable<DeviceShipListBean> GetManagementShip(final int pageSize, final int pageCount) {
+        return Observable.create(new ObservableOnSubscribe<DeviceShipListBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<DeviceShipListBean> e) throws Exception {
+                String result = mRemoteDataSource.GetManagementShip(pageSize, pageCount, "");
+                DeviceShipListBean deviceShipListBean = gson.fromJson(result, DeviceShipListBean.class);
+                List<DeviceShipBean> list = deviceShipListBean.getData();
+
+                DataSupport.deleteAll(DeviceShipBean.class);
+                DataSupport.saveAll(list);
+
+                e.onNext(deviceShipListBean);
                 e.onComplete();
             }
         });

@@ -1,10 +1,12 @@
 package com.kc.shiptransport.mvp.constructionalbumpicture;
 
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.album.ConstructionAlbumPictureBean;
 import com.kc.shiptransport.mvp.BasePresenter;
 import com.kc.shiptransport.mvp.BaseView;
 
-import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author 邱永恒
@@ -21,11 +23,34 @@ public interface ConstructionAlbumPictureContract {
         void showImgList(ConstructionAlbumPictureBean bean);
 
         /**
+         * 加载更多
+         * @param bean
+         */
+        void showImgMore(ConstructionAlbumPictureBean bean);
+
+        /**
          * 删除结果
          * @param isSuccess
          * @param position
          */
-        void showDeleteResult(boolean isSuccess, int position);
+        void showDeleteResult(boolean isSuccess, Set<Integer> position);
+
+        /**
+         * 上传图片结果
+         * @param isSuccess
+         */
+        void showCommitPictureResult(boolean isSuccess);
+
+        /**
+         * 显示进度条
+         * @param size
+         */
+        void showProgress(int size);
+
+        /**
+         * 更新进度条
+         */
+        void updateProgress();
     }
 
     interface Presenter extends BasePresenter {
@@ -33,24 +58,20 @@ public interface ConstructionAlbumPictureContract {
          * 根据相册ID获取图片列表
          * @param albumItemID 相册ID
          */
-        void getImgList(int albumItemID);
+        void getImgList(int pageSize, int pageCount, int albumItemID);
 
         /**
          * 删除照片
          * @param Table
-         * @param ItemID
-         * @param SubTable
-         * @param AssociatedColumn
-         * @param position
+         * @param albumCreator
          */
-        void deleteImg(String Table, String ItemID, String SubTable, String AssociatedColumn, int position);
+        void deleteImg(String Table, String albumCreator, List<ConstructionAlbumPictureBean.DataBean> datas, Set<Integer> positionSet);
 
         /**
          * 提交图片
          * @param albumID
-         * @param remark
-         * @param imageMultipleResultEvent
+         * @param list
          */
-        void commitPicture(int albumID, String remark, ImageMultipleResultEvent imageMultipleResultEvent);
+        void commitPicture(int albumID, List<CommitPictureBean> list);
     }
 }

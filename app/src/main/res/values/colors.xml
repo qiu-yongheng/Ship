@@ -24,5 +24,7 @@
     <color name="Dividing_line">#EEEDEB</color>
     <color name="bg">#EEEDEB</color>
     <color name="purple">#f0f</color>
-    
+    <color name="rv_select_color">#8000</color>
+    <color name="rv_unSelect_color">#0000</color>
+
 </resources>

@@ -13,7 +13,7 @@ import com.kc.shiptransport.mvp.BaseActivity;
 /**
  * @author 邱永恒
  * @time 2017/6/30 21:44
- * @desc ${TODO}
+ * @desc 从主页模块列表跳转进来, 显示模块下的小模块列表
  */
 
 public class HomeDetailActivity extends BaseActivity{

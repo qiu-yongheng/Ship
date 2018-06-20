@@ -42,7 +42,6 @@ import butterknife.Unbinder;
  */
 
 public class ScannerDetailFragment extends Fragment implements ScannerDetailContract.View {
-
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.tv_opinion)

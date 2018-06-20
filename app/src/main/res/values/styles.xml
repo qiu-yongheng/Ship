@@ -8,6 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ActionModeTheme" parent="AppTheme">
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
     <!-- 沉浸式标题栏 -->
     <style name="ImmersedTheme" parent="AppTheme"/>
 
@@ -126,5 +130,9 @@
         <item name="actionMenuTextColor">@android:color/white</item> <!--  敲定颜色-->
         <item name="android:textSize">15sp</item> <!--  搞掂字体大小-->
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

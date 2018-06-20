@@ -283,4 +283,15 @@ public class SettingUtil {
 
 
 
+    /*-----------------------------------------------设备修理--------------------------------------------------*/
+    /* 设备修理 新增 */
+    public static final int TYPE_DEVICE_REPAIR_ADD = 1101;
+    /* 设备修理 修改 */
+    public static final int TYPE_DEVICE_REPAIR_UPDATE = 1102;
+    /* 设备修理 只读 */
+    public static final int TYPE_DEVICE_REPAIR_READ_ONLY = 1103;
+    /*-----------------------------------------------设备修理--------------------------------------------------*/
+
+
+
 }

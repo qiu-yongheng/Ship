@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 
+import com.blankj.utilcode.util.Utils;
 import com.elvishew.xlog.LogConfiguration;
 import com.elvishew.xlog.LogLevel;
 import com.elvishew.xlog.XLog;
@@ -63,6 +64,10 @@ public class App extends MultiDexApplication {
         });
     }
 
+    public static Context getAppContext() {
+        return context;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -94,13 +99,8 @@ public class App extends MultiDexApplication {
         initXSnow();
 
         initLog();
-    }
 
-    private void initLog() {
-        ViseLog.getLogConfig()
-                .configAllowLog(true)//是否输出日志
-                .configShowBorders(true);//是否排版显示
-        ViseLog.plant(new LogcatTree());//添加打印日志信息到Logcat的树
+        initUtils();
     }
 
     private void initXSnow() {
@@ -147,12 +147,19 @@ public class App extends MultiDexApplication {
                 .converterFactory(GsonConverterFactory.create())
                 //配置适配器工厂
                 .callAdapterFactory(RxJava2CallAdapterFactory.create())
-                //配置连接池
-                //                .connectionPool(new ConnectionPool())
+        //配置连接池
+        //                .connectionPool(new ConnectionPool())
         ;
     }
 
-    public static Context getAppContext() {
-        return context;
+    private void initLog() {
+        ViseLog.getLogConfig()
+                .configAllowLog(true)//是否输出日志
+                .configShowBorders(true);//是否排版显示
+        ViseLog.plant(new LogcatTree());//添加打印日志信息到Logcat的树
+    }
+
+    private void initUtils() {
+        Utils.init(this);
     }
 }

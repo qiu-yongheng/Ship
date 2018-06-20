@@ -84,12 +84,6 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_hse_check, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add:
@@ -100,6 +94,16 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public int setView() {
+        return R.layout.fragment_hse_list;
+    }
+
+    @Override
+    public int setTitle() {
+        return R.string.title_hse_check;
     }
 
     @Override
@@ -137,21 +141,6 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
         });
     }
 
-    public void refresh(boolean isShow, boolean isLoadMore) {
-        if (isLoadMore) {
-            ++pageCount;
-        } else {
-            pageCount = 1;
-        }
-        presenter.getDates(pageSize, pageCount, new HseCheckSelectBean(startDate, endDate, checkedShipAccount, null), isShow);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshLayout.autoRefresh();
-    }
-
     @Override
     public void setPresenter(HseCheckContract.Presenter presenter) {
         this.presenter = presenter;
@@ -176,20 +165,42 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
         ToastUtil.tip(getContext(), msg);
     }
 
-    @Override
-    public int setView() {
-        return R.layout.fragment_hse_list;
+    public void refresh(boolean isShow, boolean isLoadMore) {
+        if (isLoadMore) {
+            ++pageCount;
+        } else {
+            pageCount = 1;
+        }
+        presenter.getDates(pageSize, pageCount, new HseCheckSelectBean(startDate, endDate, checkedShipAccount, null), isShow);
     }
 
     @Override
-    public int setTitle() {
-        return R.string.title_hse_check;
+    public void onResume() {
+        super.onResume();
+        refreshLayout.autoRefresh();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (refreshLayout != null && refreshLayout.isRefreshing()) {
+            refreshLayout.finishRefresh();
+        }
+        if (presenter != null) {
+            presenter.unsubscribe();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_hse_check, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -214,7 +225,7 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
                             .setText(R.id.tv_remark, bean.getRemark())
                             .setText(R.id.tv_defect_count, String.valueOf(bean.getDefectCount()))
                             .setText(R.id.tv_rectificationed, String.valueOf(bean.getRectificationDoneCount()))
-                            .setText(R.id.tv_rectificationing, String .valueOf(bean.getRectificationDoingCount()))
+                            .setText(R.id.tv_rectificationing, String.valueOf(bean.getRectificationDoingCount()))
                             .setTextUnderline(R.id.tv_other, "(缺陷数:" + bean.getDefectCount() + " 已整改:" + bean.getRectificationDoneCount() + " 待整改:" + bean.getRectificationDoingCount() + ")")
                             .setVisible(R.id.btn_delete, bean.getDefectCount() == 0)
                             .setOnClickListener(R.id.tv_other, new View.OnClickListener() {
@@ -280,9 +291,7 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
         } else {
             ToastUtil.tip(getContext(), "删除失败, 请重试");
         }
-    }
-
-    @Override
+    }    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.select_1:
@@ -348,14 +357,5 @@ public class HseCheckFragment extends BaseFragment<HseCheckActivity> implements 
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (refreshLayout != null && refreshLayout.isRefreshing()) {
-            refreshLayout.finishRefresh();
-        }
-        if (presenter != null) {
-            presenter.unsubscribe();
-        }
-    }
+
 }

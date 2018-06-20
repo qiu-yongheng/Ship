@@ -15,6 +15,8 @@
         android:textColor="@color/black"
         android:textSize="@dimen/text_15sp"/>
 
+    <include layout="@layout/view_divi"/>
+
     <com.kc.shiptransport.view.custom.RatioImageView
         android:id="@+id/iv_preview"
         android:scaleType="center"
@@ -41,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="@dimen/dp_10"
-            android:text="摘    要:"
+            android:text="关键字:"
             android:textSize="@dimen/text_15sp"/>
 
         <EditText
@@ -50,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:hint="选择图片添加摘要"
+            android:hint="选择图片添加关键字"
             android:singleLine="true"/>
     </LinearLayout>
 

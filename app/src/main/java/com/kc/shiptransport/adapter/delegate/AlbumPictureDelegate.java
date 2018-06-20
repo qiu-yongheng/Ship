@@ -1,7 +1,6 @@
 package com.kc.shiptransport.adapter.delegate;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,20 +12,16 @@ import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.album.ConstructionAlbumPictureBean;
 import com.kc.shiptransport.data.bean.img.ImgList;
 import com.kc.shiptransport.interfaze.OnInitDialogViewListener;
-import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 import com.kc.shiptransport.mvp.constructionalbumpicture.ConstructionAlbumPictureActivity;
 import com.kc.shiptransport.mvp.constructionalbumpicture.ConstructionAlbumPictureFragment;
-import com.kc.shiptransport.util.LogUtil;
 import com.kc.shiptransport.util.RxGalleryUtil;
+import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.actiivty.ImgViewPageActivity;
 import com.zhy.adapter.recyclerview.base.ItemViewDelegate;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
-import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 
 /**
  * @author 邱永恒
@@ -41,7 +36,7 @@ public class AlbumPictureDelegate implements ItemViewDelegate<ConstructionAlbumP
     private ArrayList<ImgList> imgLists = new ArrayList<>();
     private List<ConstructionAlbumPictureBean.DataBean> datas;
 
-    public AlbumPictureDelegate(Context context, Fragment fragment) {
+    public AlbumPictureDelegate(Context context, int albumItem, Fragment fragment) {
         this.context = context;
         this.activity = ((ConstructionAlbumPictureActivity) context);
         this.fragment = ((ConstructionAlbumPictureFragment) fragment);
@@ -62,7 +57,7 @@ public class AlbumPictureDelegate implements ItemViewDelegate<ConstructionAlbumP
     public void convert(final ViewHolder holder, final ConstructionAlbumPictureBean.DataBean dataBean, final int position) {
         ImageView iv = holder.getView(R.id.iv_img);
         RxGalleryUtil.showImage(context, dataBean.getFilePath(), null, null, iv);
-        holder.setTextLine(R.id.tv_remark, TextUtils.isEmpty(dataBean.getSummary()) ? "添加摘要" : dataBean.getSummary())
+        holder.setTextLine(R.id.tv_remark, TextUtils.isEmpty(dataBean.getSummary()) ? "暂无关键字" : dataBean.getSummary())
                 .setOnClickListener(R.id.tv_remark, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -74,26 +69,30 @@ public class AlbumPictureDelegate implements ItemViewDelegate<ConstructionAlbumP
                                 Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
                                 Button btnUpdate = (Button) view.findViewById(R.id.btn_update);
                                 RxGalleryUtil.showImage(context, dataBean.getFilePath(), null, null, ivSmall);
-                                etRemark.setText(TextUtils.isEmpty(dataBean.getSummary()) ? "" : dataBean.getSummary());
+                                etRemark.setText(TextUtils.isEmpty(dataBean.getSummary()) ? "暂无关键字" : dataBean.getSummary());
 
-                                ivSmall.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        RxGalleryUtil.getImagMultiple(context, 8, new OnRxGalleryRadioListener() {
-                                            @Override
-                                            public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
-                                                // 提交图片
-                                                LogUtil.d("多选图片");
-                                            }
+                                // TODO : 暂时取消编辑
+                                etRemark.setFocusable(false);
+                                etRemark.setFocusableInTouchMode(false);
 
-                                            @Override
-                                            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
-                                                // 单选回调
-                                                LogUtil.d("单选图片");
-                                            }
-                                        });
-                                    }
-                                });
+//                                ivSmall.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        RxGalleryUtil.getImagMultiple(context, 8, new OnRxGalleryRadioListener() {
+//                                            @Override
+//                                            public void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) {
+//                                                // 提交图片
+//                                                LogUtil.d("多选图片");
+//                                            }
+//
+//                                            @Override
+//                                            public void onEvent(ImageRadioResultEvent imageRadioResultEvent) {
+//                                                // 单选回调
+//                                                LogUtil.d("单选图片");
+//                                            }
+//                                        });
+//                                    }
+//                                });
                                 btnCancel.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -104,7 +103,7 @@ public class AlbumPictureDelegate implements ItemViewDelegate<ConstructionAlbumP
                                     @Override
                                     public void onClick(View v) {
                                         // TODO: 提交
-
+                                        ToastUtil.tip(context, "功能未完善");
                                         ((ConstructionAlbumPictureActivity) context).hideCustomDialog();
                                     }
                                 });
@@ -113,37 +112,37 @@ public class AlbumPictureDelegate implements ItemViewDelegate<ConstructionAlbumP
                         });
                     }
                 })
+                .setVisible(R.id.tv_bg, fragment.positionSet.contains(position))
                 .setOnClickListener(R.id.iv_img, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: 展示图片
-                        imgLists.clear();
-                        for (ConstructionAlbumPictureBean.DataBean bean : datas) {
-                            ImgList imgList = new ImgList();
-                            imgList.setItemID(bean.getItemID());
-                            imgList.setPath(bean.getFilePath());
-                            imgList.setRemark(bean.getSummary());
-                            imgLists.add(imgList);
+                        if (fragment.actionMode != null) {
+                            // 如果当前处于多选状态，则进入多选状态的逻辑
+                            // 维护当前已选的position
+                            fragment.addOrRemove(position);
+                        } else {
+                            // 如果不是多选状态，则进入点击事件的业务逻辑
+                            imgLists.clear();
+                            for (ConstructionAlbumPictureBean.DataBean bean : datas) {
+                                ImgList imgList = new ImgList();
+                                imgList.setItemID(bean.getItemID());
+                                imgList.setPath(bean.getFilePath());
+                                imgList.setRemark(bean.getSummary());
+                                imgLists.add(imgList);
+                            }
+                            ImgViewPageActivity.startActivity(context, imgLists, position);
                         }
-                        ImgViewPageActivity.startActivity(context, imgLists, position);
                     }
                 })
                 .setOnLongClickListener(R.id.iv_img, new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        activity.showDailog("删除图片", "删除图片不能撤销, 是否删除?", "取消", "删除", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // 取消
-                            }
-                        }, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // 删除
-                                fragment.deleteImg(dataBean.getItemID(), position);
-                            }
-                        });
-                        return true;
+                        // 长按触发多选删除
+                        if (fragment.actionMode == null) {
+                            // 创建actionMode
+                            fragment.actionMode = activity.startSupportActionMode(fragment);
+                        }
+                        return false;
                     }
                 });
     }

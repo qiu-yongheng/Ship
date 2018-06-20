@@ -84,7 +84,8 @@ public class SelectUtil<T> {
                 .isDialog(isDialog)
                 .build();
 
-        optionsPickerView.setPicker(list);//添加数据
+        //添加数据
+        optionsPickerView.setPicker(list);
 
         optionsPickerView.show();
     }

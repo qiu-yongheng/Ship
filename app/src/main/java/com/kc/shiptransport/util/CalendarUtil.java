@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author qiuyongheng
@@ -55,6 +56,7 @@ public class CalendarUtil {
 
     /**
      * 获取当前日期, 偏移后的日期
+     *
      * @param format
      * @param dateType
      * @param num
@@ -70,6 +72,7 @@ public class CalendarUtil {
 
     /**
      * 加载指定日期, 进行偏移
+     *
      * @param format
      * @param Date
      * @param dateType
@@ -79,7 +82,7 @@ public class CalendarUtil {
      */
     public static String getOffsetDate(String format, String Date, int dateType, int num) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat(format);
-        Date dt=df.parse(Date);
+        Date dt = df.parse(Date);
         Calendar cal = Calendar.getInstance();
         cal.setTime(dt);
         cal.add(dateType, num);
@@ -259,12 +262,12 @@ public class CalendarUtil {
      * 判断结束日期是否在开始日期之前
      *
      * @param startTime 开始时间
-     * @param endTime 结束
+     * @param endTime   结束
      * @return 结束时间小于开始时间, 返回true
      * @throws ParseException
      */
     public static boolean isLastDate(String startTime, String endTime) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
+        SimpleDateFormat sdf = new SimpleDateFormat(YYYY_MM_DD_HH_MM, Locale.CHINA);
 
         Date start = sdf.parse(startTime);
         Date end = sdf.parse(endTime);
@@ -414,7 +417,7 @@ public class CalendarUtil {
 
             datePickerDialog.show();
         } else {
-            showTimePicker(context, null, YYYY_MM_DD_HH_MM, null, listener, lastDateClickListener,  new boolean[]{true, true, true, true, true, false}, false, isCustom);
+            showTimePicker(context, null, YYYY_MM_DD_HH_MM, null, listener, lastDateClickListener, new boolean[]{true, true, true, true, true, false}, false, isCustom);
         }
     }
 
@@ -487,13 +490,13 @@ public class CalendarUtil {
     /**
      * 弹出时间选择器
      * DateFormat.is24HourFormat(context) 判断
-     *
+     * <p>
      * 只修改指定日期时间, 不修改日期
      *
      * @param context
      * @param view
      */
-    public static void showTimeDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener,final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
+    public static void showTimeDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener, final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
         if (isSystem) {
             Calendar calendar = getCalendar(Date, format);
 
@@ -531,7 +534,7 @@ public class CalendarUtil {
      * @param listener
      * @throws ParseException
      */
-    public static void showDateDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener,final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
+    public static void showDateDialog(final Context context, final TextView view, final String format, String Date, final OnTimePickerSureClickListener listener, final OnTimePickerLastDateClickListener lastDateClickListener, boolean isSystem, boolean isCustom) throws ParseException {
         if (isSystem) {
             Calendar calendar = getCalendar(Date, format);
 
@@ -545,7 +548,7 @@ public class CalendarUtil {
                 public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                     now.set(Calendar.HOUR_OF_DAY, hour);
                     now.set(Calendar.MINUTE, minute);
-                    SimpleDateFormat df = new SimpleDateFormat(format);
+                    SimpleDateFormat df = new SimpleDateFormat(format, Locale.CHINA);
                     String format = df.format(now.getTime());
                     view.setText(format);
                     listener.onSure(format);
@@ -561,7 +564,8 @@ public class CalendarUtil {
 
     /**
      * 弹出时间选择器
-     *  @param context  上下文
+     *
+     * @param context  上下文
      * @param view     要赋值的控件
      * @param format   时间格式
      * @param Date     指定日期

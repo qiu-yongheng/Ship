@@ -58,7 +58,7 @@ public class ImgViewPageAdapter extends PagerAdapter {
         TextView tvRemark = (TextView) view.findViewById(R.id.tv_remark);
         if (!TextUtils.isEmpty(remark)) {
             tvRemark.setVisibility(View.VISIBLE);
-            tvRemark.setText("摘要: " + remark);
+            tvRemark.setText("关键字: " + remark);
         } else {
             tvRemark.setVisibility(View.GONE);
         }

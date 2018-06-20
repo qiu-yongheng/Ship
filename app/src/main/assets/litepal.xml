@@ -1,6 +1,6 @@
 <litepal>
     <dbname value="ship_db" />
-    <version value="114"/>
+    <version value="118"/>
     <list>
         <mapping class="com.kc.shiptransport.db.ship.Ship"/>
         <mapping class="com.kc.shiptransport.db.ship.ShipList"/>
@@ -58,5 +58,7 @@
         <mapping class="com.kc.shiptransport.db.hse.HseDefectType"/>
         <mapping class="com.kc.shiptransport.db.hse.HseDefectDeadline"/>
         <mapping class="com.kc.shiptransport.data.bean.certificatesupervision.CertificateBean"/>
+        <mapping class="com.kc.shiptransport.data.bean.device.repair.DeviceShipBean"/>
+        <mapping class="com.kc.shiptransport.data.bean.device.maintenance.DeviceMaintenanceBean"/>
     </list>
 </litepal>

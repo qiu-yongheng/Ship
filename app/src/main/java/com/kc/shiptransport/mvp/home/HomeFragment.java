@@ -17,6 +17,7 @@ import com.kc.shiptransport.data.source.DataRepository;
 import com.kc.shiptransport.db.AppList;
 import com.kc.shiptransport.db.Subcontractor;
 import com.kc.shiptransport.interfaze.OnRecyclerviewItemClickListener;
+import com.kc.shiptransport.mvp.constructionalbum.ConstructionAlbumActivity;
 import com.kc.shiptransport.mvp.constructionlog.ConstructionLogActivity;
 import com.kc.shiptransport.mvp.contacts.ContactActivity;
 import com.kc.shiptransport.mvp.homedetail.HomeDetailActivity;
@@ -38,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @author 邱永恒
  * @time 2017/6/6 20:37
- * @desc ${TODO}
+ * @desc 主页显示app list
  */
 
 public class HomeFragment extends Fragment {
@@ -128,6 +129,7 @@ public class HomeFragment extends Fragment {
                             break;
                         case 4:
                             // 施工照片
+                            ConstructionAlbumActivity.startActivity(getContext());
                             break;
                         case 5:
                             // 安全管理
@@ -148,6 +150,10 @@ public class HomeFragment extends Fragment {
                             break;
                         case 18:
                             // 考勤管理
+                            HomeDetailActivity.startActiviyt(getContext(), type[0]);
+                            break;
+                        case 39:
+                            // 设备管理
                             HomeDetailActivity.startActiviyt(getContext(), type[0]);
                             break;
                     }

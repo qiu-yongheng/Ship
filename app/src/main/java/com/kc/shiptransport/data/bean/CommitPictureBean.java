@@ -30,6 +30,8 @@ public class CommitPictureBean {
     private String base64img;
     private int albumID;
     private String summary;
+    private boolean isSelect;
+    private String filePath;
 
     public int getItemID() {
         return ItemID;
@@ -117,5 +119,21 @@ public class CommitPictureBean {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

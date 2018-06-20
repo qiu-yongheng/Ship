@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.kc.shiptransport">
-    <!--网络访问-->
+
+    <!-- 网络访问 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <!--文件操作-->
+    <!-- 文件操作 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-    <!--友盟-->
+    <!-- 友盟 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
@@ -19,7 +20,6 @@
     <!-- 相机权限 -->
     <uses-permission android:name="android.permission.CAMERA"/>
 
-
     <application
         android:name=".app.App"
         android:allowBackup="true"
@@ -28,7 +28,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/ImmersedTheme">
-
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="5958a4c91061d27898001ae3"/>
@@ -297,14 +296,35 @@
         <activity
             android:name=".mvp.constructionalbumpicture.ConstructionAlbumPictureActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionModeTheme"/>
+        <activity
+            android:name=".mvp.devicerepair.DeviceRepairActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionModeTheme"/>
+        <activity
+            android:name=".mvp.devicerepairdetail.DeviceRepairDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionModeTheme"/>
+        <activity
+            android:name=".mvp.devicemaintenance.DeviceMaintenanceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionModeTheme"/>
+        <activity
+            android:name=".mvp.devicemaintenancedetail.DeviceMaintenanceDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionModeTheme"/>
 
 
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionModeTheme"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"/>
@@ -320,7 +340,7 @@
             authorities:定义唯一一个authorities，和构建content://uri中的getUriForFile方法的authority参数一致
             resource：指向保存位置path配置的xml文件。
             其它都是固定的。
-       -->
+        -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.kc.fileprovider"
@@ -330,6 +350,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
+
+        <activity android:name=".mvp.mechanical.MechanicalActivity"/>
+        <activity android:name=".mvp.crew.CrewActivity"/>
+        <activity android:name=".mvp.training.TrainingActivity"></activity>
     </application>
 
 </manifest>

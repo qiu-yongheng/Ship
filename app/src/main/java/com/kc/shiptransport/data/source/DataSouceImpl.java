@@ -3,10 +3,10 @@ package com.kc.shiptransport.data.source;
 import android.content.Context;
 
 import com.kc.shiptransport.data.bean.CommitImgListBean;
+import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.LogCurrentDateBean;
 import com.kc.shiptransport.data.bean.PartitionSBBean;
 import com.kc.shiptransport.data.bean.RecordedSandUpdataBean;
-import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.ScannerImgListByTypeBean;
 import com.kc.shiptransport.data.bean.ScannerListBean;
 import com.kc.shiptransport.data.bean.VoyageDetailBean;
@@ -18,6 +18,8 @@ import com.kc.shiptransport.data.bean.boatinquire.BoatInquireCommitBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireDetailBean;
 import com.kc.shiptransport.data.bean.boatinquire.BoatInquireItemBean;
 import com.kc.shiptransport.data.bean.certificatesupervision.CertificateBean;
+import com.kc.shiptransport.data.bean.device.repair.DeviceRepairBean;
+import com.kc.shiptransport.data.bean.device.repair.DeviceShipListBean;
 import com.kc.shiptransport.data.bean.downlog.DownLogBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckAddBean;
 import com.kc.shiptransport.data.bean.hse.HseCheckListBean;
@@ -77,6 +79,7 @@ import com.kc.shiptransport.db.voyage.WashStoneSource;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import io.reactivex.Observable;
@@ -1387,7 +1390,7 @@ public interface DataSouceImpl {
     Observable<Boolean> InsertTable(String Table, int itemID, String albumName, String remark);
 
     /**
-     * 1.127	删除施工相册数据
+     * 1.127	删除施工相册数据(废弃)
      * @param Table
      * @param ItemID
      * @param SubTable
@@ -1412,4 +1415,44 @@ public interface DataSouceImpl {
      * @return
      */
     Observable<Boolean> InsertConstructionPictureAttachment(String json, String ByteDataStr);
+
+    /**
+     * 1.129 根据当前用户UserID, 判断是否有权限修改相册
+     * @return
+     */
+    Observable<Boolean> IsConstructionPictureAdmin();
+
+    /**
+     * 1.127	删除施工相册图片数据
+     * @param Table
+     * @return
+     */
+    Observable<Boolean> DeleteItems(String Table, List<ConstructionAlbumPictureBean.DataBean> datas, Set<Integer> positionSet);
+
+    /**
+     * 删除施工相册
+     * @param table
+     * @param itemID
+     * @return
+     */
+    Observable<Boolean> DeleteItem(String table, String itemID);
+
+    /**
+     * 1.158	获取-设备修理数据
+     * @param pageSize
+     * @param pageCount
+     * @param startData
+     * @param endData
+     * @param shipAccount
+     * @return
+     */
+    Observable<DeviceRepairBean> GetEquipmentRepairRecords(int pageSize, int pageCount, String startData, String endData, String shipAccount);
+
+    /**
+     * 1.157	获取施工船舶PVD信息数据
+     * @param pageSize
+     * @param pageCount
+     * @return
+     */
+    Observable<DeviceShipListBean> GetManagementShip(int pageSize, int pageCount);
 }

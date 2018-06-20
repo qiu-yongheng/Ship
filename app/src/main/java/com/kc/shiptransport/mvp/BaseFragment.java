@@ -77,4 +77,5 @@ public abstract class BaseFragment<V extends AppCompatActivity> extends Fragment
 
     public abstract int setView();
     public abstract int setTitle();
+
 }

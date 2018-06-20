@@ -2,6 +2,19 @@
 <resources>
     <declare-styleable name="RatioImageView">
         <!-- 比例=宽/高 -->
-        <attr name="ratio" format="float" />
+        <attr name="ratio" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="DataInputLayout">
+        <attr name="input_type">
+            <enum name="read_only" value="0"/>
+            <enum name="select" value="1"/>
+            <enum name="edit" value="2"/>
+        </attr>
+        <attr name="tag" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="ImageSelectLayout">
+        <attr name="title" format="string"/>
     </declare-styleable>
 </resources>

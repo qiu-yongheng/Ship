@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.kc.shiptransport.view.custom.DataInputLayout
+                android:id="@+id/dl_creator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                app:input_type="read_only"
+                app:tag="创建账号"/>
+
+            <com.kc.shiptransport.view.custom.DataInputLayout
+                android:id="@+id/dl_ship_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                app:input_type="select"
+                app:tag="船舶账号"/>
+
+            <com.kc.shiptransport.view.custom.DataInputLayout
+                android:id="@+id/dl_repair_project"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                app:input_type="edit"
+                app:tag="修理项目"/>
+
+            <com.kc.shiptransport.view.custom.DataInputLayout
+                android:id="@+id/dl_repair_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                app:input_type="edit"
+                app:tag="修理过程"/>
+
+            <com.kc.shiptransport.view.custom.DataInputLayout
+                android:id="@+id/dl_repair_man"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                app:input_type="edit"
+                app:tag="修理人员"/>
+
+            <com.kc.shiptransport.view.custom.DataInputLayout
+                android:id="@+id/dl_repair_start_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                app:input_type="select"
+                app:tag="开始日期"/>
+
+            <com.kc.shiptransport.view.custom.DataInputLayout
+                android:id="@+id/dl_repair_end_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                app:input_type="select"
+                app:tag="结束日期"/>
+
+            <include layout="@layout/item_input_remark"/>
+
+            <com.kc.shiptransport.view.custom.ImageSelectLayout
+                android:id="@+id/img_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="图片"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_height"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btn_commit"
+            style="@style/text_title_w"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?colorPrimary"
+            android:text="@string/btn_commit"/>
+
+        <Button
+            android:id="@+id/btn_return"
+            style="@style/text_title_w"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/gray"
+            android:text="@string/btn_return"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

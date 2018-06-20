@@ -19,7 +19,7 @@ public class ImgList implements Parcelable {
      */
     private String path;
     /**
-     * 图片摘要(在相册使用)
+     * 图片摘要(目前只在相册使用)
      */
     private String remark;
 

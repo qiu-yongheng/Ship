@@ -18,7 +18,7 @@
         android:background="#8000"
         android:gravity="left"
         android:padding="10dp"
-        android:text="暂无摘要"
+        android:text="暂无关键字"
         android:textColor="#fff"
         android:textSize="@dimen/text_15sp"/>
 </RelativeLayout>

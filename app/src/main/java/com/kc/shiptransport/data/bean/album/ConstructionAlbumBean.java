@@ -52,6 +52,7 @@ public class ConstructionAlbumBean {
          * Remark : 描述3
          * TotalNumber : 0
          * Attachment :
+         * Creator: 创建者
          */
 
         private int rownumber;
@@ -60,6 +61,7 @@ public class ConstructionAlbumBean {
         private String Remark;
         private String TotalNumber;
         private String Attachment;
+        private String Creator;
 
         public int getRownumber() {
             return rownumber;
@@ -107,6 +109,14 @@ public class ConstructionAlbumBean {
 
         public void setAttachment(String Attachment) {
             this.Attachment = Attachment;
+        }
+
+        public String getCreator() {
+            return Creator;
+        }
+
+        public void setCreator(String creator) {
+            Creator = creator;
         }
     }
 }

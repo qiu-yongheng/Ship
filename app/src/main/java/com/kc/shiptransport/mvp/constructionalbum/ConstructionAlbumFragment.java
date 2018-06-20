@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 
 import com.kc.shiptransport.R;
 import com.kc.shiptransport.data.bean.album.ConstructionAlbumBean;
+import com.kc.shiptransport.db.user.User;
 import com.kc.shiptransport.interfaze.OnDailogCancleClickListener;
 import com.kc.shiptransport.interfaze.OnInitDialogViewListener;
 import com.kc.shiptransport.mvp.constructionalbumpicture.ConstructionAlbumPictureActivity;
@@ -34,7 +37,11 @@ import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +53,7 @@ import butterknife.Unbinder;
  * @desc ${TODD}
  */
 
-public class ConstructionAlbumFragment extends Fragment implements ConstructionAlbumContract.View {
+public class ConstructionAlbumFragment extends Fragment implements ConstructionAlbumContract.View{
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.recycler_view)
@@ -57,6 +64,11 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
     private ConstructionAlbumActivity activity;
     private ConstructionAlbumContract.Presenter presenter;
     private CommonAdapter<ConstructionAlbumBean.DataBean> adapter;
+    private boolean isSlidingToLast;
+    private int pageSize = 20;
+    private int pageCount = 1;
+    public ActionMode actionMode;
+    public Set<Integer> positionSet = new HashSet<>();
 
     @Nullable
     @Override
@@ -140,10 +152,52 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
 
     @Override
     public void initListener() {
+        // 下拉刷新
         swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                presenter.getAlbumList(1000, 1);
+                pageCount = 1;
+                presenter.getAlbumList(pageSize, pageCount);
+            }
+        });
+
+        // 加载更多
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            /**
+             * 当滑动到最后一个item时, 加载更多
+             * @param recyclerView
+             * @param newState
+             */
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                //获取布局管理器
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                // 当不滚动时
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // 获取最后一个完全显示的item position
+                    int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
+                    // 获取当前显示的item的数量
+                    int totalItemCount = manager.getItemCount();
+
+                    // 判断是否滚动到底部并且是向下滑动
+                    if (lastVisibleItem == (totalItemCount - 1) && isSlidingToLast) {
+                        //加载更多
+                        presenter.getAlbumList(pageSize, ++pageCount);
+                    }
+                }
+            }
+
+            /**
+             * 判断是否下滑
+             * @param recyclerView
+             * @param dx
+             * @param dy
+             */
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                isSlidingToLast = dy > 0;
             }
         });
     }
@@ -177,11 +231,20 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+
+        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.finishRefresh();
+        }
+        if (presenter != null) {
+            presenter.unsubscribe();
+        }
     }
 
     @Override
-    public void ShowAlbumList(ConstructionAlbumBean bean) {
+    public void showAlbumList(ConstructionAlbumBean bean) {
+        ToastUtil.tip(getContext(), "加载成功");
         swipeRefreshLayout.finishRefresh();
+        final User user = DataSupport.findFirst(User.class);
         final List<ConstructionAlbumBean.DataBean> data = bean.getData();
         if (adapter == null) {
             adapter = new CommonAdapter<ConstructionAlbumBean.DataBean>(getContext(), R.layout.item_album, data) {
@@ -199,6 +262,8 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
                     }
                     holder.setText(R.id.tv_count, dataBean.getTotalNumber() + "张")
                             .setText(R.id.tv_name, dataBean.getAlbumName())
+                            // 如果是当前用户, 或者是管理员, 可以修改
+                            .setVisible(R.id.tv_update, user.getUserID().equals(dataBean.getCreator()) || "1".equals(user.getIsConstructionPictureAdmin()))
                             .setOnClickListener(R.id.tv_update, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -229,7 +294,7 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
                                                     String remark = etRemark.getText().toString().trim();
                                                     if (!TextUtils.isEmpty(name)) {
                                                         // TODO
-                                                        presenter.updateAlbum(dataBean.getItemID(), name, remark, position);
+                                                        presenter.updateAlbum(dataBean.getItemID(), dataBean.getCreator(), name, remark, position);
                                                         activity.hideCustomDialog();
                                                     } else {
                                                         ToastUtil.tip(getContext(), "请填写相册名");
@@ -245,18 +310,31 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
             adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                    // TODO: 单击跳转
-                    Bundle bundle = new Bundle();
-                    ConstructionAlbumBean.DataBean dataBean = adapter.getDatas().get(position);
+//                    if (actionMode != null) {
+//                        // 如果当前处于多选状态，则进入多选状态的逻辑
+//                        // 维护当前已选的position
+//                        addOrRemove(position);
+//                    } else {
+                        // 如果不是多选状态，则进入点击事件的业务逻辑
+                        // TODO: 单击跳转
+                        Bundle bundle = new Bundle();
+                        ConstructionAlbumBean.DataBean dataBean = adapter.getDatas().get(position);
 
-                    bundle.putString(ConstructionAlbumPictureActivity.ALBUM_NAME, dataBean.getAlbumName());
-                    bundle.putString(ConstructionAlbumPictureActivity.ALBUM_REMARK, dataBean.getRemark());
-                    bundle.putInt(ConstructionAlbumPictureActivity.ALBUM_ITEM, dataBean.getItemID());
-                    ConstructionAlbumPictureActivity.startActivity(getContext(), bundle);
+                        bundle.putString(ConstructionAlbumPictureActivity.ALBUM_NAME, dataBean.getAlbumName());
+                        bundle.putString(ConstructionAlbumPictureActivity.ALBUM_REMARK, dataBean.getRemark());
+                        bundle.putInt(ConstructionAlbumPictureActivity.ALBUM_ITEM, dataBean.getItemID());
+                        bundle.putString(ConstructionAlbumPictureActivity.ALBUM_CREATOR, dataBean.getCreator());
+                        ConstructionAlbumPictureActivity.startActivity(getContext(), bundle);
+//                    }
                 }
 
                 @Override
                 public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, final int position) {
+//                    if (actionMode == null) {
+//                        // 创建actionMode
+//                        actionMode = activity.startSupportActionMode(ConstructionAlbumFragment.this);
+//                    }
+
                     // TODO: 长按
                     activity.showDailog("删除相册", "删除相册不能撤销, 是否删除?", "取消", "删除", new DialogInterface.OnClickListener() {
                         @Override
@@ -276,7 +354,11 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // 删除
-                                    presenter.deleteAlbum("ConstructionPictureAlbumRecords", String.valueOf(adapter.getDatas().get(position).getItemID()), "ConstructionPictureAttachmentRecords", "AlbumID", position);
+                                    if (Integer.valueOf(adapter.getDatas().get(position).getTotalNumber()) > 0) {
+                                        presenter.deleteAlbum("ConstructionPictureAlbumRecords", String.valueOf(adapter.getDatas().get(position).getItemID()), "", "", adapter.getDatas().get(position).getCreator(), position);
+                                    } else {
+                                        presenter.deleteAlbum("ConstructionPictureAlbumRecords", String.valueOf(adapter.getDatas().get(position).getItemID()), "ConstructionPictureAttachmentRecords", "AlbumID", adapter.getDatas().get(position).getCreator(), position);
+                                    }
                                 }
                             });
                         }
@@ -288,6 +370,45 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
         } else {
             adapter.clear();
             adapter.loadmore(data);
+        }
+    }
+
+    /**
+     * 添加选中的position到HashSet
+     *
+     * @param position
+     */
+    public void addOrRemove(int position) {
+        if (positionSet.contains(position)) {
+            // 如果包含，则撤销选择
+            positionSet.remove(position);
+        } else {
+            // 如果不包含，则添加
+            positionSet.add(position);
+        }
+        if (positionSet.size() == 0) {
+            // 如果没有选中任何的item，则退出多选模式
+            actionMode.finish();
+        } else {
+            // 设置ActionMode标题
+            actionMode.setTitle(positionSet.size() + " 已选择");
+            // 更新列表界面，否则无法显示已选的item
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 加载更多
+     * @param bean
+     */
+    @Override
+    public void showAlbumMore(ConstructionAlbumBean bean) {
+        List<ConstructionAlbumBean.DataBean> data = bean.getData();
+        if (adapter != null && data != null && data.size() > 0) {
+            ToastUtil.tip(getContext(), "加载成功");
+            adapter.loadmore(data);
+        } else {
+            ToastUtil.tip(getContext(), "没有更多数据");
         }
     }
 
@@ -322,4 +443,55 @@ public class ConstructionAlbumFragment extends Fragment implements ConstructionA
             showError("删除失败, 请重试");
         }
     }
+
+//    @Override
+//    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+//        if (actionMode == null) {
+//            actionMode = mode;
+//            MenuInflater inflater = mode.getMenuInflater();
+//            inflater.inflate(R.menu.menu_delete, menu);
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.menu_delete:
+//                activity.showDailog("删除相册", "删除相册不能撤销, 是否删除?", "取消", "删除", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // 取消
+//                    }
+//                }, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // 删除
+//                        HashSet<Integer> tempSet;
+//                        tempSet = new HashSet<>();
+//                        tempSet.addAll(positionSet);
+//                        deleteAlbum(adapter.getDatas(), tempSet);
+//                    }
+//                });
+//
+//                mode.finish();
+//                return true;
+//            default:
+//                return false;
+//        }
+//    }
+//
+//    @Override
+//    public void onDestroyActionMode(ActionMode mode) {
+//        actionMode = null;
+//        positionSet.clear();
+//        adapter.notifyDataSetChanged();
+//    }
 }

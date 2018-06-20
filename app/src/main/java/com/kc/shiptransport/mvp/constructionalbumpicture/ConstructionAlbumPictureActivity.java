@@ -18,10 +18,12 @@ public class ConstructionAlbumPictureActivity extends BaseActivity {
     public static final String ALBUM_NAME = "ALBUM_NAME";
     public static final String ALBUM_REMARK = "ALBUM_REMARK";
     public static final String ALBUM_ITEM = "ALBUM_ITEM";
+    public static final String ALBUM_CREATOR = "ALBUM_CREATOR";
     private ConstructionAlbumPictureFragment fragment;
     public String albumName;
     public String albumRemark;
     public int albumItem;
+    public String albumCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class ConstructionAlbumPictureActivity extends BaseActivity {
             albumName = bundle.getString(ALBUM_NAME);
             albumRemark = bundle.getString(ALBUM_REMARK);
             albumItem = bundle.getInt(ALBUM_ITEM);
+            albumCreator = bundle.getString(ALBUM_CREATOR);
         }
 
 

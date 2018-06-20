@@ -11,6 +11,7 @@ import org.litepal.crud.DataSupport;
 public class User extends DataSupport{
     private String UserID;
     private String UserName;
+    private String isConstructionPictureAdmin;
 
     public String getUserID() {
         return UserID;
@@ -26,5 +27,13 @@ public class User extends DataSupport{
 
     public void setUserName(String userName) {
         UserName = userName;
+    }
+
+    public String getIsConstructionPictureAdmin() {
+        return isConstructionPictureAdmin;
+    }
+
+    public void setIsConstructionPictureAdmin(String isConstructionPictureAdmin) {
+        this.isConstructionPictureAdmin = isConstructionPictureAdmin;
     }
 }

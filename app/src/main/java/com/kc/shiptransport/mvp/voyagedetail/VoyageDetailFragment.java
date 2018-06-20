@@ -33,6 +33,8 @@ import com.kc.shiptransport.util.ToastUtil;
 import com.kc.shiptransport.view.actiivty.InputActivity;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +47,6 @@ import butterknife.Unbinder;
  */
 
 public class VoyageDetailFragment extends Fragment implements VoyageDetailContract.View {
-
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.recyclerview)
@@ -70,6 +70,10 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
     private boolean save = true;
     private boolean isChange = true;
     private VoyageDetailBean bean;
+    /**
+     * 用来保存position对应的时间的映射关系
+     */
+    private HashMap<Integer, String> timeMap = new HashMap<>();
 
     @Nullable
     @Override
@@ -113,6 +117,8 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
 
                     }
                 });
+                break;
+            default:
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -270,7 +276,8 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                     if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
                         // 监听到返回按钮点击事件
                         saveData();
-                        return true;// 未处理
+                        // 未处理
+                        return true;
                     }
                     return false;
                 }
@@ -333,7 +340,6 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             }
         }
 
-
         if (adapter == null) {
             adapter = new VoyageDetailAdapter(getContext(), bean);
 
@@ -341,7 +347,7 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
             if (isChange) {
                 adapter.setOnRecyclerViewClickListener(new OnRecyclerviewItemClickListener() {
                     @Override
-                    public void onItemClick(View view, int position, int... type) {
+                    public void onItemClick(View view, final int position, int... type) {
                         final VoyageDetailBean.ColumnsBean columnsBean = adapter.list.get(position);
                         switch (type[0]) {
                             case SettingUtil.TYPE_TEXT:
@@ -354,6 +360,24 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                                     CalendarUtil.showTimePickerDialog(getContext(), new OnTimePickerSureClickListener() {
                                         @Override
                                         public void onSure(String str) {
+                                            try {
+                                                for (Map.Entry<Integer, String> entry : timeMap.entrySet()) {
+                                                    if (entry.getKey() < position && CalendarUtil.isLastDate(entry.getValue(), str)) {
+                                                        // 当前选择的时间小于之前操作的时间, 报错
+                                                        ToastUtil.tip(getContext(), "当前选择时间在上一个操作之前, 请重新选择");
+                                                        return;
+                                                    } else if (entry.getKey() > position && !CalendarUtil.isLastDate(entry.getValue(), str)) {
+                                                        // 当前选择的时间大于之后操作的时间, 报错
+                                                        ToastUtil.tip(getContext(), "当前选择时间在下一个操作之后, 请重新选择");
+                                                        return;
+                                                    }
+                                                }
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            // 缓存position, time到map集合, 遍历map集合, 判断时间是否合法
+                                            timeMap.put(position, str);
                                             // 保存数据
                                             columnsBean.setValue(str);
                                             adapter.notifyDataSetChanged();
@@ -381,6 +405,8 @@ public class VoyageDetailFragment extends Fragment implements VoyageDetailContra
                             case SettingUtil.TYPE_NUMBER:
                                 // 只能输入数字
                                 InputActivity.startActivityForResult(getActivity(), columnsBean.getLabel(), columnsBean.getValue(), SettingUtil.TYPE_NUMBER, position);
+                                break;
+                            default:
                                 break;
                         }
                     }

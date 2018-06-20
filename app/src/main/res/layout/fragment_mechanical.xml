@@ -1,0 +1,303 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.kc.shiptransport.mvp.mechanical.MechanicalFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="机电设备"/>
+
+                <TextView
+                    android:id="@+id/tv_mechanical_type"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="使用单位"/>
+
+                <TextView
+                    android:id="@+id/tv_unit"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="有  效  期"/>
+
+                <TextView
+                    android:id="@+id/tv_expiry_date"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="机手名字"/>
+
+                <TextView
+                    android:id="@+id/tv_machinist_name"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="责任人名"/>
+
+                <TextView
+                    android:id="@+id/tv_responsible_name"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="进场时间"/>
+
+                <TextView
+                    android:id="@+id/tv_approach_time"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="退场时间"/>
+
+                <TextView
+                    android:id="@+id/tv_push_time"
+                    style="@style/text_description_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tv_height"
+                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:background="@color/et_bg"
+                    android:gravity="center"
+                    android:text="@string/tv_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="铭牌照片:"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_nameplate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:layout_marginTop="@dimen/margintop_8dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="NRMM照片:"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_nrmm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:layout_marginTop="@dimen/margintop_8dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="机手照片:"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_machinist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:layout_marginTop="@dimen/margintop_8dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margintop_8dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:text="进场许可照片:"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_approach"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/marginleft_14"
+                    android:layout_marginRight="@dimen/marginleft_14"
+                    android:layout_marginTop="@dimen/margintop_8dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

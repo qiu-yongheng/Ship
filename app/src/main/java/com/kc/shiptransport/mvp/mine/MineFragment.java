@@ -125,7 +125,7 @@ public class MineFragment extends Fragment {
         activity.getSupportActionBar().setTitle(R.string.title_mine);
 
         // 添加下划线
-        tvChangePassword.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//下划线
+        tvChangePassword.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         // 显示用户信息
         userInfo = DataSupport.findAll(UserInfo.class).get(0);

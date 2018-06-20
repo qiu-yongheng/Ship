@@ -23,16 +23,20 @@ import com.kc.shiptransport.mvp.attendanceaudit.AttendanceAuditActivity;
 import com.kc.shiptransport.mvp.bcf.BCFActivity;
 import com.kc.shiptransport.mvp.boatinquire.BoatInquireActivity;
 import com.kc.shiptransport.mvp.certificatesupervision.CertificateSupervisionActivity;
+import com.kc.shiptransport.mvp.crew.CrewActivity;
+import com.kc.shiptransport.mvp.devicerepair.DeviceRepairActivity;
 import com.kc.shiptransport.mvp.exitapplication.ExitApplicationActivity;
 import com.kc.shiptransport.mvp.exitassessor.ExitAssessorActivity;
 import com.kc.shiptransport.mvp.hsecheck.HseCheckActivity;
 import com.kc.shiptransport.mvp.hserectification.HseRectificationActivity;
+import com.kc.shiptransport.mvp.mechanical.MechanicalActivity;
 import com.kc.shiptransport.mvp.plan.PlanActivity;
 import com.kc.shiptransport.mvp.recordedsand.RecordedSandActivity;
 import com.kc.shiptransport.mvp.sample.SampleActivity;
 import com.kc.shiptransport.mvp.scanner.ScannerActivity;
 import com.kc.shiptransport.mvp.supply.SupplyActivity;
 import com.kc.shiptransport.mvp.todayplan.TodayPlanActivity;
+import com.kc.shiptransport.mvp.training.TrainingActivity;
 import com.kc.shiptransport.mvp.violationrecords.ViolationRecordsActivity;
 import com.kc.shiptransport.mvp.voyageinfo.VoyageInfoActivity;
 import com.kc.shiptransport.util.SettingUtil;
@@ -84,16 +88,6 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void initListener() {
 
     }
@@ -111,6 +105,21 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
     @Override
     public void showError(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -227,6 +236,39 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
                             // 违规记录
                             ViolationRecordsActivity.startActivity(getContext());
                             break;
+                        case 35:
+                            //机电设备
+                            MechanicalActivity.startActivity(getContext());
+                            break;
+                        case 36:
+                            //人员信息
+                            CrewActivity.startActivity(getContext());
+                            break;
+                        case 37:
+                            //培训
+                            TrainingActivity.startActivity(getContext());
+                            break;
+                        case 38:
+                            //交底
+                            break;
+
+                        /** AppPID = 39 设备管理 */
+                        case 40:
+                            // 设备维修
+                            DeviceRepairActivity.startActivity(getContext());
+                            break;
+                        case 41:
+                            // 设备保养
+                            break;
+                        case 42:
+                            // 设备检查
+                            break;
+                        case 43:
+                            // 设备整改
+                            break;
+                        case 44:
+                            // 设备审核
+                            break;
                     }
                 }
 
@@ -241,10 +283,5 @@ public class HomeDetailFragment extends Fragment implements HomeDetailContract.V
             adapter.setDates(lists);
             adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 }

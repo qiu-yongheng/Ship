@@ -3030,7 +3030,7 @@ public class RemoteDataSource {
     }
 
     /**
-     * 1.127	删除施工相册数据
+     * 1.127	删除施工相册数据(废弃)
      * @param Table
      * @param ItemID
      * @param SubTable
@@ -3106,4 +3106,104 @@ public class RemoteDataSource {
 
         return getCallResult(endPoint, soapAction, rpc);
     }
+
+    /**
+     * 1.129 根据当前用户UserID, 判断是否有权限修改相册
+     * @param UserID
+     * @return
+     * @throws Exception
+     */
+    public String IsConstructionPictureAdmin(String UserID) throws Exception {
+        // 调用的方法名称
+        String methodName = "IsConstructionPictureAdmin";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("UserID", UserID);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.127	删除施工相册数据
+     * @param Table
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String DeleteItems(String Table, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "DeleteItems";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("Table", Table);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.158	获取-设备修理数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetEquipmentRepairRecords(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetEquipmentRepairRecords";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+    /**
+     * 1.157	获取施工船舶PVD信息数据
+     * @param PageSize
+     * @param PageCount
+     * @param ConditionJson
+     * @return
+     * @throws Exception
+     */
+    public String GetManagementShip(int PageSize, int PageCount, String ConditionJson) throws Exception {
+        // 调用的方法名称
+        String methodName = "GetManagementShip";
+        // EndPoint
+        String endPoint = BaseUrl.EndPoint;
+        // SOAP Action
+        String soapAction = nameSpace + methodName;
+
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+
+        rpc.addProperty("PageSize", PageSize);
+        rpc.addProperty("PageCount", PageCount);
+        rpc.addProperty("ConditionJson", ConditionJson);
+
+        return getCallResult(endPoint, soapAction, rpc);
+    }
+
+
 }

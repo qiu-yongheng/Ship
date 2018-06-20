@@ -3,12 +3,14 @@ package com.kc.shiptransport.util;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kc.shiptransport.R;
+import com.kc.shiptransport.app.App;
 import com.kc.shiptransport.data.bean.CommitPictureBean;
 import com.kc.shiptransport.data.bean.hse.HseDefectListBean;
 import com.kc.shiptransport.data.bean.hse.imglist.AttachmentListBean;
@@ -19,6 +21,8 @@ import com.kc.shiptransport.interfaze.OnRxGalleryRadioListener;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +35,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.ui.RxGalleryListener;
 import cn.finalteam.rxgalleryfinal.ui.base.IMultiImageCheckedListener;
+import top.zibin.luban.Luban;
 
 /**
  * @author qiuyongheng
@@ -209,9 +214,13 @@ public class RxGalleryUtil {
             String[] split = mimeType.split("/");
             String suffixName = split[split.length - 1];
 
+            // 图片本地路径
+            String originalPath = bean.getOriginalPath();
+
             pictureBean.setFileName(title + "." + suffixName);
             pictureBean.setSuffixName(suffixName);
             pictureBean.setCreator(creator);
+            pictureBean.setFilePath(originalPath);
             list.add(pictureBean);
         }
         return list;
@@ -294,6 +303,23 @@ public class RxGalleryUtil {
     }
 
     /**
+     * 设备维修图片转换
+     * @param str
+     * @return
+     */
+    public static List<ImgList> repairToImgList(String str) {
+        List<ImgList> imgLists = new ArrayList<>();
+        String[] imgs = str.split(",");
+        for (String img : imgs) {
+            ImgList imgList = new ImgList();
+            imgList.setItemID(0);
+            imgList.setPath(img);
+            imgLists.add(imgList);
+        }
+        return imgLists;
+    }
+
+    /**
      * 获取未提交的图片
      * @param source
      * @return
@@ -311,5 +337,21 @@ public class RxGalleryUtil {
         }
 
         return list;
+    }
+
+    /**
+     * 传入图片地址, 压缩图片
+     * @param filePath
+     * @return
+     * @throws IOException
+     */
+    public static String getImgBase64(String filePath) throws IOException {
+        LogUtil.d("上传图片本地路径: " + filePath);
+        File file = new File(filePath);
+        LogUtil.d(file.getAbsolutePath() + "原始长度: " + file.length()/1024 + "kb");
+        File tagFile = Luban.with(App.getAppContext()).load(file).get();
+        LogUtil.d(tagFile.getAbsolutePath() + "压缩长度: " + tagFile.length()/1024 + "kb");
+        byte[] bytes = FileUtil.File2byte(tagFile);
+        return new String(Base64.encode(bytes, Base64.DEFAULT));
     }
 }
